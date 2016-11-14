@@ -1,0 +1,6 @@
+/target
+/bin
+/.externalToolBuilders
+/.project
+/.settings
+/pom.xml~
