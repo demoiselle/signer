@@ -1,0 +1,60 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<artifactId>jnlp</artifactId>
+	<packaging>jar</packaging>
+
+
+	<name>Demoiselle Signer JNLP Desktop</name>
+	<description>Demoiselle Signer JNLP Desktop Component</description>
+	<url>http://www.demoiselle.org</url>
+
+	<parent>
+		<groupId>org.demoiselle.signer</groupId>
+		<artifactId>signer-parent</artifactId>
+		<version>2.0.0-BETA1</version>
+		<relativePath>../../../parent</relativePath>
+	</parent>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, Version 3</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>SERPRO - Serviço Federal de Processamento de Dados</name>
+		<url>http://www.serpro.gov.br</url>
+	</organization>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signature-core</artifactId>
+			<version>2.0.0-BETA1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signature-signer</artifactId>
+			<version>2.0.0-BETA1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>ca-icpbrasil</artifactId>
+			<version>2.0.0-BETA1</version>
+		</dependency>
+	</dependencies>
+
+</project>

@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="core-configuracao">
+
+    <title>Configuração do Demoiselle Core</title>
+
+    <section>
+        <title>Instalação do componente</title>
+        <para>
+            Para instalar o componente <emphasis>Demoiselle Core</emphasis> na aplicação,
+            basta adicionar a sua dependência no arquivo <filename>pom.xml</filename> do projeto gerenciado pelo Maven:
+        </para>
+        <programlisting role="XML"><![CDATA[<dependency>
+			<groupId>br.gov.frameworkdemoiselle.component</groupId>
+			<artifactId>demoiselle-certificate-core</artifactId>
+			<version>2.0.0</version>
+		</dependency>]]></programlisting>
+    </section>
+</chapter>

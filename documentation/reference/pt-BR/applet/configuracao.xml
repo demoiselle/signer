@@ -1,0 +1,111 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="applet-configuracao">
+
+    <title>Configuração do Demoiselle Applet</title>
+
+    <section>
+        <title>Instalação do componente</title>
+        <para>
+            Para instalar o componente
+            <emphasis>Demoiselle Applet</emphasis>
+            na aplicação,
+            basta adicionar a sua dependência no arquivo
+            <filename>pom.xml</filename>
+            do projeto
+            gerenciado pelo Maven:
+        </para>
+        <programlisting role="XML"><![CDATA[
+<dependency>
+	<groupId>br.gov.frameworkdemoiselle.component</groupId>
+	<artifactId>demoiselle-certificate-applet</artifactId>
+	<version>2.0.0</version>
+</dependency>]]></programlisting>
+    </section>
+
+    <section>
+        <title>Arquivos de configuração</title>
+        <para>
+            O arquivo
+            <filename>security-applet.properties</filename>
+            define as propriedades do componente. Ele deve ser incluído no pasta de resource do projeto, caso contrário
+            será utilizado o arquivo padrão
+            <filename>security-applet-default.properties</filename>
+            encontrado internamente no jar do demoiselle-applet.
+        </para>
+        <para>
+            Abaixo temos o conteúdo completo do arquivo de configuração.
+        </para>
+
+        <programlisting role="HTML"><![CDATA[
+#fabrica
+factory.applet.action="applet-execute"
+
+#Look and Feel
+look.and.feel=Nimbus
+
+#Labels
+label.dialog.title=Autenticação
+label.dialog.label.pin=Informe o seu PIN:
+label.dialog.label.table=Lista de Certificados
+label.dialog.label.policy=Escolha a política a ser utilizada.
+label.dialog.button.run=Executar
+label.dialog.button.cancel=Cancelar
+label.dialog.option_pane.title=Mensagem de erro
+
+#Messages
+message.error.driver.incompatible=Nenhum driver encontrado ou Dispositivo Desconectado
+message.error.invalid.pin=O PIN não foi informado ou é inválido.
+message.error.unexpected=Erro inesperado
+message.error.pkcs11.not.found=Nenhum Token/Smartcard presente. Por favor, conecte um dispositivo.
+message.error.driver.not.available=Nenhum driver instalado para acesso ao seu dispositivo
+
+#Configurations
+config.dialog.modal=true
+config.dialog.visible=true
+
+config.dialog.font=Dialog
+config.dialog.font.style=0
+config.dialog.font.size=11
+config.dialog.dimension.width=480
+config.dialog.dimension.height=350
+
+config.dialog.pin-label.x=10
+config.dialog.pin-label.y=10
+config.dialog.pin-label.width=350
+config.dialog.pin-label.height=15
+
+config.dialog.pin-code.x=10
+config.dialog.pin-code.y=25
+config.dialog.pin-code.width=220
+config.dialog.pin-code.height=20
+
+config.dialog.button-run.x=15
+config.dialog.button-run.y=300
+config.dialog.button-run.width=120
+config.dialog.button-run.height=25
+
+config.dialog.button-cancel.x=145
+config.dialog.button-cancel.y=300
+config.dialog.button-cancel.width=120
+config.dialog.button-cancel.height=25
+
+config.dialog.table.certificates.x=15
+config.dialog.table.certificates.y=30
+config.dialog.table.certificates.width=440
+config.dialog.table.certificates.height=210
+config.dialog.table.certificates.row.heigth=25
+
+config.dialog.label.policy.x=15
+config.dialog.label.policy.y=250
+config.dialog.label.policy.width=440
+config.dialog.label.policy.height=20
+
+config.dialog.combo.policy.x=15
+config.dialog.combo.policy.y=270
+config.dialog.combo.policy.width=440
+config.dialog.combo.policy.height=25
+]]></programlisting>
+    </section>
+</chapter>

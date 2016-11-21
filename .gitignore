@@ -1,6 +1,7 @@
 /target
-/bin
-/.externalToolBuilders
 /.project
+/.classpath
 /.settings
-/pom.xml~
+/.externalToolBuilders
+/impl/policy/target/
+/impl/timestamp/target/

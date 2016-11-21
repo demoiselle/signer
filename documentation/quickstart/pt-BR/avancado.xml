@@ -1,0 +1,650 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+
+<chapter id="avancado">
+
+	<title>Usando um carimbo de tempo</title>
+	
+	<section>
+	
+		<title>Como funciona</title>
+		
+		<para>
+			Para usar uma política AD_RT (Assinatura Digital de Referência Temporal) do ICP-Brasil, precisamos 
+			requisitar uma referência temporal digital a uma ACT (Autoridade de Carimbo do Tempo), que possue 
+			um servidor devidamente homologado.	O componente <literal>demoiselle-certificate-timestamp</literal> 
+			possui toda a implementação necessária para acessar o servidor de carimbo de tempo do SERPRO 
+			(que é uma ACT). Para obter uma referência temporal é necessário assinar uma requisição usando 
+			um certificado que esteja autorizado a acessar esse servidor, e assim gerar uma assinatura de 
+			conteúdo com referência temporal.
+		</para>
+		
+		<note>
+			<para>
+				Para mais informações sobre o serviço de Assinatura Digital de Referência Temporal
+				ofericido pela ACT SERPRO, acesse o site <ulink url="http://carimbodotempo.serpro.gov.br/act/">carimbodotempo.serpro.gov.br/act</ulink>.
+			</para>
+		</note>
+		
+		
+	    <para>
+            <figure>
+                <title>
+                    Arquitetura padrão
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/timestamp01.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>	
+        	
+		<para>
+			Para aplicações que disponibilizam assinatura com referência temporal para diversos usuários, essa implementação
+			padrão pode não ser a ideal, pois será necessário autorizar cada usuário para obter um carimbo de tempo.
+			Pensando nisso, o componente oferece possibilidade para que a aplicação não peça o carimbo de tempo
+			diretamente ao servidor de carimbo de tempo, mas que solicite a um outro servidor que faça isso pela 
+			aplicação, como ilustra a figura 2.2. Dessa forma, apenas o servidor intermediário necessita assinar 
+			as requisições com um certificado autorizado pelo servirdor de carimbo de tempo, não havendo então a 
+			necessidade de autorizar cada usuário da aplicação.
+		</para>
+		
+	    <para>
+            <figure>
+                <title>
+                    Arquitetura com Servlet
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/timestamp02.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>		
+        
+        <para>			
+			Essa alternativa pode ser aplicada através da implementação, na própria aplicação, da classe que obtém
+			o carimbo de tempo, em substituição à implementação padrão, como mostraremos a seguir.
+		</para>
+		
+		<para>
+			Em nossa aplicação vamos criar uma implementação de gerador de timestamp que ao invés de pedir ao servidor um carimbo
+			usando o certificado que assina o documento, peça a um servidor que tenha acesso a um certificado de máquina devidamente autorizado.
+			A assinatura do documento será feita pelo certificado do usuário que terá um carimbo de tempo para aquele conteúdo gerado com um 
+			certificado de aplicação. Nossa implementação irá enviar o conteúdo lido pela applet para um Servlet que irá carregar o certificado 
+			da aplicação e solicitar o carimbo de tempo. Nesse exemplo usamos Servlet, mas você também pode usar um serviço REST ou um WebService, 
+			lembrando apenas que é importante esse serviço exigir autenticação para que possa ser acessado.
+		</para>
+		
+	</section>
+	
+	<section>
+	
+		<title>Criando uma Servlet para gerar o TimeStamp</title>
+		
+		<para>
+			Em nosso projeto web, vamos adicionar ao pom.xml a dependência do componente <literal>demoiselle-certificate-timestamp</literal>. 
+			Vamos utilizar sua API para	obter um carimbo de tempo.
+		</para>
+		
+        <programlisting role="XML"><![CDATA[<dependencies>
+    <dependency>
+		<groupId>br.gov.frameworkdemoiselle.component</groupId>
+		<artifactId>demoiselle-certificate-timestamp</artifactId>
+		<version>2.0.0</version>
+	</dependency>
+	
+	...
+	
+</dependencies>]]></programlisting>
+
+		<para>
+			Crie a classe <literal>TimeStampGeneratorServlet</literal> no pacote <literal>br.gov.frameworkdemoiselle.certificate.sample</literal>.
+			Nessa classe vamos implementar um método para ler o certificado de máquina. Leremos o conteúdo enviado para a Servlet e faremos 
+			a requisição ao servidor de carimbo de tempo.
+		</para>
+		
+		<para>
+			Para usar a API de Servlet do Java adicione a dependência ao <literal>javaee-web-api</literal>, no <literal>pom.xml</literal> 
+			da aplicação <emphasis>AppletCustomizadaWeb</emphasis>:
+		</para>
+		
+		<programlisting role="XML"><![CDATA[<dependencies>
+	<dependency>
+		<groupId>javax</groupId>
+		<artifactId>javaee-web-api</artifactId>
+		<version>7.0</version>
+		<scope>provided</scope>
+	</dependency>
+
+	...
+
+</dependencies>]]></programlisting>
+
+		<para>
+			Além disso, nossa Servlet irá receber e enviar dados via <emphasis>stream</emphasis>. Por isso, 
+			adicionamos também dependência ao <literal>commons-io</literal>, que oferece algumas facilidades para
+			a execução dessas tarefas:
+		</para>
+		
+		<programlisting role="XML"><![CDATA[<dependencies>
+	<dependency>
+    	<groupId>commons-io</groupId>
+    	<artifactId>commons-io</artifactId>
+    	<version>1.3.2</version>
+	</dependency>
+
+	...
+
+</dependencies>]]></programlisting>
+		
+		<para>
+        	<!-- A cada nova versão, lembrar de atualizar a versão do link para a documentação de referência -->
+			Crie o método <literal>loadCertificate</literal>, que carrega o certificado no servidor da sua aplicação 
+			que tem acesso ao servidor de carimbo de tempo. Para mais detalhes de como implementar a leitura de certificado 
+			consulte a <ulink url="http://demoiselle.sourceforge.net/docs/components/certificate/reference/2.0.0/html_single/">
+			documentação de referência</ulink>. 
+		</para>
+		
+		<programlisting role="Java"><![CDATA[private void loadCertificate() throws Exception{
+	CertificateLoader certificateLoader = new CertificateLoaderImpl();
+	X509Certificate certificate = certificateLoader.load(new File("certificado.cer");
+}]]></programlisting>
+		
+		<para>
+			O segundo passo é ler o arquivo enviado à nossa Servlet. 
+		</para>
+		
+		<programlisting role="Java"><![CDATA[content = IOUtils.toByteArray(request.getInputStream());]]></programlisting>
+		
+		<para>
+			O terceito e último passo é enviar a solicitação para o servidor de carimbo de tempo usando a API do componente <literal>demoiselle-certificate-timestamp</literal>.
+			Para criar a solicitação, basta criarmos um <literal>TimeStampOperator</literal> e chamarmos o método <literal>createRequest</literal>
+			passando o conteúdo, o certificado e a chave privada para assinar a requisição.  
+		</para>
+		
+		<programlisting role="Java"><![CDATA[TimeStampOperator timeStampOperator = new TimeStampOperator();
+byte[] reqTimestamp = timeStampOperator.createRequest(privateKey,certificates, content);
+timestamp = timeStampOperator.invoke(reqTimestamp);]]></programlisting>
+		
+		<para>
+			Abaixo segue um exemplo completo da classe. 
+		</para>
+
+		<programlisting role="Java"><![CDATA[@WebServlet("/carimbo")
+public class TimeStampGeneratorServlet extends HttpServlet {
+
+	private static final long serialVersionUID = 1L;
+	private static final Logger logger = LoggerFactory.getLogger(TimeStampGeneratorServlet.class);
+	
+	private PrivateKey privateKey = null;
+	private Certificate[] certificates = null;
+
+	@Override
+	protected void doPost(HttpServletRequest request, HttpServletResponse response)	throws ServletException, IOException {
+		
+		byte[] content;
+		byte[] timestamp;
+		
+		try {
+			loadCertificate();
+			
+			//Lendo o Conteúdo enviado
+			content = IOUtils.toByteArray(request.getInputStream());
+			
+			if (content.length > 0) {
+				//requisitando um carimbo de tempo
+				TimeStampOperator timeStampOperator = new TimeStampOperator();
+				byte[] reqTimestamp = timeStampOperator.createRequest(privateKey,certificates, content);
+	
+				timestamp = timeStampOperator.invoke(reqTimestamp);
+	
+				response.setContentType("application/octet-stream");
+				response.getOutputStream().write(timestamp);
+			}else{
+				response.setContentType("text/plain");
+				response.setStatus(500);
+				response.getOutputStream().write("Conteúdo não enviado".getBytes());
+			}
+		
+		} catch (CertificateCoreException e) {
+			response.setContentType("text/plain");
+			response.setStatus(500);
+			response.getOutputStream().write(e.getMessage().getBytes());
+		} catch (Exception e) {
+			response.setContentType("text/plain");
+			response.setStatus(500);
+			response.getOutputStream().write("Erro ao fazer load do certificado habilitado para requisitar carimbo de tempo".getBytes());
+		} finally {
+			response.getOutputStream().flush();
+			response.getOutputStream().close();
+		}
+		
+		private void loadCertificate() throws Exception{
+			CertificateLoader certificateLoader = new CertificateLoaderImpl();
+			X509Certificate certificate = certificateLoader.load(new File("certificado.cer");
+		}
+	}
+]]></programlisting>
+
+	</section>	
+	
+	<section>
+	
+		<title>Criando sua própria implementação de TimeStampGenerator</title>
+		
+		<para>
+			Agora vamos criar uma implementação própria do TimeStampGenerator em nossa applet. Ao invés de solicitar um carimbo de tempo diretamente 
+			ao servidor, nossa implememtação se conecta a um serviço responsável por essa solicitação, enviando para ele o conteúdo, e recebendo de 
+			volta o carimbo de tempo. Assim, da mesma forma que a Servlet, vamos também adicionar aqui a dependência ao <literal>commons-io</literal>:
+		</para>
+		
+		<programlisting role="XML"><![CDATA[<dependencies>
+	<dependency>
+    	<groupId>commons-io</groupId>
+    	<artifactId>commons-io</artifactId>
+    	<version>1.3.2</version>
+	</dependency>
+	
+	...
+	
+<dependencies>]]></programlisting>
+		
+		<para>
+			Em seu projeto <emphasis>AppletCustomizada</emphasis>, crie no pacote <literal>br.gov.frameworkdemoiselle.certificate.sample</literal> 
+			a classe <literal>MyTimeStampGeneratorImpl</literal>, que deve implementar a interface <literal>TimeStampGenerator</literal>. Para 
+			descobrir as implementações de <literal>TimeStampGenerator</literal> presentes no projeto, é utilizado o SPI, por isso precisamos 
+			fazer dois ajustes para que a classe criada seja utilizada no lugar da implementação padrão. A primeira é anotar a classe 
+			<literal>MyTimeStampGeneratorImpl</literal> com a anotação <literal>@Priority(Priority.MAX_PRIORITY)</literal>, para definir a nossa 
+			implementação como prioritária. A segunda é criar um arquivo chamado 
+			<literal>br.gov.frameworkdemoiselle.certificate.timestamp.TimeStampGenerator</literal> no diretório 
+			<literal>src/main/resources/META-INF/services</literal>, e dentro desse arquivo colocar o caminho completo da classe 
+			<literal>MyTimestampGeneratorImpl</literal>, que é 
+			<literal>br.gov.frameworkdemoiselle.certificate.sample.MyTimeStampGeneratorImpl</literal>, no caso do nosso exemplo.
+		</para>
+		
+		<important>
+			Para garantir que a sua implementação será utilizada, é importante adicionar a anotação <literal>@Priority(Priority.MAX_PRIORITY)</literal>, 
+			e adicionar o caminho para sua implementação no arquivo <literal>br.gov.frameworkdemoiselle.certificate.timestamp.TimeStampGenerator</literal>,
+			dentro da pasta <literal>src/main/resources/META-INF/services</literal>.
+		</important>	
+		
+		<para>
+			Ao implementar a interface <literal>TimeStampGenerator</literal>, os seguintes métodos devem ser implementados:
+		</para>
+		
+		<programlisting role="Java"><![CDATA[public void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates) throws CertificateCoreException {
+}
+public void validateTimeStamp(byte[] content, byte[] response)	throws CertificateCoreException {
+}
+public byte[] generateTimeStamp() throws CertificateCoreException {
+	return null;
+}]]></programlisting>
+		
+		<para>
+		No método <literal>initialize</literal> vamos apenas atribuir o conteúdo <literal>this.content = content;</literal> 
+		</para>
+				
+		<para>
+		O método <literal>validateTimeStamp</literal> vamos manter o mesmo código da implementação padrão:
+		</para>
+		
+		<programlisting role="Java"><![CDATA[TimeStampOperator timeStampOperator = new TimeStampOperator();
+timeStampOperator.validate(content, response);]]></programlisting>
+				
+		<para>
+		O método <literal>generateTimeStamp()</literal> é o método central da nossa implementação. Nele vamos conectar à servlet e
+		enviar o conteúdo sobre o qual é requisitado o carimbo de tempo. Como em nossa aplicação usamos servlet, vamos começar
+		estabelecendo a conexão com a URL e, a seguir, usar o método POST.
+		</para>		
+		
+		<programlisting role="Java"><![CDATA[URL url = new URL(urlString);
+connection = (HttpURLConnection) url.openConnection();
+
+connection.setRequestMethod("POST");
+connection.setUseCaches(false);
+connection.setDoInput(true);
+connection.setDoOutput(true);
+connection.setRequestProperty("Content-Type","application/octet-stream");]]></programlisting>
+		<para>
+		
+		A <literal>urlString</literal> em nosso caso será: <literal>http://localhost:8080/AppletCustomizadaWeb/carimbo</literal>. 
+		</para>	
+		
+		<para>
+		Escrevemos o seguinte conteúdo no request:
+		</para>
+		
+		<programlisting role="Java"><![CDATA[OutputStream os = connection.getOutputStream();
+os.write(content);
+os.flush();
+os.close();]]></programlisting>
+		
+		<para>
+		Após estabelecidos os paramêtros da conexão, testamos os status HTTP que nos indica se a solicitação foi bem sucedida. 
+		O primeiro status que testamos é o 200. Esse status  indica o sucesso na requisição, e assim poderemos
+		ler no <literal>response</literal> o carimbo de tempo restornado. Esse mesmo carimbo será ainda validado 
+		pelo método <literal>validateTimeStamp</literal> com o conteúdo na instância local. Essa validação 
+		sempre ocorre, e, se houve qualquer alteração no arquivo ou carimbo, este é invalidado.
+		</para>
+		
+		<programlisting role="Java"><![CDATA[int status = connection.getResponseCode();
+if (status == 200) {
+	if (connection.getContentType().equals("application/octet-stream")) {
+		InputStream is = connection.getInputStream();
+		timestamp = IOUtils.toByteArray(is);
+		is.close();
+	}
+}]]></programlisting>		
+		
+		<para>
+		Para os casos de erro, trataremos os status HTTP <emphasis>500 - Internal Server Error</emphasis>, 
+		<emphasis>401 - Unauthorized</emphasis> e <emphasis>403 - Access to the requested resource has been denied</emphasis>.
+		Abaixo, veja como ficará o código da nossa classe: 
+		</para>
+		
+		<programlisting role="Java"><![CDATA[@Priority(Priority.MAX_PRIORITY)
+public class MyTimestampGeneratorImpl implements TimeStampGenerator {
+
+	private static final Logger logger = LoggerFactory.getLogger(MyTimestampGeneratorImpl.class);
+
+	private byte[] content;
+
+	public void initialize(byte[] content, PrivateKey privateKey,
+			Certificate[] certificates) throws CertificateCoreException {
+		this.content = content;
+	}
+
+	public byte[] generateTimeStamp() throws CertificateCoreException {
+
+		byte[] timestamp = null;
+		HttpURLConnection connection = null;
+
+		try {
+			// Cria a conexao com o servico que requisita o carimbo de Tempo
+			URL url = new URL("http://localhost:8080/AppletCustomizadaWeb/carimbo");
+
+			connection = (HttpURLConnection) url.openConnection();
+
+			connection.setRequestMethod("POST");
+			connection.setUseCaches(false);
+			connection.setDoInput(true);
+			connection.setDoOutput(true);
+			connection.setRequestProperty("Content-Type","application/octet-stream");
+			
+			// Envia o conteudo
+			OutputStream os = connection.getOutputStream();
+			os.write(content);
+			os.flush();
+			os.close();
+
+			// Trata o status da conexao
+			int status = connection.getResponseCode();
+			if (status == 200) {
+				if (connection.getContentType().equals("application/octet-stream")) {
+					InputStream is = connection.getInputStream();
+					timestamp = IOUtils.toByteArray(is);
+					is.close();
+				}
+			}
+			
+			if (status == 500) {
+				if (connection.getContentType().equals("text/plain")) {
+					String message = IOUtils.toString(connection.getErrorStream());
+					throw new CertificateCoreException(message);
+				}
+			}
+	
+			if (status == 403){
+				throw new CertificateCoreException("HTTP Status 403 - JBWEB000015: Access to the requested resource has been denied");
+			}
+			
+			if (status == 401){
+				throw new CertificateCoreException("HTTP Status 401");
+			}
+
+			if (timestamp == null){
+				throw new CertificateCoreException("Carimbo de Tempo não foi gerado");
+			}
+			
+			
+		} catch ( ConnectException e) {
+			throw new CertificateCoreException("Erro ao conectar ao servico que solicita carimbo de tempo");
+		} catch ( IOException e) {
+			throw new RuntimeException(e);			
+		} finally {
+			if (connection != null) {
+				connection.disconnect();
+			}
+		}
+		
+		return timestamp;
+	}
+
+	public void validateTimeStamp(byte[] content, byte[] response)
+			throws CertificateCoreException {
+		TimeStampOperator timeStampOperator = new TimeStampOperator();
+		timeStampOperator.validate(content, response);
+	}
+}]]></programlisting>
+
+		<para>
+			Além disso, na classe <literal>App</literal>, devemos modificar a política que ajustamos
+			para utilizar a política de Assinatura Digital de Referência Básica versão 2.1, para utilizar a
+			política de Assinatura Digital de Referência Temporal versão 2.1:
+		</para>	
+		
+		<programlisting role="HTML"><![CDATA[
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_1);]]></programlisting>	
+
+		<para>
+			A organização da AppletCustomizada ficara assim:
+		</para>
+
+		<programlisting role="HTML"><![CDATA[
+AppletCustomizada
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── br
+    │   │       └── gov
+    │   │           └── frameworkdemoiselle
+    │   │               └── certificate
+    │   │                   └── sample
+    │   │                       └── applet
+    │   │                           ├── App.java
+    │   │                           └── MyTimestampGeneratorImpl.java
+    │   └── resources
+    └── test
+        ├── java
+        └── resources]]></programlisting>	
+
+	</section>
+
+	<section>
+		
+		<title>Adicionando segurança</title>
+		
+		<para>
+		Por fim vamos adicionar segurança à nossa aplicação. É importante que o serviço disponível (seja usando Servlet, REST ou WebService) esteja sob
+		o contexto de segurança da aplicação. Com isso, o serviço só poderá ser acessado pelo usuário autorizado pela aplicação.
+		</para>
+		
+		<para>
+		Em nosso exemplo usaremos a autenticação JAAS do tipo FORM em nosso Servidor Jboss EAP6.
+		</para>
+		
+		<section>
+			
+			<title>Configurando o Jboss EAP 6</title>
+			
+			<para>Acesse <literal>JBOSS_HOME/bin</literal> e execute o <literal>add-user</literal> crie um usuário de aplicação 
+			pertencente ao grupo <emphasis>admin</emphasis>, e adicione ao realm "ApplicationRealm".	
+			 Para mais detalhes consulte a documentação 
+			 <ulink url="https://docs.jboss.org/author/display/AS71/add-user+utility"><citetitle>add-user utility</citetitle> </ulink>.
+			 </para>
+		
+		</section>
+		
+		<section>
+		
+			<title>Configurando a aplicação Web</title>
+			
+			<para>
+			Crie o arquivo <literal>web.xml</literal> na pasta <literal>webapp/WEB-INF</literal> do seu projeto <literal>AppletCustomizadaWeb</literal>.
+			</para>
+			
+			<programlisting role="XML"><![CDATA[
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
+	<security-constraint>
+		<web-resource-collection>
+			<web-resource-name>Admin</web-resource-name>
+			<url-pattern>/applet.html</url-pattern>
+		</web-resource-collection>
+		<auth-constraint>
+			<description>Only allow users from following roles</description>
+			<role-name>admin</role-name>
+		</auth-constraint>
+	</security-constraint>
+	<login-config>
+		<auth-method>FORM</auth-method>
+		<form-login-config>
+			<form-login-page>/login.html</form-login-page>
+			<form-error-page>/index.html</form-error-page>
+		</form-login-config>
+	</login-config>
+
+	<security-role>
+		<role-name>admin</role-name>
+	</security-role>
+
+</web-app>  	
+]]></programlisting>	
+		</section>
+
+		<section>
+			<title>Criando as páginas HTML</title>
+			
+			<para>Crie em seu projeto Web <literal>AppletCustomizadaWeb</literal> as duas páginas abaixo.</para>
+			
+			<para>login.html</para>
+			
+			<programlisting role="HTML"><![CDATA[
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Exemplo de Assinatura de Documento</title>
+<link href="css/default.css" rel="stylesheet">
+</head>
+
+<body>
+	<form id="form-login" method="post" action="j_security_check">
+		<div>
+			<h2>Applet Exemplo de Assinatura Digital</h2>
+		</div>
+
+		<label for="username">Login</label> 
+		<input id="username" type="text" name="j_username"> 
+		<label for="password">Senha</label>
+		<input id="password"  type="password" name="j_password">
+		<button id="login" type="submit" value="Login">Entrar</button>
+	</form>
+</body>
+</html>			
+]]></programlisting>	
+			
+			<para>index.html</para>
+			
+			<programlisting role="HTML"><![CDATA[
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Exemplo de Assinatura de Documento</title>
+<link href="css/default.css" rel="stylesheet">
+</head>
+<body>
+	<div>
+		<h2>Applet Exemplo de Assinatura Digital</h2>
+	</div>
+	<div>
+		<a href="applet.html">Assinar Documento</a>
+	</div>
+</body>
+</html>
+]]></programlisting>		
+		
+		</section>
+		
+		<section>
+			
+			<title>Configurando o Servlet</title>
+			
+			<para>
+			Adicione a anotação de sergurança à classe <literal>TimestampGeneratorServlet</literal> 
+			para que as definições de segurança sejam aplicadas.   
+			</para>
+			
+			<programlisting role="Java"><![CDATA[
+@ServletSecurity(value = @HttpConstraint(rolesAllowed = "admin"))
+	]]></programlisting>	
+		
+		</section>		
+		
+		<para>
+			Ao final o seu projeto ficará com a seguinte estrutura de diretórios: 
+		</para>
+
+      <programlisting role="HTML"><![CDATA[
+AppletCustomizadoWeb
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── br
+    │   │       └── gov
+    │   │           └── frameworkdemoiselle
+    │   │               └── certificate
+    │   │                   └── sample
+    │   │                       └── TimestampGeneratorServlet.java
+    │   ├── resources
+    │   └── webapp
+    │       ├── css
+    │       │   └── default.css    
+    │       ├── WEB-INF
+    │       │   └── web.xml    
+    │       ├── applet.html
+    │       ├── AppletCustomizada-1.0.0-assinado.jar
+    │       ├── bcmail-jdk15on-1.51-assinado.jar
+    │       ├── bcpkix-jdk15on-1.51-assinado.jar
+    │       ├── bcprov-jdk15on-1.51-assinado.jar
+    │       ├── commons-io-1.3.2-assinado.jar
+    │       ├── demoiselle-certificate-applet-2.0.0-SNAPSHOT-assinado.jar
+    │       ├── demoiselle-certificate-ca-icpbrasil-2.0.0-SNAPSHOT-assinado.jar
+    │       ├── demoiselle-certificate-core-2.0.0-SNAPSHOT-assinado.jar
+    │       ├── demoiselle-certificate-criptography-2.0.0-SNAPSHOT-assinado.jar
+    │       ├── demoiselle-certificate-policy-engine-2.0.0-SNAPSHOT-assinado.jar
+    │       ├── demoiselle-certificate-signer-2.0.0-SNAPSHOT-assinado.jar
+    │       ├── demoiselle-certificate-timestamp-2.0.0-SNAPSHOT-assinado.jar
+    │       ├── index.html
+    │       ├── log4j-1.2.17-assinado.jar
+    │       ├── login.html    
+    │       ├── plugin-assinado.jar
+    │       ├── slf4j-api-1.6.1-assinado.jar
+    │       └── slf4j-log4j12-1.6.1-assinado.jar
+    └── test
+        ├── java
+        └── resources]]></programlisting>		
+		
+	</section>
+	
+</chapter>

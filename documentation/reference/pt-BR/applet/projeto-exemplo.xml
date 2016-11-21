@@ -1,0 +1,802 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="applet-projeto-exemplo">
+
+    <title>Criando o projeto exemplo</title>
+    <para>
+        Nesta seção apresentaremos o passo-a-passo para construção de um projeto de exemplo do <emphasis>demoiselle-applet</emphasis>. Nele será construída uma página html que executará a applet para
+        obtenção de certificados A1 ou A3 e apresentação das informações do certificado na própria página html.
+    </para>
+
+
+    <para>
+        <figure>
+            <title>
+                Tela Final do Projeto Exemplo
+            </title>
+            <mediaobject>
+                <imageobject>
+                    <imagedata fileref="images/tela01.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                </imageobject>
+            </mediaobject>
+        </figure>
+    </para>
+
+    <section>
+        <title>Criando uma AppletExecute</title>
+		
+        <para>
+            Crie um novo projeto com o nome de demoiselle-applet-customizada. Adicione a esse projeto a dependência para o componente
+            Demoiselle Certificate Signer:
+        </para>
+        <programlisting role="XML"><![CDATA[<dependency>
+	<groupId>br.gov.frameworkdemoiselle.component</groupId>
+	<artifactId>demoiselle-certificate-signer</artifactId>
+	<version>2.0.0</version>
+</dependency>]]></programlisting>
+         
+        <para>   
+             Em seguida, crie uma classe que chamaremos de <literal>App.java</literal> no pacote 
+             <literal>br.gov.frameworkdemoiselle</literal>, estendendo a classe <literal>AbstractAppletExecute</literal>.
+        </para>
+
+        <programlisting role="JAVA" ><![CDATA[package br.gov.frameworkdemoiselle;
+
+import br.gov.frameworkdemoiselle.certificate.applet.action.AbstractAppletExecute;
+import br.gov.frameworkdemoiselle.certificate.applet.certificate.ICPBrasilCertificate;
+import br.gov.frameworkdemoiselle.certificate.signer.factory.PKCS7Factory;
+import br.gov.frameworkdemoiselle.certificate.signer.pkcs7.PKCS7Signer;
+import br.gov.frameworkdemoiselle.policy.engine.factory.PolicyFactory;
+import java.applet.Applet;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.AuthProvider;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
+import javax.security.auth.login.LoginException;
+import javax.swing.JOptionPane;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+public class App extends AbstractAppletExecute {
+
+    private static final Logger logger = LoggerFactory.getLogger(App.class);
+
+    @Override
+    public void execute(KeyStore keystore, String alias, int policyselected, Applet applet) {
+        try {
+            /* Carregando o conteudo a ser assinado */
+            String documento = AbstractAppletExecute.getFormField(applet, "mainForm", "documento");
+
+            if (documento.length() == 0) {
+                JOptionPane.showMessageDialog(applet, "Por favor, escolha um documento para assinar", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            String user_home = System.getProperty("user.home");
+            logger.info("user.home......: {}", user_home);
+            String path = new File(documento).getAbsolutePath();
+            logger.info("Path...........: {}", path);
+            byte[] content = readContent(path);
+
+            /* Parametrizando o objeto doSign */
+            PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+            signer.setCertificates(keystore.getCertificateChain(alias));
+            signer.setPrivateKey((PrivateKey) keystore.getKey(alias, null));
+
+            switch (policyselected) {
+                case 0: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_1_0);
+                    break;
+                }
+                case 1: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_1_1);
+                    break;
+                }
+                case 2: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_0);
+                    break;
+                }
+                case 3: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_1);
+                    break;
+                }
+                case 4: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_1_0);
+                    break;
+                }
+                case 5: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_1_1);
+                    break;
+                }
+                case 6: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_0);
+                    break;
+                }
+                case 7: {
+                    signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_1);
+                    break;
+                }
+            }
+
+            signer.setAttached(true);
+
+            /* Realiza a assinatura do conteudo */
+            logger.info("Efetuando a  assinatura do conteudo");
+            byte[] signed = signer.doSign(content);
+
+            /* Grava o conteudo assinado no disco */
+            writeContent(signed, documento.concat(".p7s"));
+
+            /* Valida o conteudo */
+            logger.info("Efetuando a validacao da assinatura.");
+            boolean checked = signer.check(content, signed);
+
+            if (checked) {
+                logger.info("A assinatura e valida.");
+                JOptionPane.showMessageDialog(applet, "O arquivo foi assinado e validado com sucesso.", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+                logger.info("A assinatura nao e valida!");
+            }
+
+            /* Exibe alguns dados do certificado */
+            ICPBrasilCertificate certificado = super.getICPBrasilCertificate(keystore, alias, false);
+            AbstractAppletExecute.setFormField(applet, "mainForm", "cpf", certificado.getCpf());
+            AbstractAppletExecute.setFormField(applet, "mainForm", "nome", certificado.getNome());
+            AbstractAppletExecute.setFormField(applet, "mainForm", "nascimento", certificado.getDataNascimento());
+            AbstractAppletExecute.setFormField(applet, "mainForm", "email", certificado.getEmail());
+
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException e) {
+            JOptionPane.showMessageDialog(applet, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            logger.info("Efetuando logout no provider.");
+            AuthProvider ap = null;
+
+            if (keystore != null) {
+                ap = (AuthProvider) keystore.getProvider();
+            }
+
+            if (ap != null) {
+                try {
+                    ap.logout();
+                } catch (LoginException e) {
+                    JOptionPane.showMessageDialog(applet, e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void cancel(KeyStore keystore, String alias, int policyselected, Applet applet) {
+        /* Seu codigo customizado aqui... */
+    }
+
+    private byte[] readContent(String arquivo) {
+        byte[] result = null;
+        try {
+            File file = new File(arquivo);
+            FileInputStream is = new FileInputStream(file);
+            result = new byte[(int) file.length()];
+            is.read(result);
+            is.close();
+
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        return result;
+    }
+
+    private void writeContent(byte[] conteudo, String arquivo) {
+        try {
+            File file = new File(arquivo);
+            FileOutputStream os = new FileOutputStream(file);
+            os.write(conteudo);
+            os.flush();
+            os.close();
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+    }
+}
+}]]></programlisting>
+
+        <para>
+            No código acima o método <literal>execute</literal> será acionado logo após o carregamento do keystore do usuário. O método <literal>getICPBrasilCertificate</literal>
+            retorna um objeto do tipo ICPBrasilCertificate que possui todas as informações de um certificado ICPBrasil.
+        </para>
+
+        <para>
+            Os métodos
+            <literal>setFormField</literal>
+            escrevem no formulário html chamado de mainForm no qual a applet está sendo executada. O terceiro parâmetro do método informa em
+            qual campo do formulário a informação será registrada.
+        </para>
+
+        <para>
+            O método
+            <literal>cancel</literal>
+            pode ser utilizado para implementar uma ação no caso do usuário desistir da ação. No código de exemplo é feito apenas a ocultação da applet.
+        </para>
+
+    </section>
+
+    <section>
+        <title>Implementando o método Cancel</title>
+
+        <para>
+            O componente possui agora uma ação de cancelamento padrão, que oculta e libera os recursos da tela de certificados. Caso seja necessário fazer mais alguma ação além desta, o desenvolvedor pode implementar uma customização através do método cancel.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[@Override
+public void cancel(KeyStore keystore, String alias, int policyselected, Applet applet) {
+	/* Seu codigo customizado aqui... */
+}]]></programlisting>
+
+    </section>
+
+    <section>
+        <title>Integração do applet com páginas web</title>
+
+
+        <para>
+            O componente do applet possui a capacidade se comunicar com campos html de uma página web.
+        </para>
+
+        <para>
+            Para prencher um valor vindo do applet em um componente html, vamos considerar o código html abaixo:
+        </para>
+
+        <programlisting role="HTML" language="HTML"><![CDATA[<form id="mainForm" name="mainForm" method="post">
+	<input type="text" name="cpf" value="" size="11">
+</form>]]></programlisting>
+
+        <para>
+            Para preenchermos o campo html descrito acima com um valor fornecido do applet, utilizamos o código a seguir.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[AbstractAppletExecute.setFormField(applet, "mainForm", "cpf", "12345678900");]]></programlisting>
+
+        <para>
+            Para obtermos o valor do campo html descrito acima para ser utilizado pelo applet, utilizamos o código a seguir.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[AbstractAppletExecute.getFormField(applet, "mainform", "cpf");]]></programlisting>
+
+    </section>
+
+    <section>
+        <title>Empacotando a applet customizada</title>
+
+        <para>
+            Crie o jar do seu projeto (demoiselle-applet-customizada-1.0.0.jar) que conterá sua classe App.class.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[demoiselle-certificate-applet-customizada-1.0.0.jar
+   |---br
+   |   |---gov
+   |        |----frameworkdemoiselle
+   |                |---App.class
+   |---security-applet.properties]]></programlisting>
+
+        <note>
+            <para>
+                A criação do arquivo security-applet.properties é opcional. Sua função é sobrescrever todas as propriedades do componente.
+            </para>
+        </note>
+
+    </section>
+
+    <section>
+        <title>Criando a Página HTML</title>
+
+        <para>
+            abaixo temos o código do formulário HTML.
+        </para>
+
+        <programlisting role="HTML"><![CDATA[<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="/demoiselle-certificate-applet-customizada-web/resources/styles/default.css" rel="stylesheet" type="text/css"/>
+        <title>Projeto Exemplo</title>
+    </head>
+
+    <script type="text/javascript">
+        function foo() {
+            alert("foo() method called!");
+        }
+    </script>
+
+    <body>
+        <form id="mainForm" name="mainForm" method="post" action="">
+            <table>
+                <tr>
+                    <td><h1>Applet Exemplo de Assinatura Digital</h1></td>
+                </tr>
+                <tr>
+                    <td>
+                        <applet codebase="http://10.32.180.96:8080/demoiselle-certificate-applet-customizada-web/"
+                                code="br.gov.frameworkdemoiselle.certificate.applet.view.JPanelApplet" width=480 height=350 MAYSCRIPT
+                                archive="demoiselle-certificate-applet-customizada-1.0.0-assinado.jar,
+                                demoiselle-certificate-applet-2.0.0-assinado.jar,
+                                demoiselle-certificate-core-2.0.0-assinado.jar,
+                                demoiselle-certificate-signer-2.0.0-assinado.jar,
+                                demoiselle-certificate-policy-engine-2.0.0-assinado.jar,
+                                demoiselle-certificate-timestamp-2.0.0-assinado.jar,
+                                demoiselle-certificate-criptography-2.0.0-assinado.jar,
+                                demoiselle-certificate-ca-icpbrasil-2.0.0-assinado.jar,
+                                demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0-assinado.jar,
+                                bcprov-jdk15on-1.51-assinado.jar,
+                                bcpkix-jdk15on-1.51-assinado.jar,
+                                bcmail-jdk15on-1.51-assinado.jar,
+                                log4j-1.2.17-assinado.jar,
+                                slf4j-api-1.6.1-assinado.jar,
+                                slf4j-log4j12-1.6.1-assinado.jar,
+                                plugin-assinado.jar">
+
+                            <param name="factory.applet.action" value="br.gov.frameworkdemoiselle.App" />
+                            <param name="applet.javascript.postaction.failure" value="foo" />
+                            No Applet
+                        </applet>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <th colspan="2">Escolha o arquivo a ser assinado</th>
+                            </tr>
+                            <tr>
+                                <td>Documento:</td>
+                                <td><input type="file" name="documento" value=""></td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Dados extraídos do certificado digital</th>
+                            </tr>
+                            <tr>
+                                <td>CPF:</td>
+                                <td><input type="text" name="cpf" value="" size="11" disabled="true"></td>
+                            </tr>
+                            <tr>
+                                <td >Nome:</td>
+                                <td><input type="text" name="nome" value="" size="30" disabled="true"></td>
+                            </tr>
+                            <tr>
+                                <td >Email:</td>
+                                <td><input type="text" name="email" value="" size="30" disabled="true"></td>
+                            </tr>
+                            <tr>
+                                <td >Nascimento:</td>
+                                <td><input type="text" name="nascimento" value="" size="8" disabled="true"></td>
+                            </tr>
+                        </table>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>]]></programlisting>
+
+    </section>
+
+
+    <section>
+        <title>Criando a folha de estilos CSS</title>
+
+        <para>
+            Abaixo temos o código da folha de estilos.
+        </para>
+
+        <programlisting role="HTML"><![CDATA[body {
+    margin:             0px;
+    font-family:        Verdana, Geneva, sans-serif;
+    font-size:          12px;
+    font-weight:        normal;
+}
+
+table{
+    margin-left:auto;
+    margin-right:auto;
+}
+
+th{
+    height: 30px;
+    color: #333333;
+    font-size: 13px;
+    text-align: left;
+}
+
+h1{
+    text-align: center;
+    color: #6699ff;
+    font-size: 14px;
+}
+
+input[type="text"],input[type="file"]{
+    border: 1px solid #cccccc;
+    padding: 5px;
+}
+]]></programlisting>
+
+    </section>
+
+
+    <section>
+        <title>Criando um tratamento de erro por JavaScript</title>
+
+        Caso ocorra algum problema na recuperação do certificado digital, o componente está preparado para efetuar o tratamento. Entretanto, existem casos em que o desenvolvedor precisa executar ações adicionais. Para estes casos, foi disponibilizado um novo recurso em que o componente efetua a chamada de um método
+        JavaScript que pode ser personalizado conforme a necessidade da aplicação. Abaixo temos um exemplo de método:
+
+        <programlisting role="JAVA"><![CDATA[<script type="text/javascript">
+	function foo() {
+		alert("foo() method called!");
+	}
+</script>]]></programlisting>
+
+        <note>
+            <para>
+                A únicas propriedades necessárias ao funcionamento da applet são a
+                <literal>factory.applet.action</literal>
+                , que define qual classe será instanciada no momento do clique do botão Ok e carregamento do Keystore do usuário, e a
+                <literal>applet.javascript.postaction.failure</literal>
+                , que define qual método JavaScript deverá ser chamado. Mesmo que
+                este último recurso não seja usado, é necessário que seja definido um método vazio, do contrário
+                o componente exibirá um erro informando que não foi possível encontrar um método válido.
+            </para>
+        </note>
+
+        <important>
+            <para>
+                A chamada do método JavaScript por padrão só funciona no Linux e Mac, pois neles o acesso é feito diretamente pelo Hardware, e não por uma camada de abstração
+                como no Windows. Para que este recurso funcione também no Windows, é necessário indicar que o acesso deve ser feito diretamente pelo hardware também. Consulte
+                a documentação do componente <emphasis>demoiselle-core</emphasis> para detalhes sobre este recurso.
+            </para>
+        </important>
+
+    </section>
+
+    <section>
+        <title>Assinatura dos jars</title>
+
+        <para>
+            Para publicação do projeto será necessário assinar todos os jar necessários a execução da applet, conforme mostrado na tabela abaixo:
+        </para>
+
+        <table frame="all" pgwide="1">
+            <title>Lista dos jars assinados</title>
+            <tgroup colsep="1" cols="2">
+                <colspec colnum="1" colname="c0" />
+                <colspec colnum="2" colname="c1" />
+                <thead>
+                    <row>
+                        <entry>Jar Original</entry>
+                        <entry>Jar Assinado</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>demoiselle-certificate-applet-customizada-1.0.0.jar</entry>
+                        <entry>demoiselle-certificate-applet-customizada-1.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-applet-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-applet-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-core-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-core-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-signer-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-signer-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-policy-engine-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-policy-engine-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-timestamp-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-timestamp-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-criptography-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-criptography-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-ca-icpbrasil-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-ca-icpbrasil-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>bcprov-jdk15on-1.51.jar</entry>
+                        <entry>bcprov-jdk15on-1.51-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>bcpkix-jdk15on-1.51.jar</entry>
+                        <entry>bcpkix-jdk15on-1.51-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>bcmail-jdk15on-1.51.jar</entry>
+                        <entry>bcmail-jdk15on-1.51-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>log4j-1.2.17.jar</entry>
+                        <entry>log4j-1.2.17-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>slf4j-api-1.6.1.jar</entry>
+                        <entry>slf4j-api-1.6.1-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>slf4j-log4j12-1.6.1.jar</entry>
+                        <entry>slf4j-log4j12-1.6.1-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry></entry>
+                        <entry>plugin-assinado.jar</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+        <para>
+            Para utilizar certificados de homologação, o componente abaixo deve ser incluído Não esqueça de removê-lo quando a aplicação foi enviada para produção ou o usuário poderar usar certificados de homologação neste ambiente.
+        </para>
+
+        <table frame="all" pgwide="1">
+            <title>Lista dos jars assinados</title>
+            <tgroup colsep="1" cols="2">
+                <colspec colnum="1" colname="c0" />
+                <colspec colnum="2" colname="c1" />
+                <thead>
+                    <row>
+                        <entry>Jar Original</entry>
+                        <entry>Jar Assinado</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0-assinado.jar</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+        <para>
+            Para mais detalhes sobre os procedimentos para assinatura dos artefatos, consulte o <xref linkend="assinatura-jar" />.
+        </para>
+
+    </section>
+
+    <section>
+        <title>Publicando no servidor Tomcat</title>
+
+        <para>
+            Para testar nosso projeto, crie um novo projeto Web (No exemplo utilizamos o nome demoiselle-certificate-applet-customizada-web) e copie todos os jar assinados e seu index.html para a pasta WebContent. Adicione seu projeto ao servidor Tomcat e acesse a aplicação pelo navegador.
+        </para>
+
+    </section>
+
+    <section>
+        <title>Executando a applet</title>
+
+        <para>
+            Abra seu navegador na url na qual foi publicado os arquivos. Neste exemplo seria http://localhost:8080/demoiselle-certificate-applet-customizada-web. Se o certificado
+            digital necessitar do pin para que seja feito o acesso, a aplicação solicitará imediatamente o pin de seu certificado, conforme a tela abaixo:
+        </para>
+
+        <para>
+            <figure>
+                <title>
+                    Solicitação de Pin do Certificado
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/tela02.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+
+        <para>
+            O componente exibirá uma tela com os certificados disponíveis, seu número de série, sua data inicial de validade, sua data final de validade e o emissor deste certificado, fornecendo ao
+            usuário a possibilidade de escolher qual certificado deseja-se utilizar.
+        </para>
+
+        <para>
+            <figure>
+                <title>
+                    Lista com certificado de usuário
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/tela03.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+
+    </section>
+
+    <section>
+        <title>Transformação de um Panel para Dialog</title>
+
+        <para>
+            Para transformar a tela que exibe a lista de certificados de um Panel para Dialog, basta realizar a modificação na tag que efetua o carregamento do componente,
+            conforme mostrado abaixo.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[code="br.gov.frameworkdemoiselle.certificate.applet.view.JPanelApplet"]]></programlisting>
+
+        <para>
+            Para:
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[code="br.gov.frameworkdemoiselle.certificate.applet.view.JDialogApplet"]]></programlisting>
+
+    </section>
+
+    <section>
+        <title>Integração com o componente Demoiselle Signer</title>
+
+        <para>
+            A classe da applet customizada fornecida mais acima nos fornece um exemplo de implementação utilizando o componente demoiselle-signer, onde o componente utiliza o certificado recebido pelo applet e efetua a
+            assinatura digital de um arquivo.
+        </para>
+
+        <para>
+            Através de uma combo, podemos selecionar a política que desejamos utilizar para assinar o documento. Estas políticas são fornecidas pelo ITI e utilizadas pelo componente como padrão.
+        </para>
+
+        <para>
+            <figure>
+                <title>
+                    Lista de políticas ICP-Brasil
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/tela03a.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+    </section>
+
+    <section>
+        <title>Customização</title>
+
+        <para>
+            Para modificar o texto do botão "Executar" modifique a propriedade label.dialog.button.select registrando-a como parâmetro da applet:
+        </para>
+        <programlisting role="JAVA"><![CDATA[<param name="label.dialog.button.run" value="Assinar" />]]></programlisting>
+
+        <para>
+            Para redimensionar os botões "Carregar" e "Cancelar" inclua os seguintes parametros:
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[<param name="config.dialog.button-run.height" value="40" />
+<param name="config.dialog.button-cancel.height" value="40" />
+<param name="config.dialog.button-run.width" value="130" />
+<param name="config.dialog.button-cancel.width" value="130" />]]></programlisting>
+
+        Segue abaixo o código completo:
+
+        <programlisting role="HTML"><![CDATA[<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <link href="/demoiselle-certificate-applet-customizada-web/resources/styles/default.css" rel="stylesheet" type="text/css"/>
+        <title>Projeto Exemplo</title>
+    </head>
+
+    <script type="text/javascript">
+        function foo() {
+            alert("foo() method called!");
+        }
+    </script>
+
+    <body>
+        <form id="mainForm" name="mainForm" method="post" action="">
+            <table>
+                <tr>
+                    <td><h1>Applet Exemplo de Assinatura Digital</h1></td>
+                </tr>
+                <tr>
+                    <td>
+                        <applet codebase="http://10.32.180.96:8080/demoiselle-certificate-applet-customizada-web/"
+                                code="br.gov.frameworkdemoiselle.certificate.applet.view.JPanelApplet" width=480 height=350 MAYSCRIPT
+                                archive="demoiselle-certificate-applet-customizada-1.0.0-assinado.jar,
+                                demoiselle-certificate-applet-1.0.8-SNAPSHOT-assinado.jar,
+                                demoiselle-certificate-core-1.0.8-SNAPSHOT-assinado.jar,
+                                demoiselle-certificate-signer-1.0.8-SNAPSHOT-assinado.jar,
+                                demoiselle-certificate-policy-engine-1.0.8-SNAPSHOT-assinado.jar,
+                                demoiselle-certificate-timestamp-1.0.8-SNAPSHOT-assinado.jar,
+                                demoiselle-certificate-criptography-1.0.8-SNAPSHOT-assinado.jar,
+                                demoiselle-certificate-ca-icpbrasil-1.0.8-SNAPSHOT-assinado.jar,
+                                demoiselle-certificate-ca-icpbrasil-homologacao-1.0.8-SNAPSHOT-assinado.jar,
+                                bcprov-jdk15on-1.51-assinado.jar,
+                                bcpkix-jdk15on-1.51-assinado.jar,
+                                bcmail-jdk15on-1.51-assinado.jar,
+                                log4j-1.2.17-assinado.jar,
+                                slf4j-api-1.6.1-assinado.jar,
+                                slf4j-log4j12-1.6.1-assinado.jar,
+                                plugin-assinado.jar">
+
+                            <param name="factory.applet.action" value="br.gov.frameworkdemoiselle.App" />
+                            <param name="applet.javascript.postaction.failure" value="foo" />
+
+                            <param name="label.dialog.button.run" value="Assinar" />
+                            <param name="config.dialog.button-run.height" value="40" />
+                            <param name="config.dialog.button-cancel.height" value="40" />
+                            <param name="config.dialog.button-run.width" value="130" />
+                            <param name="config.dialog.button-cancel.width" value="130" />
+
+                            No Applet
+                        </applet>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <table width="100%">
+                            <tr>
+                                <th colspan="2">Escolha o arquivo a ser assinado</th>
+                            </tr>
+                            <tr>
+                                <td>Documento:</td>
+                                <td><input type="file" name="documento" value=""></td>
+                            </tr>
+                            <tr>
+                                <th colspan="2">Dados extraídos do certificado digital</th>
+                            </tr>
+                            <tr>
+                                <td>CPF:</td>
+                                <td><input type="text" name="cpf" value="" size="11" disabled="true"></td>
+                            </tr>
+                            <tr>
+                                <td >Nome:</td>
+                                <td><input type="text" name="nome" value="" size="30" disabled="true"></td>
+                            </tr>
+                            <tr>
+                                <td >Email:</td>
+                                <td><input type="text" name="email" value="" size="30" disabled="true"></td>
+                            </tr>
+                            <tr>
+                                <td >Nascimento:</td>
+                                <td><input type="text" name="nascimento" value="" size="8" disabled="true"></td>
+                            </tr>
+                        </table>
+                </tr>
+            </table>
+        </form>
+    </body>
+</html>]]></programlisting>
+
+        <para>
+            Abaixo temos a tela com as customizações aplicadas.
+        </para>
+
+        <para>
+            <figure>
+                <title>
+                    Tela com as customizações aplicadas
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/tela04.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+
+    </section>
+</chapter>

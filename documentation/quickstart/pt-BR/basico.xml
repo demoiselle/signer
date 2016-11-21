@@ -1,0 +1,619 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+
+<chapter id="basico">
+	
+	<title>Criação da aplicação</title>
+	
+	<section>
+	
+		<title>Nossa primeira aplicação</title>
+		
+		<para>
+			Nesta seção apresentaremos o passo-a-passo para construção de um projeto de exemplo do <emphasis>demoiselle-applet</emphasis>. 
+			Nele será construída uma página <literal>html</literal> que executará a <literal>applet</literal> para assinatura de documentos, 
+			utilizando certificados A1 ou A3, e apresentação das informações do certificado na própria página <literal>html</literal>.
+		</para>
+		
+	</section>
+	
+	<section>
+		
+		<title>Criando sua Applet para exibir informações em uma página</title>
+		
+		<para>
+			Crie um novo projeto Maven em branco, marcando a opção "Create a Simple Project" e atribua os seguintes valores:
+		</para>
+		
+		<programlisting role="HTML" ><![CDATA[Group-id: br.gov.frameworkdemoiselle.certificate.sample
+Artifact-id: AppletCustomizada
+Packaging: JAR]]></programlisting>
+		
+		<para>	
+			Após criada a aplicação adicione como dependência o componente <literal>demoiselle-certificate-applet</literal>: 
+		</para>	
+		
+        <programlisting role="XML"><![CDATA[<dependencies>
+    <dependency>
+		<groupId>br.gov.frameworkdemoiselle.component</groupId>
+		<artifactId>demoiselle-certificate-applet</artifactId>
+		<version>2.0.0</version>
+	</dependency>
+	
+	...
+	
+</dependencies>]]></programlisting>
+
+		<para>
+			Como esse componente não está no repositório <emphasis>Maven</emphasis>, devemos adicionar também no <literal>pom.xml</literal> o 
+			repositório do qual o componente deve ser baixado:
+		</para>
+		
+		 <programlisting role="XML"><![CDATA[<repositories>
+    <repository>
+        <id>demoiselle</id>
+        <name>Demoiselle SourceForge Repository</name>
+    	<url>http://demoiselle.sourceforge.net/repository/release</url>
+	</repository>
+	
+	...
+	
+</repositories>]]></programlisting>
+			
+		<para>
+			Em seguida, crie a classe <literal>App.java</literal> no pacote <literal>br.gov.frameworkdemoiselle.certificate.sample.applet</literal>, estendendo a classe <literal>AbstractAppletExecute</literal>.
+		</para>
+		
+		<programlisting role="JAVA" ><![CDATA[public class App extends AbstractAppletExecute {
+
+	@Override
+	public void execute(KeyStore keystore, String alias, Applet applet) {
+		try {
+			/* Exibe alguns dados do certificado */
+			ICPBrasilCertificate certificado = super.getICPBrasilCertificate(keystore, alias, false);
+			AbstractAppletExecute.setFormField(applet, "mainForm", "cpf", certificado.getCpf());
+			AbstractAppletExecute.setFormField(applet, "mainForm", "nome", certificado.getNome());
+			AbstractAppletExecute.setFormField(applet, "mainForm", "nascimento", certificado.getDataNascimento());
+			AbstractAppletExecute.setFormField(applet, "mainForm", "email",	certificado.getEmail());
+		
+		} catch (KeyStoreException e) {
+			JOptionPane.showMessageDialog(applet, e.getMessage(), "Error",	JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	@Override
+	public void cancel(KeyStore keystore, String alias, Applet applet) {
+		/* Seu codigo customizado aqui... */
+	}
+}]]></programlisting>
+		
+        <para>
+            No código acima o método <literal>execute</literal> será acionado logo após o carregamento do keystore do usuário. O método <literal>getICPBrasilCertificate</literal>
+            retorna um objeto do tipo ICPBrasilCertificate que possui todas as informações de um certificado ICPBrasil.
+        </para>
+
+        <para>
+            Os métodos <literal>setFormField</literal> escrevem no formulário <literal>html</literal> chamado de mainForm no qual a applet está 
+            sendo executado. O terceiro parâmetro do método informa em qual campo do formulário a informação será registrada.
+        </para>
+        
+        <para>
+            O método
+            <literal>cancel</literal>
+            pode ser utilizado para implementar uma ação no caso do usuário desistir da ação. No código de exemplo é feito apenas a ocultação da applet.
+        </para>	
+        	
+	</section>
+
+    <section>
+        
+        <title>Assinatura dos jars</title>
+
+        <para>
+        	O modelo de segurança da plataforma Java é centrado sobre o conceito de sandbox (caixa de areia), no qual um código remoto como um 
+        	<literal>applet</literal> por padrão não é confiável e, portanto, não pode ter acesso ilimitado ao Sistema Operacional.	Para que 
+        	possamos executar nossa <literal>applet</literal>, precisamos assinar todos os jars necessários à sua execução, conforme mostrado
+        	na tabela abaixo:
+        </para>
+        
+        <table frame="all" pgwide="1">
+            <title>Lista dos jars assinados</title>
+            <tgroup colsep="1" cols="2">
+                <colspec colnum="1" colname="c0" />
+                <colspec colnum="2" colname="c1" />
+                <thead>
+                    <row>
+                        <entry>Jar Original</entry>
+                        <entry>Jar Assinado</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>demoiselle-certificate-applet-customizada-1.0.0.jar</entry>
+                        <entry>demoiselle-certificate-applet-customizada-1.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-applet-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-applet-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-core-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-core-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-signer-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-signer-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-policy-engine-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-policy-engine-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-timestamp-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-timestamp-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-criptography-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-criptography-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-ca-icpbrasil-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-ca-icpbrasil-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0.jar</entry>
+                        <entry>demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>bcprov-jdk15on-1.51.jar</entry>
+                        <entry>bcprov-jdk15on-1.51-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>bcpkix-jdk15on-1.51.jar</entry>
+                        <entry>bcpkix-jdk15on-1.51-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>bcmail-jdk15on-1.51.jar</entry>
+                        <entry>bcmail-jdk15on-1.51-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>commons-io-1.3.2.jar</entry>
+                        <entry>commons-io-1.3.2-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>log4j-1.2.17.jar</entry>
+                        <entry>log4j-1.2.17-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>slf4j-api-1.6.1.jar</entry>
+                        <entry>slf4j-api-1.6.1-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>slf4j-log4j12-1.6.1.jar</entry>
+                        <entry>slf4j-log4j12-1.6.1-assinado.jar</entry>
+                    </row>
+                    <row>
+                        <entry>plugin.jar</entry>
+                        <entry>plugin-assinado.jar</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+        
+        <para>
+        	<!-- A cada nova versão, lembrar de atualizar a versão do link para a documentação de referência -->
+            Para mais detalhes sobre os procedimentos para assinatura dos artefatos, 
+            consulte a <ulink url="http://demoiselle.sourceforge.net/docs/components/certificate/reference/2.0.0/html_single/">documentação de referência</ulink>,
+            e o <link linkend="certificado">Apendice B</link>.
+        </para>
+
+    </section>
+
+	<section>
+		
+		<title>Projeto Web Exemplo</title>
+		
+		<para>
+			Crie um novo projeto Maven em branco, marcando a opção "Create a Simple Project" e atribua os seguintes valores:
+		</para>
+		
+<programlisting role="HTML" ><![CDATA[Group-id: br.gov.frameworkdemoiselle.certificate.sample
+Artifact-id: AppletCustomizadaWeb
+Packaging: WAR]]></programlisting>
+		
+		<para>
+			Adicione a página <literal>html</literal> que irá executar a <literal>applet</literal>:
+		</para>
+		
+        <programlisting role="HTML"><![CDATA[<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Exemplo de Assinatura de Documento</title>
+<link href="css/default.css" rel="stylesheet">
+</head>
+<body>
+	<form id="mainForm" name="mainForm" method="post" action="">
+		<h3>Applet Exemplo de Assinatura Digital</h3>
+		<object codetype="application/java"
+			classid="java:br.gov.frameworkdemoiselle.certificate.applet.view.JPanelApplet"
+			width=480 height=350
+			archive="AppletCustomizada-1.0.0-assinado.jar,
+                demoiselle-certificate-applet-2.0.0-SNAPSHOT-assinado.jar,
+                demoiselle-certificate-core-2.0.0-SNAPSHOT-assinado.jar,
+                demoiselle-certificate-signer-2.0.0-SNAPSHOT-assinado.jar,
+                demoiselle-certificate-policy-engine-2.0.0-SNAPSHOT-assinado.jar,
+                demoiselle-certificate-timestamp-2.0.0-SNAPSHOT-assinado.jar,
+                demoiselle-certificate-criptography-2.0.0-SNAPSHOT-assinado.jar,
+                demoiselle-certificate-ca-icpbrasil-2.0.0-SNAPSHOT-assinado.jar,
+                demoiselle-certificate-ca-icpbrasil-homologacao-2.0.0-SNAPSHOT-assinado.jar,
+                bcprov-jdk15on-1.51-assinado.jar,
+                bcpkix-jdk15on-1.51-assinado.jar,
+                bcmail-jdk15on-1.51-assinado.jar,
+                commons-io-1.3.2-assinado.jar,
+                log4j-1.2.17-assinado.jar,
+                slf4j-api-1.6.1-assinado.jar,
+                slf4j-log4j12-1.6.1-assinado.jar,
+                plugin-assinado.jar">
+			<param name="factory.applet.action"
+				value="br.gov.frameworkdemoiselle.certificate.sample.applet.App" />
+			<param name="applet.javascript.postaction.failure" value="foo" />
+			No Applet
+		</object>
+		<label for="documento">Arquivo: </label> 
+		<input id="documento" type="file" name="documento">
+		<label for="cpf">CPF</label> 
+		<input id="cpf"	type="text" name="cpf" disabled="disabled">
+		<label for="nome">Nome</label> 
+		<input id="nome" type="text" name="nome" disabled="disabled">
+		<label for="nascimento">Nascimento</label> 
+		<input id="nascimento" type="text" name="nascimento" disabled="disabled">
+		<label for="email">Email</label> 
+		<input id="email" type="text" name="email" disabled="disabled">
+	</form>
+</body>
+</html>]]></programlisting>
+		<note>
+			<para>
+				É necessário que os arquivos .jar assinados na sessão anterior sejam adicionados 
+				ao mesmo diretório da página <literal>html</literal> que irá utilizá-los
+			</para>
+		</note>
+
+		<para>
+       		Para o funcionamento da <literal>applet</literal>applet são necessárias as propiedades:              
+            <literal>factory.applet.action</literal> e <literal>applet.javascript.postaction.failure</literal>. A primeira define qual classe 
+            será instanciada no momento do clique do botão Ok e carregamento do Keystore do usuário, enquanto a segunda define qual método 
+            JavaScript deverá ser chamado em caso de alguma falha. 
+        </para>
+        
+        <para>
+        	Acrescente um arquivo <literal>default.css</literal> na pasta <literal>webpapp/css</literal>, com o seguinte conteúdo:
+        </para>
+        
+   		<programlisting role="HTML"><![CDATA[label {
+	display: block;
+	margin-bottom: -1em;
+}
+
+input {
+	display: block;
+	position: relative;
+	left: 7em;
+	top: -0.5em;
+}
+
+input[type="file"]{
+    border: 1px solid #cccccc;
+    padding: 5px;
+}]]></programlisting>
+		
+		<para>
+			O seu projeto ficará com a seguinte estrutura de diretórios: 
+		</para>
+
+      <programlisting role="HTML"><![CDATA[
+AppletCustomizadaWeb
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   ├── resources
+    │   └── webapp
+    │       ├── css
+    │       │   └── default.css
+    │       ├── AppletCustomizada-1.0.0-assinado.jar
+    │       ├── applet.html
+    │       ├── bcmail-jdk15on-1.51-assinado.jar
+    │       ├── bcpkix-jdk15on-1.51-assinado.jar
+    │       ├── bcprov-jdk15on-1.51-assinado.jar    
+    │       ├── commons-io-1.3.2-assinado.jar
+    │       ├── demoiselle-certificate-applet-2.0.0-assinado.jar
+    │       ├── demoiselle-certificate-ca-icpbrasil-2.0.0-assinado.jar
+    │       ├── demoiselle-certificate-core-2.0.0-assinado.jar
+    │       ├── demoiselle-certificate-criptography-2.0.0-assinado.jar
+    │       ├── demoiselle-certificate-policy-engine-2.0.0-assinado.jar
+    │       ├── demoiselle-certificate-signer-2.0.0-assinado.jar
+    │       ├── demoiselle-certificate-timestamp-2.0.0-assinado.jar
+    │       ├── log4j-1.2.17-assinado.jar
+    │       ├── plugin-assinado.jar
+    │       ├── slf4j-api-1.6.1-assinado.jar
+    │       └── slf4j-log4j12-1.6.1-assinado.jar
+    └── test
+        ├── java
+        └── resources
+   ]]></programlisting>
+
+	</section>
+
+	<section>
+		
+		<title> Assinando um documento	</title>
+	 	
+	 	<para>
+			Para realizar assinatura digital do contéudo utilizamos o componente <literal>demoiselle-certificate-signer</literal>. 
+			Esse componente assina um conteúdo carregado no <literal>applet</literal>, utilizando um certificado digital também carregado pela 
+			<literal>applet</literal>.
+		</para>
+		
+		<para>
+			Para isso, devemos adicionar dependência à esse componente no <literal>pom.xml</literal> do projeto AppletCustomizada: 
+		</para>
+		
+        <programlisting role="XML"><![CDATA[<dependencies>
+    <dependency>
+		<groupId>br.gov.frameworkdemoiselle.component</groupId>
+		<artifactId>demoiselle-certificate-signer</artifactId>
+		<version>2.0.0</version>
+	</dependency>
+	
+	...
+	
+</dependencies>]]></programlisting>		
+<!-- 
+		<para>
+			Assim como o componente Demoiselle Certificate Applet, o Demoiselle Certificate Signer não está no repositório <emphasis>Maven</emphasis>, 
+			sendo assim necessário também adicionar o repositório do qual o componente deve ser baixado:
+		</para>
+		
+		 <programlisting role="XML"><![CDATA[<repositories>
+    <repository>
+        <id>demoiselle</id>
+        <name>Demoiselle SourceForge Repository</name>
+    	<url>http://demoiselle.sourceforge.net/repository/release</url>
+	</repository>
+	
+	...
+	
+</repositories>]]></programlisting>	
+ -->
+
+		<para>
+			Para assinatura de documentos é necessário criar um objeto <literal>PKCS7Singer</literal>, configurar os atributos 
+			e chamar o método <literal>doSign()</literal>:
+		</para>	
+		
+        <programlisting role="JAVA"><![CDATA[PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificates(keystore.getCertificateChain(alias));
+signer.setPrivateKey((PrivateKey) keystore.getKey(alias, null));
+byte[] signed = signer.doSign(content);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_1);]]></programlisting>	
+
+		<para>
+			O componente implementa assinatura padrão ICPBrasil de referência básica (RB) e de referência temporal (RT). 
+			No método <literal>setSignaturePolicy()</literal> você pode definir a política a ser usada. 
+			Atualmente o componente suporta as política de assinatura listadas abaixo:
+		</para>
+		
+		<itemizedlist>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RB_CADES_1_0</literal>, Refere-se à Assinatura Digital de Referência Básica versão 1.0;
+            </listitem>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RB_CADES_1_1</literal>, Refere-se à Assinatura Digital de Referência Básica versão 1.1;
+            </listitem>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RB_CADES_2_0</literal>, Refere-se à Assinatura Digital de Referência Básica versão 2.0;
+            </listitem>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RB_CADES_2_1</literal>, Refere-se à Assinatura Digital de Referência Básica versão 2.1;
+            </listitem>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RT_CADES_1_0</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 1.0;
+            </listitem>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RT_CADES_1_1</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 1.1;
+            </listitem>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RT_CADES_2_0</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 2.0;
+            </listitem>
+            <listitem>
+                <literal>PolicyFactory.Policies.AD_RT_CADES_2_1</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 2.1;
+            </listitem>
+        </itemizedlist>	
+        
+        <para>
+        	Por isso, devemos adicionar ainda outra dependência ao projeto AppletCustomizada, justamente
+        	ao componente responsável pelo gerenciamento das políticas, o <literal>demoiselle-certificate-policy-engine</literal>:
+        </para>	
+        
+        <programlisting role="XML"><![CDATA[<dependencies>
+    <dependency>
+		<groupId>br.gov.frameworkdemoiselle.component</groupId>
+		<artifactId>demoiselle-certificate-policy-engine</artifactId>
+		<version>2.0.0</version>
+	</dependency>
+	
+	...
+	
+</dependencies>]]></programlisting>		
+
+		<para>
+			Para utilizar esses recursos, devemos modificar nossa classe <literal>App.java</literal>, também no projeto AppletCustomizada,
+			que ficará assim:
+		</para>
+		
+       	<programlisting role="JAVA" ><![CDATA[public class App extends AbstractAppletExecute{
+	
+	private static final Logger logger = LoggerFactory.getLogger(App.class);
+
+	@Override
+	public void execute(KeyStore keystore, String alias, Applet applet) {
+		try {
+            /* Exibe alguns dados do certificado */
+            ICPBrasilCertificate certificado = super.getICPBrasilCertificate(keystore, alias, false);
+            AbstractAppletExecute.setFormField(applet, "mainForm", "cpf", certificado.getCpf());
+            AbstractAppletExecute.setFormField(applet, "mainForm", "nome", certificado.getNome());
+            AbstractAppletExecute.setFormField(applet, "mainForm", "nascimento", certificado.getDataNascimento());
+            AbstractAppletExecute.setFormField(applet, "mainForm", "email", certificado.getEmail());
+            
+            
+            /* Carregando o conteudo a ser assinado */
+            String documento = AbstractAppletExecute.getFormField(applet, "mainForm", "documento");
+
+            if (documento.length() == 0) {
+                JOptionPane.showMessageDialog(applet, "Por favor, escolha um documento para assinar", "Error", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            String path = new File(documento).getAbsolutePath();
+            byte[] content = readContent(path);
+            logger.info("Path.........: {}", path );
+
+            /* Parametrizando o objeto doSign */
+            PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+            signer.setCertificates(keystore.getCertificateChain(alias));
+            signer.setPrivateKey((PrivateKey) keystore.getKey(alias, null));
+            signer.setAttached(true);
+            signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_1);
+            
+            /* Realiza a assinatura do conteudo */
+            logger.info("Efetuando a  assinatura do conteudo");
+            byte[] signed = signer.doSign(content);
+
+            /* Grava o conteudo assinado no disco */
+            writeContent(signed, documento.concat(".p7s"));
+
+            /* Valida o conteudo */
+            logger.info("Efetuando a validacao da assinatura.");
+            boolean checked = signer.check(content, signed);
+
+            if (checked) {
+                JOptionPane.showMessageDialog(applet, "O arquivo foi assinado e validado com sucesso.", "Mensagem", JOptionPane.INFORMATION_MESSAGE);
+            } else {
+            	JOptionPane.showMessageDialog(applet, "Assinatura inválida.", "Error", JOptionPane.ERROR_MESSAGE);
+            }            
+            
+        } catch (KeyStoreException e) {
+            JOptionPane.showMessageDialog(applet, e.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+        } catch (UnrecoverableKeyException e) {
+        	JOptionPane.showMessageDialog(applet, e.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+		} catch (NoSuchAlgorithmException e) {
+			JOptionPane.showMessageDialog(applet, e.getMessage(), "Error",  JOptionPane.ERROR_MESSAGE);
+		}
+		
+	}
+
+	@Override
+	public void cancel(KeyStore keystore, String alias,	Applet applet) {
+		// TODO Auto-generated method stub
+	}
+	
+    private byte[] readContent(String arquivo) {
+        byte[] result = null;
+        try {
+            File file = new File(arquivo);
+            FileInputStream is = new FileInputStream(file);
+            result = new byte[(int) file.length()];
+            is.read(result);
+            is.close();
+
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+        return result;
+    }
+
+    private void writeContent(byte[] conteudo, String arquivo) {
+        try {
+            File file = new File(arquivo);
+            FileOutputStream os = new FileOutputStream(file);
+            os.write(conteudo);
+            os.flush();
+            os.close();
+        } catch (IOException ex) {
+            logger.info(ex.getMessage());
+        }
+    }	
+}]]></programlisting>
+		
+		<para>
+			O seu projeto ficará com a seguinte estrutura de diretórios: 
+		</para>
+
+      <programlisting role="HTML"><![CDATA[
+AppletCustomizada
+├── pom.xml
+└── src
+    ├── main
+    │   ├── java
+    │   │   └── br
+    │   │       └── gov
+    │   │           └── frameworkdemoiselle
+    │   │               └── certificate
+    │   │                   └── sample
+    │   │                       └── applet
+    │   │                           └── App.java                      
+    │   └── resources
+    └── test
+        ├── java
+        └── resources]]></programlisting>
+	</section>
+
+	<section>
+		
+		<title>Executando o Applet</title>
+ 		
+ 		<para>
+         Agora publique sua aplicação web em um servidor Jboss EAP6, e acesse a url 
+         http://localhost:8080/AppletCustomizadaWeb/applet.html. Se o certificado digital necessitar 
+         do pin para que seja feito o acesso, a aplicação solicitará imediatamente o pin de seu certificado, 
+         conforme a tela abaixo:
+        </para>
+
+        <para>
+            <figure>
+                <title>
+                    Solicitação de Pin do Certificado
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/tela02.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+        
+        <para>
+            O componente exibirá uma tela com os certificados disponíveis, seu número de série, sua data 
+            inicial de validade, sua data final de validade, e o emissor deste certificado, fornecendo ao
+            usuário a possibilidade de escolher qual certificado deseja-se utilizar.
+        </para>
+        
+        <para>
+            <figure>
+                <title>
+                    Lista com certificado de usuário
+                </title>
+                <mediaobject>
+                    <imageobject>
+                        <imagedata fileref="images/tela03.png" format="PNG" align="center" scalefit="1" width="75%"/>
+                    </imageobject>
+                </mediaobject>
+            </figure>
+        </para>
+        
+</section>
+
+</chapter>

@@ -1,0 +1,123 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.demoiselle.signer</groupId>
+	<artifactId>assinadorweb-jnlp</artifactId>
+	<packaging>jar</packaging>
+	<version>2.0.0-BETA1</version>
+
+	<name>Demoiselle Signer Desktop Example</name>
+	<description>Demoiselle Signer Desktop Component</description>
+	<url>http://www.frameworkdemoiselle.gov.br</url>
+
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, Version 3</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>SERPRO - Serviço Federal de Processamento de Dados</name>
+		<url>http://www.serpro.gov.br</url>
+	</organization>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
+						<manifestEntries>
+							<Permissions>all-permissions</Permissions>
+							<Codebase>*</Codebase>
+							<Application-Name>Assinador Web Desktop</Application-Name>
+							<Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
+							<Caller-Allowable-Codebase>*</Caller-Allowable-Codebase>
+							<Trusted-Only>true</Trusted-Only>
+							<Trusted-Library>false</Trusted-Library><!-- True em Producao, dependencias 
+								tambem precisam deste manifesto -->
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>webstart-maven-plugin</artifactId>
+				<version>1.0-beta-6</version>
+
+				<dependencies>
+					<!-- TODO(pw): This dependency is just a workaround for 1.0-beta-6 until 
+						1.0-beta-7 is released. -->
+					<dependency>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>keytool-api-1.7</artifactId>
+						<version>1.5</version>
+					</dependency>
+				</dependencies>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>jnlp</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<codebase>${project.build.directory}/jnlp</codebase>
+					<jnlp>
+						<mainClass>br.gov.frameworkdemoiselle.certificate.ui.view.MainFrame</mainClass>
+					</jnlp>
+
+					<!--<pack200> <enabled>true</enabled> </pack200> -->
+
+					<sign>
+						<keystore>${project.basedir}/src/main/jnlp/newcert.p12</keystore>
+						<keypass>secret</keypass>
+						<storepass>secret</storepass>
+						<alias>Spock</alias>
+						<storetype>pkcs12</storetype>
+						<verify>false</verify> <!-- verifica a assinatura depois de assinado -->
+					</sign>
+					<unsign>true</unsign> <!-- remove a assinatura de pacotes e assinados e reassina com a minha chave -->
+					<verbose>true</verbose>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>jnlp</artifactId>
+			<version>2.0.0-BETA1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signature-signer</artifactId>
+			<version>2.0.0-BETA1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>ca-icpbrasil</artifactId>
+			<version>2.0.0-BETA1</version>
+		</dependency>
+	</dependencies>
+
+    <repositories>
+        <repository>
+            <id>demoiselle</id>
+            <name>Demoiselle Maven Repository</name>
+            <url>http://demoiselle.sourceforge.net/repository/release</url>
+        </repository>
+    </repositories>
+
+</project>

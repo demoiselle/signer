@@ -1,0 +1,159 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="assinatura-jar">
+
+    <title>Assinatura de Jars</title>
+
+    <section>
+        <title>Introdução</title>
+        <para>
+            O modelo de segurança da plataforma Java é centrado sobre o conceito de sandbox (caixa de areia), no qual um código remoto como um applet por padrão não é
+            confiável e, portanto, não pode ter acesso ilimitado ao Sistema Operacional. A sandbox garante que mesmo que um usuário carregue um applet malicioso, este não
+            poderá danificar a máquina local executando, por exemplo, o comando de remoção de um arquivo do seu disco local.
+        </para>
+        <para>
+            Entretanto, existem applets confiáveis que necessitam rodar fora da sandbox, como é o caso do componente Demoiselle Applet, que necessita acessar certificados A3
+            armazenados em dispositivos como tokens usb através de drivers. Nestes casos podemos criar uma permissão para acesso fora da sandbox através da assinatura digital
+            do componente.
+        </para>
+        <para>
+            Neste parte da documentação é apresentada uma forma para assinar componentes utilizando a ferramenta <emphasis>jarsigner</emphasis>, nativa na instalação do JDK.
+        </para>
+    </section>
+
+    <section>
+        <title>Criando o arquivo de configuração para acesso ao certificado digital armazenado em Hardware</title>
+
+        <para>
+            Primeiramente, precisamos criar um arquivo de configuração que determinará a localização do driver do Token ou
+            Smartcard. Crie um arquivo de nome <filename>token.config</filename> na sua pasta de trabalho.
+        </para>
+
+        <para>A seguir temos o conteúdo que deve ser colocado neste arquivo. Os parâmetros <parameter>name</parameter> e <parameter>description</parameter> podem conter um
+            texto de sua escolha, mas o parâmetro <parameter>library</parameter> deve apontar para a localização do driver do dispositivo.</para>
+
+        <programlisting role="XHTML"><![CDATA[name = Provedor
+description = Token Pro Azul
+library = /usr/lib/libeTPkcs11.so]]></programlisting>
+    </section>
+
+    <section>
+        <title>Obtendo o apelido de um certificado digital</title>
+
+        <para>
+            O Token / Smartcard ou arquivo pode conter um ou mais certificados, cada um deles associado a um apelido. Antes de iniciarmos a
+            assinatura, precisamos descobrir qual o apelido do certificado que será utilizado para a assinatura. Para isso, vamos
+            executar a linha de comando a seguir. O campo <parameter>PASSWORD</parameter> deve ser substituído pelo seu Pin.
+        </para>
+
+        <para>O comando abaixo é utilizado para certificados digitais armazenados em dispositivos com Tokens ou SmartCards.</para>
+
+        <programlisting role="XHTML"><![CDATA[JAVAHOME/bin/keytool -keystore NONE -storetype PKCS11 -providerClass sun.security.pkcs11.SunPKCS11 -providerArg token.config -storepass PASSWORD -list]]></programlisting>
+
+        <para>O comando abaixo é utilizado para certificados digitais armazenados em arquivos.</para>
+
+        <programlisting role="XHTML"><![CDATA[JAVAHOME/bin/keytool -storetype PKCS12 -certificado.pfx -storepass PASSWORD -list]]></programlisting>
+
+
+        <para>
+            Após a execução deste comando, será exibido a lista de apelidos. abaixo temos um exemplo do resultado esperado.
+        </para>
+
+        <para>
+            Para o certificado armazenado em arquivo.
+        </para>
+
+        <programlisting role="XHTML"><![CDATA[Sua area de armazenamento de chaves contem 1 entrada
+
+{13c3a71b-ec23-47ae-b44b-eaf903390c30}, 26/08/2014, PrivateKeyEntry,
+Fingerprint (SHA1) do certificado: E0:8B:A2:54:7A:91:78:8F:AD:0A:D0:FC:33:37:8D:58:02:D6:87:09]]></programlisting>
+
+        <para>
+            Neste caso o só existe um certificado com o apelido <computeroutput>{13c3a71b-ec23-47ae-b44b-eaf903390c30}</computeroutput>.
+        </para>
+
+        <para>
+            Para o certificado armazenado em Token ou SmartCard.
+        </para>
+
+        <programlisting language="XML" role="XML"><![CDATA[Sua area de armazenamento de chaves contem 1 entrada
+
+(eTCAPI) HUMBERTO DE MELO PACHECO's ICP-Brasil ID, PrivateKeyEntry,
+Fingerprint (SHA1) do certificado: 1B:EA:F7:7C:87:33:B7:7F:6B:35:6E:E0:6C:2F:9F:BD:22:A6:6E:85]]></programlisting>
+    </section>
+
+    <para>
+        Neste caso o só existe um certificado com o apelido <computeroutput>(eTCAPI) HUMBERTO DE MELO PACHECO's ICP-Brasil ID</computeroutput>.
+    </para>
+
+    <section>
+        <title>Assinando um artefato com um certificado digital .pfx ou .p12</title>
+
+        <para>
+            A ferramenta <emphasis>jarsigner</emphasis> será utilizada para assinar todos os jars da aplicação. Para isto será necessário informar a localização do
+            certificado digital, seu alias, o nome do jar assinado e o nome do jar original:
+        </para>
+
+        <programlisting role="XML"><![CDATA[#Inclui os dados adicionais de seguranca do jar
+JAVAHOME/bin/jar uvfm meujar.jar manifest-addition.txt
+
+#Assina o jar com um certificado armazenado em disco
+JAVAHOME/bin/jarsigner -keystore certificado.pfx -storetype PKCS12 -storepass secret -sigfile SERPRO -signedjar meujar-assinado.jar meujar.jar aliasDoCertificado]]>
+        </programlisting>
+
+        <important>
+            <para>Note que o jar assinado (meujar-assinado.jar) define o nome do arquivo jar que será criado, diferente do nome original do jar (meujar.jar).</para>
+        </important>
+
+        <para>
+            Dentro do jar, na pasta <filename>META-INF</filename>, foram inseridos os aquivos <filename>SERPRO.RSA</filename>, <filename>SERPRO.SF</filename> e
+            <filename>MANIFEST.MF</filename>, que possuem informações como o algoritmo de criptografia utilizado e a chave pública do certificado.
+        </para>
+
+        <para>
+            Para verificar a assinatura do jar utilize o comando <emphasis>jarsigner</emphasis> conforme abaixo:
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[jarsigner -verify -keystore certificado.pfx meujar-assinado.jar]]></programlisting>
+
+    </section>
+
+    <section>
+        <title>Assinando um artefato com Token ou SmartCard</title>
+
+        <para>
+            Podemos proceder com a assinatura do artefato utilizando um certificado armazenado em hardware utilizando a linha de comando abaixo. Os parâmetros a serem
+            alterados são os seguintes.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <parameter>PASSWORD</parameter>, o Pin do Token ou SmartCard.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <parameter>DSANAME</parameter>, o nome do arquivo que contém as assinaturas das classes. Este atributo é opcional.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <parameter>JARFILESIGNED</parameter>, o nome do arquivo gerado após a assinatura.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <parameter>JARFILE</parameter>, o nome do arquivo a ser assinado.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <parameter>ALIAS</parameter>, o apelido do certificado a ser utilizado, obtido no passo anterior.
+                </para>
+            </listitem>
+        </itemizedlist>
+
+        <programlisting role="XHTML"><![CDATA[JAVAHOME/bin/jarsigner -keystore NONE -storetype PKCS11 -providerClass sun.security.pkcs11.SunPKCS11 -providerArg token.config -storepass PASSWORD -sigfile DSANAME -signedjar JARFILESIGNED -verbose JARFILE "ALIAS"]]></programlisting>
+    </section>
+</chapter>

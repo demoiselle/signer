@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.demoiselle.signer</groupId>
-    <artifactId>signer-build</artifactId>
+    <artifactId>ca-icp-brasil-build</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.0-BETA1-SNAPSHOT</version>
+    <version>2.0.0-BETA1-SNAPSHOT</version>
 
-    <name>Demoiselle Signer Build</name>
-    <description>Assinador Digital</description>
+    <name>CA-ICP-BRASIL Build</name>
+    <description>ICP-Brasil's Certificates</description>
     <url>http://demoiselle.io</url>
 
     <licenses>
@@ -18,12 +18,46 @@
         </license>
     </licenses>
 
+    <modules>
+        <module>impl</module>
+    </modules>
     <organization>
         <name>SERPRO - Serviço Federal de Processamento de Dados</name>
         <url>http://www.serpro.gov.br</url>
     </organization>
 
     <developers>
+	<developer>
+            <name>Ednara Oliveira Santos</name>
+            <email>ednaraoliveira@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+        </developer>
+
+	<developer>
+            <name>Emerson Sachio Saito</name>
+            <email>emerson.saito@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+        </developer>
+	<developer>
+            <name>Fabiano Sardenberg Kuss</name>
+            <email>fabiano.kuss@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+        </developer>
+	<developer>
+            <name>Humberto de Melo Pacheco</name>
+            <email>humberto.pacheco@serpro.gov.br</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+        </developer>
+	<developer>
+            <name>Jose Rene Nery Cailleret Campanario</name>
+            <email>jose.campanario@serpro.gov.br</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+        </developer>
         <developer>
             <name>Vanderson Botelho da Silva</name>
             <email>botelhojp@gmail.com</email>

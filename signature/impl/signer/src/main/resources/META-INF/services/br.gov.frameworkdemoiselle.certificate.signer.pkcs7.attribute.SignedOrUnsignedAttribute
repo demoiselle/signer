@@ -1,0 +1,12 @@
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.ContentType
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.MessageDigest
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.IdSigningPolicy
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.SigningCertificate
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.SigningCertificateV2
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.TimeStampToken
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.CertificateRefs
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.RevocationRefs
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.CertValues
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.RevocationValues
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.ArchiveTimestampV2
+br.gov.frameworkdemoiselle.certificate.signer.pkcs7.attribute.impl.EscTimeStamp

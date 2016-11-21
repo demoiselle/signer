@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="signer-master">
+
+	<title>Demoiselle Signer</title>
+
+	<partintro>
+		<para>
+			O componente
+			<emphasis>Demoiselle Signer</emphasis>
+			foi desenvolvido para atender às necessidades de assinatura digital no âmbito da ICP-Brasil.
+		</para>
+	</partintro>
+
+	<!-- capítulos -->
+	<xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="funcionalidades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="exemplos.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+</part>

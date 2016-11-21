@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Assinador Web</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" 	href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script	src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+<script	src="http://malsup.github.io/jquery.blockUI.js"></script>
+
+
+</head>
+<body>
+
+	<div class="container">
+		<h2>Exemplo de Assinatura Digital usando demoiselle certificate</h2>
+		<form role="form" action="api/jnlp/generate" method="post" id="jnlpForm">
+			<!-- 
+			<div class="form-group ">
+				<span class="help-block">Escolha abaixo o arquivo que será
+					assinado. O hash gerado é um exemplo de chave que pode ser usado
+					para se criar um identificador único.</span> <input type="radio"
+					name="arquivo" value="livro.pdf" checked>livro.pdf<br>
+				<input type="radio" name="arquivo" value="minecraft.jpg">minecraft.jpg<br>
+				<input type="radio" name="arquivo" value="supermario.gif">supermario.gif<br>
+			</div>
+			 -->
+			<div class="form-group ">
+				<span class="help-block">Escolha abaixo o arquivo que será assinado. O hash gerado é um exemplo de chave que pode ser usado para se criar um identificador único.</span> 
+				<input type="checkbox" name="arquivo" value="livro.pdf" checked>livro.pdf<br>
+				<input type="checkbox" name="arquivo" value="minecraft.jpg">minecraft.jpg<br>
+				<input type="checkbox" name="arquivo" value="supermario.gif">supermario.gif<br>
+			</div>
+			<div class="form-group">
+				<label for="digest">Identificador</label> <input type="text"
+					class="form-control input-sm" id="hash" name="hash" readonly
+					placeholder="Hash">
+			</div>
+			<div class="form-group">
+				<label for="service">Serviço:</label> <input type="text"
+					class="form-control input-sm" id="service" name="service"
+					value="http://localhost:8080/assinadorweb-example/api/filemanager">
+			</div>
+
+			<button type="button" class="btn btn-default btn-sm btn-success"
+				id="enviar">Gerar identificador e enviar</button>
+		</form>
+	</div>
+
+	<div id="content"></div>
+
+	<script src="js/newjavascript.js" type="text/javascript"></script>
+</body>
+</html>

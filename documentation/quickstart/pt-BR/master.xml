@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<book lang="pt">
+    <xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<preface>
+		<title>Sobre o QuickStart - versão &version;</title>
+		<para>
+			Este documento é um tutorial do tipo "passo-a-passo" que visa ilustrar de forma rápida e prática a criação 
+			de uma aplicação para assinatura digital utilizando o <emphasis>Demoiselle Certificate &version;</emphasis>.
+		</para>
+		<note>
+			<para>
+				É desejável o conhecimento de algumas tecnologias envolvidas no desenvolvimento de aplicações Java Web, incluindo:
+				<itemizedlist>
+					<listitem>Linguagem Java</listitem>
+					<listitem>Java Applet</listitem>
+					<listitem>Servlets, JSP e Tag Libraries</listitem>
+					<listitem>HTML e XML</listitem>
+					<listitem>Contêineres e Servidores Web</listitem>
+				</itemizedlist>
+			</para>
+		</note>
+		<note>
+  		<para>
+			Esta documentação refere-se à versão &version; do <emphasis>Demoiselle Certificate</emphasis> e pode diferir 
+			significativamente de outras versões.
+		</para>
+		</note>
+	</preface>
+	
+	<xi:include href="ambiente.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="basico.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="avancado.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- Anexos -->
+	<xi:include href="repositorios.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="certificado.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+ </book>

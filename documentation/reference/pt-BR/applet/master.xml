@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="applet-master">
+
+    <title>Demoiselle Applet</title>
+
+    <partintro>
+        <para>
+            O Security Applet simplifica a construção de Applets para manipulação de certificados digitais. Seu objetivo é o carregamento do Repositório de Chaves e Certificados
+            (Keystore) de Certificados A3, cujo armazenamento é realizado por dispositivos seguros como Tokens USB ou Smart Cards, ou de Certificados A1, cujo armazenamento é
+            feito em arquivos.
+        </para>
+    </partintro>
+
+    <!-- capítulos -->
+    <xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include href="funcionalidades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include href="projeto-exemplo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include href="regras-seguranca-jdk.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include href="assinatura-jar.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+</part>

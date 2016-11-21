@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE revhistory PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<revhistory>
+    <revision>
+        <revnumber>2.0.0</revnumber>
+        <date>15/08/2014</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Criação do componente de motor de politicas</para>
+                </listitem>
+                <listitem>
+                    <para>Criação do componente de carimbo de tempo</para>
+                </listitem>
+                <listitem>
+                    <para>Implementação da política de carimbo de tempo</para>
+                </listitem>
+                <listitem>
+                    <para>Atualização das cadeias de certificados</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.9</revnumber>
+        <date>22/10/2014</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Conformidade com a <ulink url="http://www.iti.gov.br/images/legislacao/resolucoes/RESOLU%C3%87%C3%83O_N_103-_DOC-ICP-04_-_29.04.2014.pdf">Resolução 103 do ITI</ulink></para>
+                </listitem>
+                <listitem>
+                    <para>Inclusão do tratamento do campo RIC (Registro de Identidade Civil)</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.8</revnumber>
+        <date>01/10/2014</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Conformidade com o <ulink url="http://verificador.iti.gov.br/">Verificador de referência do ITI</ulink></para>
+                </listitem>
+                <listitem>
+                    <para>Atualização das cadeias de certificados</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.7</revnumber>
+        <date>15/04/2014</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Atualização das cadeias de certificados</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.6</revnumber>
+        <date>20/02/2014</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Revisão e acréscimos de documentação</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.5</revnumber>
+        <date>14/02/2014</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Correção da validação de chave pública nas políticas</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.4</revnumber>
+        <date>23/01/2014</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Atualização das cadeias de certificados</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.3</revnumber>
+        <date>06/11/2013</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Atualização das cadeias de certificados e correcao das datas das politicas de assinatura</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.2</revnumber>
+        <date>04/11/2013</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Correção no serviço do componente CA ICP-Brasil Homlogação</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.1</revnumber>
+        <date>31/05/2013</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Revisão e acréscimos de documentação</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
+        <revnumber>1.0.0</revnumber>
+        <date>24/01/2013</date>
+        <authorinitials>hmp</authorinitials>
+        <revremark>
+            <itemizedlist>
+                <listitem>
+                    <para>Primeiro release da documentação.</para>
+                </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+</revhistory>

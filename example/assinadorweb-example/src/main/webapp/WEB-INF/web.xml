@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+    <welcome-file-list>
+        <welcome-file>home.html</welcome-file>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+
+    <mime-mapping>
+        <extension>jnlp</extension>
+        <mime-type>application/x-java-jnlp-file</mime-type>
+    </mime-mapping>
+
+    <!-- Auto scan REST service -->
+    <context-param>
+        <param-name>resteasy.scan</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <!-- this need same with resteasy servlet url-pattern -->
+    <context-param>
+        <param-name>resteasy.servlet.mapping.prefix</param-name>
+        <param-value>/api</param-value>
+    </context-param>
+
+    <listener>
+        <listener-class>
+            org.jboss.resteasy.plugins.server.servlet.ResteasyBootstrap
+        </listener-class>
+    </listener>
+
+    <servlet>
+        <servlet-name>resteasy-servlet</servlet-name>
+        <servlet-class>
+            org.jboss.resteasy.plugins.server.servlet.HttpServletDispatcher
+        </servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>resteasy-servlet</servlet-name>
+        <url-pattern>/api/*</url-pattern>
+    </servlet-mapping>
+    
+<!--  	<security-constraint> -->
+<!--       <web-resource-collection> -->
+<!--         <web-resource-name>Viewpoint Secure URLs</web-resource-name> -->
+<!--         <url-pattern>/api/filemanager/*</url-pattern> -->
+<!--       </web-resource-collection> -->
+<!--       <user-data-constraint> -->
+<!--         <transport-guarantee>CONFIDENTIAL</transport-guarantee> -->
+<!--       </user-data-constraint> -->
+<!--     </security-constraint> -->
+
+</web-app>

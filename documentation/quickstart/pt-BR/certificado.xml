@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE appendix PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<appendix id="certificado">
+	
+	<title>Assinando JARs com certificado auto-assinado</title>
+	
+	<para>
+	No <link linkend="basico"> capítulo 2</link> comentamos que, por motivos de segurança, é preciso assinar todos
+	os arquivos .jar necessários para a execução da applet. Para assinar esse tipo de arquivo é necessário um 
+	certificado para assinatura de código. Porém, é provável que os desenvolvedores não tenham esse tipo de 
+	certificado disponível para fazer testes locais antes de implementar determinado recurso em uma aplicação em 
+	produção, o que é uma prática comum. 
+	</para>
+	
+	<para>
+	Por isso, nesse apêndice mostraremos como gerar um certificado que pode assinar arquivos .jar, e também como 
+	assiná-los. Enfatizamos que esse certificado só deve ser utilizado no ambiente de desenvolvimento, para testes
+	e afins, e nunca em ambientes de produção.
+	</para>
+	
+	<section>
+		<title>Criando um certificado</title>
+		<para>
+			Primeiramente criaremos o keystore que armazenará o certificado digital. A ferramenta keytool 
+			será utilizada para criação simultãnea do keystore e do certificado digital que identificaremos 
+			pelo alias <literal>applet_alias</literal>.
+		</para>
+		<programlisting role="XHTML"><![CDATA[keytool -genkey -alias applet_alias -keyalg RSA -keypass changeit -storepass changeit -keystore applet_keystore.jks]]></programlisting>
+	
+		<para>Na sequência serão solicitadas algumas informações do certificado:</para>
+		
+		<programlisting role="XHTML"><![CDATA[What is your first and last name?
+  [Unknown]:  Framework Demoiselle
+What is the name of your organizational unit?
+  [Unknown]:  Demoiselle
+What is the name of your organization?
+  [Unknown]:  Demoiselle
+What is the name of your City or Locality?
+  [Unknown]:  Salvador
+What is the name of your State or Province?
+  [Unknown]:  BA
+What is the two-letter country code for this unit?
+  [Unknown]:  BR
+Is CN=Framework Demoiselle, OU=Demoiselle, O=Demoiselle, L=Salvador, ST=BA, C=BR correct?
+  [no]:  yes
+]]></programlisting>
+		
+		<para>
+		Será criado o keystore JKS de nome <literal>applet_keystore.jks</literal> que contém um certificado
+		auto assinado. Seu par de chaves será identificado pelo alias <literal>applet_alias</literal>.
+		</para>
+	</section>
+	
+	<section>
+		<title>Assinando um jar com certificado auto-assinado</title>
+		
+		<para>
+			Neste momento a ferramenta <literal>jarsigner</literal> será utilizada para assinar todos os jars da aplicação.
+			Portanto será necessário informar a localização do keystore, o nome do jar assinado, o nome do jar 
+			original e o alias do certificado:
+		</para>
+		
+		<programlisting role="XHTML"><![CDATA[jarsigner -keystore applet_keystore.jks -signedjar meujar-assinado.jar meujar.jar applet_alias]]></programlisting>
+		
+		<important>
+			Note que o jar assinado (meujar-assinado.jar) define o nome do arquivo jar que será criado, diferente 
+			do nome original do jar (meujar.jar).
+		</important>
+		
+		<para>
+			Dentro do jar, na pasta <emphasis>META-INF</emphasis>, foram inseridos os aquivos 
+			<emphasis>APPLET_A.RSA</emphasis>, <emphasis>APPLET_A.SF</emphasis> e <emphasis>MANIFEST.MF</emphasis>, 
+			que possuem informações como o algoritmo de criptografia utilizado e a chave pública do certificado.
+		</para>
+		
+		<para>
+			Para verificar a assinatura do jar utilize o comando jarsigner conforme abaixo:
+		</para>
+		
+		<programlisting role="XHTML"><![CDATA[jarsigner -verify -keystore applet_keystore.jks meujar-assinado.jar]]></programlisting>
+		
+	</section>
+
+</appendix>

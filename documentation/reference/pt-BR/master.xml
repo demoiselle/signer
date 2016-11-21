@@ -1,0 +1,47 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<book lang="pt">
+
+    <xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- prefácio -->
+    <preface>
+        <title>Sobre o Demoiselle Components</title>
+        <para>
+            O <emphasis>Demoiselle Components Guide</emphasis> agrega em um único lugar toda a
+            documentação referente a todos os componentes disponibilizados e que são
+            compatíveis com a versão mais recente do <emphasis>Demoiselle Framework</emphasis>.
+        </para>
+    </preface>
+
+    <!-- índice -->
+    <toc />
+
+    <!-- partes -->
+
+    <!-- Demoiselle Applet -->
+    <xi:include href="applet/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Demoiselle Core -->
+    <xi:include href="core/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Demoiselle Policy -->
+    <xi:include href="policy/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Demoiselle Timestamp -->
+    <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Demoiselle Signer -->
+    <xi:include href="signer/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Demoiselle Criptography -->
+    <xi:include href="criptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Demoiselle CA ICP-Brasil -->
+    <xi:include href="ca-icp-brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Demoiselle CA ICP-Brasil Homologacao-->
+    <xi:include href="ca-icp-brasil-homologacao/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</book>

@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+  <chapter id="ambiente">
+  
+    <title>Ambiente</title>
+    
+    <section>
+      <title>Ambiente recomendado</title>
+      <para>
+      Para desenvolver e executar as aplicações deste guia, utilizamos e recomendamos o seguinte ambiente:
+      </para>
+      <informaltable>
+        <tgroup cols="3">
+          <colspec colwidth="50*" />
+          <colspec colwidth="10*" />
+          <colspec colwidth="40*" />
+          <tbody>
+            <row>
+              <entry>
+                <emphasis role="bold">Software</emphasis>
+              </entry>
+              <entry>
+                <emphasis role="bold">Versão</emphasis>
+              </entry>
+              <entry>
+                <emphasis role="bold">Site (Download)</emphasis>
+              </entry>
+            </row>
+            <row>
+              <entry>Java Development Kit (JDK)</entry>
+              <entry>7.0</entry>
+              <entry>
+                <ulink url="http://www.oracle.com/technetwork/java/javase/downloads/index.html">
+                  <citetitle>www.oracle.com</citetitle>
+                </ulink>
+              </entry>
+            </row>
+            <row>
+              <entry>Apache Maven</entry>
+              <entry>2.2</entry>
+              <entry>
+                <ulink url="http://maven.apache.org/docs/2.2.1/release-notes.html">
+                  <citetitle>maven.apache.org</citetitle>
+                </ulink>
+              </entry>
+            </row>
+            <row>
+              <entry>Eclipse IDE</entry>
+              <entry>4.3</entry>
+              <entry>
+                <ulink url="https://www.eclipse.org/kepler/">
+                  <citetitle>www.eclipse.org</citetitle>
+                </ulink>
+              </entry>
+            </row>
+            <row>
+              <entry>m2eclipse plugin</entry>
+              <entry>1.4</entry>
+              <entry>
+                <ulink url="http://m2eclipse.sonatype.org/installing-m2eclipse.html">
+                  <citetitle>m2eclipse.sonatype.org</citetitle>
+                </ulink>
+              </entry>
+            </row>
+            <row>
+              <entry>JBoss Application Server</entry>
+              <entry>7.1.1</entry>
+              <entry>
+                <ulink url="http://download.jboss.org/jbossas/7.1/jboss-as-7.1.1.Final/jboss-as-7.1.1.Final.zip">
+                  <citetitle>www.jboss.org</citetitle>
+                </ulink>
+              </entry>
+            </row>
+          </tbody>
+        </tgroup>
+      </informaltable>
+    </section>
+  </chapter>
