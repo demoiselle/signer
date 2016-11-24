@@ -26,7 +26,7 @@
  */
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPRO
+ * Copyright (C) 2016 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  * 

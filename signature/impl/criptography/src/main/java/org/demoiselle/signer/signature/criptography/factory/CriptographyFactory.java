@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPRO
+ * Copyright (C) 2016 SERPRO
  * --import br.gov.frameworkdemoiselle.criptography.Criptography;
 import br.gov.frameworkdemoiselle.criptography.implementation.CriptographyImpl;
 selle Framework is free software; you can redistribute it and/or

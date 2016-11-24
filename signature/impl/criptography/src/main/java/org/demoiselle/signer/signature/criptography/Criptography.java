@@ -1,16 +1,11 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERimport java.security.Key;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.PublicKey;
-
-import javax.crypto.SecretKey;
-
-import br.gov.frameworkdemoiselle.criptography.implementation.CriptographyImpl;
-
-import com.sun.crypto.provider.SunJCE;
-cense version 3
+ * Copyright (C) 2016 SERPRO
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
+ * 
+ * Demoiselle Framework is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License version 3
  * as published by the Free Software Foundation.
  * 
  * This program is distributed in the hope that it will be useful,

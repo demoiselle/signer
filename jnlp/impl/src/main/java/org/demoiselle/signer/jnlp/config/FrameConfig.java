@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPRO
+ * Copyright (C) 2016 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  * 
@@ -103,10 +103,10 @@ public enum FrameConfig {
 			return rb;
 		}
 		try {
-			rb = getBundle("desktop-config");
+			rb = getBundle("jnpl-config");
 		} catch (MissingResourceException mre) {
 			try {
-				rb = getBundle("desktop-config-default");
+				rb = getBundle("jnlp-config-default");
 			} catch (MissingResourceException e) {
 				throw new RuntimeException("key '" + key
 						+ "' not found for resource ''");

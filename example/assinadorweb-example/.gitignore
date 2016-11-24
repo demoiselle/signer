@@ -6,9 +6,7 @@
 /.settings
 /.externalToolBuilders
 /.DS_Store
-/target
 glassfish-web.xml
 nb-configuration.xml
 .tern-project
-/target/
-/target/
+

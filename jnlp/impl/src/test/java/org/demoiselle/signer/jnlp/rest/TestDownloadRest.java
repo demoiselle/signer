@@ -6,7 +6,7 @@ package org.demoiselle.signer.jnlp.rest;
 // */
 //package org.demoiselle.signer.jnlp.rest;
 //
-//import br.gov.frameworkdemoiselle.certificate.ui.util.Utils;
+//import org.demoiselle.signer.signature.ui.util.Utils;
 //
 //import java.io.FileNotFoundException;
 //import java.io.IOException;

@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPRO
+ * Copyright (C) 2016 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -34,7 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.signer.pkcs7.impl;
+package org.demoiselle.signer.signature.signer.pkcs7.impl;
 
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.signature.signer.factory.PKCS7Factory;

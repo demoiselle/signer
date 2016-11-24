@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPRO
+ * Copyright (C) 2016 SERPRO
  * ----------import java.security.cert.X509Certificate;
 import java.util.Collection;
 

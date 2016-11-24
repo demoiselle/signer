@@ -1,9 +1,8 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPimport java.io.File;
-
-import br.gov.frameworkdemoiselle.criptography.implementation.DigestImpl;
-ile is part of Demoiselle Framework.
+ * Copyright (C) 2016 SERPRO
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
  * 
  * Demoiselle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3

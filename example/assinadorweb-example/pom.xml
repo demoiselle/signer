@@ -68,6 +68,11 @@
 			<artifactId>signature-signer</artifactId>
 			<version>2.0.0-BETA1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signature-policy-engine</artifactId>
+			<version>2.0.0-BETA1</version>
+		</dependency>		
 	</dependencies>
 
 	<build>

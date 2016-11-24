@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPRO
+ * Copyright (C) 2016 SERPRO
  *import java.io.InputStream;
  import java.security.cert.CertificateException;
  import java.security.cert.CertificateFactory;
