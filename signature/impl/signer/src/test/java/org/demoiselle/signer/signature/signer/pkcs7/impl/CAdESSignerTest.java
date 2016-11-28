@@ -69,7 +69,9 @@ public class CAdESSignerTest {
 
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CAdESSignerTest.class);
 
-    @Test
+    // @Test
+    
+    // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa
     public void testSignAndVerifySignature() {
         try {
             String configName = "/home/01748913506/drivers.config";

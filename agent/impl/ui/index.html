@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Desktop Agent UI</title>
+</head>
+<style>
+	table,
+	th,
+	td {
+		border: 1px solid grey;
+		border-collapse: collapse;
+		padding: 5px;
+	}
+	
+	table tr:nth-child(odd) {
+		background-color: #f1f1f1;
+	}
+	
+	table tr:nth-child(even) {
+		background-color: #ffffff;
+	}
+</style>
+<html>
+<script src="angular.min.js"></script>
+<script src="app.js"></script>
+<script src="desktop-agent.js"></script>
+
+<body>
+	<div ng-app="desktop-agent" ng-controller="controller">
+		<h2>Interface do Aplicativo Desktop Agent</h2>
+		<input type="button" value="Listar Certificados instalados" ng-click="listarCertificados()">&nbsp;
+		<input type="button" value="Verificar status" ng-click="status()">&nbsp;
+		<input type="button" value="Assinar" ng-click="assinar()">&nbsp;
+		<input type="button" value="Desligar Desktop Agent" ng-click="shutdown()"><br><br>
+		PIN <input type="password" ng-model="password">
+		<input type="button" value="Deslogar o PIN" ng-click="logout()"><br><br>
+		<table>
+			<tr>
+				<th>Alias</th>
+				<th>Emitido para</th>
+				<th>não antes</th>
+				<th>não depois</th>
+				<th>Provedor</th>
+				<th>Acao</th>
+			</tr>
+			<tr ng-repeat="cert in listaCertificados.certificates">
+				<td>{{ cert.alias }}</td>
+				<td>{{ cert.subject }}</td>
+				<td>{{ cert.notBefore }}</td>
+				<td>{{ cert.notAfter }}</td>
+				<td>{{ cert.provider }}</td>
+				<td><button ng-click="assinar(cert.alias, cert.provider, content)">Assinar o texto abaixo</button></td>
+			</tr>
+		</table>
+		<br><br>
+		Texto a ser assinado: <input type="text" ng-model="content">
+		<select ng-model="politica">
+			<option ng-repeat="p in listaPoliticas" value="{{p}}">{{p}}
+		</select><input type="button" value="Carregar lista de politicas" ng-click="listarPoliticas()"><br>
+		Resultado da Assinatura: <textarea name="signed">{{signed}}</textarea>
+		<br>
+		Erros: <input type="text" ng-model="erros">
+	</div>
+</body>
+
+</html>

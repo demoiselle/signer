@@ -50,6 +50,13 @@
 			<artifactId>gson</artifactId>
 			<version>2.7</version>
 		</dependency>
+		<dependency>
+			<groupId>javafx</groupId>
+			<artifactId>javafx</artifactId>
+			<version>2.1</version>
+			<scope>system</scope>
+			<systemPath>${project.basedir}/lib/jfxrt.jar</systemPath>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>
@@ -69,7 +76,7 @@
 					<transformers>
 						<transformer
 							implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-							<mainClass>gov.demoiselle.desktop.Main</mainClass>
+							<mainClass>org.demoiselle.signer.agent.desktop.Main</mainClass>
 						</transformer>
 					</transformers>
 					<filters>

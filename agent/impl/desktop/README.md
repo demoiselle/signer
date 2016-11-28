@@ -1,2 +1,2 @@
-Desktop Agent
+Demoiselle Signer - Agent Desktop
  - TODO

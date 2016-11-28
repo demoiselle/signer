@@ -58,4 +58,5 @@
     <properties>
     	<java.version>1.7</java.version>
     </properties>
+    <description>Artefato parent para Demoiselle Signer</description>
 </project>
