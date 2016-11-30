@@ -1,0 +1,3 @@
+name = Provedor
+description = Azul
+library = /usr/lib/libeToken.so

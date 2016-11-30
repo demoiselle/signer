@@ -2,7 +2,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<title>Desktop Agent UI</title>
+	<title>Demoiselle Signer - Agent UI</title>
 </head>
 <style>
 	table,
@@ -24,15 +24,15 @@
 <html>
 <script src="angular.min.js"></script>
 <script src="app.js"></script>
-<script src="desktop-agent.js"></script>
+<script src="agent-desktop.js"></script>
 
 <body>
-	<div ng-app="desktop-agent" ng-controller="controller">
+	<div ng-app="agent-desktop" ng-controller="controller">
 		<h2>Interface do Aplicativo Desktop Agent</h2>
 		<input type="button" value="Listar Certificados instalados" ng-click="listarCertificados()">&nbsp;
 		<input type="button" value="Verificar status" ng-click="status()">&nbsp;
 		<input type="button" value="Assinar" ng-click="assinar()">&nbsp;
-		<input type="button" value="Desligar Desktop Agent" ng-click="shutdown()"><br><br>
+		<input type="button" value="Desligar Agent Desktop" ng-click="shutdown()"><br><br>
 		PIN <input type="password" ng-model="password">
 		<input type="button" value="Deslogar o PIN" ng-click="logout()"><br><br>
 		<table>

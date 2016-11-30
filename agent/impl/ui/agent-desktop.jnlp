@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- JNLP File for Desktop Agent Application -->
+<!-- JNLP File for Demoiselle Signer - Agent Desktop Application -->
 <jnlp
   spec="6.0+"
-  codebase="http://stdcs.supst.serpro/desktop-agent/"
+  codebase="http://stdcs.supst.serpro/agent-desktop/"
   href="agent-desktop.jnlp">
   <information>
-    <title>Demoiselle Signer Desktop</title>
+    <title>Demoiselle Signer - Agent Desktop</title>
     <vendor>SERPRO</vendor>
     <homepage href="index.html"/>
     <description>Demoiselle Signer Desktop Example Application</description>
     <offline-allowed/> 
-    <association mime-type="application-x/da-file"  extensions="da"/> 
     <shortcut online="false" install="false">
       <desktop/>
       <menu submenu="Demoiselle Signer"/>
@@ -21,7 +20,7 @@
   </security>
   <resources>
     <j2se version="1.6+" />
-    <jar href="das.jar"/>
+    <jar href="sad.jar"/>
   </resources>
   <application-desc main-class="org.demoiselle.signer.agent.desktop.Main"/>
 </jnlp>
