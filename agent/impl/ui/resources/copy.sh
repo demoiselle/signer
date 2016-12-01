@@ -1,1 +1,0 @@
-cp ~/git/signer/agent/impl/desktop/target/agent-desktop-*.jar sad.jar

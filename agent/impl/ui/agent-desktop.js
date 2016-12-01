@@ -1,4 +1,4 @@
-angular.module('agent-desktop').factory('daService', ['$q', '$rootScope', function ($q, $rootScope) {
+angular.module('agent-desktop').factory('sadService', ['$q', '$rootScope', function ($q, $rootScope) {
     var service = {};
     var defer = null;
     var ws = new WebSocket("ws://localhost:9091/");

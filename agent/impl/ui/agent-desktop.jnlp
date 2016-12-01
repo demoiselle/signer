@@ -10,7 +10,7 @@
     <homepage href="index.html"/>
     <description>Demoiselle Signer Desktop Example Application</description>
     <offline-allowed/> 
-    <shortcut online="false" install="false">
+    <shortcut online="false" install="true">
       <desktop/>
       <menu submenu="Demoiselle Signer"/>
     </shortcut>
