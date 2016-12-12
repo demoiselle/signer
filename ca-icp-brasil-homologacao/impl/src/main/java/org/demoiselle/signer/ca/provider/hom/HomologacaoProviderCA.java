@@ -43,11 +43,18 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 
 public class HomologacaoProviderCA implements ProviderCA {
+	
+	private final static Logger LOGGER = Logger.getLogger(HomologacaoProviderCA.class.getName());
+	
+	
 
-    public Collection<X509Certificate> getCAs() {
+    public Collection<X509Certificate> getCAs() {    	
+    	
         List<X509Certificate> result = new ArrayList<X509Certificate>();
         try {
             InputStream raizDeHomologacaoSERPRO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/RaizdeHomologacaoSERPRO.cer");
@@ -57,7 +64,9 @@ public class HomologacaoProviderCA implements ProviderCA {
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPROACFv3Homologacao));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(intermediariaHOMv2));
         } catch (Throwable error) {
-            error.printStackTrace();
+        	LOGGER.setLevel(Level.INFO);
+        	LOGGER.info("----------- HomologacaoProviderCA -----------");
+        	LOGGER.info(error.getMessage());
             return null;
         } finally {
             return result;
