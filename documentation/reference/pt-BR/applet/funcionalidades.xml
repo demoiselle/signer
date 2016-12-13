@@ -3,37 +3,48 @@
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="applet-funcionalidades">
 
-    <title id="funcionalidades">Funcionalidades</title>
-    <para>
-        O princípio do componente é prover ao desenvolvedor o Keystore de um dispositivo. A partir do keystore a aplicação pode construir outras funcionalidades como autenticação e
-        assinatura de documentos. Existem duas formas de se obter o Keystore do certificado, descritas a seguir.
-    </para>
+	<title id="funcionalidades">Funcionalidades</title>
+	<para>
+		O princípio do componente é prover ao desenvolvedor o Keystore de um dispositivo. A partir do keystore a aplicação pode construir outras funcionalidades como autenticação e
+		assinatura de documentos. Existem duas formas de se obter o Keystore do certificado, descritas a seguir.
+	</para>
 
-    <section>
-        <title>O JKeyStoreDialog</title>
-        <para>
-            O <literal>JKeyStoreDialog</literal> é um JDialog que solicita o PIN ao usuário retornando o KeyStore através do método <literal>getKeyStore</literal>.
-        </para>
-        <programlisting role="JAVA"><![CDATA[
+	<section>
+		<title>O JKeyStoreDialog</title>
+		<para>
+			O
+			<literal>JKeyStoreDialog</literal>
+			é um JDialog que solicita o PIN ao usuário retornando o KeyStore através do método
+			<literal>getKeyStore</literal>
+			.
+		</para>
+		<programlisting role="JAVA"><![CDATA[
 JKeyStoreDialog dialog = new JKeyStoreDialog();
-KeyStore keystoreDialog = dialog.getKeyStore();
-]]></programlisting>
-    </section>
+KeyStore keystoreDialog = dialog.getKeyStore();]]></programlisting>
 
-    <section>
-        <title>O JKeyStorePanel</title>
+	</section>
 
-        <para>O <literal>JKeyStorePanel</literal> é um JPanel que pode ser renderizado junto a qualquer applet e possui o mesmo comportamento do <literal>JKeyStoreDialog</literal>.
-        </para>
+	<section>
+		<title>O JKeyStorePanel</title>
 
-        <programlisting role="JAVA"><![CDATA[
+		<para>
+			O
+			<literal>JKeyStorePanel</literal>
+			é um JPanel que pode ser renderizado junto a qualquer applet e possui o mesmo comportamento do
+			<literal>JKeyStoreDialog</literal>
+			.
+		</para>
+
+		<programlisting role="JAVA"><![CDATA[
 public class JPanelApplet extends JApplet {
-    public void init() {
-        keyStorePanel = new JKeyStorePanel();
-        ...
-        this.getContentPane().add(keyStorePanel);
-        ...
-    }
+        public void init() {            
+                keyStorePanel = new JKeyStorePanel();
+                ...
+                this.getContentPane().add(keyStorePanel);
+                ...
+        }
 }]]></programlisting>
-    </section>
+
+	</section>
+
 </chapter>

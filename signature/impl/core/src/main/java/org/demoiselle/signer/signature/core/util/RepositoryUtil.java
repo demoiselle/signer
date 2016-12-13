@@ -37,7 +37,6 @@
 package org.demoiselle.signer.signature.core.util;
 
 import org.demoiselle.signer.signature.core.exception.CertificateValidatorException;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -52,7 +51,6 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

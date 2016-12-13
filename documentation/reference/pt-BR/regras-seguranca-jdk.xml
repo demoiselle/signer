@@ -1,14 +1,14 @@
 <?xml version='1.0' encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="regras-seguranca-jdk">
+<appendix id="regras-seguranca-jdk">
 
-    <title>Novas regras de segurança de aplicações JAVA assinadas</title>
+    <title>Regras de segurança de aplicações JAVA assinadas</title>
 
     <section>
         <title>Introdução</title>
         <para>
-            A seguir vamos introduzir alguns conceitos de segurança introduzidos nas versões mais recentes do JAVA.
+        	A partir da release 7u51 o Java adicionou mais requisitos de segurança obrigando que as aplicações Web Start tenham assinaturas de código de uma autoridade confiável e alguns atributos no arquivo <command>MANIFEST</command>
         </para>
     </section>
 
@@ -62,7 +62,7 @@
 
         <para>
             O valor do atributo <emphasis>Codebase</emphasis> deve coincidir com a localização do arquivo JAR do RIA. Caso contrário, um erro é mostrado e o RIA será bloqueado. Se o atributo não estiver
-            presente, um aviso é escrito no console do JAVA e a base de código especificada para a tag applet ou o arquivo JNLP é usado.
+            presente, um aviso é escrito no console do JAVA e a base de código especificada para o arquivo JNLP é usado.
         </para>
     </section>
 
@@ -108,31 +108,15 @@
 
     </section>
     <section>
-        <title>O Atributo Caller-Allowable-Codebase</title>
-        <para>
-            O atributo <emphasis>Caller-Allowable-Codebase</emphasis> é usado para identificar os domínios nos quais código JavaScript pode fazer chamadas para seu RIA sem avisos de segurança. Defina este
-            atributo para o domínio que hospeda o código JavaScript. Se for feita uma chamada do código JavaScript que não está localizado em um domínio especificado pelo atributo
-            <emphasis>Caller-Allowable-Codebase</emphasis>, a chamada é bloqueada. Para especificar mais de um domínio, separe-os por um espaço, por exemplo:
-        </para>
-
-        <para>
-            <emphasis>Caller-Allowable-Codebase: host.example.com 127.0.0.1</emphasis>
-        </para>
-
-        <para>
-            Se o atributo não estiver presente, chamadas de código JavaScript para seu RIA serão bloqueadas quando o nível estiver definido como alto, que é o padrão, ou muito alto. Quando o nível de segurança é definido como médio, que não é recomendado, é mostrado um aviso de segurança e usuários, então, tem a opção para permitir a chamada ou bloquear a chamada. Para RIAs não assinados, o código JavaScript que requer acesso para a RIA deve estar no mesmo local que o arquivo JAR principal do seu RIA. Caso contrário, o usuário é solicitado a permitir acesso. Avisos de segurança são mostrados para cada instância do Classloader do applet.
-        </para>
-    </section>
-    <section>
         <title>O Atributo Trusted-Only</title>
         <para>
-            O atributo  <emphasis>Trusted-Only</emphasis> é usado para impedir que as classes não confiáveis ou recursos sejam carregadas em um applet ou aplicativo. Por exemplo:
+            O atributo  <emphasis>Trusted-Only</emphasis> é usado para impedir que as classes não confiáis ou recursos sejam carregadas em um  aplicativo. Por exemplo:
         </para>
         <para>
             <emphasis>Trusted-Only: true</emphasis>
         </para>
         <para>
-            Este atributo impede que um aplicativo privilegiado ou applet seja realocado com componentes não confiáveis. Todas as classes e recursos do aplicativo ou da applet devem ser assinados e todas as permissões
+            Este atributo impede que um aplicativo privilegiado seja realocado com componentes não confiáveis. Todas as classes e recursos do aplicativo devem ser assinados e todas as permissões
             devem ser solicitadas.
         </para>
 
@@ -140,14 +124,14 @@
     <section>
         <title>O Atributo Trusted-Library</title>
         <para>
-            O atributo <emphasis>Trusted-Library</emphasis> é usado para aplicativos e applets que são projetados para permitir componentes não confiáveis. Nenhuma caixa de diálogo de aviso é mostrada e um aplicativo ou applet
+            O atributo <emphasis>Trusted-Library</emphasis> é usado para aplicativos que são projetados para permitir componentes não confiáveis. Nenhuma caixa de diálogo de aviso é mostrada e um aplicativo
             pode carregar arquivos JAR que contêm classes não confiáveis ou recursos. Por exemplo:
         </para>
         <para>
             <emphasis>Trusted-Library: true</emphasis>
         </para>
         <para>
-            Este atributo impede que componentes em um aplicativo privilegiado ou applet seja realocado com componentes não confiáveis. Todas as classes e recursos em um arquivo JAR contendo este atributo
+            Este atributo impede que componentes em um aplicativo privilegiado seja realocado com componentes não confiáveis. Todas as classes e recursos em um arquivo JAR contendo este atributo
             devem ser assinados e todas as permissões devem ser solicitadas.
         </para>
     </section>
@@ -160,7 +144,7 @@
 
         <programlisting role="JAVA"><![CDATA[Permissions: all-permissions
 Codebase: *
-Application-Name: Applet Customizada
+Application-Name: App Customizada
 Application-Library-Allowable-Codebase: *
 Caller-Allowable-Codebase: *
 Trusted-Only: true
@@ -311,4 +295,4 @@ Trusted-Library: true]]></programlisting>
 
     </section>
 
-</chapter>
+</appendix>

@@ -7,30 +7,62 @@
 
     <!-- prefácio -->
     <preface>
-        <title>Sobre o Demoiselle Components</title>
+        <title>Sobre o Demoiselle Certificate</title>
         <para>
-            O <emphasis>Demoiselle Components Guide</emphasis> agrega em um único lugar toda a
-            documentação referente a todos os componentes disponibilizados e que são
-            compatíveis com a versão mais recente do <emphasis>Demoiselle Framework</emphasis>.
+            O Demoiselle Certificate é um componente para facilitar a implementação de assinatura digital usando certificado. 
+            O componente implementa o padrão de assinatura básica ADRB em CADES do ICPBrasil, conforme o 
+            <ulink url="http://www.iti.gov.br/legislacao/143-icp-brasil/legislacao/790-doc-icp">DOC-ICP-15</ulink>.
         </para>
+        <para>
+        	O componente é dividido de acordo com suas funcionalidades:
+        	<itemizedlist>
+    			<listitem>
+    				<para><emphasis role="bold">demoiselle-certificate-core: </emphasis>fornece acesso ao token, carregamento de certificado e API para dados de um certificado ICPBrasil</para>
+	    		</listitem>
+    			<listitem>
+    				<para><emphasis role="bold">demoiselle-certificate-ca-icpbrasil: </emphasis>possui as cadeias de autoridades certificadores ICPBrasil válidas</para>
+	    		</listitem>
+    			<listitem>
+    				<para><emphasis role="bold">demoiselle-certificate-criprography: </emphasis>provê funcionalidades de criptografia</para>
+	    		</listitem>
+    			<listitem>
+    				<para><emphasis role="bold">demoiselle-certificate-signer: </emphasis>realiza assinatura digital e verificação de assinatura</para>
+	    		</listitem>
+    			<listitem>
+    				<para><emphasis role="bold">demoiselle-certificate-desktop: </emphasis>possui funcionalidades para desenvolvimento aplicação desktop (Java Swing) para ser iniciada via Java Web Start</para>
+	    		</listitem>
+    		</itemizedlist>
+        </para>
+        <para>
+        	Funcionalidades ainda não implementadas no componente:
+        	<itemizedlist>
+    			<listitem>
+    				<para>Assinatura com carimbo de tempo</para>
+	    		</listitem>
+    			<listitem>
+    				<para>Assinatura no padrão XADES (assinatura em XML)</para>
+	    		</listitem>
+    			<listitem>
+    				<para>Assinatura no padrão PADES (assinatura em PDF)</para>
+	    		</listitem>
+    		</itemizedlist>
+        </para>
+
+        
     </preface>
 
     <!-- índice -->
     <toc />
 
     <!-- partes -->
+	<!-- Demoiselle Desktop -->
+    <xi:include href="desktop/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
     <!-- Demoiselle Applet -->
     <xi:include href="applet/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
     <!-- Demoiselle Core -->
     <xi:include href="core/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-    <!-- Demoiselle Policy -->
-    <xi:include href="policy/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-    <!-- Demoiselle Timestamp -->
-    <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
     <!-- Demoiselle Signer -->
     <xi:include href="signer/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
@@ -43,5 +75,11 @@
 
     <!-- Demoiselle CA ICP-Brasil Homologacao-->
     <xi:include href="ca-icp-brasil-homologacao/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- Apendice sobre assinatura de código-->
+	<xi:include href="regras-seguranca-jdk.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    
+    <!-- Apendice sobre assinatura de código-->
+	<xi:include href="assinatura-jar.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 </book>

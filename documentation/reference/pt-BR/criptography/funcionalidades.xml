@@ -337,7 +337,7 @@ public static void main(String[] args) {
             <programlisting role="JAVA"><![CDATA[
 		public static void main(String[] args) {
                 Digest digest = DigestFactory.getInstance().factoryDefault();
-                digest.setAlgorithm(DigestAlgorithmEnum.SHA_1);
+                digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
                 String resumo = digest.digestFileHex(new File("/home/03397040477/relatorio.pdf"));
                 System.out.println(resumo);
         } ]]></programlisting>

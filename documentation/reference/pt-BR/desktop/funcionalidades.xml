@@ -1,0 +1,49 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="desktop-funcionalidades">
+
+	<title id="funcionalidades">Funcionalidades</title>
+	<para>
+		O compomente <command>demoiselle-certificate-desktop</command> disponibiliza facilidades para desenvolver aplicações Java Swing,
+		para carregamento da KeyStore e comunicação da aplicação desktop com serviços web.  
+	</para>
+
+	<section>
+		<title>Métodos para comunicação com servidor</title>
+		<para>
+			O compomente <command>demoiselle-certificate-desktop</command> oferece métodos para facilitar a comunicação com os serviços que serão implementados pela aplicação.
+		</para>
+<programlisting role="JAVA"><![CDATA[Utils.downloadFromUrl(url, token)]]></programlisting>
+    	<para>
+    		Método para fazer download de um array de bytes do arquivo zip na <emphasis>url</emphasis> especificada via método GET do HTTP.
+    		O <emphasis>token</emphasis> é passado no cabeçalho <command>Authorization: Token __Token__ </command> caso o HTTP Status-Code 
+    		do response seja diferente de 401 (Unauthorized) o método lança a exceção <command>AuthorizationException</command>, 
+    		se diferente de 200 lança a exceção <command>ConnectionException</command> com o código do status HTTP.
+    	</para>
+<programlisting role="JAVA"><![CDATA[Utils.downloadFromUrl(url, token, certificate)]]></programlisting>
+    	<para>Mesma função do método anterior usando conexão HTTPS.</para>
+<programlisting role="JAVA"><![CDATA[Utils.uploadToURL(content, url, token)]]></programlisting>
+    	<para>
+    		Método para fazer upload de um array de bytes do arquivo zip (<emphasis>content</emphasis>) na <emphasis>url</emphasis> 
+    		especificada via método POST do HTTP.
+    		O <emphasis>token</emphasis> é passado no cabeçalho <command>Authorization: Token __Token__ </command> caso o HTTP Status-Code 
+    		do response seja diferente de 401 (Unauthorized) o método lança a exceção <command>AuthorizationException</command>, 
+    		se diferente de 204 lança a exceção <command>ConnectionException</command> com o código do status HTTP.    
+    	</para>
+<programlisting role="JAVA"><![CDATA[Utils.uploadToURL(content, url, token, certificate)]]></programlisting>
+    	<para>Mesma função do método anterior usando conexão HTTPS.	</para>
+<programlisting role="JAVA"><![CDATA[Utils.cancel(message, url, token)]]></programlisting>    
+		<para>Método para enviar uma <emphasis>message</emphasis> de cancelamento na <emphasis>url</emphasis> especificada via método POST do HTTP.
+		O <emphasis>token</emphasis> é passado no cabeçalho <command>Authorization: Token __Token__ </command> caso o HTTP Status-Code 
+    		do response seja diferente de 401 (Unauthorized) o método lança a exceção <command>AuthorizationException</command>, 
+    		se diferente de 204 lança a exceção <command>ConnectionException</command> com o código do status HTTP. 		
+		</para>
+<programlisting role="JAVA"><![CDATA[Utils.cancel(message, url, token, certificate)]]></programlisting>		
+		<para>Mesma função do método anterior usando conexão HTTPS.	</para> 
+<programlisting role="JAVA"><![CDATA[Utils.getSSLCertificate(url)]]></programlisting>		
+		<para>Método que retorna um array de bytes com o certificado da url</para> 		   		
+
+	</section>
+
+</chapter>

@@ -1,34 +1,27 @@
 <?xml version='1.0' encoding="utf-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="signer-funcionalidades">
 
     <title>Funcionalidades</title>
     <para>
         Este componente provê mecanismos de assinatura digital baseado nas normas ICP-Brasil e implementa mecanismos de assinatura digital em dois formatos: PKCS1 e
-        PKCS7. A maior diferença entre esses dois mecanismos está na forma de envelopamento da assinatura digital, onde o PKCS1 não possui um formato de envelope,
-        sendo o resultado da operação de assinatura a própria assinatura, já o PKCS7 possui um formato de retorno que pode ser binário (especificado na RFC5126) ou XML.
-        A interface <package>br.gov.frameworkdemoiselle.certificate.signer.Signer</package> especifica o comportamento padrão dos mecanismos de assinatura digital.
-        O componente especializa essa interface em mais duas, são elas:
-
-        <itemizedlist>
-            <listitem>
-                <para>
-                    <package>br.gov.frameworkdemoiselle.certificate.signer.pkcs1.PKCS1Signer</package> para implementações de mecanismos PKCS1
-                </para>
-            </listitem>
-            <listitem>
-                <para>
-                    <package>br.gov.frameworkdemoiselle.certificate.signer.pkcs7.PKCS7Signer</package> para implementações de mecanismos de
-                    envelopamento PKCS7
-                </para>
-            </listitem>
-        </itemizedlist>
+        PKCS7. A maior diferença entre esses dois mecanismos está na forma de envelopamento da assinatura digital, onde o PKCS1 não possui um formato de
+        envelope, sendo o resultado da
+        operação de assinatura a própria assinatura, já o PKCS7 possui um formato de retorno que pode ser binário (especificado na RFC5126) ou XML. A interface
+        <literal>br.gov.frameworkdemoiselle.certificate.signer.Signer</literal>
+        especifica o comportamento padrão dos mecanismos de assinatura digital. O componente especializa essa
+        interface em mais duas, são elas:
+        <literal>br.gov.frameworkdemoiselle.certificate.signer.pkcs1.PKCS1Signer</literal>
+        para implementações de mecanismos PKCS1
+        e
+        <literal>br.gov.frameworkdemoiselle.certificate.signer.pkcs7.PKCS7Signer</literal>
+        para implementações de mecanismos de envelopamento PKCS7.
     </para>
 
     <para>
-        Este componente, até a presente versão, permite assinar dados representados por um array de bytes. Então, para a a assinatura de um arquivo, por exemplo,
-        a aplicação deverá montar um array de bytes com o conteúdo do arquivo para efetuar a assinatura digital.
+        Este componente, até a presente versão, permite assinar dados representados por um array de bytes. Então se for necessário a assinatura de um arquivo, por exemplo,
+        a aplicação deverá montar um array de bytes com o conteúdo do arquivo para poder assiná-lo.
     </para>
 
     <para>
@@ -44,8 +37,7 @@
                 Fabricar o objeto responsável pela implementação do formato escolhido
             </listitem>
             <listitem>
-                Passar algumas informações para o objeto fabricado como chave criptográfica, algoritmo, etc, no caso do formato PKCS1. O formato PKCS7 obtêm estas informações
-                através da política de assinatura especificada.
+                Passar algumas informações para o objeto fabricado como chave criptográfica, algoritmo, etc. O formato PKCS7 necessita de mais informações do que o formato PKCS1.
             </listitem>
             <listitem>
                 Assinar o conteúdo
@@ -59,11 +51,12 @@
             A seguir temos um fragmento de código que demonstra uma assinatura no formato PKCS1.
         </para>
 
-        <programlisting role="JAVA" language="JAVA"><![CDATA[/* conteudo a ser assinado */
-byte[] content = "Hello World!".getBytes();
+        <programlisting role="JAVA"><![CDATA[
+/* conteudo a ser assinado */
+byte[] content = "conteudo a ser assinado".getBytes();
 
 /* chave privada */
-PrivateKey chavePrivada = (PrivateKey) keystore.getKey(alias, null);
+PrivateKey chavePrivada = getPrivateKey(); /* implementar metodo para pegar chave privada */
 
 /* construindo um objeto PKCS1Signer atraves da fabrica */
 PKCS1Signer signer = PKCS1Factory.getInstance().factory();
@@ -82,9 +75,11 @@ byte[] sign = signer.signer(content);]]></programlisting>
     <section>
         <title>Assinatura Digital no Formato PKCS7</title>
         <para>
-            O formato PKCS7 permite colocar diversas informações no pacote gerado que serão úteis posteriormente para validar a assinatura. A ICP-Brasil define um conjunto
-            de atributos que contém estas informações para as assinaturas digitais.  O componente <emphasis>demoiselle-certificate-signer</emphasis> monta o pacote com os
-            atributos exigidos de acordo com a política escolhida. Então, para montar um PKCS7 padrão ICP-Brasil é necessário informar ao objeto PKCS7Signer qual a política de assinatura a ser aplicada.
+            O formato PKCS7 permite colocar informações no pacote gerado. Essas informações são úteis para validar a assinatura. A ICP-Brasil define um conjunto mínimo de informações
+            básicas para as assinaturas digitais. São elas: Tipo de conteúdo, data da assinatura, algoritmo de resumo aplicado e a política de assinatura.
+            O componente
+            demoiselle-signer já monta o pacote final com três atributos obrigatórios: tipo de conteúdo, data da assinatura e o algoritmo de resumo.
+            Então, para montar um PKCS7 padrão ICP-Brasil é necessário informar ao objeto PKCS7Signer qual a política de assinatura aplicada.
         </para>
 
         <para>
@@ -98,50 +93,89 @@ signer.setCertificate(certificate);
 signer.setPrivateKey(privateKey);
 byte[] sign = signer.signer(this.content);]]></programlisting>
 
-        <important>
-            <para>
-                Caso não seja especificada nenhuma política, o componente assumirá a Política de Assinatura de Referência Básica 2.1.
-            </para>
-        </important>
-
         <para>
-            A seguir temos um fragmento de código que demonstra a utilização do pacote PKCS7 com informação da política de assinatura. Neste caso podemos escolher uma das
-            políticas que já acompanham o componente. Atualmente o componente suporta as política de assinatura listadas abaixo:
+            A seguir temos um fragmento de código que demonstra a utilização do pacote PKCS7 padrão com informação da política de assinatura. Neste caso podemos escolher uma das
+            políticas que já acompanham o componente e referem-se à Assinatura Digital de Referência Básica.
         </para>
         <itemizedlist>
             <listitem>
-                <literal>AD_RB_CADES_1_0</literal>, Refere-se à Assinatura Digital de Referência Básica versão 1.0;
+                <literal>ADRBCMS_1_0</literal>
+                , Refere-se à Assinatura Digital de Referência Básica versão 1.0;
             </listitem>
             <listitem>
-                <literal>AD_RB_CADES_1_1</literal>, Refere-se à Assinatura Digital de Referência Básica versão 1.1;
+                <literal>ADRBCMS_1_1</literal>
+                , Refere-se à Assinatura Digital de Referência Básica versão 1.1;
             </listitem>
             <listitem>
-                <literal>AD_RB_CADES_2_0</literal>, Refere-se à Assinatura Digital de Referência Básica versão 2.0;
+                <literal>ADRBCMS_2_0</literal>
+                , Refere-se à Assinatura Digital de Referência Básica versão 2.0;
             </listitem>
             <listitem>
-                <literal>AD_RB_CADES_2_1</literal>, Refere-se à Assinatura Digital de Referência Básica versão 2.1;
+                <literal>ADRBCMS_2_1</literal>
+                , Refere-se à Assinatura Digital de Referência Básica versão 2.1;
             </listitem>
             <listitem>
-                <literal>AD_RT_CADES_1_0</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 1.0;
-            </listitem>
-            <listitem>
-                <literal>AD_RT_CADES_1_1</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 1.1;
-            </listitem>
-            <listitem>
-                <literal>AD_RT_CADES_2_0</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 2.0;
-            </listitem>
-            <listitem>
-                <literal>AD_RT_CADES_2_1</literal>, Refere-se à Assinatura Digital de Referência Temporal versão 2.1;
+                <literal>ADRBCMS_2_2</literal>
+                , Refere-se à Assinatura Digital de Referência Básica versão 2.2;
             </listitem>
         </itemizedlist>
 
         <programlisting role="JAVA"><![CDATA[
 byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-signer.setCertificates(keystore.getCertificateChain(alias));
-signer.setPrivateKey((PrivateKey) keystore.getKey(alias, null));
-signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_1);
-byte[] signed = signer.doSign(content);]]></programlisting>
+signer.setCertificate(certificate);
+signer.setPrivateKey(privateKey);
+signer.setSignaturePolicy(new ADRBCMS_2_2());
+byte[] sign = signer.signer(this.content);]]></programlisting>
+
+
+        <important>
+            <para>
+                Caso não seja especificada nenhuma política, o componente assumirá a política padrão ADRBCMS_1_0 (1.0).
+            </para>
+        </important>
+    </section>
+
+    <section>
+        <title>
+            Criação de Assinatura Digital sem envio do conteúdo original para o assinador
+        </title>
+
+        <para>
+            Este procedimento visa facilitar a geração de assinaturas digitais em aplicações Web pois não há necessidade de trafegar o conteúdo original pela rede,
+            sendo necessário apeas o tráfego dos bytes do resumo do conteúdo original (HASH). Neste caso, é necessário gerar o HASH do conteúdo a ser assinado e passar
+            para o
+            assinador. Ao gerar o HASH, é importante dar atenção ao algoritmo a ser usado, pois na validação da assinatura será considerado o algoritmo da política escolhida.
+            Então, para que esse procedimento funcione, é necessário escolher o algoritmo do HASH igual ao algoritmo da assinatura digital. Não há necessidade de
+            passar o conteúdo
+            original para o assinador, como mostra a última linha do exemplo abaixo:
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+import br.gov.frameworkdemoiselle.certificate.criptography.Digest;
+import br.gov.frameworkdemoiselle.certificate.criptography.factory.DigestFactory;
+import br.gov.frameworkdemoiselle.certificate.criptography.DigestAlgorithmEnum;
+...         
+
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+/* Gerando o HASH fora do assinador */
+Digest digest = DigestFactory.getInstance().factoryDefault();
+digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+byte[] hash = digest.digest(content);
+
+/* Gerando a assinatura a partir do HASH gerado anteriormente */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificate(certificate);
+signer.setPrivateKey(privateKey);
+signer.addAttribute(new MessageDigest(hash));
+signer.setSignaturePolicy(new ADRBCMS_2_2());
+byte[] sign = signer.signer(null);]]></programlisting>
+
+        <important>
+            <para>
+                Este procedimento gera o pacote PKCS7 idêntico ao pacote gerado pelo exemplo do tópico 2.2
+            </para>
+        </important>
     </section>
 
     <section>
@@ -151,8 +185,7 @@ byte[] signed = signer.doSign(content);]]></programlisting>
         </title>
 
         <para>
-            Para validar uma assinatura sem o conteúdo anexado no pacote, precisamos efetuar o carregamento do arquivo original e passá-lo para a verificação. A seguir temos
-            um fragmento de código que demonstra a validação uma assinatura PKCS7 sem o conteúdo anexado.
+            A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 sem o conteúdo anexado.
         </para>
 
 
@@ -171,9 +204,7 @@ boolean checked = signer.check(content, signed);]]></programlisting>
         </title>
 
         <para>
-            Para validar uma assinatura que já possui o conteúdo anexado no pacote, bastar passarmos <code>null</code> no parâmetro do conteúdo original. O componente, ao
-            identificar que não foi passado nenhum conteúdo do arquivo original, tentará então extrair do pacote  PKCS7. A seguir temos um fragmento de código que demonstra a
-            validação uma assinatura PKCS7 com o conteúdo anexado.
+            A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 com o conteúdo anexado.
         </para>
 
         <programlisting role="JAVA"><![CDATA[
@@ -191,8 +222,7 @@ boolean checked = signer.check(null, signed);]]></programlisting>
         </title>
 
         <para>
-            A seguir temos um fragmento de código que demonstra a recuperação do conteúdo de um arquivo anexado a uma assinatura PKCS7. O método permite obter o conteúdo
-            fazendo simultâneamente a validação da assinatura, se for necessário.
+            A seguir temos um fragmento de código que demonstra a recuperação do conteúdo de um arquivo anexado a uma assinatura PKCS7.
         </para>
 
         <programlisting role="JAVA"><![CDATA[

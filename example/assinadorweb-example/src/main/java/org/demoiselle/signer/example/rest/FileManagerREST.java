@@ -251,9 +251,9 @@ public class FileManagerREST {
 		byte[] file = null;
 		byte[] signature = null;
 
-		Iterator entries = TokenManager.get(token).entrySet().iterator();
+		Iterator<?> entries = TokenManager.get(token).entrySet().iterator();
 		while (entries.hasNext()) {
-			Entry thisEntry = (Entry) entries.next();
+			Entry<?, ?> thisEntry = (Entry<?, ?>) entries.next();
 			String nameFile = (String) thisEntry.getKey();
 			String nameSignature = (String) thisEntry.getValue();
 

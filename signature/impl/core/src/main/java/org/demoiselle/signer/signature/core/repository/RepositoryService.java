@@ -38,7 +38,6 @@ package org.demoiselle.signer.signature.core.repository;
 
 import org.demoiselle.signer.signature.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.signature.core.util.RepositoryUtil;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -56,7 +55,7 @@ public class RepositoryService {
 
     public static void main(String[] args) {
         if (args == null || args.length < 2) {
-            println(" Error: number of invalid arguments.\n " + "Use: java -jar demoiselle-certificate-core.jar [operation] <[url]> <[fileindex]>\n " + "Sample for update: java -jar security-certificate.jar " + UPDATE + " /tmp/crls/crl_index.txt\n " + "Sample for add url of crl: java -jar security-certificate.jar " + ADD
+            println(" Error: number of invalid arguments.\n " + "Use: java -jar signer-signature-core.jar [operation] <[url]> <[fileindex]>\n " + "Sample for update: java -jar signer-signature-core.jar " + UPDATE + " /tmp/crls/crl_index.txt\n " + "Sample for add url of crl: java -jar signer-signature-core.jar " + ADD
                     + " http://www.domain.org/file.clr /tmp/crls/crl_index.txt");
         } else {
 

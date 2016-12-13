@@ -38,7 +38,7 @@ CertificateManager cm = new CertificateManager(x509, validator1, validator2, val
     <programlisting role="JAVA"><![CDATA[
 /* Neste caso os validadores padrao nao serao carregados. */
 CertificateManager cm = new CertificateManager(x509, false, validator1, validator2, validatorN);]]></programlisting>
-    e
+
     <para>
         É possível também criar um CertificateManager e passar um arquivo do tipo PEM que represente um objeto X509Certificate, conforme mostrado abaixo.
     </para>
@@ -57,25 +57,16 @@ CertificateManager cm = new CertificateManager(pinNumber);]]></programlisting>
 
     <section>
         <title>O Certificado Digital</title>
-
-        <para>
-            Os certificados no formato X.509 podem conter várias informações armazenadas que podem ser obtidas através de um OID (Object Identifier). OID são usados
-            extensivamente em certificados de formato X.509, como por exemplo, para designar algoritmos criptográficos empregados, políticas de
-            certificação e campos de
-            extensão. Cada autoridade certificadora pode definir um conjunto de OID para armazenar suas informações. O componente de segurança implementa extensões de OID
-            para ICP-Brasil e Default.
-        </para>
-
         <section>
-            <title>Extração de informações utilizando as classes</title>
+            <title>Extração de Informações utilizando anotações</title>
 
             <para>
-                ...
+                Os certificados no formato X.509 podem conter várias informações armazenadas que podem ser obtidas através de um OID (Object Identifier). OID são usados
+                extensivamente em certificados de formato X.509, como por exemplo, para designar algoritmos criptográficos empregados, políticas de
+                certificação e campos de
+                extensão. Cada autoridade certificadora pode definir um conjunto de OID para armazenar suas informações. O componente de segurança implementa extensões de OID
+                para ICP-Brasil e Default.
             </para>
-        </section>
-
-        <section>
-            <title>Extração de informações com anotações</title>
 
             <para>
                 Para extrair informações basta criar uma classe com os atributos que se deseja preencher com informações do certificado X.509. Cada atributo deve ser anotado com
@@ -84,26 +75,26 @@ CertificateManager cm = new CertificateManager(pinNumber);]]></programlisting>
 
             <programlisting role="JAVA"><![CDATA[class Cert {
 
-        @ICPBrasilExtension(type=ICPBrasilExtensionType.CPF)
-        private String cpf;
+    @ICPBrasilExtension(type=ICPBrasilExtensionType.CPF)
+    private String cpf;
 
-        @ICPBrasilExtension(type=ICPBrasilExtensionType.NOME)
-        private String nome;
+    @ICPBrasilExtension(type=ICPBrasilExtensionType.NOME)
+    private String nome;
 
-        @DefaultExtension(type=DefaultExtensionType.CRL_URL)
-        private List<String> crlURL;
+    @DefaultExtension(type=DefaultExtensionType.CRL_URL)
+    private List<String> crlURL;
 
-        public String getCpf() {
-                return cpf;
-        }
+    public String getCpf() {
+        return cpf;
+    }
 
-        public String getNome() {
-                return nome;
-        }
+    public String getNome() {
+        return nome;
+    }
 
-        public List<String> getCrlURL() {
-                return crlURL;
-        }
+    public List<String> getCrlURL() {
+        return crlURL;
+    }
 
 }]]></programlisting>
 
@@ -113,6 +104,7 @@ CertificateManager cm = new CertificateManager(pinNumber);]]></programlisting>
 
             <programlisting role="JAVA"><![CDATA[CertificateManager cm = new CertificateManager(x509);
 Cert cert = cm.load(Cert.class);]]></programlisting>
+
 
             <section>
                 <title>DefaultExtension</title>
@@ -228,6 +220,55 @@ Cert cert = cm.load(Cert.class);]]></programlisting>
                     </listitem>
                 </itemizedlist>
             </section>
+        </section>
+
+        <section>
+            <title>Extração de Informações utilizando Classes</title>
+
+            <para>
+                Uma outra maneira de obter os valores necessários do certificado é através das classes de apoio fornecidas pelo componente. Caso deseje obter apenas informações, básicas,
+                podemos utilizar a classe <classname>BasicCertificate</classname>.
+            </para>
+
+            <para>
+                A seguir temos o exemplo de utilização, onde passamos um certificado para a classe e em seguida obtemos exibimos algumas informações no console.
+            </para>
+
+            <programlisting linenumbering="true" role="JAVA"><![CDATA[BasicCertificate bc = new BasicCertificate(certificate);
+logger.log(Level.INFO, "Nome....................[{0}]", bc.getNome());
+logger.log(Level.INFO, "E-mail..................[{0}]", bc.getEmail());
+logger.log(Level.INFO, "Numero de serie.........[{0}]", bc.getSerialNumber());
+logger.log(Level.INFO, "Nivel do Certificado....[{0}]", bc.getNivelCertificado());]]></programlisting>
+
+            <para>
+                Para obter informações mais específicas de um certificado de um e-CPF, e-CNPJ ou de equipamento, devemos utilizar a classe <classname>CertificateExtra</classname>.
+            </para>
+
+            <para>
+                A seguir temos alguns exemplos de de utilização.
+            </para>
+
+            <para>
+                O exemplo a seguir recupera o CPF e o número RIC de um certificado digital do tipo e-CPF.
+            </para>
+
+            <programlisting linenumbering="true" role="JAVA"><![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
+logger.log(Level.INFO, "CPF.....................[{0}]", ce.getOID_2_16_76_1_3_1().getCPF());
+logger.log(Level.INFO, "RIC.....................[{0}]", ce.getOID_2_16_76_1_3_9().getRegistroDeIdentidadeCivil());]]></programlisting>
+
+            <para>
+                O exemplo a seguir recupera o CNPJ de um certificado digital do tipo e-CNPJ.
+            </para>
+
+            <programlisting linenumbering="true" role="JAVA"><![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
+logger.log(Level.INFO, "CNPJ....................[{0}]", ce.getOID_2_16_76_1_3_3().getCNPJ());]]></programlisting>
+
+            <para>
+                O exemplo a seguir recupera o nome do responsável de um certificado digital do tipo Equipamento.
+            </para>
+
+            <programlisting linenumbering="true" role="JAVA"><![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
+logger.log(Level.INFO, "Nome....................[{0}]", ce.getOID_2_16_76_1_3_2().getNome());]]></programlisting>
         </section>
     </section>
 

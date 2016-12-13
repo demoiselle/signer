@@ -116,9 +116,10 @@ public class CAdESSigner implements PKCS7Signer {
     private boolean defaultCertificateValidators = true;
     private Collection<IValidator> certificateValidators = null;
 
+    //TODO - verificar o setSignature passar para
     public CAdESSigner() {
         this.pkcs1.setAlgorithm((String) null);
-        this.setSignaturePolicy(Policies.AD_RB_CADES_2_1);
+        this.setSignaturePolicy(Policies.AD_RB_CADES_2_2);
 
     }
 
@@ -484,6 +485,7 @@ public class CAdESSigner implements PKCS7Signer {
         this.signaturePolicy = sp;
     }
 
+    //TODO verifcar esse algoritmos.
     private enum AlgorithmNames {
 
         sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"),
