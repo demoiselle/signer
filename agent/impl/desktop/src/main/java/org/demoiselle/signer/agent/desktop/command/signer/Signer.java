@@ -6,6 +6,7 @@ import java.security.cert.X509Certificate;
 
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.command.cert.Certificate;
+import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.agent.desktop.web.Execute;
 import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
@@ -25,7 +26,7 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 		this.validateRequest(request);
 		
 		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-		loader.setCallbackHandler(new DialogCallbackHandler());
+		loader.setCallbackHandler(new PinHandler());
 		KeyStore keyStore = loader.getKeyStore();
 		try {
 			X509Certificate cert = (X509Certificate)keyStore.getCertificate(request.getAlias());
