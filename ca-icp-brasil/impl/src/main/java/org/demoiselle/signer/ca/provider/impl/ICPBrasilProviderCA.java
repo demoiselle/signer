@@ -36,8 +36,6 @@
  */
 package org.demoiselle.signer.ca.provider.impl;
 
-import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -49,11 +47,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 
 public class ICPBrasilProviderCA implements ProviderCA {
-
+	
     @Override
     public Collection<X509Certificate> getCAs() {
+    	
+    	    	
         KeyStore keyStore = this.getKeyStore();
         List<X509Certificate> result = new ArrayList<X509Certificate>();
         try {

@@ -123,7 +123,7 @@ public class PolicyFactory {
         AD_RA_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_2.der"),
         AD_RA_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.der");
         
-        // http://politicas.icpbrasil.gov.br
+        
         
         private String url;
 

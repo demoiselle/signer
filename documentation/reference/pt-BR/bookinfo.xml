@@ -4,12 +4,11 @@
 <bookinfo>
 
 	<title>Demoiselle Components Guide</title>
-	<subtitle>Demoiselle Components</subtitle>
+	<subtitle>Demoiselle Certificate</subtitle>
 
 	<abstract>Demoiselle Components: Guide to all Demoiselle Components</abstract>
 	<titleabbrev>Demoiselle Components Guide</titleabbrev>
 
-	<xi:include href="revhistory.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="authorgroup.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 </bookinfo>

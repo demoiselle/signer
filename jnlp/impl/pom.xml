@@ -18,27 +18,6 @@
 		<relativePath>../../../parent</relativePath>
 	</parent>
 
-	<licenses>
-		<license>
-			<name>GNU Lesser General Public License, Version 3</name>
-			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
-		</license>
-	</licenses>
-
-	<organization>
-		<name>SERPRO - Serviço Federal de Processamento de Dados</name>
-		<url>http://www.serpro.gov.br</url>
-	</organization>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>

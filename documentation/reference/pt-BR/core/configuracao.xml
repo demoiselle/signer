@@ -14,7 +14,7 @@
         <programlisting role="XML"><![CDATA[<dependency>
 			<groupId>br.gov.frameworkdemoiselle.component</groupId>
 			<artifactId>demoiselle-certificate-core</artifactId>
-			<version>2.0.0</version>
+			<version>1.1.1</version>
 		</dependency>]]></programlisting>
     </section>
 </chapter>

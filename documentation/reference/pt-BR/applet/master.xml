@@ -7,16 +7,25 @@
 
     <partintro>
         <para>
-            O Security Applet simplifica a construção de Applets para manipulação de certificados digitais. Seu objetivo é o carregamento do Repositório de Chaves e Certificados
-            (Keystore) de Certificados A3, cujo armazenamento é realizado por dispositivos seguros como Tokens USB ou Smart Cards, ou de Certificados A1, cujo armazenamento é
-            feito em arquivos.
+            O Demoiselle Applet foi descontinuado, pois a maioria dos browsers de mercado suspederam ou anunciaram intenção de suspender
+            o suporte o NPAPI, esta API possibilita a execução de applets java. Segue a situação atual dos principais  browser.
         </para>
+    <para>
+    	<itemizedlist>
+    		<listitem>
+    			<para><emphasis role="bold">Chrome:</emphasis> sem suporte a partir da versão 45</para>
+    		</listitem>
+			<listitem>
+    			<para><emphasis role="bold">Mozilla Firefox:</emphasis> anunciou que suspenderá o suporte até o final de 2016</para>
+    		</listitem>
+			<listitem>
+    			<para><emphasis role="bold">Interner Explore:</emphasis> Não se manifestou, mas este browser será descontinuado </para>
+    		</listitem>
+    		<listitem>
+    			<para><emphasis role="bold">Microsoft EDGE:</emphasis> Browser que vai substituir o IE e foi lançado sem o suporte </para>
+    		</listitem>    		
+    	</itemizedlist>
+    </para>
     </partintro>
-
-    <!-- capítulos -->
-    <xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <xi:include href="funcionalidades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <xi:include href="projeto-exemplo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <xi:include href="regras-seguranca-jdk.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <xi:include href="assinatura-jar.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    
 </part>

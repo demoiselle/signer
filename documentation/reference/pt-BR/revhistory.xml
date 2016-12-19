@@ -3,22 +3,40 @@
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <revhistory>
     <revision>
-        <revnumber>2.0.0</revnumber>
-        <date>15/08/2014</date>
-        <authorinitials>hmp</authorinitials>
+        <revnumber>1.1.1</revnumber>
+        <date>23/11/2016</date>
+        <authorinitials>eos</authorinitials>
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Criação do componente de motor de politicas</para>
+                    <para>Inclusão da Política de Assinatura de Referência Básica 2.2 do ITI</para>
+                    <para>Atualização das cadeias de certificados.</para>
                 </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+
+    <revision>
+        <revnumber>1.0.11</revnumber>
+        <date>04/05/2015</date>
+        <authorinitials>eos</authorinitials>
+        <revremark>
+            <itemizedlist>
                 <listitem>
-                    <para>Criação do componente de carimbo de tempo</para>
+                    <para>Atualização das cadeias de certificados.</para>
                 </listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+
+    <revision>
+        <revnumber>1.0.10</revnumber>
+        <date>16/01/2015</date>
+        <authorinitials>eos</authorinitials>
+        <revremark>
+            <itemizedlist>
                 <listitem>
-                    <para>Implementação da política de carimbo de tempo</para>
-                </listitem>
-                <listitem>
-                    <para>Atualização das cadeias de certificados</para>
+                    <para>Retirada a validação do vencimento do certificado durante o check do arquivo assinado.</para>
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -60,7 +78,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Atualização das cadeias de certificados</para>
+                    Atualização das cadeias de certificados
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -72,7 +90,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Revisão e acréscimos de documentação</para>
+                    Revisão e acréscimos de documentação.
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -84,7 +102,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Correção da validação de chave pública nas políticas</para>
+                    Correção da validação de chave pública nas políticas
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -96,7 +114,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Atualização das cadeias de certificados</para>
+                    Atualização das cadeias de certificados
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -108,7 +126,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Atualização das cadeias de certificados e correcao das datas das politicas de assinatura</para>
+                    Atualização das cadeias de certificados e correcao das datas das politicas de assinatura
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -120,7 +138,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Correção no serviço do componente CA ICP-Brasil Homlogação</para>
+                    Correção no serviço do componente CA ICP-Brasil Homlogação.
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -132,7 +150,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Revisão e acréscimos de documentação</para>
+                    Revisão e acréscimos de documentação.
                 </listitem>
             </itemizedlist>
         </revremark>
@@ -144,7 +162,7 @@
         <revremark>
             <itemizedlist>
                 <listitem>
-                    <para>Primeiro release da documentação.</para>
+                    Primeiro release da documentação.
                 </listitem>
             </itemizedlist>
         </revremark>
