@@ -51,8 +51,12 @@ public class PolicyFactoryTest {
         PolicyFactory factory = PolicyFactory.getInstance();
         Policies[] policies = PolicyFactory.Policies.values();
 
+        
         for (Policies policy : policies) {
-            logger.info(factory.loadPolicy(policy).toString());
+        	// TODO - falta implentar policy para XADES
+        	if (policy.toString().contains("CADES") || policy.toString().contains("PADES")){
+        		logger.info(factory.loadPolicy(policy).toString());
+        	}           
         }
     }
 
@@ -72,5 +76,11 @@ public class PolicyFactoryTest {
     public void testLoadLPAv2() {
         PolicyFactory factory = PolicyFactory.getInstance();
         logger.info(factory.loadLPAv2().toString());
+    }
+    
+    @Test
+    public void testLoadCades() {
+        PolicyFactory factory = PolicyFactory.getInstance();
+        logger.info(factory.loadLPACAdES().toString());
     }
 }

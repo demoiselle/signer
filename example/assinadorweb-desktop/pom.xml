@@ -110,6 +110,11 @@
 			<artifactId>signature-policy-engine</artifactId>
 			<version>2.0.0-BETA2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signature-criptography</artifactId>
+			<version>2.0.0-BETA2</version>
+		</dependency>
 		
 	</dependencies>
 
