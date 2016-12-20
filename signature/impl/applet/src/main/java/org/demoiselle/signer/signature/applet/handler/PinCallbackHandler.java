@@ -48,6 +48,12 @@ import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.swing.JOptionPane;
 import javax.swing.JPasswordField;
 
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class PinCallbackHandler implements CallbackHandler {
 
     @Override

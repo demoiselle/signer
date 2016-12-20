@@ -49,6 +49,11 @@ import java.util.List;
  * Certificate
  *
  */
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class ICPBrasilCertificate {
 
     @ICPBrasilExtension(type = ICPBrasilExtensionType.CPF)

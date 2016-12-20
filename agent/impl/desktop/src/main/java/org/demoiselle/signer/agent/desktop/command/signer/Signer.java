@@ -6,14 +6,13 @@ import java.security.cert.X509Certificate;
 
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.command.cert.Certificate;
-import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.agent.desktop.web.Execute;
+import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.signature.core.util.Base64Utils;
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
-import org.demoiselle.signer.signature.signer.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.signer.pkcs7.PKCS7Signer;
 
 import com.sun.security.auth.callback.DialogCallbackHandler;
 
@@ -26,7 +25,7 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 		this.validateRequest(request);
 		
 		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-		loader.setCallbackHandler(new PinHandler());
+		loader.setCallbackHandler(new DialogCallbackHandler());
 		KeyStore keyStore = loader.getKeyStore();
 		try {
 			X509Certificate cert = (X509Certificate)keyStore.getCertificate(request.getAlias());
@@ -37,8 +36,9 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 	        Policies policie = null;
 	        try {
 	        	policie = Policies.valueOf(request.getSignaturePolicy());
-	        } catch (Throwable error) {
-	        	policie = Policies.AD_RB_CADES_2_1;
+	        } catch (Throwable error) {	        
+	        	error.printStackTrace();
+	        	policie = Policies.AD_RB_CADES_2_2;
 	        }
 	        signer.setSignaturePolicy(policie);
 	        signer.setAttached(false);
@@ -57,6 +57,7 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 			result.setPublicKey(Base64Utils.base64Encode(cert.getPublicKey().getEncoded()));
 			return result;
 		} catch (Throwable error) {
+			error.printStackTrace();
 			throw new RuntimeException(error.getMessage(), error);
 		}
 	}
@@ -83,15 +84,4 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 		}
 		return result;
 	}
-
-	public static void main(String[] args) {
-		SignerRequest request = new SignerRequest();
-		request.setId(1);
-		request.setAlias("(1288991) JOSE RENE NERY CAILLERET CAMPANARIO");
-		request.setProvider("SunPKCS11-TokenOuSmartCard_30");
-		request.setContent("HELLO WORLD!");
-		System.out.println(request.toJson());
-		System.out.println((new Execute()).executeCommand(request));
-	}
-
 }

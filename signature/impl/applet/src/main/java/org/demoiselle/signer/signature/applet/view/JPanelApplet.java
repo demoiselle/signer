@@ -55,6 +55,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import netscape.javascript.JSObject;
 
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class JPanelApplet extends JApplet {
 
     private static final long serialVersionUID = -8768328158163719122L;

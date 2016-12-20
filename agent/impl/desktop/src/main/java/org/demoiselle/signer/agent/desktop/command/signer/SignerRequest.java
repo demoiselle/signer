@@ -17,7 +17,7 @@ public class SignerRequest extends Request {
 	private String format = "text";
 	private Boolean compacted = false;
 	private String alias;
-	private String signaturePolicy = "AD_RB_CADES_2_1";
+	private String signaturePolicy = "AD_RB_CADES_2_2";
 	private String provider;
 	private String content;
 	

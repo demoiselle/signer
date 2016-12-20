@@ -72,8 +72,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.demoiselle.signer.example.token.TokenManager;
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.signature.signer.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.signer.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.signature.core.util.ZipBytes;
 
 @Path("filemanager")

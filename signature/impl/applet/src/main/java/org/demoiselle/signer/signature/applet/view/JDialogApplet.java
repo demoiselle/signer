@@ -59,6 +59,11 @@ import javax.swing.WindowConstants;
 
 import netscape.javascript.JSObject;
 
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class JDialogApplet extends JApplet {
 
     private static final long serialVersionUID = 1L;

@@ -29,7 +29,7 @@ public class TrayIcon {
 					URL urlImagem = getClass().getResource("/icone.jpeg");
 					Image image = Toolkit.getDefaultToolkit().getImage(urlImagem);
 					PopupMenu popup = new PopupMenu();
-					final java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image, "Signer Agent Desktop", popup);
+					final java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image, "Demoiselle Signer 2.0.0-BETA1", popup);
 					trayIcon.setImageAutoSize(true);
 					MenuItem removeTray = new MenuItem("Remove Tray Icon");
 					removeTray.addActionListener(new ActionListener() {

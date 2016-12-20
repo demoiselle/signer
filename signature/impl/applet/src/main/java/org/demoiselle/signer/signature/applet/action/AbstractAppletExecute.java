@@ -62,9 +62,15 @@ import org.w3c.dom.html.HTMLInputElement;
  * Implementação padrao do AppletExecute que fornece alguns recursos para
  * manipulacao do certificado e html
  *
- * @author SUPST/STDCS
+ * @author SUPSD/
  *
  */
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated 
 public abstract class AbstractAppletExecute implements AppletExecute {
 
     /**

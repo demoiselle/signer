@@ -44,6 +44,12 @@ import org.demoiselle.signer.signature.applet.action.AppletExecute;
  * @author SUPST/STDCS
  *
  */
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class AppletExecuteFactory {
 
     /**

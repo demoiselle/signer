@@ -40,6 +40,12 @@ package org.demoiselle.signer.signature.applet.factory;
 /**
  * Excecoes geradas pela package Factory
  */
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class FactoryException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

@@ -6,17 +6,17 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
-import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.agent.desktop.web.Execute;
 import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import com.sun.security.auth.callback.DialogCallbackHandler;
 
 public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsResponse> {
 
 	public ListCertsResponse doCommand(final ListCertsRequest request) {
 		try {
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-			loader.setCallbackHandler(new PinHandler());
+			loader.setCallbackHandler(new DialogCallbackHandler());
 			KeyStore keyStore = loader.getKeyStore();
 			Enumeration<String> aliases = keyStore.aliases();
 			ListCertsResponse response = new ListCertsResponse();

@@ -82,12 +82,12 @@ public class JnlpREST {
 		sb.append("<all-permissions/>\n");
 		sb.append("</security>\n");
 		sb.append("<resources>\n");
-		sb.append("<jar href=\"assinadorweb-jnlp-2.0.0-BETA1.jar\" main=\"true\"/>\n");
-		sb.append("<jar href=\"signature-core-2.0.0-BETA1.jar\"/>\n");
-		sb.append("<jar href=\"signature-signer-2.0.0-BETA1.jar\"/>\n");
+		sb.append("<jar href=\"assinadorweb-jnlp-2.0.0-BETA2.jar\" main=\"true\"/>\n");
+		sb.append("<jar href=\"signature-core-2.0.0-BETA2.jar\"/>\n");
+		sb.append("<jar href=\"signature-cades-2.0.0-BETA2.jar\"/>\n");
 		sb.append("<jar href=\"signature-criptography-2.0.0-BETA1.jar\"/>\n");
 		sb.append("<jar href=\"ca-icpbrasil-2.0.0-BETA1.jar\"/>\n");
-		sb.append("<jar href=\"jnlp-2.0.0-BETA1.jar\"/>\n");
+		sb.append("<jar href=\"jnlp-2.0.0-BETA2.jar\"/>\n");
 		sb.append("<jar href=\"bcprov-jdk15-1.45.jar\"/>\n");
 		sb.append("<jar href=\"bcmail-jdk15-1.45.jar\"/>\n");
 		sb.append("<property name=\"jnlp.identifier\" value=\"").append(identificador).append("\"/>\n");

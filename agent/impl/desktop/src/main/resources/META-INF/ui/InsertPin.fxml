@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<?import javafx.scene.image.*?>
+
+
+<GridPane  
+    fx:controller="org.demoiselle.signer.agent.desktop.ui.Controller" 
+    xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10"
+    styleClass="root">
+    <padding><Insets top="10" right="20" bottom="20" left="20"/></padding>
+
+    <ImageView
+                fx:id="imageView"
+                fitHeight="150.0"
+                fitWidth="500.0"
+                preserveRatio="true"
+                GridPane.columnIndex="0" GridPane.rowIndex="0"
+                GridPane.columnSpan="2">
+            <image>
+                <Image
+                    url="@logoDemoiselle.png"
+                    backgroundLoading="true"
+                    />
+            </image>   
+
+    </ImageView>
+ 
+    <Text id="welcome-text" text="Autenticação PKCS11" 
+         GridPane.columnIndex="0" GridPane.rowIndex="1"
+        GridPane.columnSpan="2"/>
+ 
+    <Label text="Entre com o PIN:"
+        GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+ 
+    <PasswordField 
+        fx:id="pwdPIN"
+        GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+        
+    <HBox spacing="10" alignment="bottom_right" 
+        GridPane.columnIndex="1" GridPane.rowIndex="4">
+        <Button text="Validar"
+        onAction="#submitButtonAction"
+        />
+    </HBox>
+
+    <Text fx:id="actiontarget"
+        GridPane.columnSpan="2"
+        GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+        
+    <stylesheets>
+      <URL value="@Login.css" />
+    </stylesheets>
+
+</GridPane>

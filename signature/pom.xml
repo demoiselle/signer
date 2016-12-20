@@ -17,7 +17,7 @@
         <module>impl/core</module>
 	<module>impl/criptography</module>
 	<module>impl/policy</module>
-        <module>impl/signer</module>
+        <module>impl/cades</module>
 	<module>impl/timestamp</module>        
 	<module>impl/xml</module>
     </modules>

@@ -8,7 +8,7 @@ JAVA_HOME=/usr/lib/jvm/java-7-serpro
 PATH=$JAVA_HOME/bin:$PATH
 
 #Colocar o Pin do Token aqui
-PASSWORD="xxxx"
+PASSWORD="EsS197402"
 
 #
 DSANAME="SERPRO"

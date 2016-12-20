@@ -50,17 +50,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.swing.JOptionPane;
+
 import org.demoiselle.signer.jnlp.action.AbstractFrameExecute;
 import org.demoiselle.signer.jnlp.util.AuthorizationException;
 import org.demoiselle.signer.jnlp.util.ConectionException;
 import org.demoiselle.signer.jnlp.util.Utils;
 import org.demoiselle.signer.jnlp.view.MainFrame;
+import org.demoiselle.signer.signature.cades.SignerException;
+import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.signature.core.util.ZipBytes;
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.signature.signer.SignerException;
-import org.demoiselle.signer.signature.signer.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.signer.pkcs7.PKCS7Signer;
 
 
 public class App extends AbstractFrameExecute {

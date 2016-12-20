@@ -45,9 +45,20 @@ import java.util.Enumeration;
 
 import javax.swing.table.AbstractTableModel;
 
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class ListaCertificadosModel extends AbstractTableModel {
 
-    private Object[][] dados;
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private Object[][] dados;
 
     private final String[] columnNames = {"Emitido Para", "Número de série", "Válido de", "Válido até", "Emitido Por"};
 

@@ -49,6 +49,12 @@ import java.util.ResourceBundle;
  * nenhum outro resource.
  *
  */
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public enum AppletConfig {
 
     PARAM_APPLET_ACTION_EXECUTE("factory.applet.action"),

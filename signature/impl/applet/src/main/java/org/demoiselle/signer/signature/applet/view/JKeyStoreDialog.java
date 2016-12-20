@@ -36,6 +36,26 @@
  */
 package org.demoiselle.signer.signature.applet.view;
 
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Rectangle;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyListener;
+import java.security.KeyStore;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.border.Border;
+import javax.swing.border.EtchedBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.table.TableColumn;
+
 import org.demoiselle.signer.signature.applet.config.AppletConfig;
 import org.demoiselle.signer.signature.applet.handler.PinCallbackHandler;
 import org.demoiselle.signer.signature.applet.tiny.Item;
@@ -47,27 +67,6 @@ import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoaderExcept
 import org.demoiselle.signer.signature.core.keystore.loader.PKCS11NotFoundException;
 import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
 
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Rectangle;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyListener;
-import java.security.KeyStore;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.border.Border;
-import javax.swing.border.EtchedBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.table.TableColumn;
-
 /**
  * JDialog especializado para obtencao do KeyStore de um dispositivo usb ou
  * smartcard.
@@ -75,6 +74,12 @@ import javax.swing.table.TableColumn;
  * @author SUPST/STCTA
  *
  */
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public class JKeyStoreDialog extends JDialog {
 
     private static final long serialVersionUID = 1L;

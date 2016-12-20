@@ -43,6 +43,12 @@ import java.security.KeyStore;
  * Interface que define a acao a ser executado pelo applet logo apos o
  * carregametno do keystore
  */
+
+/**
+ * @deprecated  As of release 2.0.0, see org.demoiselle.signer.jnlp project
+ */
+
+@Deprecated
 public interface AppletExecute {
 
     /**

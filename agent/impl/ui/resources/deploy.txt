@@ -1,5 +1,6 @@
-publicar os arquivos
-scp agent-desktop.jnlp root@stdcs.supst.serpro:/rede/aplic/www/agent-desktop/
-scp agent-desktop.js root@stdcs.supst.serpro:/rede/aplic/www/agent-desktop/
-scp app.js root@stdcs.supst.serpro:/rede/aplic/www/agent-desktop/
-scp index.html root@stdcs.supst.serpro:/rede/aplic/www/agent-desktop/
+publicar os arquivos abaixo, no servidor web:
+
+agent-desktop.jnlp 
+agent-desktop.js 
+app.js 
+index.html 
