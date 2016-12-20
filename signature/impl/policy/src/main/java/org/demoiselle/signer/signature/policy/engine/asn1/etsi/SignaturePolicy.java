@@ -39,12 +39,15 @@ package org.demoiselle.signer.signature.policy.engine.asn1.etsi;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.signature.policy.engine.asn1.ASN1Object;
+import org.bouncycastle.asn1.DEROctetString;
+
 
 public class SignaturePolicy {
 
     private AlgorithmIdentifier signPolicyHashAlg;
     private SignPolicyInfo signPolicyInfo;
     private SignPolicyHash signPolicyHash;
+    private String signPolicyURI;
 
     public AlgorithmIdentifier getSignPolicyHashAlg() {
         return signPolicyHashAlg;
@@ -70,18 +73,29 @@ public class SignaturePolicy {
         this.signPolicyHash = signPolicyHash;
     }
 
+    public String getSignPolicyURI() {
+		return signPolicyURI;
+	}
+
+	public void setSignPolicyURI(String signPolicyURI) {
+		this.signPolicyURI = signPolicyURI;
+	}
+    
     public void parse(ASN1Primitive derObject) {
         ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
         this.signPolicyHashAlg = new AlgorithmIdentifier();
         this.signPolicyHashAlg.parse(derSequence.getObjectAt(0).toASN1Primitive());
         this.signPolicyInfo = new SignPolicyInfo();
-        this.signPolicyInfo.parse(derSequence.getObjectAt(1).toASN1Primitive());
+        this.signPolicyInfo.parse(derSequence.getObjectAt(1).toASN1Primitive());          
         if (derSequence.size() == 3) {
-            this.signPolicyHash = new SignPolicyHash();
-            this.signPolicyHash.parse(derSequence.getObjectAt(2).toASN1Primitive());
+            this.signPolicyHash = new SignPolicyHash((DEROctetString) derSequence.getObjectAt(2));
         }
     }
 
+    
+    
+    
+    
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
