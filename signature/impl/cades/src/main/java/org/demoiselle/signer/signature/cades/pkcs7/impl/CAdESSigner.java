@@ -513,7 +513,7 @@ public class CAdESSigner implements PKCS7Signer {
                     return sha256WithRSAEncryption.getAlgorithmName();
                 }
                 default: {
-                    return sha1WithRSAEncryption.getAlgorithmName();
+                    return sha256WithRSAEncryption.getAlgorithmName();
                 }
             }
         }
