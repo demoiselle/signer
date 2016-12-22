@@ -41,12 +41,14 @@ import java.math.BigInteger;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TimeZone;
+
+import org.apache.log4j.Logger;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+
 
 /**
  *
@@ -54,7 +56,8 @@ import org.slf4j.LoggerFactory;
  */
 public class Timestamp {
 
-    private static final Logger logger = LoggerFactory.getLogger(Timestamp.class);
+    private final static Logger logger = Logger.getLogger(Timestamp.class.getName());
+    
 
     private TimeStampToken timeStampToken = null;
 

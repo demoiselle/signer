@@ -36,21 +36,19 @@
  */
 package org.demoiselle.signer.signature.cades.pkcs7.attribute.impl;
 
-import org.demoiselle.signer.signature.cades.SignerException;
-import org.demoiselle.signer.signature.cades.pkcs7.attribute.UnsignedAttribute;
-import org.demoiselle.signer.signature.core.timestamp.TimeStampGenerator;
-import org.demoiselle.signer.signature.core.timestamp.TimeStampGeneratorSelector;
-import org.demoiselle.signer.signature.policy.engine.asn1.etsi.SignaturePolicy;
-
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-import java.util.ServiceLoader;
 
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.demoiselle.signer.signature.cades.SignerException;
+import org.demoiselle.signer.signature.cades.pkcs7.attribute.UnsignedAttribute;
+import org.demoiselle.signer.signature.core.timestamp.TimeStampGenerator;
+import org.demoiselle.signer.signature.core.timestamp.TimeStampGeneratorSelector;
+import org.demoiselle.signer.signature.policy.engine.asn1.etsi.SignaturePolicy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

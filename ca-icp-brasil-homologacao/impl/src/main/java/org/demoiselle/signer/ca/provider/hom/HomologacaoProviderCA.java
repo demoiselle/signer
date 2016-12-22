@@ -43,7 +43,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.apache.log4j.Level;
+//import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 
@@ -64,7 +64,7 @@ public class HomologacaoProviderCA implements ProviderCA {
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPROACFv3Homologacao));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(intermediariaHOMv2));
         } catch (Throwable error) {
-        	LOGGER.setLevel(Level.INFO);
+//        	LOGGER.setLevel(Level.INFO);
         	LOGGER.info("----------- HomologacaoProviderCA -----------");
         	LOGGER.info(error.getMessage());
             return null;
