@@ -20,6 +20,85 @@
 	table tr:nth-child(even) {
 		background-color: #ffffff;
 	}
+        
+    h2{
+        color:#23527c;
+        text-align: center;
+        margin-left: auto; 
+        margin-right: auto;
+        width:850px;
+    }
+
+    tr{
+        font-size: 14px;
+
+    }
+
+    body{
+        font-family: robotoSlabBold ,'Arial','sans-serif';
+        color:#23527c;
+        padding: 0;
+        margin: 0;
+        background-color: #23527c;
+    }
+
+    #action{
+        display:block;
+        list-style: none;
+        margin:0px;
+        float:right;
+    }
+
+    #action li{
+        float:left;
+        cursor: pointer;
+        background-color: #F1F1F1;
+        color: #777;
+        font-size:13px;
+        padding: 5px;
+    }
+    
+    #action li:not(:first-child):before {
+        content: " | ";
+    }
+
+    #main_list{
+        background-color: #F1F1F1;
+        width:900px;
+        float: left;
+    }
+
+    #main{
+        width:900px; 
+        margin-left: auto; 
+        margin-right: auto;
+        text-align: center;
+        background-color: #FFF;
+    }
+    
+    #into{
+        padding: 10px;
+        text-align: left;
+        height:800px; 
+        display:block;
+    }
+
+    #polices{
+        width:200px;
+        margin-right: 10px;
+        background-color: #FFF;
+    }
+
+    #result{
+        width:700px;
+        height: 150px
+    }
+
+    #errors{
+        width:700px;
+        border: none;
+    }
+
 </style>
 <html>
 <script src="angular.min.js"></script>
@@ -27,20 +106,25 @@
 <script src="agent-desktop.js"></script>
 
 <body>
-	<div ng-app="agent-desktop" ng-controller="controller">
-		<h2>Interface do Aplicativo Demoiselle Signer Agent Desktop</h2>
-		<input type="button" value="Listar Certificados instalados" ng-click="listarCertificados()">&nbsp;
-		<input type="button" value="Verificar status" ng-click="status()">&nbsp;
-		<input type="button" value="Assinar" ng-click="assinar()">&nbsp;
-		<input type="button" value="Desligar Agent Desktop" ng-click="shutdown()"><br><br>
-		PIN <input type="password" ng-model="password">
-		<input type="button" value="Deslogar o PIN" ng-click="logout()"><br><br>
-		<table>
+	<div id="main" ng-app="agent-desktop" ng-controller="controller">
+        <div id="main_list">
+            <ul id="action">
+                <li ng-click="listarCertificados()">Listar Certificados instalados</li>
+                <li ng-click="status()">Verificar status</li>
+                <li ng-click="assinar()">Assinar</li>
+                <li ng-click="shutdown()">Desligar Agent Desktop</li>
+                <li ng-click="logout()">Deslogar o PIN</li>
+                <li ng-click="getfiles()">Selecionar Arquivo</li>
+            </ul>
+        </div>
+		<h2 style="float:left">Interface do Aplicativo Demoiselle Signer Agent Desktop</h2>
+        <div id="into">
+		<table style="width:850px">
 			<tr>
 				<th>Alias</th>
 				<th>Emitido para</th>
-				<th>não antes</th>
-				<th>não depois</th>
+				<th>Não antes</th>
+				<th>Não depois</th>
 				<th>Provedor</th>
 				<th>Acao</th>
 			</tr>
@@ -50,19 +134,33 @@
 				<td>{{ cert.notBefore }}</td>
 				<td>{{ cert.notAfter }}</td>
 				<td>{{ cert.provider }}</td>
-				<td><button ng-click="assinar(cert.alias, cert.provider, content)">Assinar o texto abaixo</button></td>
+				<td>
+                    <button ng-click="assinar(cert.alias, cert.provider, content)">Assinar Texto</button>
+                    <button ng-click="assinarArquivo(cert.alias, cert.provider, content)">Assinar Documento</button>
+                </td>
 			</tr>
 		</table>
 		<br><br>
 		Texto a ser assinado: <input type="text" ng-model="content">
-		<select ng-model="politica">
+		<select id="polices" ng-model="politica">
 			<option ng-repeat="p in listaPoliticas" value="{{p}}">{{p}}
-		</select><input type="button" value="Carregar lista de politicas" ng-click="listarPoliticas()"><br>
-		Resultado da Assinatura: <textarea name="signed">{{signed}}</textarea>
-		<br>
-		Erros: <input type="text" ng-model="erros">
+		</select>
+        <input type="button" value="Carregar lista de politicas" ng-click="listarPoliticas()">
+        <div style="margin-top:10px;">
+		Resultado da Assinatura: <textarea id="result" name="signed">{{signed}}</textarea>
+		</div>
+        <div>
+		Erros: <input id="errors" type="text" ng-model="erros">
+        </div>
+        <div>
+		Arquivo: <input id="errors" type="text" ng-model="fileName">
+        </div>
+        <div>
+		Arquivo Assinado: <input id="errors" type="text" ng-model="signedFileName">
+        </div>
+	    <div style="margin-top:100px"><a href="agent-desktop.jnlp" download> Baixar/Executar Agent-Desktop </a></div>
+        </div>
 	</div>
-	<div><a href="agent-desktop.jnlp" download> Baixar/Executar Agent-Desktop </a></div>
 </body>
 
 </html>

@@ -67,6 +67,29 @@ angular.module('agent-desktop').factory('sadService', ['$q', '$rootScope', funct
         var promise = execute(listpoliciesCommand);
         return promise;
     }
+    service.getfiles = function () {
+        var getfileCommand = {
+            command: 'getfiles'
+        }
+        var promise = execute(getfileCommand);
+        return promise;
+    }
+    service.signerfile = function (alias, provider, content, signaturePolicy) {
+        var signerCommand = {
+            command: 'filesigner',
+            type: 'raw',
+            format: 'text',
+            compacted: false,
+            alias: alias,
+            signaturePolicy: signaturePolicy,
+            provider: provider,
+            content: content
+        }
+        console.log(signerCommand);
+        var promise = execute(signerCommand);
+        return promise;
+    }
+
     service.shutdown = function () {
         var shutdownCommand = {
             command: 'shutdown'
