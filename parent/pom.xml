@@ -104,24 +104,45 @@
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcprov-jdk15on</artifactId>
-			<version>1.51</version>
+			<version>${bouncycastle.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcmail-jdk15on</artifactId>
-			<version>1.51</version>
+			<version>${bouncycastle.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.bouncycastle</groupId>
 			<artifactId>bcpkix-jdk15on</artifactId>
-			<version>1.51</version>
+			<version>${bouncycastle.version}</version>
 		</dependency>
 
 
 	</dependencies>
 
-	<build>
+	<build>		
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Permissions>all-permissions</Permissions>
+							<Caller-Allowable-Codebase>*</Caller-Allowable-Codebase>
+							<Codebase>*</Codebase>
+							<Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
+							<Trusted-Library>true</Trusted-Library>
+							<Bundle-RequiredExecutionEnvironment> J2SE-1.5, JavaSE-1.6, JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+							<Implementation-Vendor-Id>org.demoiselle</Implementation-Vendor-Id>
+							<Implementation-Version>${project.version}</Implementation-Version>
+							<Specification-Vendor>Demoiselle.org</Specification-Vendor>
+							<Implementation-Vendor>Demoiselle.org</Implementation-Vendor>
+							<Bundle-Version>${project.version}</Bundle-Version>
+						</manifestEntries>
+					</archive>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -460,6 +481,7 @@
 		<wagon.plugin.version>1.0-beta-3</wagon.plugin.version>
 		<eclipse.lifecycle.mapping.plugin.version>1.0.0</eclipse.lifecycle.mapping.plugin.version>
 		<java.version>1.7</java.version>
+		<bouncycastle.version>1.52</bouncycastle.version>
 		<site.url>file://${project.build.directory}/tmp</site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.release.plugin.version>2.5</maven.release.plugin.version>

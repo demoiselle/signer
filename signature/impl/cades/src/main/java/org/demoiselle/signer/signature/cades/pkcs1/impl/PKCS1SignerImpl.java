@@ -52,7 +52,7 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 
     private Provider provider = null;
     private PrivateKey privateKey = null;
-    private String algorithm = SignerAlgorithmEnum.SHA1withRSA.getAlgorithm();
+    private String algorithm = SignerAlgorithmEnum.SHA256withRSA.getAlgorithm();
     private PublicKey publicKey = null;
 
     /**

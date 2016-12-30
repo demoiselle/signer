@@ -56,7 +56,7 @@ public enum SignerAlgorithmEnum {
     /**
      * Definicao de algoritmo padrao.
      */
-    public static SignerAlgorithmEnum DEFAULT = SignerAlgorithmEnum.SHA1withRSA;
+    public static SignerAlgorithmEnum DEFAULT = SignerAlgorithmEnum.SHA256withRSA;
 
     /**
      * Definicao de algoritmo padrao.
