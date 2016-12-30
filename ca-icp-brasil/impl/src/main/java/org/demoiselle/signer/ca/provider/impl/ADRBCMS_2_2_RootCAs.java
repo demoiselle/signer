@@ -51,11 +51,9 @@ public class ADRBCMS_2_2_RootCAs implements ProviderSignaturePolicyRootCA {
     public Collection<X509Certificate> getCAs() {
         List<X509Certificate> result = new ArrayList<X509Certificate>();
         InputStream icpBrasilv2 = ADRBCMS_2_2_RootCAs.class.getClassLoader().getResourceAsStream("trustedca/ICP-Brasilv2.crt");
-        //InputStream icpBrasilv4 = ADRBCMS_2_2_RootCAs.class.getClassLoader().getResourceAsStream("trustedca/ICP-Brasilv4.crt");
         InputStream icpBrasilv5 = ADRBCMS_2_2_RootCAs.class.getClassLoader().getResourceAsStream("trustedca/ICP-Brasilv5.crt");
         try {
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(icpBrasilv2));
-           //result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(icpBrasilv4));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(icpBrasilv5));
         } catch (CertificateException e) {
         	e.printStackTrace();
