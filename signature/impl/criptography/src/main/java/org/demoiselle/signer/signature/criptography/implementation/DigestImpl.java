@@ -54,7 +54,7 @@ import org.demoiselle.signer.signature.criptography.DigestAlgorithmEnum;
 public class DigestImpl implements Digest {
 
 	private String algorithm = DigestAlgorithmEnum.DEFAULT.getAlgorithm();
-	private final int BUFSIZE = 128;
+	private final int BUFSIZE = 256;
 
 	@Override
 	public void setAlgorithm(String algorithm) {

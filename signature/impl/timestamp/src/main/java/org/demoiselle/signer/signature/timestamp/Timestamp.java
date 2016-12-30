@@ -112,11 +112,11 @@ public class Timestamp {
         return timeStampToken.getCertificates();
     }
 
-    public Map getAtributosAssinados() {
+    public Map<?, ?> getAtributosAssinados() {
         return timeStampToken.getSignedAttributes().toHashtable();
     }
 
-    public Map getAtributosNaoAssinados() {
+    public Map<?, ?> getAtributosNaoAssinados() {
         return timeStampToken.getUnsignedAttributes().toHashtable();
     }
 

@@ -40,22 +40,19 @@ import org.demoiselle.signer.signature.core.Priority;
 import org.demoiselle.signer.signature.core.exception.CertificateCoreException;
 import org.demoiselle.signer.signature.core.timestamp.TimeStampGenerator;
 import org.demoiselle.signer.signature.timestamp.connector.TimeStampOperator;
-
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @Priority(Priority.MIN_PRIORITY)
 public class TimestampGeneratorImpl implements TimeStampGenerator {
 
-    private static final Logger logger = LoggerFactory.getLogger(TimestampGeneratorImpl.class);
+    //private static final Logger logger = LoggerFactory.getLogger(TimestampGeneratorImpl.class);
 
     private byte[] content;
     private PrivateKey privateKey;
     private Certificate[] certificates;
-
+    
     /**
      * Inicializa os atributos necessarios para obter o carimbo de tempo
      *
@@ -68,7 +65,7 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
     public void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates) throws CertificateCoreException {
         this.content = content;
         this.privateKey = privateKey;
-        this.certificates = certificates;
+        this.certificates = certificates;        
     }
 
     /**

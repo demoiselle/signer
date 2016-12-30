@@ -44,6 +44,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
@@ -74,7 +75,7 @@ public class RequestSigner {
      * @param request
      * @return A requisicao assinada
      */
-    public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request) {
+    public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request, String algorithm) {
         try {
             logger.info("Efetuando a assinatura da requisicao");
             Security.addProvider(new BouncyCastleProvider());
@@ -85,7 +86,14 @@ public class RequestSigner {
 
             // setup the generator
             CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
-            SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder().build("SHA256withRSA", privateKey, signCert);
+            String varAlgorithm = null;
+            if (algorithm != null && !algorithm.isEmpty()){
+            	varAlgorithm = algorithm;
+            }else{
+            	varAlgorithm = "SHA256withRSA";
+            }
+            	
+            SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder().build(varAlgorithm, privateKey, signCert);
             generator.addSignerInfoGenerator(signerInfoGenerator);
 
             Store certStore = new JcaCertStore(certList);

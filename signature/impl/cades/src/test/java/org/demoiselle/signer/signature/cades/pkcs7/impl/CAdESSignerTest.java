@@ -36,14 +36,13 @@
  */
 package org.demoiselle.signer.signature.cades.pkcs7.impl;
 
-import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
-import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
-
+import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.KeyStore;
+import java.security.KeyStore.Builder;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -57,30 +56,39 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
+import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
 import org.junit.Test;
-import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author 07721825741
  */
 public class CAdESSignerTest {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(CAdESSignerTest.class);
-
+    // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
     // @Test
-    
-    // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa
+
     public void testSignAndVerifySignature() {
         try {
-            String configName = "~/drives/drivers.config";
-            String password = "";
-
-            Provider p = new sun.security.pkcs11.SunPKCS11(configName);
+           
+            // ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
+            
+            // Para TOKEN Branco a linha abaixo
+            //String pkcs11LibraryPath = "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+          //Para TOKEN Azul a linha abaixo
+            String pkcs11LibraryPath = "/usr/lib/libeToken.so";
+            
+        	StringBuilder buf = new StringBuilder();
+        	buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
+        	Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
             Security.addProvider(p);
-
-            KeyStore ks = KeyStore.getInstance("PKCS11", "SunPKCS11-Provedor");
-            ks.load(null, password.toCharArray());
+            
+            // ATENÇÃO ALTERAR "SENHA" ABAIXO
+            Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
+            KeyStore ks = builder.getKeyStore();
 
             Certificate[] certificates = null;
 
@@ -89,43 +97,75 @@ public class CAdESSignerTest {
             Enumeration<String> e = ks.aliases();
             while (e.hasMoreElements()) {
                 alias = e.nextElement();
-                logger.info("alias..............: {}", alias);
+                System.out.println("alias..............: {}"+ alias);
                 certificates = ks.getCertificateChain(alias);
             }
 
             X509Certificate c = (X509Certificate) certificates[0];
-            logger.info("Número de série....: {}", c.getSerialNumber().toString());
+            System.out.println("Número de série....: {}"+ c.getSerialNumber().toString());
 
-            byte[] content = "Hello World".getBytes();
-
+            String arquivo = "local_e_nome_do_arquivo";
+            
+            
+			byte[] paraAssinar = readContent(arquivo);
+			
+						
             /* Parametrizando o objeto doSign */
             PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
             signer.setCertificates(ks.getCertificateChain(alias));
             signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
             signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
-            signer.setAttached(true);
-
+            signer.setAttached(false);
+            
+			
             /* Realiza a assinatura do conteudo */
-            logger.info("Efetuando a  assinatura do conteudo");
-            byte[] signed = signer.doSign(content);
-
-            /* Valida o conteudo */
-            logger.info("Efetuando a validacao da assinatura.");
-            boolean checked = signer.check(content, signed);
+            System.out.println("Efetuando a  assinatura do conteudo");
+            byte[] assinatura = signer.doSign(paraAssinar);
+            /* Valida o conteudo antes de gravar em arquivo */
+            System.out.println("Efetuando a validacao da assinatura.");
+            boolean checked = signer.check(paraAssinar, assinatura);
+            
 
             if (checked) {
-                logger.info("A assinatura foi validada.");
+            	System.out.println("A assinatura foi validada.");
             } else {
-                logger.info("A assinatura foi invalidada!");
+            	System.out.println("A assinatura foi invalidada!");
             }
 
-            try (FileOutputStream fos = new FileOutputStream(new File("./helloworld.p7s"))) {
-                fos.write(signed);
-            }
+            try {
+    			File file = new File(arquivo+".p7s");
+    			FileOutputStream os = new FileOutputStream(file);
+    			os.write(assinatura);
+    			os.flush();
+    			os.close();
+    		} catch (IOException ex) {
+    			ex.printStackTrace();
+    		}
+            
+            /* Valida o conteudo depois de gravado */
+            System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
+            byte[] arquivoAssinatura = readContent(arquivo+".p7s");
+            checked = signer.check(paraAssinar, arquivoAssinatura);
 
-        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException | CertificateException | UnrecoverableKeyException ex) {
+        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
             Logger.getLogger(CAdESSignerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    private byte[] readContent(String arquivo) {
+		
+		byte[] result = null;
+		try {
+			File file = new File(arquivo);
+			FileInputStream is = new FileInputStream(arquivo);
+			result = new byte[(int) file.length()];
+			is.read(result);
+			is.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+    
 
 }

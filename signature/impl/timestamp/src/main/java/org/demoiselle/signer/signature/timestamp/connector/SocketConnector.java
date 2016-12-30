@@ -77,6 +77,7 @@ public class SocketConnector implements Connector {
             logger.info("Obtendo o response");
             return socket.getInputStream();
         } catch (IOException e) {
+        	e.printStackTrace();
             logger.info(e.getMessage());
         }
         return null;

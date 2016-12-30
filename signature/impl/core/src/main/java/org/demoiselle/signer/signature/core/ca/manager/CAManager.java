@@ -101,7 +101,6 @@ public class CAManager {
                 valid = this.validateRootCA(ca, certificate);
                 break;
             } catch (CAManagerException error) {
-            	LOGGER.setLevel(Level.INFO);
             	LOGGER.info("----------- CAManager validate rootCAs -----------");
             	LOGGER.info(error.getMessage());
                 continue;
@@ -140,7 +139,6 @@ public class CAManager {
     			throw new CAManagerException("A autoridade raiz não faz parte da cadeia de certificados do certificado informado");
     		}
     	} catch(Exception ex){
-    		LOGGER.setLevel(Level.INFO);
         	LOGGER.info("----------- CAManager validateRootCA  -----------");
         	LOGGER.info(ex.getMessage());
     		return false;
@@ -159,23 +157,21 @@ public class CAManager {
     public boolean isCAofCertificate(X509Certificate ca,  X509Certificate certificate) {
         try {     	
         	
-        	ASN1InputStream derin = new ASN1InputStream(certificate.getEncoded());
-            ASN1Primitive certInfo = derin.readObject();
-            derin.close();
-            ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
-        	X509CertificateObject certificateObject = new X509CertificateObject(org.bouncycastle.asn1.x509.Certificate.getInstance(seq));
-        	certificateObject.verify(ca.getPublicKey());
-//        	certificate.verify(ca.getPublicKey());
+        	//ASN1InputStream derin = new ASN1InputStream(certificate.getEncoded());
+            //ASN1Primitive certInfo = derin.readObject();
+            //derin.close();
+            //ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
+        	//X509CertificateObject certificateObject = new X509CertificateObject(org.bouncycastle.asn1.x509.Certificate.getInstance(seq));
+        	//certificateObject.verify(ca.getPublicKey());
+        	certificate.verify(ca.getPublicKey());
             return true;
         } catch (SignatureException ex) {
-        	LOGGER.setLevel(Level.INFO);
-        	LOGGER.info("----------- CAManager isCAofCertificate -----------");
-        	LOGGER.info(ex.getMessage());
+        	//LOGGER.info("----------- CAManager isCAofCertificate -----------");
+        	//LOGGER.info(ex.getMessage());
             return false;
         } catch (InvalidKeyException ex) {
-        	LOGGER.setLevel(Level.INFO);
-        	LOGGER.info("----------- CAManager isCAofCertificate -----------");
-        	LOGGER.info(ex.getMessage());
+        	//LOGGER.info("----------- CAManager isCAofCertificate -----------");
+        	//LOGGER.info(ex.getMessage());
         	return false;
         } catch (CertificateException ex) {
             throw new CAManagerException("Algum erro ocorreu com o certificado informado", ex);
@@ -183,10 +179,10 @@ public class CAManager {
             throw new CAManagerException("Não há o algoritmo necessário", ex);
         } catch (NoSuchProviderException ex) {
             throw new CAManagerException("Provider inválido", ex);
-        } catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		} 
+//        } catch (IOException e) {
+			//e.printStackTrace();
+			//return false;
+        } 
     }
 
     public Certificate[] getCertificateChainArray(X509Certificate certificate) {

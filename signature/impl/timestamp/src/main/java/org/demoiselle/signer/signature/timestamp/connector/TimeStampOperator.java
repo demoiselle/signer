@@ -109,20 +109,23 @@ public class TimeStampOperator {
             Digest digest = DigestFactory.getInstance().factoryDefault();
             digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
             byte[] hashedMessage = digest.digest(content);
+            
             logger.info(Base64.toBase64String(hashedMessage));
 
             logger.info("Montando a requisicao para o carimbador de tempo");
             TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();
+                        
             timeStampRequestGenerator.setReqPolicy(new ASN1ObjectIdentifier(TimeStampConfig.getInstance().getTSPOid()));
             timeStampRequestGenerator.setCertReq(true);
-            timeStampRequest = timeStampRequestGenerator.generate(TSPAlgorithms.SHA256, hashedMessage, BigInteger.valueOf(100));
+            BigInteger nonce = BigInteger.valueOf(100);
+            timeStampRequest = timeStampRequestGenerator.generate(new ASN1ObjectIdentifier(TSPAlgorithms.SHA256.getId()), hashedMessage, nonce);
             byte request[] = timeStampRequest.getEncoded();
-
             logger.info("Efetuando a  assinatura do conteudo");
             RequestSigner requestSigner = new RequestSigner();
-            byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request);
+            byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request, "SHA256withRSA");
             return signedRequest;
-        } catch (IOException ex) {
+        } catch (IOException ex) { //catch (IOException | NoSuchAlgorithmException ex
+        
             throw new CertificateCoreException(ex.getMessage());
         }
     }
@@ -305,7 +308,8 @@ public class TimeStampOperator {
      * @param response O carimbo de tempo a ser validado
      *
      */
-    public void validate(byte[] content, byte[] response) throws CertificateCoreException {
+    @SuppressWarnings("unchecked")
+	public void validate(byte[] content, byte[] response) throws CertificateCoreException {
         try {
             TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(response));
             CMSSignedData s = timeStampToken.toCMSSignedData();
@@ -315,12 +319,12 @@ public class TimeStampOperator {
             Store certStore = s.getCertificates();
             SignerInformationStore signers = s.getSignerInfos();
             Collection<SignerInformation> c = signers.getSigners();
-            Iterator it = c.iterator();
+            Iterator<SignerInformation> it = c.iterator();
 
             while (it.hasNext()) {
                 SignerInformation signer = (SignerInformation) it.next();
-                Collection certCollection = certStore.getMatches(signer.getSID());
-                Iterator certIt = certCollection.iterator();
+                Collection<?> certCollection = certStore.getMatches(signer.getSID());
+                Iterator<?> certIt = certCollection.iterator();
                 X509CertificateHolder cert = (X509CertificateHolder) certIt.next();
                 if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert))) {
                     verified++;

@@ -47,6 +47,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,7 +69,8 @@ public class MessageDigest implements SignedAttribute {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
             byte[] hash = md.digest(content);
-            return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DEROctetString(hash)));
+            logger.info(Base64.toBase64String(hash));
+            return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DEROctetString(hash)));            
         } catch (NoSuchAlgorithmException ex) {
             logger.info(ex.getMessage());
         }
