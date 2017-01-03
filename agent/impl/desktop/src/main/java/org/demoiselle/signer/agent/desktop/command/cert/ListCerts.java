@@ -10,7 +10,6 @@ import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.agent.desktop.web.Execute;
 import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
-import com.sun.security.auth.callback.DialogCallbackHandler;
 
 public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsResponse> {
 

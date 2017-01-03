@@ -36,12 +36,18 @@
  */
 package org.demoiselle.signer.signature.core.keystore.loader.configuration;
 
-import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoaderException;
-
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
+import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoaderException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,6 +75,8 @@ public class Configuration {
     protected static final String CUSTOM_CONFIG_FILENAME = "drivers.config";
     protected static final String FILE_SEPARATOR = "file.separator";
     protected static final String MSCAPI_DISABLED = "mscapi.disabled";
+    protected static final String  CONFIG_FILE_DIR = ".signer";
+    protected static final String  CONFIG_FILE_PATH = "drivers.properties";
     private static final Configuration instance = new Configuration();
 
     public static Configuration getInstance() {
@@ -79,6 +87,8 @@ public class Configuration {
     private Configuration() {
         String winRoot = (System.getenv("SystemRoot") == null) ? "" : System.getenv("SystemRoot").replaceAll("\\\\", "/");
         Map<String, String> map = new HashMap<>();
+        
+        loadFromHomeFile(map);
 
         map.put("TokenOuSmartCard_00", winRoot.concat("/system32/ngp11v211.dll"));
         map.put("TokenOuSmartCard_01", winRoot.concat("/system32/aetpkss1.dll"));
@@ -309,6 +319,38 @@ public class Configuration {
         }
 
         return content;
+    }
+    
+    private void loadFromHomeFile(Map<String, String> map){
+    	Properties prop = new Properties();
+    	InputStream input = null;
+    	
+    	
+    	try {
+			input = new FileInputStream(Configuration.getConfigFilePath());
+			prop.load(input);
+			Set<String> keys = prop.stringPropertyNames();
+			Iterator<String> it = keys.iterator();
+			while (it.hasNext()){
+				String key = it.next();
+				map.put(key, prop.getProperty(key));
+			}
+		} catch (FileNotFoundException e) {
+			new File(System.getProperty(CUSTOM_CONFIG_PATH)+System.getProperty(FILE_SEPARATOR)+CONFIG_FILE_DIR).mkdir();
+			try {
+				new File(Configuration.getConfigFilePath()).createNewFile();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+		} catch (IOException e) {			
+		}
+   	
+    }
+    
+    public static String getConfigFilePath(){
+    	String separator = System.getProperty(FILE_SEPARATOR);
+    	return System.getProperty(CUSTOM_CONFIG_PATH)+separator+CONFIG_FILE_DIR+separator+CONFIG_FILE_PATH;
     }
 
 }

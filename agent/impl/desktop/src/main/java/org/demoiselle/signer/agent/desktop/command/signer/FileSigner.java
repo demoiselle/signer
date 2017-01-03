@@ -10,6 +10,7 @@ import java.security.cert.X509Certificate;
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.agent.desktop.web.Execute;
+import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
@@ -22,18 +23,34 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	@Override
 	public SignerResponse doCommand(final SignerRequest request) {
 		
+		
+		try {
+			
+	        SignerResponse result = new SignerResponse();
+			String resultFileName = sign(request.getAlias(), request.getSignaturePolicy(), new String(this.getContent(request)));
+	        result.setSigned(resultFileName);
+	        
+			return result;
+		} catch (Throwable error) {
+			error.printStackTrace();
+			throw new RuntimeException(error.getMessage(), error);
+		}
+	}
+
+	public String sign(String alias, String signaturePolicy, String fileName){
 		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
 		loader.setCallbackHandler(new PinHandler());
 		KeyStore keyStore = loader.getKeyStore();
 		try {
-			X509Certificate cert = (X509Certificate)keyStore.getCertificate(request.getAlias());
-	        PrivateKey privateKey = (PrivateKey) keyStore.getKey(request.getAlias(), null);        
+			X509Certificate cert = (X509Certificate)keyStore.getCertificate(alias);
+	        PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, null);        
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-	        signer.setCertificates(keyStore.getCertificateChain(request.getAlias()));
+	        signer.setCertificates(keyStore.getCertificateChain(alias));
 	        signer.setPrivateKey(privateKey);
+	        signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
 	        Policies policie = null;
 	        try {
-	        	policie = Policies.valueOf(request.getSignaturePolicy());
+	        	policie = Policies.valueOf(signaturePolicy);
 	        } catch (Throwable error) {
 	        	policie = Policies.AD_RB_CADES_2_1;
 	        }
@@ -42,7 +59,7 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	        
 	        byte[] byteFile = null;
 	        SignerResponse result = new SignerResponse();
-	        String fileName = new String(this.getContent(request));
+	        
 	        File file = new File(fileName);
 	        FileInputStream is = new FileInputStream(file);
 	        byteFile = new byte[(int) file.length()];
@@ -56,17 +73,12 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	        os.write(signed);
 	        os.flush();
 	        os.close();
-	        result.setSigned(fileName+".p7s");
 	        
-	        
-			return result;
+			return fileName+".p7s";
 		} catch (Throwable error) {
 			error.printStackTrace();
 			throw new RuntimeException(error.getMessage(), error);
 		}
-	}
-
-	private void validateRequest(SignerRequest request) {
 	}
 
 	private byte[] getContent(SignerRequest request) {
@@ -90,13 +102,6 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	}
 
 	public static void main(String[] args) {
-		SignerRequest request = new SignerRequest();
-		request.setId(1);
-		request.setAlias("(1288991) JOSE RENE NERY CAILLERET CAMPANARIO");
-		request.setProvider("SunPKCS11-TokenOuSmartCard_30");
-		request.setContent("HELLO WORLD!");
-		System.out.println(request.toJson());
-		System.out.println((new Execute()).executeCommand(request));
 	}
 
 }
