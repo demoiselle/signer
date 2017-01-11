@@ -3,6 +3,7 @@ package org.demoiselle.signer.agent.desktop.command.signer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -23,7 +24,6 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	@Override
 	public SignerResponse doCommand(final SignerRequest request) {
 		
-		
 		try {
 			
 	        SignerResponse result = new SignerResponse();
@@ -37,7 +37,7 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 		}
 	}
 
-	public String sign(String alias, String signaturePolicy, String fileName){
+	public byte[] makeSignature(String alias, String signaturePolicy, String fileName){
 		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
 		loader.setCallbackHandler(new PinHandler());
 		KeyStore keyStore = loader.getKeyStore();
@@ -52,13 +52,12 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	        try {
 	        	policie = Policies.valueOf(signaturePolicy);
 	        } catch (Throwable error) {
-	        	policie = Policies.AD_RB_CADES_2_1;
+	        	policie = Policies.AD_RB_CADES_2_2;
 	        }
 	        signer.setSignaturePolicy(policie);
 	        signer.setAttached(false);
 	        
 	        byte[] byteFile = null;
-	        SignerResponse result = new SignerResponse();
 	        
 	        File file = new File(fileName);
 	        FileInputStream is = new FileInputStream(file);
@@ -66,19 +65,26 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	        is.read(byteFile);
 	        is.close();
 	        
-	        byte[] signed = signer.doSign(byteFile);
+	        return signer.doSign(byteFile);
 	        
-	        File fw = new File(fileName+".p7s");
-	        FileOutputStream os = new FileOutputStream(fw);
-	        os.write(signed);
-	        os.flush();
-	        os.close();
-	        
-			return fileName+".p7s";
 		} catch (Throwable error) {
 			error.printStackTrace();
 			throw new RuntimeException(error.getMessage(), error);
 		}
+		
+	}
+	
+	public String sign(String alias, String signaturePolicy, String fileName) throws IOException{
+		
+	        
+        File fw = new File(fileName+".p7s");
+        FileOutputStream os = new FileOutputStream(fw);
+        os.write(makeSignature(alias, signaturePolicy, fileName));
+        os.flush();
+        os.close();
+        
+		return fileName+".p7s";
+		
 	}
 
 	private byte[] getContent(SignerRequest request) {
