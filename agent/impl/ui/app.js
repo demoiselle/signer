@@ -7,16 +7,41 @@ angular.module('agent-desktop', []).controller('controller', function ($scope, $
     $scope.erros = null;
     $scope.fileName = null;
     $scope.signedFileName=null;
+    connectionStatus = -1;
+
+
+
+    callback = function(data){
+        connectionStatus = data;
+        elementMessage = document.getElementById("serverstate");
+        if(data == 1)
+            elementMessage.innerHTML = "Conectado ao servidor";
+        else{
+            elementMessage.innerHTML = "<a href='agent-desktop.jnlp' download> Baixar/Executar Agent-Desktop </a>";
+            setTimeout(tryAgain, 3000);
+        }
+    }
+
+    function tryAgain(){
+        sadService.connect(callback);
+    }
+
+    sadService.connect(callback);
+
     $scope.listarCertificados = function () {
+        console.log("Listar");        
         sadService.listcerts($scope.password).then(function (response) {
             $scope.listaCertificados = response;
+            console.log(response);
         });
     }
+
     $scope.tratarErros = function(responseWithErro) {
 
         $scope.erros = responseWithErro.erro;
         alert('Erro. ' + responseWithErro.erro);
     }
+
     $scope.assinar = function (alias, provider, content) {
         sadService.signer(alias, $scope.password, provider, content, $scope.politica).then(function (response) {
             if (response.erro) {

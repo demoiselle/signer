@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URL;
+import java.security.cert.CertificateException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -27,6 +28,8 @@ import org.demoiselle.signer.agent.desktop.command.policy.ListPoliciesResponse;
 import org.demoiselle.signer.agent.desktop.command.signer.FileSigner;
 import org.demoiselle.signer.agent.desktop.ui.JFileChooserPolicy;
 import org.demoiselle.signer.agent.desktop.ui.ListCertificateData;
+import org.demoiselle.signer.agent.desktop.ui.SignatureInfo;
+import org.demoiselle.signer.agent.desktop.ui.pdf.SignerPDF;
 import org.demoiselle.signer.agent.desktop.web.WSServer;
 import org.demoiselle.signer.signature.core.keystore.loader.configuration.Configuration;
 
@@ -44,7 +47,12 @@ public class TrayIcon {
 					URL urlImagem = getClass().getResource("/icone.jpeg");
 					Image image = Toolkit.getDefaultToolkit().getImage(urlImagem);
 					PopupMenu popup = new PopupMenu();
-										
+					boolean isEnterpriseLicence = false;
+					
+					String enterpriseLicence = System.getProperty("DESKTOP_LICENCE");
+					if(enterpriseLicence != null)
+						isEnterpriseLicence = true;
+					
 					final java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image, "Demoiselle Signer 2.0.0-BETA1", popup);
 					trayIcon.setImageAutoSize(true);
 					
@@ -70,11 +78,48 @@ public class TrayIcon {
 					MenuItem docSigner = new MenuItem("Assinar");
 					docSigner.addActionListener(new ActionListener() {
 						public void actionPerformed(ActionEvent e) {
-							signer();
+							try {
+								signer();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
 						}
 					});
 					popup.add(docSigner);
 					popup.addSeparator();
+					
+					MenuItem docValidate = new MenuItem("Validar Assinatura");
+					docValidate.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							try {
+								validate();
+							} catch (CertificateException e1) {
+								e1.printStackTrace();
+							} catch (IOException e1) {
+								e1.printStackTrace();
+							}
+						}
+					});
+					popup.add(docValidate);
+					popup.addSeparator();
+					
+					if(isEnterpriseLicence){
+					MenuItem menuPdfSigner = new MenuItem("Assinar PDF");
+					menuPdfSigner.addActionListener(new ActionListener() {
+						public void actionPerformed(ActionEvent e) {
+							
+								try {
+									pdfSigner();
+								} catch (Throwable e1) {
+									e1.printStackTrace();
+								}
+							
+						}
+					});
+					popup.add(menuPdfSigner);
+					popup.addSeparator();
+					}
+					
 					
 					MenuItem newDriver = new MenuItem("Adicionar driver do token");
 					newDriver.addActionListener(new ActionListener() {
@@ -102,7 +147,7 @@ public class TrayIcon {
 		EventQueue.invokeLater(runner);
 	}
 	
-	public void signer(){
+	public void signer() throws IOException{
 		
 		String fileName = "";
 		String alias;
@@ -131,6 +176,71 @@ public class TrayIcon {
           JOptionPane.showMessageDialog(null, "Arquivo de assinatuara disponível em: "+signatureFileName, 
         		  "Sucesso", JOptionPane.INFORMATION_MESSAGE);       
         }
+		
+	}
+	
+	public void pdfSigner() throws Throwable{
+		
+		String fileName = "";
+		String alias;
+		
+		ListCertsRequest requestCert = new ListCertsRequest();
+
+		ListCerts ls = new ListCerts();
+		ListCertsResponse lr = ls.doCommand(requestCert);
+		if(lr.getCertificates().size() > 1){
+			ListCertificateData lcd = new ListCertificateData(lr);
+			lcd.init();
+			alias = lcd.getAlias();
+		}else
+			alias = lr.getCertificates().iterator().next().getAlias();
+
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Pdf", "pdf");
+		fileChooser.addChoosableFileFilter(filter);
+		
+		int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+          File selectedFile = fileChooser.getSelectedFile();
+          fileName = selectedFile.getAbsolutePath();
+          byte[] signature = new FileSigner().makeSignature(alias, null, fileName);
+          SignerPDF pdf = new SignerPDF();
+          try{
+        	  pdf.doSigner(fileName, fileName+".p7s.pdf", signature);
+          
+          JOptionPane.showMessageDialog(null, "Arquivo de assinatuara disponível em: "+fileName, 
+        		  "Sucesso", JOptionPane.INFORMATION_MESSAGE);
+          }catch (Exception e) {
+        	  JOptionPane.showMessageDialog(null, "Falha ao assinar: "+e.getMessage(), 
+            		  "Falha", JOptionPane.ERROR_MESSAGE);
+		}
+        }
+		
+	}
+	
+	
+	public void validate() throws CertificateException, IOException{
+		String fileName = "";
+		String signatureFileName = "";
+		
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogTitle("Selecione o arquivo de conteúdo");
+		
+		int returnValue = fileChooser.showOpenDialog(null);
+        if (returnValue == JFileChooser.APPROVE_OPTION) {
+          File selectedFile = fileChooser.getSelectedFile();
+          fileName = selectedFile.getAbsolutePath();
+          fileChooser.setDialogTitle("Selecione o arquivo de assinatura");
+          returnValue = fileChooser.showOpenDialog(null);
+          
+          if (returnValue == JFileChooser.APPROVE_OPTION) {
+            selectedFile = fileChooser.getSelectedFile();
+            signatureFileName = selectedFile.getAbsolutePath();
+            new SignatureInfo(fileName, signatureFileName).init();
+          }
+        }
+		
 		
 	}
 	

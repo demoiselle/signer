@@ -20,7 +20,8 @@ import org.demoiselle.signer.signature.core.util.Base64Utils;
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
 
 public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
-
+//TODO Arquivo de controle de MENU
+	//TODO Opção atachado e desatachado
 	@Override
 	public SignerResponse doCommand(final SignerRequest request) {
 		

@@ -11,6 +11,7 @@ import java.net.URL;
 import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -46,7 +47,7 @@ public class SignatureInfo extends JDialog{
 	private String signedFileName;
 	
 	public static void main(String[] args) throws CertificateException, IOException{
-		new SignatureInfo("/home/87450496968/Banner.pdf.p7s", "/home/87450496968/Banner.pdf.p7s").init();
+		new SignatureInfo("/home/87450496968/Banner.pdf", "/home/87450496968/Banner.pdf.p7s").init();
 	}
 	
 	public void init() throws CertificateException, IOException{
@@ -125,15 +126,15 @@ public class SignatureInfo extends JDialog{
 		}
 		
 
-		JLabel title = new JLabel("<html><span style='font-size:15px; color:#23527c'>Certificados Da Assinatura</span></html>");
-			
-		JLabel end = new JLabel("<html><span style='font-size:10px; color:#23527c'>Expira em:  "+values.get(0).getNotAfter()+"</span></html>");
+		JLabel title = new JLabel("<html><span style='font-size:13px; color:#23527c'>Certificados Da Assinatura</span></html>");
+		String dateValidate = (new SimpleDateFormat("dd/MM/yyyy")).format(values.get(0).getNotAfter());
+		JLabel end = new JLabel("<html><span style='font-size:10px; color:#23527c'>Expira em:  "+dateValidate+"</span></html>");
 
 		
 		URL urlCheck = getClass().getResource("/check.png");
 		ImageIcon iconCheck = new ImageIcon(urlCheck);
 		JLabel check = new JLabel(iconCheck);
-		JLabel status = new JLabel("<html><span style='font-size:18px;font-weight: bold; color:#008000ff'>"
+		JLabel status = new JLabel("<html><span style='font-size:14px;font-weight: bold; color:#008000ff'>"
 				+ "Assinatura digital válida em conformidade ao padrão ICP-Brasil (DOC-ICP-15)</span></html>");
 		
         JButton btnCancel = new JButton("Fechar");
@@ -172,7 +173,7 @@ public class SignatureInfo extends JDialog{
         status.setBounds(100, 10, 480, 55);
         check.setBounds(20, 10, 50, 55);
         end.setBounds(12, y_init + 50, 350, 15);
-        title.setBounds(12, 80, 300, 25);        
+        title.setBounds(12, 80, 400, 25);        
         btnCancel.setBounds(this.getWidth()- 120, 300, 100, 30);
         
         this.setModal(true);

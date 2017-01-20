@@ -1,15 +1,44 @@
 angular.module('agent-desktop').factory('sadService', ['$q', '$rootScope', function ($q, $rootScope) {
     var service = {};
     var defer = null;
-    var ws = new WebSocket("ws://localhost:9091/");
-    ws.onmessage = function (response) {
-        defer.resolve(JSON.parse(response.data));
-    };
+    var ws;
+
+    function connect(callback){
+        if(ws == null || ws.readyState != 1){
+            ws = new WebSocket("ws://localhost:9091/");
+
+            ws.onopen = function(msg){
+                if(callback)
+                    callback(msg.target.readyState);
+            }
+
+            ws.onclose = function(msg){
+                if(callback)
+                    callback(msg.target.readyState);
+            }
+
+            ws.onmessage = function (response) {
+                defer.resolve(JSON.parse(response.data));
+            };
+
+        }
+    }
+
     function execute(request) {
         defer = $q.defer();
         ws.send(JSON.stringify(request));
         return defer.promise;
     }
+
+    service.connect = function(callback){connect(callback);}
+
+    service.isConnected = function(){ 
+        if(ws != null)
+            return ws.readyState == 1 ? true : false;
+        
+        return false;
+    };
+
     service.signer = function (alias, provider, content, signaturePolicy) {
         var signerCommand = {
             command: 'signer',
@@ -85,7 +114,6 @@ angular.module('agent-desktop').factory('sadService', ['$q', '$rootScope', funct
             provider: provider,
             content: content
         }
-        console.log(signerCommand);
         var promise = execute(signerCommand);
         return promise;
     }

@@ -16,7 +16,7 @@ public class JFileChooserPolicy extends JFileChooser{
 
 	private static final long serialVersionUID = 1L;
 	String policy;
-	JComboBox<String> cmbPolicy;
+	JComboBox cmbPolicy;
 	public JFileChooserPolicy(HashSet<String> policies){
 		
 		List<String> validPolicies = new ArrayList<String>();
@@ -28,8 +28,8 @@ public class JFileChooserPolicy extends JFileChooser{
 		}
 		
 		String strPolicies [] = (String[])validPolicies.toArray(new String[validPolicies.size()]);
-		cmbPolicy = new JComboBox<String> ();
-		cmbPolicy.setModel(new DefaultComboBoxModel<String>(strPolicies));
+		cmbPolicy = new JComboBox ();
+		cmbPolicy.setModel(new DefaultComboBoxModel(strPolicies));
 
         JPanel pMain = (JPanel)this.getComponent(3);
         JPanel pData = (JPanel) pMain.getComponent(2);
