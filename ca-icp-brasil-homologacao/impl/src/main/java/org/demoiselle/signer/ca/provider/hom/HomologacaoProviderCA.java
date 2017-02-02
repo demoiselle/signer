@@ -43,33 +43,34 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-//import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
+//import org.apache.log4j.Level;
 
 public class HomologacaoProviderCA implements ProviderCA {
 	
-	private final static Logger LOGGER = Logger.getLogger(HomologacaoProviderCA.class.getName());
-	
-	
 
-    public Collection<X509Certificate> getCAs() {    	
-    	
+    public Collection<X509Certificate> getCAs() {
         List<X509Certificate> result = new ArrayList<X509Certificate>();
         try {
             InputStream raizDeHomologacaoSERPRO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/RaizdeHomologacaoSERPRO.cer");
             InputStream ACSERPROACFv3Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACSERPROACFv3Homologacao.cer");
+            InputStream ACSERPRORFBv3Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACSERPRORFBv3Homologacao.cer");
             InputStream intermediariaHOMv2 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/IntermediariaHOMv2.cer");
+            InputStream ACSERPROACFv4Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/serproACFv4Homolog.cer");
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(raizDeHomologacaoSERPRO));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPROACFv3Homologacao));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPRORFBv3Homologacao));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(intermediariaHOMv2));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPROACFv4Homologacao));
         } catch (Throwable error) {
-//        	LOGGER.setLevel(Level.INFO);
-        	LOGGER.info("----------- HomologacaoProviderCA -----------");
-        	LOGGER.info(error.getMessage());
+            error.printStackTrace();
             return null;
         } finally {
             return result;
         }
+    }
+
+    public String getName() {
+         return "Homologacao SERPRO Provider";
     }
 }

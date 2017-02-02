@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -54,6 +55,8 @@ import org.bouncycastle.asn1.DERIA5String;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.x509.AccessDescription;
+import org.bouncycastle.asn1.x509.AuthorityInformationAccess;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
 import org.bouncycastle.asn1.x509.DistributionPoint;
 import org.bouncycastle.asn1.x509.DistributionPointName;
@@ -61,6 +64,8 @@ import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.PolicyInformation;
+import org.bouncycastle.asn1.x509.X509Extensions;
+import org.bouncycastle.x509.extension.X509ExtensionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -467,6 +472,28 @@ public class BasicCertificate {
         }
         return null;
     }
+    
+    
+    /**
+     * Returns the AuthorityInfoAccess extension value on list format.<br>
+     * Otherwise, returns <b>list empty</b>.<br>
+     * @return List
+     */
+	public List<String> getAuthorityInfoAccess() {
+		List<String> address = new ArrayList<String>();
+		try {
+			AuthorityInformationAccess infoAccess = AuthorityInformationAccess.getInstance(X509ExtensionUtil
+					.fromExtensionValue(certificate.getExtensionValue(Extension.authorityInfoAccess.getId())));
+			for (AccessDescription desc : infoAccess.getAccessDescriptions())
+				if (desc.getAccessLocation().getTagNo() == GeneralName.uniformResourceIdentifier)
+					address.add(((DERIA5String) desc.getAccessLocation().getName()).getString());
+			return address;
+		} catch (IOException error) {
+			logger.info(error.getMessage());
+			return address;
+		}
+	}
+
 
     /**
      * Obtém o Identificador de chave de autoridade de um certificado
@@ -619,6 +646,7 @@ public class BasicCertificate {
 
             sb.append("*********************************\n");
             sb.append("Authority KeyID : ").append(this.getAuthorityKeyIdentifier()).append("\n");
+            sb.append("Authority Info Access...[").append(this.getAuthorityInfoAccess()).append("]\n");
             sb.append("Subject KeyID . : ").append(this.getSubjectKeyIdentifier()).append("\n");
             sb.append("CRL DistPoint . : ").append(this.getCRLDistributionPoint()).append("\n");
         } catch (IOException e) {

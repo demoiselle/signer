@@ -41,5 +41,7 @@ import java.util.Collection;
 
 public interface ProviderCA {
 
+	public String getName();
+	
     public Collection<X509Certificate> getCAs();
 }

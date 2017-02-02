@@ -36,8 +36,8 @@
  */
 package org.demoiselle.signer.signature.core.ca.provider;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.ServiceLoader;
 
 public class ProviderSignaturePolicyRootCAFactory {
@@ -53,7 +53,7 @@ public class ProviderSignaturePolicyRootCAFactory {
     }
 
     public Collection<ProviderSignaturePolicyRootCA> factory(String signaturePolicyOID) {
-        Collection<ProviderSignaturePolicyRootCA> result = new HashSet<>();
+        Collection<ProviderSignaturePolicyRootCA> result = new ArrayList<>();
         ServiceLoader<ProviderSignaturePolicyRootCA> loader = ServiceLoader.load(ProviderSignaturePolicyRootCA.class);
         if (loader != null) {
             for (ProviderSignaturePolicyRootCA provider : loader) {

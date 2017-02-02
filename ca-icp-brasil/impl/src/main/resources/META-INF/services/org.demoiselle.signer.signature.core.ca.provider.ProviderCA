@@ -1,1 +1,4 @@
 org.demoiselle.signer.ca.provider.impl.ICPBrasilProviderCA
+org.demoiselle.signer.ca.provider.impl.ICPBrasilUserHomeProviderCA
+org.demoiselle.signer.ca.provider.impl.ICPBrasilOnLineSerproProviderCA
+org.demoiselle.signer.ca.provider.impl.ICPBrasilOnLineITIProviderCA

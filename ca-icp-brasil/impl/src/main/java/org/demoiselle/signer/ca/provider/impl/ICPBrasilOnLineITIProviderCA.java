@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2010 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -34,33 +34,26 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.signature.core.validator;
 
-import org.demoiselle.signer.signature.core.IValidator;
-import org.demoiselle.signer.signature.core.ca.manager.CAManager;
-import org.demoiselle.signer.signature.core.ca.manager.CAManagerException;
-import org.demoiselle.signer.signature.core.exception.CertificateValidatorException;
+package org.demoiselle.signer.ca.provider.impl;
 
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
+public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderCA {
 
-public class CAValidator implements IValidator {
+	private static String STRING_URL_ZIP = "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip";
+	private static String STRING_URL_HASH = "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/hashsha512.txt";
 
-    @Override
-    public void validate(X509Certificate x509) throws CertificateValidatorException {
-        Collection<X509Certificate> cas = CAManager.getInstance().getCAs();
-        if (cas == null || cas.size() <= 0) {
-            throw new CertificateValidatorException("Não há informações das autoridades certificadoras para validar o certificado informado.");
-        }
-        Certificate ca = null;
-        try {
-            ca = CAManager.getInstance().getCAFromCertificate(x509);
-        } catch (CAManagerException error) {
-            throw new CertificateValidatorException("Não foi possível localizar o certificado da autoridade do certificado informado [" + x509.getIssuerDN().getName() + "]", error);
-        }
-        if (ca == null) {
-            throw new CertificateValidatorException("Autoridade Certificadora do certificado em questao não é confiável.");
-        }
-    }
+	@Override
+	public String getURLZIP() {
+		return ICPBrasilOnLineITIProviderCA.STRING_URL_ZIP;
+	}
+
+	public String getURLHash() {
+		return ICPBrasilOnLineITIProviderCA.STRING_URL_HASH;
+	}
+
+	@Override
+	public String getName() {
+		return "ICP Brasil ONLINE ITI Provider (" + getURLZIP() + ")";
+	}
+
 }

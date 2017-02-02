@@ -64,208 +64,234 @@ import java.util.LinkedList;
 
 public class CAManager {
 
-    private static final CAManager instance = new CAManager();
-    
-    private final static Logger LOGGER = Logger.getLogger(CAManager.class.getName());
+	private static final CAManager instance = new CAManager();
+	private static final Logger LOGGER = Logger.getLogger(CAManager.class.getName());
 
-    private CAManager() {
-    }
+	private CAManager() {
+	}
 
-    public static CAManager getInstance() {
-        return CAManager.instance;
-    }
+	public static CAManager getInstance() {
+		return CAManager.instance;
+	}
 
-    public Collection<X509Certificate> getSignaturePolicyRootCAs(String policyOID) {
-        Collection<ProviderSignaturePolicyRootCA> providers = ProviderSignaturePolicyRootCAFactory.getInstance().factory(policyOID);
-        Collection<X509Certificate> result = new HashSet<X509Certificate>();
-        for (ProviderSignaturePolicyRootCA provider : providers) {
-            result.addAll(provider.getCAs());
-        }
-        return result;
-    }
+	public Collection<X509Certificate> getSignaturePolicyRootCAs(String policyOID) {
+		Collection<ProviderSignaturePolicyRootCA> providers = ProviderSignaturePolicyRootCAFactory.getInstance()
+				.factory(policyOID);
+		Collection<X509Certificate> result = new HashSet<X509Certificate>();
+		for (ProviderSignaturePolicyRootCA provider : providers) {
+			try {
+				result.addAll(provider.getCAs());
+			} catch (Throwable error) {
+				// TODO: Nao foi possivel resgatar as raizes confiaveis
+				// de uma determinada politica
+			}
+		}
+		return result;
+	}
 
-    public Collection<X509Certificate> getCAs() {
-    	
-        Collection<ProviderCA> providers = ProviderCAFactory.getInstance().factory(); 
-        Collection<X509Certificate> result = new HashSet<X509Certificate>();
-        for (ProviderCA provider : providers) {
-            result.addAll(provider.getCAs());
-        }
-        return result;
-    }
+	public boolean validateRootCAs(Collection<X509Certificate> cas, X509Certificate certificate) {
+		boolean valid = false;
+		for (X509Certificate ca : cas) {
+			try {
+				this.validateRootCA(ca, certificate);
+				valid = true;
+				break;
+			} catch (CAManagerException error) {
+				continue;
+			}
+		}
+		if (!valid) {
+			throw new CAManagerException(
+					"Nenhuma autoridade informada faz parte da cadeia de certificados do certificado informado");
+		}
+		return true;
+	}
 
-    public boolean validateRootCAs(Collection<X509Certificate> cas, X509Certificate certificate) {
-        boolean valid = false;
-        for (X509Certificate ca : cas) {
-            try {                
-                valid = this.validateRootCA(ca, certificate);
-                break;
-            } catch (CAManagerException error) {
-            	LOGGER.info("----------- CAManager validate rootCAs -----------");
-            	LOGGER.info(error.getMessage());
-                continue;
-            }
-        }
-        if (!valid) {
-            throw new CAManagerException("Nenhuma autoridade informada faz parte da cadeia de certificados do certificado informado");
-        }
-        return valid;
-    }
+	public boolean validateRootCA(X509Certificate ca, X509Certificate certificate) {
+		if (ca == null) {
+			throw new CAManagerException("Certificado da autoridade raiz não informado");
+		}
+		if (!this.isRootCA(ca)) {
+			throw new CAManagerException("Certificado da autoridade não é raiz");
+		}
+		Collection<X509Certificate> acs = this.getCertificateChain(certificate);
+		if (acs == null || acs.size() <= 0) {
+			throw new CAManagerException("Não foi possível resgatar a cadeia de autoridades do certificado informado");
+		}
+		X509Certificate rootCA = null;
+		for (X509Certificate x509 : acs) {
+			if (this.isRootCA(x509)) {
+				rootCA = x509;
+				break;
+			}
+		}
+		if (rootCA == null) {
+			throw new CAManagerException(
+					"Não foi possível achar um certificado raiz na cadeia do certificado informado");
+		}
 
-    public boolean validateRootCA(X509Certificate ca, X509Certificate certificate) {
-    	try {
-    		if (ca == null) {
-    			throw new CAManagerException("Certificado da autoridade raiz não informado");
-    		}
-    		if (!this.isRootCA(ca)) {
-    			throw new CAManagerException("Certificado da autoridade não é raiz");
-    		}
-    		Collection<X509Certificate> acs = this.getCertificateChain(certificate);
-    		if (acs == null || acs.size() <= 0) {
-    			throw new CAManagerException("Não foi possível resgatar a cadeia de autoridades do certificado informado");
-    		}
-    		X509Certificate rootCA = null;
-    		for (X509Certificate x509 : acs) {
-    			if (this.isRootCA(x509)) {
-    				rootCA = x509;
-    				break;
-    			}
-    		}
-    		if (rootCA == null) {
-    			throw new CAManagerException("Não foi possível achar um certificado raiz na cadeia do certificado informado");
-    		}
+		if (!this.isCAofCertificate(rootCA, ca)) {
+			throw new CAManagerException(
+					"A autoridade raiz não faz parte da cadeia de certificados do certificado informado");
+		}
+		return true;
+	}
 
-    		if (!this.isCAofCertificate(rootCA, ca)) {
-    			throw new CAManagerException("A autoridade raiz não faz parte da cadeia de certificados do certificado informado");
-    		}
-    	} catch(Exception ex){
-        	LOGGER.info("----------- CAManager validateRootCA  -----------");
-        	LOGGER.info(ex.getMessage());
-    		return false;
-    	}
-    	
-   		return true;
-    }
+	public boolean isRootCA(X509Certificate ca) {
+		if (ca == null) {
+			return false;
+		}
+		return this.isCAofCertificate(ca, ca);
+	}
 
-    public boolean isRootCA(X509Certificate ca) {
-        if (ca == null) {
-            return false;
-        }
-        return this.isCAofCertificate(ca, ca);
-    }
+	public boolean isCAofCertificate(X509Certificate ca, X509Certificate certificate) {
+		try {
+			certificate.verify(ca.getPublicKey());
+			return true;
+		} catch (SignatureException error) {
+			return false;
+		} catch (InvalidKeyException error) {
+			return false;
+		} catch (CertificateException error) {
+			throw new CAManagerException("Algum erro ocorreu com o certificado informado", error);
+		} catch (NoSuchAlgorithmException error) {
+			throw new CAManagerException("Não há o algoritmo necessário", error);
+		} catch (NoSuchProviderException error) {
+			throw new CAManagerException("Provider inválido", error);
+		}
+	}
 
-    public boolean isCAofCertificate(X509Certificate ca,  X509Certificate certificate) {
-        try {     	
-        	
-        	//ASN1InputStream derin = new ASN1InputStream(certificate.getEncoded());
-            //ASN1Primitive certInfo = derin.readObject();
-            //derin.close();
-            //ASN1Sequence seq = ASN1Sequence.getInstance(certInfo);
-        	//X509CertificateObject certificateObject = new X509CertificateObject(org.bouncycastle.asn1.x509.Certificate.getInstance(seq));
-        	//certificateObject.verify(ca.getPublicKey());
-        	certificate.verify(ca.getPublicKey());
-            return true;
-        } catch (SignatureException ex) {
-        	//LOGGER.info("----------- CAManager isCAofCertificate -----------");
-        	//LOGGER.info(ex.getMessage());
-            return false;
-        } catch (InvalidKeyException ex) {
-        	//LOGGER.info("----------- CAManager isCAofCertificate -----------");
-        	//LOGGER.info(ex.getMessage());
-        	return false;
-        } catch (CertificateException ex) {
-            throw new CAManagerException("Algum erro ocorreu com o certificado informado", ex);
-        } catch (NoSuchAlgorithmException ex) {
-            throw new CAManagerException("Não há o algoritmo necessário", ex);
-        } catch (NoSuchProviderException ex) {
-            throw new CAManagerException("Provider inválido", ex);
-//        } catch (IOException e) {
-			//e.printStackTrace();
-			//return false;
-        } 
-    }
+	public Certificate[] getCertificateChainArray(X509Certificate certificate) {
+		Certificate[] result = null;
+		LinkedList<X509Certificate> chain = (LinkedList<X509Certificate>) this.getCertificateChain(certificate);
+		if (chain == null || chain.size() <= 0) {
+			return result;
+		}
+		result = new Certificate[chain.size()];
+		for (int i = 0; i < chain.size(); i++) {
+			result[i] = chain.get(i);
+		}
+		return result;
+	}
 
-    public Certificate[] getCertificateChainArray(X509Certificate certificate) {
-        Certificate[] result = null;
-        LinkedList<X509Certificate> chain = (LinkedList<X509Certificate>) this.getCertificateChain(certificate);
-        if (chain == null || chain.size() <= 0) {
-            return result;
-        }
-        result = new Certificate[chain.size()];
-        for (int i = 0; i < chain.size(); i++) {
-            result[i] = chain.get(i);
-        }
-        return result;
-    }
+	/**
+	 * Get ALL certificate chains previously added in
+	 * 
+	 * @param certificate
+	 * @return list of certificates
+	 */
+	public Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {
 
-    public Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {
-        Collection<X509Certificate> result = new LinkedList<X509Certificate>();
-        result.add(certificate);
-        if (this.isRootCA(certificate)) {
-            return result;
-        }
-        Collection<X509Certificate> acs = this.getCAs();
-        for (X509Certificate ac : acs) {
-            if (this.isCAofCertificate(ac, certificate)) {
-                result.add(ac);
-                X509Certificate acFromAc = this.getCAFromCertificate(acs, ac);
-                while (acFromAc != null) {
-                    result.add(acFromAc);
-                    acFromAc = this.getCAFromCertificate(acs, acFromAc);
-                }
-            }
-        }
-        return result;
-    }
+		Collection<X509Certificate> result = new LinkedList<X509Certificate>();
+		result.add(certificate);
+		if (this.isRootCA(certificate)) {
+			return result;
+		}
 
-    private X509Certificate getCAFromCertificate(Collection<X509Certificate> certificates, X509Certificate certificate) {
-        if (this.isRootCA(certificate)) {
-            return null;
-        }
-        if (certificates == null || certificates.isEmpty()) {
-            return null;
-        }
-        for (X509Certificate ca : certificates) {
-            if (this.isCAofCertificate(ca, certificate)) {
-                return ca;
-            }
-        }
-        return null;
-    }
+		Collection<ProviderCA> providers = ProviderCAFactory.getInstance().factory();
 
-    public X509Certificate getCAFromCertificate(X509Certificate certificate) {
-        return this.getCAFromCertificate(this.getCAs(), certificate);
-    }
+		for (ProviderCA provider : providers) {
+			try {
 
-    public Certificate[] getCertificateChainArray(KeyStore keyStore, String privateKeyPass, String certificateAlias) {
-        Certificate[] certificateChain = null;
-        try {
-            keyStore.getKey(certificateAlias, privateKeyPass.toCharArray());
-            certificateChain = keyStore.getCertificateChain(certificateAlias);
-            if (certificateChain == null) {
-                throw new CAManagerException("Não há caminho de certificação para o alias informado");
-            }
-        } catch (KeyStoreException error) {
-            throw new CAManagerException("O provedor não suporta este tipo de keystore", error);
-        } catch (UnrecoverableKeyException error) {
-            throw new CAManagerException("Impossível recuperar a chave privada do keystore", error);
-        } catch (NoSuchAlgorithmException error) {
-            throw new CAManagerException("Não há o algoritmo necessário", error);
-        }
-        return certificateChain;
-    }
+				LOGGER.info(">>> Procurando certificado no Provider: " + provider.getName());
 
-    public Collection<X509Certificate> getCertificateChain(KeyStore keyStore, String privateKeyPass, String certificateAlias) {
-        Collection<X509Certificate> result = null;
-        Certificate[] certificateChain = this.getCertificateChainArray(keyStore, privateKeyPass, certificateAlias);
-        if (certificateChain != null) {
-            result = new LinkedList<X509Certificate>();
-            for (Certificate certificate : certificateChain) {
-                result.add((X509Certificate) certificate);
-            }
-        } else {
-            throw new CAManagerException("Não há caminho de certificação para o alias informado");
-        }
-        return result;
-    }
+				// Get ALL CAs of ONE provider
+				Collection<X509Certificate> acs = provider.getCAs();
+
+				// Variable to control if go to next Provider is necessery
+				boolean ok = false;
+
+				// Iterate this provider to create a Cert Chain
+				for (X509Certificate ac : acs) {
+					if (this.isCAofCertificate(ac, certificate)) {
+						result.add(ac);
+						X509Certificate acFromAc = this.getCAFromCertificate(acs, ac);
+						while (acFromAc != null) {
+
+							// If the chain was created SET OK
+							result.add(acFromAc);
+
+							// If Certificate is ROOT end while
+							if (this.isRootCA(acFromAc)) {
+								ok = true;
+								break;
+							} else {
+								acFromAc = this.getCAFromCertificate(acs, acFromAc);
+							}
+
+						}
+					}
+
+					if (ok == true) {
+						break;
+					}
+				}
+
+				LOGGER.log(Level.INFO, ">>> Foram encontrados [" + result.size() + "] níveis na cadeia do provider ["
+						+ provider.getName() + "].");
+
+				// If chain is created BREAK! Doesn't go to next Provider
+				if (ok) {
+					break;
+				} else {
+					LOGGER.info("Não foi possivel montar a cadeia com o provider: " + provider.getName());
+				}
+
+			} catch (Throwable error) {
+				// TODO: Nao foi possivel resgatar as CAs de um determinado
+				// provedor
+			}
+		}
+
+		return result;
+	}
+
+	private X509Certificate getCAFromCertificate(Collection<X509Certificate> certificates,
+			X509Certificate certificate) {
+		if (this.isRootCA(certificate)) {
+			return null;
+		}
+		if (certificates == null || certificates.isEmpty()) {
+			return null;
+		}
+		for (X509Certificate ca : certificates) {
+			if (this.isCAofCertificate(ca, certificate)) {
+				return ca;
+			}
+		}
+		return null;
+	}
+
+	public Certificate[] getCertificateChainArray(KeyStore keyStore, String privateKeyPass, String certificateAlias) {
+		Certificate[] certificateChain = null;
+		try {
+			keyStore.getKey(certificateAlias, privateKeyPass.toCharArray());
+			certificateChain = keyStore.getCertificateChain(certificateAlias);
+			if (certificateChain == null) {
+				throw new CAManagerException("Não há caminho de certificação para o alias informado");
+			}
+		} catch (KeyStoreException error) {
+			throw new CAManagerException("O provedor não suporta este tipo de keystore", error);
+		} catch (UnrecoverableKeyException error) {
+			throw new CAManagerException("Impossível recuperar a chave privada do keystore", error);
+		} catch (NoSuchAlgorithmException error) {
+			throw new CAManagerException("Não há o algoritmo necessário", error);
+		}
+		return certificateChain;
+	}
+
+	public Collection<X509Certificate> getCertificateChain(KeyStore keyStore, String privateKeyPass,
+			String certificateAlias) {
+		Collection<X509Certificate> result = null;
+		Certificate[] certificateChain = this.getCertificateChainArray(keyStore, privateKeyPass, certificateAlias);
+		if (certificateChain != null) {
+			result = new LinkedList<X509Certificate>();
+			for (Certificate certificate : certificateChain) {
+				result.add((X509Certificate) certificate);
+			}
+		} else {
+			throw new CAManagerException("Não há caminho de certificação para o alias informado");
+		}
+		return result;
+	}
 }

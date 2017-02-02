@@ -47,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 
 public class ICPBrasilProviderCA implements ProviderCA {
@@ -84,4 +85,9 @@ public class ICPBrasilProviderCA implements ProviderCA {
         }
         return keyStore;
     }
+
+	@Override
+	public String getName() {
+		return "ICP Brasil Provider (Componente)";
+	}
 }
