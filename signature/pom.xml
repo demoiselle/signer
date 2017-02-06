@@ -13,13 +13,12 @@
 
 
     <modules>
-        <module>impl/applet</module>
         <module>impl/core</module>
-	<module>impl/criptography</module>
-	<module>impl/policy</module>
+		<module>impl/criptography</module>
+		<module>impl/policy</module>
         <module>impl/cades</module>
-	<module>impl/timestamp</module>        
-	<module>impl/xml</module>
+		<module>impl/timestamp</module>        
+		<module>impl/xml</module>
     </modules>
 </project>
 

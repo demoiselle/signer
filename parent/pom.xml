@@ -4,7 +4,7 @@
 
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>signer-parent</artifactId>
-	<version>2.0.0-BETA2</version>
+	<version>3.0.0-BETA1</version>
 	<packaging>pom</packaging>
 	<modelVersion>4.0.0</modelVersion>
 
@@ -270,6 +270,41 @@
 
 		</plugins>
 
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-plugin-plugin
+										</artifactId>
+										<versionRange>
+											[3.2,)
+										</versionRange>
+										<goals>
+											<goal>descriptor</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 
@@ -464,9 +499,6 @@
 		</repository>
 	</distributionManagement>
 
-
-
-
 	<properties>
 		<maven.compiler.plugin.version>3.5.1</maven.compiler.plugin.version>
 		<maven.war.plugin.version>2.1.1</maven.war.plugin.version>
@@ -485,6 +517,8 @@
 		<site.url>file://${project.build.directory}/tmp</site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.release.plugin.version>2.5</maven.release.plugin.version>
+		<signer.signature.version>${project.version}</signer.signature.version>
+		<ca.icpbrasil.version>${project.version}</ca.icpbrasil.version>
 	</properties>
 
 

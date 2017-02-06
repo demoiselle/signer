@@ -6,7 +6,6 @@
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>assinadorweb-example</artifactId>
 	<packaging>war</packaging>
-	<version>2.0.0-BETA2</version>
 
 	<name>Demoiselle Certificate Desktop Example</name>
 	<description>Demoiselle Desktop Component</description>
@@ -61,17 +60,17 @@
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>ca-icpbrasil</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${ca.icpbrasil.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>signature-cades</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${signer.signature.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>signature-policy-engine</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${signer.signature.version}</version>
 		</dependency>		
 	</dependencies>
 
@@ -98,4 +97,9 @@
 	</repositories>
 
 
+	<version>3.0.0-BETA1</version>
+	<properties>
+		<signer.signature.version>3.0.0-BETA1</signer.signature.version>
+		<ca.icpbrasil.version>3.0.0-BETA1</ca.icpbrasil.version>
+	</properties>
 </project>

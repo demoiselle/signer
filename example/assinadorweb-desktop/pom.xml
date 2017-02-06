@@ -7,7 +7,7 @@
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>assinadorweb-jnlp-example</artifactId>
 	<packaging>jar</packaging>
-	<version>2.0.0-BETA2</version>
+	<version>3.0.0-BETA1</version>
 
 	<name>Demoiselle Signer JNLP Example</name>
 	<description>Demoiselle Signer JNLP Component Example</description>
@@ -93,27 +93,27 @@
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>jnlp</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${jnlp.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>signature-cades</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${signer.signature.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>ca-icpbrasil</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${ca.icpbrasil.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>signature-policy-engine</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${signer.signature.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>signature-criptography</artifactId>
-			<version>2.0.0-BETA2</version>
+			<version>${signer.signature.version}</version>
 		</dependency>
 		
 	</dependencies>
@@ -131,4 +131,9 @@
         </repository>
     </repositories>
 
+    <properties>
+    	<signer.signature.version>3.0.0-BETA1</signer.signature.version>
+    	<jnlp.version>3.0.0-BETA1</jnlp.version>
+    	<ca.icpbrasil.version>3.0.0-BETA1</ca.icpbrasil.version>
+    </properties>
 </project>
