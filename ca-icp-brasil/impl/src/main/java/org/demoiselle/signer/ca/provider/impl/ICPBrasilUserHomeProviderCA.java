@@ -58,6 +58,11 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 
+/**
+ * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file (ACcompactado.zip) stored on user home folder,
+ * that was previous downloaded by ICPBrasilOnLineSerproProviderCA or ICPBrasilOnLineITIProviderCA.  
+ *  *
+ */
 
 public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 

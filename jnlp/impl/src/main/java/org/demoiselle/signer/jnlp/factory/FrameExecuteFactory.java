@@ -45,7 +45,7 @@ public class FrameExecuteFactory {
 
     public static FrameExecute factory(String className) {
         FrameExecute instance = null;
-        Class clazz = null;
+        Class<?> clazz = null;
         try {
             clazz = Class.forName(className);
         } catch (Throwable error) {

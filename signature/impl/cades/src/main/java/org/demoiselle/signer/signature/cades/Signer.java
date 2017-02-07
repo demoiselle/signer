@@ -80,14 +80,24 @@ public interface Signer {
      */
     abstract public void setAlgorithm(SignerAlgorithmEnum algorithm);
 
+    
     /**
-     * Efetua a assinatura digital de um conjunto de bytes
-     *
-     * @param content O conteúdo a ser assinado
-     * @return O conteúdo assinado
+     * Generates a digital signature from a content and attaches this content on result file
+     * @param content
+     * @return
      */
-    abstract public byte[] doSign(byte[] content);
-
+    abstract public byte[] doAttachedSign(byte[] content);
+    
+    /**
+     * 
+     * Generates a digital signature from a content, 
+     * the result file does not contains the content that was signed
+     * @param content
+     * @return
+     */
+    abstract public byte[] doDetachedSign (byte[] content);
+    
+    
     /**
      * Método de validação da aassiantura.
      *

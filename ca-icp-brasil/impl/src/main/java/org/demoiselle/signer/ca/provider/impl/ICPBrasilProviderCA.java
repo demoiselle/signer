@@ -50,8 +50,15 @@ import java.util.List;
 
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 
+/**
+ * Provides trusted Certificate Authority chain of the ICP-BRAZIL's digital signature policies
+ * from Keystore (icpbrasil.jks) stored in resources library   
+ */
 public class ICPBrasilProviderCA implements ProviderCA {
 	
+	/**
+	 * read Certificate Authority chain from loaded keystore
+	 */
     @Override
     public Collection<X509Certificate> getCAs() {
     	
@@ -72,7 +79,7 @@ public class ICPBrasilProviderCA implements ProviderCA {
     }
 
     /**
-     * Pega o keystore interno do componente Tipo: JKS
+     * Load from file icpbrasil.jks 
      */
     private KeyStore getKeyStore() {
         KeyStore keyStore = null;

@@ -37,6 +37,11 @@
 
 package org.demoiselle.signer.ca.provider.impl;
 
+/**
+ * 
+ * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from it's defined URL http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip
+ *
+ */
 public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderCA {
 
 	private static String STRING_URL_ZIP = "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip";

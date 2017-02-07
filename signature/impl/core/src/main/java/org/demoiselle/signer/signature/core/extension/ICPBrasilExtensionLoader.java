@@ -260,7 +260,7 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
                         }
                         break;
                     case NIVEL_CERTIFICADO:
-                        keyValue = cert.getNivelCertificado();
+                        keyValue = cert.getCertificateLevel();
                         break;
 
                     default:

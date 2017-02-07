@@ -36,23 +36,21 @@
  */
 package org.demoiselle.signer.signature.core.repository;
 
-import org.demoiselle.signer.signature.core.exception.CertificateValidatorException;
-import org.demoiselle.signer.signature.core.util.RepositoryUtil;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.logging.Logger;
+
+import org.demoiselle.signer.signature.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.signature.core.util.RepositoryUtil;
 
 public class RepositoryService {
 
     private static final String UPDATE = "update-crl-list";
     private static final String ADD = "add-crl";
     private static String rt = "";
-    private static final Logger logger = Logger.getLogger(RepositoryService.class.getName());
-
     public static void main(String[] args) {
         if (args == null || args.length < 2) {
             println(" Error: number of invalid arguments.\n " + "Use: java -jar signer-signature-core.jar [operation] <[url]> <[fileindex]>\n " + "Sample for update: java -jar signer-signature-core.jar " + UPDATE + " /tmp/crls/crl_index.txt\n " + "Sample for add url of crl: java -jar signer-signature-core.jar " + ADD

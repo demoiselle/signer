@@ -36,13 +36,10 @@
  */
 package org.demoiselle.signer.signature.core.repository;
 
-import java.util.logging.Logger;
 
 public class CRLFileNotFoundException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
-
-    private static final Logger logger = Logger.getLogger(CRLFileNotFoundException.class.getName());
 
     public CRLFileNotFoundException() {
         super();

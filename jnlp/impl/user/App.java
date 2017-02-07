@@ -1,9 +1,40 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Demoiselle Framework
+ * Copyright (C) 2017 SERPRO
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
+ * 
+ * Demoiselle Framework is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License version 3
+ * as published by the Free Software Foundation.
+ * 
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * 
+ * You should have received a copy of the GNU Lesser General Public License version 3
+ * along with this program; if not,  see <http://www.gnu.org/licenses/>
+ * or write to the Free Software Foundation, Inc., 51 Franklin Street,
+ * Fifth Floor, Boston, MA  02110-1301, USA.
+ * ----------------------------------------------------------------------------
+ * Este arquivo é parte do Framework Demoiselle.
+ * 
+ * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
+ * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
+ * do Software Livre (FSF).
+ * 
+ * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
+ * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
+ * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
+ * para maiores detalhes.
+ * 
+ * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
+ * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
+ * ou escreva para a Fundação do Software Livre (FSF) Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package br.gov.serpro.certificate.ui.user;
+package org.demoiselle.signer.jnlp.user;
 
 import java.io.File;
 import java.security.KeyStore;
@@ -12,17 +43,17 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import javax.swing.JOptionPane;
-import org.demoiselle.signer.signature.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.pkcs7.PKCS7Signer;
-import org.demoiselle.signer.signature.pkcs7.bc.policies.ADRBCMS_2_1;
+import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.jnlp.action.AbstractFrameExecute;
 import org.demoiselle.signer.jnlp.util.ConectionException;
 import org.demoiselle.signer.jnlp.util.Utils;
-import org.demoiselle.signer.jnlp.view.Principal;
+import org.demoiselle.signer.jnlp.view.MainFrame;
 
 /**
  *
- * @author 07721825741
+ * 
  */
 public class App extends AbstractFrameExecute {
 
@@ -42,7 +73,7 @@ public class App extends AbstractFrameExecute {
     }
 
     @Override
-    public void execute(KeyStore ks, String alias, Principal principal) {
+    public void execute(KeyStore ks, String alias, MainFrame principal) {
         try {
 
             if (jnlpIdentifier == null || jnlpIdentifier.isEmpty()) {
@@ -59,7 +90,7 @@ public class App extends AbstractFrameExecute {
             PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
             signer.setCertificates(ks.getCertificateChain(alias));
             signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
-            signer.setSignaturePolicy(new ADRBCMS_2_1());
+            signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
             signer.setAttached(true);
             /* Realiza a assinatura do conteudo */
             System.out.println("Efetuando a  assinatura do conteudo");
@@ -84,9 +115,9 @@ public class App extends AbstractFrameExecute {
     }
 
     @Override
-    public void cancel(KeyStore ks, String alias, Principal principal) {
+    public void cancel(KeyStore ks, String alias, MainFrame principal) {
         /* Seu codigo customizado aqui... */
-        System.out.println("br.gov.serpro.certificate.ui.user.App.cancel()");
+        System.out.println("org.demoiselle.signer.jnlp.user.App.cancel()");
         principal.setVisible(false); //you can't see me!
         principal.dispose(); //Destroy the JFrame object
     }

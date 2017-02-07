@@ -36,7 +36,9 @@
  */
 
 package org.demoiselle.signer.ca.provider.impl;
-
+/**
+ * custom unchecked exceptions for package impl  
+ */
 public class ICPBrasilProviderCAException extends RuntimeException {
 
 	private static final long serialVersionUID = -6402129068352716143L;

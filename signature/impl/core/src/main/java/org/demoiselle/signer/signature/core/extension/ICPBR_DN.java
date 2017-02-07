@@ -39,7 +39,6 @@ package org.demoiselle.signer.signature.core.extension;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Logger;
 
 public class ICPBR_DN extends Properties {
 
@@ -47,7 +46,6 @@ public class ICPBR_DN extends Properties {
      *
      */
     private static final long serialVersionUID = 1L;
-    private static final Logger logger = Logger.getLogger(ICPBR_DN.class.getName());
     private String dn = null;
 
     public ICPBR_DN(String dn) throws IOException {

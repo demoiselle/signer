@@ -108,7 +108,7 @@ public class DefaultExtensionLoader implements IOIDExtensionLoader {
                     keyValue = basicCertificate.getAfterDate();
                     break;
                 case CERTIFICATION_AUTHORITY:
-                    keyValue = basicCertificate.isCertificadoAc();
+                    keyValue = basicCertificate.isCACertificate();
                     break;
 
                 default:

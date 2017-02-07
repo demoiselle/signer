@@ -52,7 +52,7 @@ public class OID_2_16_76_1_3_5 extends OIDGeneric {
 
 	public static final String OID = "2.16.76.1.3.5";
 
-	protected static final Object CAMPOS[] = { "titulo", (int) 12, "zona", (int) 3, "secao", (int) 4, "municipioUf", (int) 22 };
+	protected static final Object FIELDS[] = { "titulo", (int) 12, "zona", (int) 3, "secao", (int) 4, "municipioUf", (int) 22 };
 
 	public OID_2_16_76_1_3_5() {
 	}
@@ -60,7 +60,7 @@ public class OID_2_16_76_1_3_5 extends OIDGeneric {
 	@Override
 	public void initialize() {
 
-		super.initialize(CAMPOS);
+		super.initialize(FIELDS);
 
 	}
 

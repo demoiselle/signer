@@ -36,8 +36,6 @@
  */
 package org.demoiselle.signer.signature.core.extension;
 
-import org.demoiselle.signer.signature.core.util.Base64Utils;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -45,11 +43,11 @@ import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
-import java.util.logging.Logger;
+
+import org.demoiselle.signer.signature.core.util.Base64Utils;
 
 public class ICPBR_CRL {
 
-    private static final Logger logger = Logger.getLogger(ICPBR_CRL.class.getName());
     private X509CRL x509crl = null;
 
     /**

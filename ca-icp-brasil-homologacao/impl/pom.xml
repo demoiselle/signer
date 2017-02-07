@@ -24,14 +24,12 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>ca-icpbrasil-homologacao</artifactId>
+	<artifactId>ca-icpbrasil-hom</artifactId>
 	<packaging>jar</packaging>
 
 
-	<name>Demoiselle Signer CA ICP-Brasil Homologacao</name>
-	<description>
-        Demoiselle Signer CA ICP-Brasil Homologacao Component
-    </description>
+	<name>Demoiselle Signer CA ICP-Brasil Homologation</name>
+	<description>Demoiselle Signer CA ICP-Brasil Homologation Component</description>
 	<url>http://www.demoiselle.org</url>
 
 	<parent>

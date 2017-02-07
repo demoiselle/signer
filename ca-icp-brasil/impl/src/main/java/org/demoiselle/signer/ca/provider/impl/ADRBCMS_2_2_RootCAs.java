@@ -45,8 +45,18 @@ import java.util.Collection;
 import java.util.List;
 import org.demoiselle.signer.signature.core.ca.provider.ProviderSignaturePolicyRootCA;
 
+/**
+ * Provides trusted Certificate Authority chain and policy OID for version 2.2 of the ICP-BRAZIL's
+ * policy for digital signature with basic reference in CMS format. 
+ *
+ */
+
 public class ADRBCMS_2_2_RootCAs implements ProviderSignaturePolicyRootCA {
 		
+	/**
+	 * Trusted Root CA defined by
+	 * http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=07/06/2016&jornal=1&pagina=3
+	 */
 	@Override
     public Collection<X509Certificate> getCAs() {
         List<X509Certificate> result = new ArrayList<X509Certificate>();
@@ -62,6 +72,10 @@ public class ADRBCMS_2_2_RootCAs implements ProviderSignaturePolicyRootCA {
     }
 
     @Override
+    /**
+     *  Policy OID defined by
+     * http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?data=07/06/2016&jornal=1&pagina=3
+     */
     public String getSignaturePolicyOID() {
         return "2.16.76.1.7.1.1.2.2";
     }

@@ -46,6 +46,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * Provides trusted Certificate Authority chain and policy OID for version 2.0 of the ICP-BRAZIL's
+ * policy for digital signature with basic reference in CMS format. 
+ *
+ */
+
 public class ADRBCMS_2_0_RootCAs implements ProviderSignaturePolicyRootCA {
 
     @Override

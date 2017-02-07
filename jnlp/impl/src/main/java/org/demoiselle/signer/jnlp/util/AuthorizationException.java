@@ -41,7 +41,7 @@ public class AuthorizationException extends RuntimeException{
 
 
 	/**
-	 * Construtor recebendo mensagem e causa
+	 * Constructor receiving the message and cause parameters
 	 * 
 	 * @param message
 	 * @param error
@@ -52,7 +52,7 @@ public class AuthorizationException extends RuntimeException{
 
 	
 	/**
-	 * Construtor recebendo mensagem
+	 * Constructor receiving the message parameter
 	 * 
 	 * @param message
 	 */

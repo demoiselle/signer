@@ -53,10 +53,10 @@ public class Item {
 		DateFormat f = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
 		this.alias = alias;
-		this.subject = this.corte(subject);
+		this.subject = this.cutCN(subject);
 		this.initDate = f.format(initDate);
 		this.endDate = f.format(endDate);
-		this.issuer = this.corte(issuer);
+		this.issuer = this.cutCN(issuer);
 	}
 
 	public String getAlias() {
@@ -86,14 +86,19 @@ public class Item {
 		return buffer.toString();
 	}
 
-	private String corte(String texto) {
+	/**
+	 * Cut a string from first comma and, from result, take off this chars sequence: "CN="  
+	 * @param text
+	 * @return String
+	 */
+	private String cutCN(String text) {
 
 		int end = 0;
-		end = texto.indexOf(",");
+		end = text.indexOf(",");
 		if (end == -1)
-			end = texto.length();
+			end = text.length();
 
-		String cortado = texto.substring(0, end);
-		return cortado.replace("CN=", "");
+		String cuted = text.substring(0, end);
+		return cuted.replace("CN=", "");
 	}
 }

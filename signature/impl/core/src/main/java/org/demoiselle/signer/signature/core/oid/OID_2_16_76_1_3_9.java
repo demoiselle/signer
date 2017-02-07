@@ -36,8 +36,6 @@
  */
 package org.demoiselle.signer.signature.core.oid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * OID = 2.16.76.1.3.9 e conteúdo = nas primeiras 11 (onze) posições, o número
@@ -47,15 +45,13 @@ import org.slf4j.LoggerFactory;
  */
 public class OID_2_16_76_1_3_9 extends OIDGeneric {
 
-    private static final Logger logger = LoggerFactory.getLogger(OID_2_16_76_1_3_9.class);
-
     public static final String OID = "2.16.76.1.3.9";
 
-    protected static final Object CAMPOS[] = {"RIC", 11};
+    protected static final Object FIELDS[] = {"RIC", 11};
 
     @Override
     public void initialize() {
-        super.initialize(CAMPOS);
+        super.initialize(FIELDS);
     }
 
     /**
@@ -66,5 +62,4 @@ public class OID_2_16_76_1_3_9 extends OIDGeneric {
     public String getRegistroDeIdentidadeCivil() {
         return properties.get("RIC");
     }
-
 }

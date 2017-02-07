@@ -41,6 +41,16 @@ import org.demoiselle.signer.signature.core.ca.provider.ProviderSignaturePolicyR
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
+/**
+* 
+*  WARNING: USE ONLY ON HOMOLOGATION ENVIROMENT
+*  
+*  Provides homologation Certificate Authority chain and policy OID for version 1.1 of the ICP-BRAZIL's
+*  policy for digital signature with basic reference in CMS format.
+*  
+*
+*/
+
 public class ADRBCMS_1_1_RootCAs implements ProviderSignaturePolicyRootCA {
 
     @Override

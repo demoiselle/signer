@@ -36,18 +36,6 @@
  */
 package org.demoiselle.signer.signature.core.ca.manager;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.bouncycastle.asn1.ASN1InputStream;
-import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.jce.provider.X509CertificateObject;
-import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
-import org.demoiselle.signer.signature.core.ca.provider.ProviderCAFactory;
-import org.demoiselle.signer.signature.core.ca.provider.ProviderSignaturePolicyRootCA;
-import org.demoiselle.signer.signature.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
-
-import java.io.IOException;
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -61,6 +49,12 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.signature.core.ca.provider.ProviderCAFactory;
+import org.demoiselle.signer.signature.core.ca.provider.ProviderSignaturePolicyRootCA;
+import org.demoiselle.signer.signature.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
 
 public class CAManager {
 
@@ -84,6 +78,7 @@ public class CAManager {
 			} catch (Throwable error) {
 				// TODO: Nao foi possivel resgatar as raizes confiaveis
 				// de uma determinada politica
+				error.printStackTrace();
 			}
 		}
 		return result;

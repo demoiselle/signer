@@ -76,14 +76,14 @@ import org.demoiselle.signer.signature.core.keystore.loader.PKCS11NotFoundExcept
 import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
 
 /**
- * @author SUPST/STDCS
+ * To design a main view with digital signature commands Execute and Cancel
 */
 public class MainFrame extends javax.swing.JFrame {
 
 	private static final long serialVersionUID = 1L;
 	
-	private JButton btnCancelar;
-	private JButton btnExecutar;
+	private JButton btnCancel;
+	private JButton btnExecute;
 	private JPanel panelbottom;
 	private JPanel paneltop;
 	private JScrollPane scrollPane;
@@ -96,17 +96,17 @@ public class MainFrame extends javax.swing.JFrame {
 	private static boolean loadedFiles = false;
 	String alias = "";
 	String className = "";
-	CertificadoModel certificateModel;
+	CertificateModel certificateModel;
 
 	/**
-	 * Creates new form NovoJFrame
+	 * Creates new form 
 	 */
 	public MainFrame() {
 		initComponents();
 		className = System.getProperty("jnlp.myClassName");
 
 		if (className == null || className.isEmpty()) {
-			className = "br.gov.serpro.certificate.ui.user.App";
+			className = "org.demoiselle.signer.jnlp.user.App";
 		}
 		FrameExecute frameExecute = FrameExecuteFactory.factory(className);
 
@@ -114,12 +114,12 @@ public class MainFrame extends javax.swing.JFrame {
 			keystore = this.getKeyStore();// Recupera o repositorio de certificados digitais
 		}
 
-		certificateModel = new CertificadoModel();
+		certificateModel = new CertificateModel();
 		certificateModel.populate(keystore);
 		tableCertificates.setModel(certificateModel);
 
 		if (tableCertificates.getRowCount() == 0) {
-			btnExecutar.setEnabled(false);
+			btnExecute.setEnabled(false);
 		} else {
 			tableCertificates.setRowSelectionInterval(0, 0);
 		}
@@ -176,9 +176,9 @@ public class MainFrame extends javax.swing.JFrame {
 		scrollPaneFiles = new JScrollPane();
 		tableCertificates = new JTable();
 		panelbottom = new JPanel();
-		btnExecutar = new JButton();
-		btnCancelar = new JButton();
-		listFiles = new JList();
+		btnExecute = new JButton();
+		btnCancel = new JButton();
+		listFiles = new JList<String>();
 				
 		setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		setLocation(new Point(0, 0));
@@ -231,17 +231,17 @@ public class MainFrame extends javax.swing.JFrame {
 	
 		panelbottom.setBorder(BorderFactory.createEtchedBorder());
 
-		btnExecutar.setText(FrameConfig.LABEL_DIALOG_BUTTON_RUN.getValue());
-		btnExecutar.addActionListener(new ActionListener() {
+		btnExecute.setText(FrameConfig.LABEL_DIALOG_BUTTON_RUN.getValue());
+		btnExecute.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				btnExecutarActionPerformed(evt);
+				btnExecuteActionPerformed(evt);
 			}
 		});
 
-		btnCancelar.setText(FrameConfig.LABEL_DIALOG_BUTTON_CANCEL.getValue());
-		btnCancelar.addActionListener(new ActionListener() {
+		btnCancel.setText(FrameConfig.LABEL_DIALOG_BUTTON_CANCEL.getValue());
+		btnCancel.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-				btnCancelarActionPerformed(evt);
+				btnCancelActionPerformed(evt);
 			}
 		});
 		
@@ -249,15 +249,15 @@ public class MainFrame extends javax.swing.JFrame {
 		panelbottom.setLayout(panelbottomLayout);
 		panelbottomLayout.setHorizontalGroup(panelbottomLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(panelbottomLayout.createSequentialGroup()
-								.addComponent(btnExecutar,GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_RUN_WIDTH.getValueInt(), GroupLayout.PREFERRED_SIZE)
-								.addComponent(btnCancelar, GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_CANCEL_WIDTH.getValueInt(), GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnExecute,GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_RUN_WIDTH.getValueInt(), GroupLayout.PREFERRED_SIZE)
+								.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_CANCEL_WIDTH.getValueInt(), GroupLayout.PREFERRED_SIZE)
 						));
 		panelbottomLayout.setVerticalGroup(panelbottomLayout.createParallelGroup(Alignment.LEADING)
 						.addGroup(panelbottomLayout.createSequentialGroup()
 								.addContainerGap()
 								.addGroup(panelbottomLayout.createParallelGroup(Alignment.BASELINE)
-										.addComponent(btnExecutar, GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_RUN_HEIGHT.getValueInt(), GroupLayout.PREFERRED_SIZE)
-										.addComponent(btnCancelar, GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_CANCEL_HEIGHT.getValueInt(), GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnExecute, GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_RUN_HEIGHT.getValueInt(), GroupLayout.PREFERRED_SIZE)
+										.addComponent(btnCancel, GroupLayout.PREFERRED_SIZE, FrameConfig.CONFIG_DIALOG_BUTTON_CANCEL_HEIGHT.getValueInt(), GroupLayout.PREFERRED_SIZE)
 								)
 								.addContainerGap()
 						));
@@ -282,13 +282,13 @@ public class MainFrame extends javax.swing.JFrame {
 		pack();
 	}
 
-	private void btnExecutarActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btnExecuteActionPerformed(java.awt.event.ActionEvent evt) {
 		FrameExecute frameExecute = FrameExecuteFactory.factory(className);
 		alias = this.getAlias();
 		frameExecute.execute(keystore, alias, this);
 	}
 
-	private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {
+	private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {
 		FrameExecute frameExecute = FrameExecuteFactory.factory(className);
 		alias = this.getAlias();
 		frameExecute.cancel(keystore, alias, this);
@@ -386,11 +386,7 @@ public class MainFrame extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(MainFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-
+     
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -405,7 +401,14 @@ public class MainFrame extends javax.swing.JFrame {
 		for (String string : list) {
 			files.addElement(string);
 		}
-		loadedFiles = true;
+		setLoadedFiles(true);
     }
 
+	public static boolean isLoadedFiles() {
+		return loadedFiles;
+	}
+
+	public static void setLoadedFiles(boolean loadedFiles) {
+		MainFrame.loadedFiles = loadedFiles;
+	}
 }

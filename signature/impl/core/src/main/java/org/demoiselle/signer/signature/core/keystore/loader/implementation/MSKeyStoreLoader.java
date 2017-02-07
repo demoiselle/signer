@@ -81,7 +81,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 
     @Override
     public void setCallbackHandler(CallbackHandler callback) {
-        this.callback = callback;
+        this.setCallback(callback);
     }
 
     /**
@@ -101,13 +101,13 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
             keyStoreVeritable = (KeyStoreSpi) field.get(keyStore);
 
             if ("sun.security.mscapi.KeyStore$MY".equals(keyStoreVeritable.getClass().getName())) {
-                Collection entries;
+                Collection<?> entries;
                 String alias, hashCode;
                 X509Certificate[] certificates;
 
                 field = keyStoreVeritable.getClass().getEnclosingClass().getDeclaredField("entries");
                 field.setAccessible(true);
-                entries = (Collection) field.get(keyStoreVeritable);
+                entries = (Collection<?>) field.get(keyStoreVeritable);
 
                 for (Object entry : entries) {
                     field = entry.getClass().getDeclaredField("certChain");
@@ -130,4 +130,12 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
             ex.printStackTrace();
         }
     }
+
+	public CallbackHandler getCallback() {
+		return callback;
+	}
+
+	public void setCallback(CallbackHandler callback) {
+		this.callback = callback;
+	}
 }

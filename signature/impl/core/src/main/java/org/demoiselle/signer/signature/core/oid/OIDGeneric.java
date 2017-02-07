@@ -63,6 +63,7 @@ public class OIDGeneric {
     private String oid = null;
     private String data = null;
     protected Map<String, String> properties = new HashMap<String, String>();
+	private static ASN1InputStream is;
 
     protected OIDGeneric() {
     }
@@ -76,7 +77,7 @@ public class OIDGeneric {
      * @throws Exception Retorna a exceção Exception
      */
     public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
-        ASN1InputStream is = new ASN1InputStream(data);
+        is = new ASN1InputStream(data);
         DLSequence sequence = (DLSequence) is.readObject();
         ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) sequence.getObjectAt(0);
         DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(1);

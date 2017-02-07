@@ -36,25 +36,6 @@
  */
 package org.demoiselle.signer.signature.cades.pkcs7.impl;
 
-import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
-import org.demoiselle.signer.signature.cades.SignerException;
-import org.demoiselle.signer.signature.cades.factory.PKCS1Factory;
-import org.demoiselle.signer.signature.cades.pkcs1.PKCS1Signer;
-import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
-//import org.demoiselle.signer.signature.cades.pkcs7.attribute.SignedAttribute;
-import org.demoiselle.signer.signature.cades.pkcs7.attribute.SignedOrUnsignedAttribute;
-//import org.demoiselle.signer.signature.cades.pkcs7.attribute.UnsignedAttribute;
-import org.demoiselle.signer.signature.cades.pkcs7.attribute.factory.AttributeFactory;
-//import org.demoiselle.signer.signature.core.IValidator;
-import org.demoiselle.signer.signature.core.ca.manager.CAManager;
-import org.demoiselle.signer.signature.policy.engine.asn1.etsi.AlgAndLength;
-import org.demoiselle.signer.signature.policy.engine.asn1.etsi.CertificateTrustPoint;
-import org.demoiselle.signer.signature.policy.engine.asn1.etsi.ObjectIdentifier;
-import org.demoiselle.signer.signature.policy.engine.asn1.etsi.SignaturePolicy;
-import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
-import org.demoiselle.signer.signature.timestamp.connector.TimeStampOperator;
-
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.Provider;
@@ -62,7 +43,6 @@ import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
-//import java.security.cert.CollectionCertStoreParameters;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAKey;
 import java.text.SimpleDateFormat;
@@ -72,16 +52,11 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-
 import org.bouncycastle.asn1.ASN1EncodableVector;
-import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1UTCTime;
-import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.cms.CMSAttributes;
@@ -106,6 +81,20 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
+import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
+import org.demoiselle.signer.signature.cades.SignerException;
+import org.demoiselle.signer.signature.cades.factory.PKCS1Factory;
+import org.demoiselle.signer.signature.cades.pkcs1.PKCS1Signer;
+import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.signature.cades.pkcs7.attribute.SignedOrUnsignedAttribute;
+import org.demoiselle.signer.signature.cades.pkcs7.attribute.factory.AttributeFactory;
+import org.demoiselle.signer.signature.core.ca.manager.CAManager;
+import org.demoiselle.signer.signature.policy.engine.asn1.etsi.AlgAndLength;
+import org.demoiselle.signer.signature.policy.engine.asn1.etsi.CertificateTrustPoint;
+import org.demoiselle.signer.signature.policy.engine.asn1.etsi.ObjectIdentifier;
+import org.demoiselle.signer.signature.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
+import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -167,7 +156,7 @@ public class CAdESSigner implements PKCS7Signer {
 		// Quantidade inicial de assinaturas validadas
 		int verified = 0;
 
-		Store certStore = cmsSignedData.getCertificates();
+		Store<?> certStore = cmsSignedData.getCertificates();
 		SignerInformationStore signers = cmsSignedData.getSignerInfos();
 		Iterator<?> it = signers.getSigners().iterator();
 
@@ -251,8 +240,8 @@ public class CAdESSigner implements PKCS7Signer {
 		return true;
 	}
 
-	private Store generatedCertStore() {
-		Store result = null;
+	private Store<?> generatedCertStore() {
+		Store<?> result = null;
 		try {
 			List<Certificate> certificates = new ArrayList<>();
 			certificates.addAll(Arrays.asList(certificateChain));
@@ -353,8 +342,7 @@ public class CAdESSigner implements PKCS7Signer {
 		this.pkcs1.setAlgorithm(algorithm);
 	}
 
-	@Override
-	public void setAttached(boolean attached) {
+	private void setAttached(boolean attached) {
 		this.attached = attached;
 	}
 
@@ -396,8 +384,8 @@ public class CAdESSigner implements PKCS7Signer {
 	 *            Conteúdo a ser assinado. TODO: Implementar co-assinaturas,
 	 *            informar a política de assinatura
 	 */
-	@Override
-	public byte[] doSign(byte[] content) {
+	
+	private byte[] doSign(byte[] content) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
 
@@ -821,6 +809,18 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 			}
 		}
+	}
+
+	@Override
+	public byte[] doAttachedSign(byte[] content) {
+		this.setAttached(true);
+		return this.doSign(content);
+
+	}
+
+	@Override
+	public byte[] doDetachedSign(byte[] content) {
+		return this.doSign(content);
 	}
 
 }

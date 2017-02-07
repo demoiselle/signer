@@ -136,12 +136,12 @@ public class App extends AbstractFrameExecute {
             signer.setCertificates(ks.getCertificateChain(alias));
             signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
             signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
-            signer.setAttached(false);
             
             //Varrendo todos os arquivos, gera uma assinatura para cada arquivo
             for (Map.Entry<String, byte[]> entry : files.entrySet()) {
             	LOGGER.log(Level.INFO, "Assinando arquivo: " + entry.getKey());
-                byte[] signed = signer.doSign(entry.getValue());
+                byte[] signed = signer.doDetachedSign(entry.getValue());
+                //byte[] signed = signer.doAttachedSign(entry.getValue());
                 signatures.put(entry.getKey(), signed);
             }
             //compressão dos arquivos em um zip

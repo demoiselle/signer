@@ -42,7 +42,7 @@ import java.security.KeyStore;
 import org.demoiselle.signer.jnlp.view.MainFrame;
 
 /**
-  * @author SUPST/STDCS
+ * 
  */
 public abstract class AbstractFrameExecute implements FrameExecute {
 

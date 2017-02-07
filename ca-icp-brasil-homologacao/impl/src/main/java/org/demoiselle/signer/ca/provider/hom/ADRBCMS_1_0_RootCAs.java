@@ -46,6 +46,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 
+ *  WARNING: USE ONLY ON HOMOLOGATION ENVIROMENT
+ *  
+ *  Provides homologation Certificate Authority chain and policy OID for version 1.0 of the ICP-BRAZIL's
+ *  policy for digital signature with basic reference in CMS format.
+ *  
+ *
+ */
 public class ADRBCMS_1_0_RootCAs implements ProviderSignaturePolicyRootCA {
 
     @Override

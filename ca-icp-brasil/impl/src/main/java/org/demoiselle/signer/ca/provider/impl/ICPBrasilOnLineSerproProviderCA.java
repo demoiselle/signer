@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2010 SERPRO
+ * Copyright (C) 2017 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -30,7 +30,7 @@
  * para maiores detalhes.
  *
  * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
- * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
+ * "License.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
@@ -66,7 +66,10 @@ import javax.xml.bind.DatatypeConverter;
 
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 
-
+/**
+ * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from 
+ * SERPRO's mirror URL http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip
+*/
 
 public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 

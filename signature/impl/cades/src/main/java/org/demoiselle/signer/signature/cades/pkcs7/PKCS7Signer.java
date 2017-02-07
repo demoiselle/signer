@@ -49,10 +49,9 @@ public interface PKCS7Signer extends Signer {
 
     abstract public void setCertificates(Certificate certificate[]);
 
-    abstract public void setAttached(boolean attached);
-
     abstract public void setSignaturePolicy(Policies signaturePolicy);
 
     abstract public byte[] getAttached(byte[] signed, boolean validate);
-
-}
+    
+    
+ }

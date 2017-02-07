@@ -44,12 +44,20 @@ import java.util.Collection;
 import java.util.List;
 
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
-//import org.apache.log4j.Level;
+
+/**
+* 
+*  WARNING: USE ONLY ON HOMOLOGATION ENVIROMENT
+*  
+*  Provides homologation Certificate Authority chain of the ICP-BRAZIL's
+*
+*/
 
 public class HomologacaoProviderCA implements ProviderCA {
 	
 
-    public Collection<X509Certificate> getCAs() {
+    @SuppressWarnings("finally")
+	public Collection<X509Certificate> getCAs() {
         List<X509Certificate> result = new ArrayList<X509Certificate>();
         try {
             InputStream raizDeHomologacaoSERPRO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/RaizdeHomologacaoSERPRO.cer");

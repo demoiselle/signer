@@ -50,8 +50,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * 
+ *  Provides trusted Certificate Authority chain and policy OID for version 1.0 of the ICP-BRAZIL's
+ *  policy for digital signature with basic reference in CMS format.
+ *  
+ *
+ */
+
 public class ADRBCMS_1_0_RootCAs implements ProviderSignaturePolicyRootCA {
 
+	/**
+	 * 
+	 */
     @Override
     public Collection<X509Certificate> getCAs() {
         List<X509Certificate> result = new ArrayList<X509Certificate>();
@@ -65,6 +76,9 @@ public class ADRBCMS_1_0_RootCAs implements ProviderSignaturePolicyRootCA {
         return result;
     }
 
+    /**
+     * http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?jornal=1&pagina=30&data=13/01/2009 
+     */
     @Override
     public String getSignaturePolicyOID() {
         return "2.16.76.1.7.1.1.1";

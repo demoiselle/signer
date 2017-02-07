@@ -36,19 +36,16 @@
  */
 package org.demoiselle.signer.signature.core.extension;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import org.demoiselle.signer.signature.core.oid.OID_2_16_76_1_3_2;
 import org.demoiselle.signer.signature.core.oid.OID_2_16_76_1_3_3;
 import org.demoiselle.signer.signature.core.oid.OID_2_16_76_1_3_4;
 import org.demoiselle.signer.signature.core.oid.OID_2_16_76_1_3_8;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Logger;
-
 public class ICPBRCertificateEquipment {
-
-    private static final Logger logger = Logger.getLogger(ICPBRCertificateEquipment.class.getName());
 
     private OID_2_16_76_1_3_2 oID_2_16_76_1_3_2 = null;
     private OID_2_16_76_1_3_3 oID_2_16_76_1_3_3 = null;

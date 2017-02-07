@@ -40,7 +40,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @author SUPST/STDCS
+ * Configuration for UI messages (can be internationalized) and useful properties 
  */
 public enum FrameConfig {
 
@@ -89,15 +89,17 @@ public enum FrameConfig {
 	}
 
 	/**
-	 * Retorna o valor de enum convertido para o tipo 'int' conforme sua
-	 * respectiva chave
 	 * 
-	 * @return
+	 * @return the value of an enum, converted to integer type according to its respective key
 	 */
 	public int getValueInt() {
 		return Integer.valueOf(getValue());
 	}
 
+	/**
+	 * 
+	 * @return instace of ResourceBundle from file: /resources/jnlp-config-default.properties
+	 */
 	private ResourceBundle getResourceBundle() {
 		if (rb != null) {
 			return rb;
@@ -115,6 +117,11 @@ public enum FrameConfig {
 		return rb;
 	}
 
+	/**
+	 * 
+	 * @param bundleName
+	 * @return java.util.ResourceBundle
+	 */
 	public ResourceBundle getBundle(String bundleName) {
 		return ResourceBundle.getBundle(bundleName);
 	}

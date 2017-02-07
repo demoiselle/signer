@@ -48,6 +48,8 @@ import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 
+
+// TODO - verificar se é necessário, 
 public class PKCS1SignerImpl implements PKCS1Signer {
 
     private Provider provider = null;
@@ -63,8 +65,7 @@ public class PKCS1SignerImpl implements PKCS1Signer {
      *
      * @param content Conteúdo a ser assinado.
      */
-    @Override
-    public byte[] doSign(byte[] content) {
+    private byte[] doSign(byte[] content) {
         if (content == null) {
             throw new SignerException("O conteudo é nulo.");
         }
@@ -195,5 +196,15 @@ public class PKCS1SignerImpl implements PKCS1Signer {
     public PublicKey getPublicKey() {
         return this.publicKey;
     }
+
+	@Override
+	public byte[] doAttachedSign(byte[] content) {
+		return this.doSign(content);
+	}
+
+	@Override
+	public byte[] doDetachedSign(byte[] content) {
+		return this.doSign(content);
+	}
 
 }

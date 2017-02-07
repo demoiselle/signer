@@ -47,7 +47,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -64,7 +63,6 @@ import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.PolicyInformation;
-import org.bouncycastle.asn1.x509.X509Extensions;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -87,6 +85,8 @@ public class BasicCertificate {
     private ICPBRKeyUsage keyUsage = null;
     private ICPBR_DN certificateFrom = null;
     private ICPBR_DN certificateFor = null;
+
+	private ASN1InputStream varASN1InputStream;
 
     /**
      *
@@ -415,19 +415,19 @@ public class BasicCertificate {
      *
      * @return boolean
      */
-    public boolean isCertificadoAc() {
+    public boolean isCACertificate() {
         return certificate.getBasicConstraints() >= 0;
     }
 
     /**
-     * returns the ICP-BRASIL Level Certificate(A1, A2, A3, A4, S1, S2, S3,
+     * returns the ICP-BRASIL Certificate Level(A1, A2, A3, A4, S1, S2, S3,
      * S4).<br>
      * DOC-ICP-04 Returns the <b>null</b> value if the CertificatePolicies is
      * NOT present.
      *
      * @return String
      */
-    public String getNivelCertificado() {
+    public String getCertificateLevel() {
         try {
             DLSequence sequence = (DLSequence) getExtensionValue(Extension.certificatePolicies.getId());
             if (sequence != null) {
@@ -578,8 +578,10 @@ public class BasicCertificate {
             return null;
         }
         try {
-            DEROctetString oct = (DEROctetString) (new ASN1InputStream(extensionValue).readObject());
-            return (new ASN1InputStream(oct.getOctets()).readObject());
+        	varASN1InputStream = new ASN1InputStream(extensionValue);
+            DEROctetString oct = (DEROctetString) varASN1InputStream.readObject();
+            varASN1InputStream = new ASN1InputStream(oct.getOctets());
+            return varASN1InputStream.readObject();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -639,9 +641,9 @@ public class BasicCertificate {
             }
 
             sb.append("*********************************\n");
-            sb.append("Eh CertificadoAC: ").append(this.isCertificadoAc()).append("\n");
+            sb.append("Eh CertificadoAC: ").append(this.isCACertificate()).append("\n");
             sb.append("PathLength  . . : ").append(this.getPathLength()).append("\n");
-            sb.append("Tipo Certificado: ").append(this.getNivelCertificado()).append("\n");
+            sb.append("Tipo Certificado: ").append(this.getCertificateLevel()).append("\n");
             sb.append("Tipo de Uso . . : ").append(this.getICPBRKeyUsage()).append("\n");
 
             sb.append("*********************************\n");

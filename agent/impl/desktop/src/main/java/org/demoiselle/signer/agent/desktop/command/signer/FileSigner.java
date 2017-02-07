@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
-
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.ui.PinHandler;
-import org.demoiselle.signer.agent.desktop.web.Execute;
 import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
@@ -56,8 +54,7 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	        	policie = Policies.AD_RB_CADES_2_2;
 	        }
 	        signer.setSignaturePolicy(policie);
-	        signer.setAttached(false);
-	        
+        
 	        byte[] byteFile = null;
 	        
 	        File file = new File(fileName);
@@ -66,7 +63,8 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 	        is.read(byteFile);
 	        is.close();
 	        
-	        return signer.doSign(byteFile);
+	        //return signer.doAttachedSign(byteFile);
+	        return signer.doDetachedSign(byteFile);
 	        
 		} catch (Throwable error) {
 			error.printStackTrace();

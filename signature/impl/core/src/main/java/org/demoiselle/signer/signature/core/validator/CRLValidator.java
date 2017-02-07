@@ -41,7 +41,6 @@ import org.demoiselle.signer.signature.core.exception.CertificateValidatorExcept
 import org.demoiselle.signer.signature.core.extension.ICPBR_CRL;
 import org.demoiselle.signer.signature.core.repository.CRLRepository;
 import org.demoiselle.signer.signature.core.repository.CRLRepositoryFactory;
-
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 

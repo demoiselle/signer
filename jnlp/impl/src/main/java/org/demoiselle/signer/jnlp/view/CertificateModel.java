@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2017 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  * 
@@ -41,28 +41,26 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-
 import javax.swing.table.AbstractTableModel;
-
 import org.demoiselle.signer.jnlp.tiny.Item;
 
 /**
- * @author SUPST/STDCS
+ * Extension for TableModel to show commons certificate attributes ( SubjectDN, NotBefore, NotAfter, IssuerDN)
 */
-public class CertificadoModel extends AbstractTableModel {
+public class CertificateModel extends AbstractTableModel {
 
     /**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private Object[][] dados;
+	private Object[][] data;
     private final String[] columnNames = {"Emitido Para", "Válido de", "Válido até", "Emitido Por"};
 
     @Override
     public int getRowCount() {
-        if (dados != null) {
-            return dados.length;
+        if (data != null) {
+            return data.length;
         } else {
             return 0;
         }
@@ -80,7 +78,7 @@ public class CertificadoModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        return dados[rowIndex][columnIndex];
+        return data[rowIndex][columnIndex];
     }
 
     public void populate(KeyStore keystore) {
@@ -89,7 +87,7 @@ public class CertificadoModel extends AbstractTableModel {
                 int linha = keystore.size();
                 int coluna = columnNames.length;
 
-                dados = new Object[linha][coluna];
+                data = new Object[linha][coluna];
 
                 int ik = 0;
                 Enumeration<String> aliases = keystore.aliases();
@@ -98,10 +96,10 @@ public class CertificadoModel extends AbstractTableModel {
                     X509Certificate certificate = (X509Certificate) keystore.getCertificate(alias);
 
                     Item item = new Item(alias, certificate.getSubjectDN().getName(), certificate.getNotBefore(), certificate.getNotAfter(), certificate.getIssuerDN().getName());
-                    dados[ik][0] = item;
-                    dados[ik][1] = item.getInitDate();
-                    dados[ik][2] = item.getEndDate();
-                    dados[ik][3] = item.getIssuer();
+                    data[ik][0] = item;
+                    data[ik][1] = item.getInitDate();
+                    data[ik][2] = item.getEndDate();
+                    data[ik][3] = item.getIssuer();
                     ik++;
                 }
                 fireTableDataChanged();

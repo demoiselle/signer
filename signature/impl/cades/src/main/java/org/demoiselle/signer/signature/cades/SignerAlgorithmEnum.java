@@ -38,6 +38,11 @@ package org.demoiselle.signer.signature.cades;
 
 import org.demoiselle.signer.signature.criptography.DigestAlgorithmEnum;
 
+/**
+ * 
+ * Enumeration for suported Algorrithm
+ *
+ */
 public enum SignerAlgorithmEnum {
 
     /**

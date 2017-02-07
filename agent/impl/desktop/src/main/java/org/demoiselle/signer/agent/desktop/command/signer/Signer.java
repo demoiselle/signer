@@ -42,8 +42,8 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 	        	policie = Policies.AD_RB_CADES_2_2;
 	        }
 	        signer.setSignaturePolicy(policie);
-	        signer.setAttached(false);
-	        byte[] signed = signer.doSign(this.getContent(request));
+	        //byte[] signed = signer.doAttachedSign(this.getContent(request));
+	        byte[] signed = signer.doDetachedSign(this.getContent(request));	        
 	        String encripted = Base64Utils.base64Encode(signed);
 	        SignerResponse result = new SignerResponse();
 	        result.setRequestId(request.getId());

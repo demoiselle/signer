@@ -45,23 +45,19 @@ import java.security.KeyStore;
 import java.security.KeyStore.Builder;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
-import org.junit.Test;
+//import org.junit.Test;
 
 /**
  *
@@ -69,7 +65,7 @@ import org.junit.Test;
 public class CAdESSignerTest {
 
     // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
-    // @Test
+    //@Test
 
     public void testSignAndVerifySignature() {
         try {
@@ -104,10 +100,10 @@ public class CAdESSignerTest {
             X509Certificate c = (X509Certificate) certificates[0];
             System.out.println("Número de série....: {}"+ c.getSerialNumber().toString());
 
-            String arquivo = "local_e_nome_do_arquivo";
+            String fileDirName = "local_e_nome_do_arquivo";
             
             
-			byte[] paraAssinar = readContent(arquivo);
+			byte[] fileToSign = readContent(fileDirName);
 			
 						
             /* Parametrizando o objeto doSign */
@@ -115,15 +111,13 @@ public class CAdESSignerTest {
             signer.setCertificates(ks.getCertificateChain(alias));
             signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
             signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
-            signer.setAttached(false);
-            
-			
+            			
             /* Realiza a assinatura do conteudo */
             System.out.println("Efetuando a  assinatura do conteudo");
-            byte[] assinatura = signer.doSign(paraAssinar);
+            byte[] signature = signer.doDetachedSign(fileToSign);
             /* Valida o conteudo antes de gravar em arquivo */
             System.out.println("Efetuando a validacao da assinatura.");
-            boolean checked = signer.check(paraAssinar, assinatura);
+            boolean checked = signer.check(fileToSign, signature);
             
 
             if (checked) {
@@ -133,9 +127,9 @@ public class CAdESSignerTest {
             }
 
             try {
-    			File file = new File(arquivo+".p7s");
+    			File file = new File(fileDirName+".p7s");
     			FileOutputStream os = new FileOutputStream(file);
-    			os.write(assinatura);
+    			os.write(signature);
     			os.flush();
     			os.close();
     		} catch (IOException ex) {
@@ -144,20 +138,20 @@ public class CAdESSignerTest {
             
             /* Valida o conteudo depois de gravado */
             System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
-            byte[] arquivoAssinatura = readContent(arquivo+".p7s");
-            checked = signer.check(paraAssinar, arquivoAssinatura);
+            byte[] singnatureFile = readContent(fileToSign+".p7s");
+            checked = signer.check(fileToSign, singnatureFile);
 
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
             Logger.getLogger(CAdESSignerTest.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
-    private byte[] readContent(String arquivo) {
+    private byte[] readContent(String parmFile) {
 		
 		byte[] result = null;
 		try {
-			File file = new File(arquivo);
-			FileInputStream is = new FileInputStream(arquivo);
+			File file = new File(parmFile);
+			FileInputStream is = new FileInputStream(parmFile);
 			result = new byte[(int) file.length()];
 			is.read(result);
 			is.close();
@@ -166,6 +160,4 @@ public class CAdESSignerTest {
 		}
 		return result;
 	}
-    
-
 }

@@ -37,6 +37,9 @@
 
 package org.demoiselle.signer.signature.cades;
 
+/**
+ * custom unchecked exceptions for package   
+ */
 public class SignerException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

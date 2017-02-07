@@ -6,11 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
@@ -19,22 +15,20 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.ExternalSigningSupport;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.SignatureInterface;
-import org.demoiselle.signer.agent.desktop.ui.PinHandler;
-import org.demoiselle.signer.ca.provider.impl.ADRBCMS_2_2_RootCAs;
 import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.signature.core.ca.manager.CAManager;
-import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
 
 
 public class SignerPDF {
 	
+	private FileInputStream fis;
+
 	public void doSigner(String originalFile, String signedFile, String signFile) throws Throwable {
 		File file = new File(signFile);
-		FileInputStream fis = new FileInputStream(file);
+		fis = new FileInputStream(file);
 		byte[] sign = new byte[(int)file.length()];
 		fis.read(sign);
 		this.doSigner(originalFile, signedFile, sign);
@@ -77,7 +71,7 @@ public class SignerPDF {
 					signer.setSignaturePolicy(Policies.AD_RA_CADES_2_2);
 					signer.setPrivateKey(privateKey);
 					signer.setCertificates(chain);
-					byte[] assinatura = signer.doSign(content);
+					byte[] assinatura = signer.doDetachedSign(content);
 					return assinatura;
 				} catch (Throwable error) {
 					error.printStackTrace();

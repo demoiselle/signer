@@ -36,6 +36,9 @@
  */
 package org.demoiselle.signer.signature.core.ca.manager;
 
+/**
+ * custom unchecked exceptions for package impl  
+ */
 public class CAManagerException extends RuntimeException {
 
     private static final long serialVersionUID = 6416422024286509896L;

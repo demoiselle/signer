@@ -36,13 +36,6 @@
  */
 package org.demoiselle.signer.signature.core.keystore.loader.implementation;
 
-import org.demoiselle.signer.signature.core.keystore.loader.DriverNotAvailableException;
-import org.demoiselle.signer.signature.core.keystore.loader.InvalidPinException;
-import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoaderException;
-import org.demoiselle.signer.signature.core.keystore.loader.PKCS11NotFoundException;
-import org.demoiselle.signer.signature.core.keystore.loader.configuration.Configuration;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,8 +56,12 @@ import java.util.Set;
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.demoiselle.signer.signature.core.keystore.loader.DriverNotAvailableException;
+import org.demoiselle.signer.signature.core.keystore.loader.InvalidPinException;
+import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoaderException;
+import org.demoiselle.signer.signature.core.keystore.loader.PKCS11NotFoundException;
+import org.demoiselle.signer.signature.core.keystore.loader.configuration.Configuration;
 
 /**
  * Implementação de KeyStoreLoader baseado em drivers do sistema operacional. É
@@ -73,7 +70,6 @@ import org.slf4j.LoggerFactory;
  */
 public class DriverKeyStoreLoader implements KeyStoreLoader {
 
-    private static final Logger logger = LoggerFactory.getLogger(DriverKeyStoreLoader.class);
     private static final String PINNUMBER_INVALID = "PIN access to token can not be null or invalid";
     private static final String DRIVER_LOAD_ERROR = "Error on load a module PKCS#11";
     private static final String DRIVERS_EMPTY = "No driver are available";
@@ -81,6 +77,7 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
     private static final String PKCS11_KEYSTORE_TYPE = "PKCS11";
     private static final String PKCS11_CONTENT_CONFIG_FILE = "name = %s\nlibrary = %s";
     private CallbackHandler callback;
+	private Formatter formatter;
 
     @Override
     public KeyStore getKeyStore() {
@@ -108,7 +105,9 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
     public KeyStore getKeyStoreFromDriver(String driverName, String driverPath) {
         Configuration.getInstance().addDriver(driverName, driverPath);
         KeyStore keyStore = null;
-        String pkcs11ConfigSettings = (new Formatter()).format(PKCS11_CONTENT_CONFIG_FILE, driverName, driverPath).toString();
+        formatter = new Formatter();
+        
+        String pkcs11ConfigSettings = formatter.format(PKCS11_CONTENT_CONFIG_FILE, driverName, driverPath).toString();
         byte[] pkcs11ConfigBytes = pkcs11ConfigSettings.getBytes();
         ByteArrayInputStream confStream = new ByteArrayInputStream(pkcs11ConfigBytes);
 

@@ -36,13 +36,10 @@
  */
 package org.demoiselle.signer.signature.core.repository;
 
-import java.util.logging.Logger;
 
 public class CRLOldCertificateException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;
-
-    private static final Logger logger = Logger.getLogger(CRLOldCertificateException.class.getName());
 
     public CRLOldCertificateException() {
         super();
