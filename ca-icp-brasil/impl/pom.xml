@@ -43,9 +43,7 @@
 
     
     <name>Demoiselle Signer CA ICP-Brasil</name>
-    <description>
-        Demoiselle Signer CA ICP-Brasil Component
-    </description>
+    <description>Demoiselle Signer Component to provides trusted Certificate Authority chain of the ICP-BRAZIL's digital signature policies</description>
     <url>http://www.demoiselle.org</url>
 
 	<parent>

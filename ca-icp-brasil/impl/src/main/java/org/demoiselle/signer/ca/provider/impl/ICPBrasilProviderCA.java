@@ -49,12 +49,16 @@ import java.util.Enumeration;
 import java.util.List;
 
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.signature.core.util.MessagesBundle;
 
 /**
  * Provides trusted Certificate Authority chain of the ICP-BRAZIL's digital signature policies
  * from Keystore (icpbrasil.jks) stored in resources library   
  */
 public class ICPBrasilProviderCA implements ProviderCA {
+	
+	
+	private MessagesBundle messagesBundle = new MessagesBundle();
 	
 	/**
 	 * read Certificate Authority chain from loaded keystore
@@ -73,7 +77,7 @@ public class ICPBrasilProviderCA implements ProviderCA {
 
             }
         } catch (KeyStoreException ex) {
-            throw new ICPBrasilProviderCAException("Error on load certificates from default keystore", ex);
+            throw new ICPBrasilProviderCAException(messagesBundle.getString("error.load.keystore"), ex);
         }
         return result;
     }
@@ -87,14 +91,23 @@ public class ICPBrasilProviderCA implements ProviderCA {
             InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
             keyStore = KeyStore.getInstance("JKS");
             keyStore.load(is, "changeit".toCharArray());
-        } catch (KeyStoreException | IOException | NoSuchAlgorithmException | CertificateException ex) {
-            throw new ICPBrasilProviderCAException("KeyStore default not loaded.", ex);
-        }
+        } catch (KeyStoreException ex) {
+            throw new ICPBrasilProviderCAException(messagesBundle.getString("error.load.keystore"), ex);
+        } catch (NoSuchAlgorithmException ex) {
+        	throw new ICPBrasilProviderCAException(messagesBundle.getString("error.no.algorithm"), ex);
+		} catch (CertificateException ex) {
+			throw new ICPBrasilProviderCAException(messagesBundle.getString("error.jks.certificate"), ex);
+		} catch (IOException ex) {
+			throw new ICPBrasilProviderCAException(messagesBundle.getString("error.io"), ex);
+		}
         return keyStore;
     }
 
+    /**
+	 * This provider Name
+	 */
 	@Override
-	public String getName() {
-		return "ICP Brasil Provider (Componente)";
+	public String getName() {		
+		return messagesBundle.getString("info.provider.name.demoiselle");
 	}
 }

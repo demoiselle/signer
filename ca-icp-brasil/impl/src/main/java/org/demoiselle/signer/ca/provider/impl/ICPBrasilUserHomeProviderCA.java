@@ -56,7 +56,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.signature.core.util.MessagesBundle;
 
 /**
  * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file (ACcompactado.zip) stored on user home folder,
@@ -67,20 +69,25 @@ import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
 public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 	public static final String PATH_HOME_USER = System.getProperty("user.home");
-	public static final String FOLDER_ASSINADOR = ".java" + File.separator + "assinador";
+	public static final String FOLDER_SIGNER = ".java" + File.separator + "signer";
 	public static final String FILENAME_ZIP = "ACcompactado.zip";
 	public static final String FILENAME_HASH = "hashsha512.txt";
 
-	public static final Path FULL_PATH_FOLDER_ASSINADOR = Paths.get(PATH_HOME_USER, FOLDER_ASSINADOR);
-	public static final Path FULL_PATH_ZIP = Paths.get(PATH_HOME_USER, FOLDER_ASSINADOR, FILENAME_ZIP);
-	public static final Path FULL_PATH_HASH = Paths.get(PATH_HOME_USER, FOLDER_ASSINADOR, FILENAME_HASH);
+	public static final Path FULL_PATH_FOLDER_SIGNER = Paths.get(PATH_HOME_USER, FOLDER_SIGNER);
+	public static final Path FULL_PATH_ZIP = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, FILENAME_ZIP);
+	public static final Path FULL_PATH_HASH = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, FILENAME_HASH);
 
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilUserHomeProviderCA.class.getName());
+	private static final MessagesBundle messagesBundle = new MessagesBundle();
 
+	/**
+	 * Main method for read trusted Certificate Authorities Chain
+	 */
+	
 	@Override
 	public Collection<X509Certificate> getCAs() {
 
-		// Verifica se a pasta do assinador existe
+		// verify if the FULL_PATH_FOLDER_SINGER exists
 		try {
 			verifyZIPPath();
 		} catch (IOException e) {
@@ -90,9 +97,14 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 		return getFromLocalZip(FULL_PATH_ZIP);
 	}
 
+	/**
+	 * Load file from file system and read Certificate Authorities Chain 
+	 * @param fileZip
+	 * @return
+	 */
 	public Collection<X509Certificate> getFromLocalZip(Path fileZip) {
 
-		LOGGER.log(Level.INFO, "Recuperando localmente as cadeias da ICP-Brasil [" + fileZip.toString() + "].");
+		LOGGER.log(Level.INFO, messagesBundle.getString("info.loading.from.file", fileZip.toString()));
 
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
 		long timeBefore = 0;
@@ -102,32 +114,36 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 			if (Files.exists(fileZip)) {
 
-				// Pega o ZIP do filesystem
+				// get file from filesystem
 				InputStream inputStream = new FileInputStream(fileZip.toString());
 
-				// Pega os certificados do ZIP
+				// get certificates stored on file
 				result = this.getFromZip(inputStream);
 
 			} else {
-				throw new Exception("Arquivo ZIP não encontrado no home do usuário");
+				throw new Exception(messagesBundle.getString("error.filenotfound.userhome",fileZip.toString()));
 			}
 
 			timeAfter = System.currentTimeMillis();
 		} catch (Throwable error) {
 			timeAfter = System.currentTimeMillis();
-			LOGGER.log(Level.WARNING, "ERRO. [" + error.getMessage() + "].");
+			LOGGER.log(Level.WARNING, messagesBundle.getString("error.throwable"));
 		} finally {
 			LOGGER.log(Level.INFO,
-					"Levamos " + (timeAfter - timeBefore) + "ms para tentar recuperar as cadeias do ZIP local.");
+					messagesBundle.getString("info.time.file.userhome", timeAfter - timeBefore));
 		}
 		return result;
 	}
 
+	/**
+	 *  Verify if folder exists, otherwise will create it
+	 * @return
+	 * @throws IOException
+	 */
 	public Path verifyZIPPath() throws IOException {
 
-		Path finalFolder = ICPBrasilUserHomeProviderCA.FULL_PATH_FOLDER_ASSINADOR;
+		Path finalFolder = ICPBrasilUserHomeProviderCA.FULL_PATH_FOLDER_SIGNER;
 
-		// Verifica se existe o folder, se não cria
 		if (!Files.isDirectory(finalFolder)) {
 			Files.createDirectories(finalFolder);
 		}
@@ -136,6 +152,12 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 	}
 
+	/**
+	 * get all Certificate Authorities stored on file 
+	 * @param zip
+	 * @return
+	 * @throws RuntimeException
+	 */
 	public Collection<X509Certificate> getFromZip(InputStream zip) throws RuntimeException {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
 		InputStream in = new BufferedInputStream(zip);
@@ -158,15 +180,19 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				}
 			}
 		} catch (CertificateException error) {
-			throw new RuntimeException("Certificado inválido", error);
+			throw new RuntimeException( messagesBundle.getString("error.invalid.certificate"), error);
 		} catch (IOException error) {
-			throw new RuntimeException("Erro ao tentar abrir o stream", error);
+			throw new RuntimeException(messagesBundle.getString("error.stream"), error);
 		}
 		return result;
 	}
 
+	/**
+	 * This provider Name
+	 */
 	@Override
 	public String getName() {
-		return "Home User Provider";
+		return messagesBundle.getString("info.provider.name.userhome", FULL_PATH_ZIP);
+
 	}
 }

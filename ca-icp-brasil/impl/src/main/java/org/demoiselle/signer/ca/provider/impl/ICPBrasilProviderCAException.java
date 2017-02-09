@@ -37,7 +37,7 @@
 
 package org.demoiselle.signer.ca.provider.impl;
 /**
- * custom unchecked exceptions for package impl  
+ * custom (to do unchecked) exceptions for package impl  
  */
 public class ICPBrasilProviderCAException extends RuntimeException {
 

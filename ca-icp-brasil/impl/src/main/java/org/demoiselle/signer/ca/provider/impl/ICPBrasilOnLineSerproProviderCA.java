@@ -61,10 +61,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import javax.xml.bind.DatatypeConverter;
-
 import org.demoiselle.signer.signature.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.signature.core.util.MessagesBundle;
 
 /**
  * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from 
@@ -79,15 +78,28 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	private static final int TIMEOUT_READ = 5000;
 
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class.getName());
+	
+	
+	protected MessagesBundle messagesBundle = new MessagesBundle();
 
+	/**
+	 *  return the address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.  
+	 */
 	public String getURLZIP() {
 		return ICPBrasilOnLineSerproProviderCA.STRING_URL_ZIP;
 	}
 
+	/**
+	 *  return the address (mirrored by SERPRO) where is located a file that contains the hash code (SHA512)
+	 *  which corresponds to the file downloaded with {@link #getURLZIP()} . 
+	 */
 	public String getURLHash() {
 		return ICPBrasilOnLineSerproProviderCA.STRING_URL_HASH;
 	}
 
+	/** 
+	 * Read Certificate Authority chain from file 
+	 */
 	@Override
 	public Collection<X509Certificate> getCAs() {
 
@@ -96,7 +108,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 		try {
 
-			// Faz o hash do checksum do arquivo e não usa o local de propósito,
+			// Faz o hash do checksum do arquivo, e não usa o arquivo local de propósito,
 			// pois o arquivo pode ter sido corrompido e neste caso o check vai
 			// dar errado e baixar novamente
 			Path pathZip = ICPBrasilUserHomeProviderCA.FULL_PATH_ZIP;
@@ -127,7 +139,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 					}
 
 				} else {
-					LOGGER.log(Level.WARNING, "Ocorreu um erro ao obter o hash online, pois está vazio.");
+					LOGGER.log(Level.WARNING, messagesBundle.getString("error.hash.empty"));
 				}
 			}
 
@@ -135,12 +147,12 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			// salva localmente
 			if (!useCache) {
 				// Baixa um novo arquivo
-				LOGGER.log(Level.INFO, "Recuperando REMOTAMENTE as cadeias da ICP-Brasil [" + getURLZIP() + "].");
+				LOGGER.log(Level.INFO, messagesBundle.getString("info.file.downloading",getURLZIP() ));
 				InputStream inputStreamZip = getInputStreamFromURL(getURLZIP());
 				Files.copy(inputStreamZip, pathZip, StandardCopyOption.REPLACE_EXISTING);
 				inputStreamZip.close();
 
-				LOGGER.log(Level.INFO, "Cadeias da ICP-Brasil recupedadas com sucesso.");	
+				LOGGER.log(Level.INFO, messagesBundle.getString("info.sucess"));	
 			}
 			
 			// Pega os certificados locais
@@ -148,23 +160,29 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			result = getFromZip(inputStreamZipReturn);
 			inputStreamZipReturn.close();
 
-			LOGGER.log(Level.INFO, "Recuperou [" + result.size() + "] certificados do arquivo que foi baixado.");
+			LOGGER.log(Level.INFO, messagesBundle.getString("info.recovered.certs",result.size()));
 
 		} catch (IOException e) {			
-			LOGGER.log(Level.WARNING, "Erro ao tentar recuperar a cadeia.", e);			
+			LOGGER.log(Level.WARNING,messagesBundle.getString("error.recover.file") , e.getMessage());			
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, "Erro inesperado ao tentar recuperar a cadeia.", e);
+			LOGGER.log(Level.SEVERE, messagesBundle.getString("error.exception.recorver.chain"), e.getMessage());
 		}
 
 		if (result != null) {
-			LOGGER.log(Level.INFO, "O Provider " + getName() + " possui [" + result.size() + "] certificados.");
+			LOGGER.log(Level.INFO, messagesBundle.getString("info.number.certificates.found",getName(), result.size()));
 		} else {
-			LOGGER.log(Level.INFO, "O Provider " + getName() + " NÃO possui certificados.");
+			LOGGER.log(Level.INFO, messagesBundle.getString("info.none.certificates",getName()));
 		}
 
 		return result;
 	}
 
+	/**
+	 * calculte SHA-512 hash from downloaded file.  
+	 * @param input
+	 * @return
+	 * @throws IOException
+	 */
 	public byte[] checksum(File input) throws IOException {
 		InputStream in = null;
 		try {
@@ -197,22 +215,28 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			timeAfter = System.currentTimeMillis();
 		} catch (Throwable error) {
 			timeAfter = System.currentTimeMillis();
-			LOGGER.log(Level.WARNING, "ERRO. [" + error.getMessage() + "].");
+			LOGGER.log(Level.SEVERE, messagesBundle.getString("error.throwable", error.getMessage()));
 		} finally {
-			LOGGER.log(Level.INFO, "Levamos " + (timeAfter - timeBefore) + "ms para recuperar as cadeias.");
+			LOGGER.log(Level.INFO, messagesBundle.getString("info.time.total", (timeAfter - timeBefore)));  
 		}
 
 		return result;
 	}
 
+	/**
+	 *  get Chain from file stored on local user diretory 
+	 * @param zip
+	 * @return
+	 * @throws RuntimeException
+	 */
 	public Collection<X509Certificate> getFromZip(InputStream zip) throws RuntimeException {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
 		InputStream in = new BufferedInputStream(zip);
 		ZipInputStream zin = new ZipInputStream(in);
-		ZipEntry arquivoInterno = null;
+		ZipEntry localFile = null;
 		try {
-			while ((arquivoInterno = zin.getNextEntry()) != null) {
-				if (!arquivoInterno.isDirectory()) {
+			while ((localFile = zin.getNextEntry()) != null) {
+				if (!localFile.isDirectory()) {
 					ByteArrayOutputStream out = new ByteArrayOutputStream();
 					byte[] b = new byte[512];
 					int len = 0;
@@ -227,13 +251,19 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				}
 			}
 		} catch (CertificateException error) {
-			throw new RuntimeException("Certificado inválido", error);
+			throw new RuntimeException(messagesBundle.getString("error.invalid.certificate"), error);
 		} catch (IOException error) {
-			throw new RuntimeException("Erro ao tentar abrir o stream", error);
+			throw new RuntimeException(messagesBundle.getString("error.stream"), error);
 		}
 		return result;
 	}
 
+	/**
+	 * execute file download from defined URL 
+	 * @param stringURL
+	 * @return
+	 * @throws RuntimeException
+	 */
 	public InputStream getInputStreamFromURL(String stringURL) throws RuntimeException {
 		try {
 			URL url = new URL(stringURL);
@@ -242,17 +272,20 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			connection.setReadTimeout(TIMEOUT_READ);
 			return connection.getInputStream();
 		} catch (MalformedURLException error) {
-			throw new RuntimeException("URL mal formada", error);
+			throw new RuntimeException(messagesBundle.getString("error.malformedURL"), error);
 		} catch (UnknownServiceException error) {
-			throw new RuntimeException("Serviço da URL desconhecido", error);
+			throw new RuntimeException(messagesBundle.getString("error.unknown.service"), error);
 		} catch (IOException error) {
-			throw new RuntimeException("Algum erro de I/O ocorreu", error);
+			throw new RuntimeException(messagesBundle.getString("error.io"), error);
 		}
 	}
 
+	/**
+	 * This provider Name
+	 */
 	@Override
 	public String getName() {
-		return "ICP Brasil ONLINE SERPRO Provider (" + getURLZIP() + ")";
+		return messagesBundle.getString("info.provider.name.serpro", getURLZIP());
 	}
 
 }

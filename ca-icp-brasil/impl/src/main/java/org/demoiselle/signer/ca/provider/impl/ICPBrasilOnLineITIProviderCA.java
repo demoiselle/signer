@@ -39,7 +39,8 @@ package org.demoiselle.signer.ca.provider.impl;
 
 /**
  * 
- * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from it's defined URL http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip
+ * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from  it's defined URL:
+ * http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip
  *
  */
 public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderCA {
@@ -47,18 +48,28 @@ public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderC
 	private static String STRING_URL_ZIP = "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip";
 	private static String STRING_URL_HASH = "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/hashsha512.txt";
 
+	/**
+	 *  return the address where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.  
+	 */
 	@Override
 	public String getURLZIP() {
 		return ICPBrasilOnLineITIProviderCA.STRING_URL_ZIP;
 	}
 
+	/**
+	 *  return the address where is located a file that contains the hash code (SHA512)
+	 *  which corresponds to the file downloaded with {@link #getURLZIP()} . 
+	 */
 	public String getURLHash() {
 		return ICPBrasilOnLineITIProviderCA.STRING_URL_HASH;
 	}
 
+	/**
+	 * This provider Name
+	 */
 	@Override
 	public String getName() {
-		return "ICP Brasil ONLINE ITI Provider (" + getURLZIP() + ")";
+		return messagesBundle.getString("info.provider.name.iti", getURLZIP());
 	}
 
 }

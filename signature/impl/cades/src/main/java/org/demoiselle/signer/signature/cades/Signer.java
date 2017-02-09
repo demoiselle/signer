@@ -99,13 +99,13 @@ public interface Signer {
     
     
     /**
-     * Método de validação da aassiantura.
+     * Check if a digital signature, informed by parameter signedData, is valid for content
      *
      * @param content
-     * @param signed
+     * @param signedData
      * @return
      */
-    abstract public boolean check(byte[] content, byte[] signed);
+    abstract public boolean check(byte[] content, byte[] signedData);
 
     /**
      * Retorna o provider.

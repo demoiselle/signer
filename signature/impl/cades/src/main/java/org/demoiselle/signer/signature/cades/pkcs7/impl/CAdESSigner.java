@@ -138,15 +138,15 @@ public class CAdESSigner implements PKCS7Signer {
 	 *         caso do PKCS1. TODO: Implementar validação de co-assinaturas
 	 */
 	@Override
-	public boolean check(byte[] content, byte[] signed) {
+	public boolean check(byte[] content, byte[] signedData) {
 		Security.addProvider(new BouncyCastleProvider());
 		CMSSignedData cmsSignedData = null;
 		try {
 			if (content == null) {
-				cmsSignedData = new CMSSignedData(signed);
+				cmsSignedData = new CMSSignedData(signedData);
 			} else {
 				cmsSignedData = new CMSSignedData(new CMSProcessableByteArray(
-						content), signed);
+						content), signedData);
 			}
 		} catch (CMSException ex) {
 			throw new SignerException(

@@ -52,8 +52,6 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
@@ -65,7 +63,7 @@ import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory;
 public class CAdESSignerTest {
 
     // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
-    //@Test
+   // @Test
 
     public void testSignAndVerifySignature() {
         try {
@@ -100,7 +98,7 @@ public class CAdESSignerTest {
             X509Certificate c = (X509Certificate) certificates[0];
             System.out.println("Número de série....: {}"+ c.getSerialNumber().toString());
 
-            String fileDirName = "local_e_nome_do_arquivo";
+            String fileDirName = "diretorio_e_nome_do_arquivo";
             
             
 			byte[] fileToSign = readContent(fileDirName);
@@ -110,6 +108,8 @@ public class CAdESSignerTest {
             PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
             signer.setCertificates(ks.getCertificateChain(alias));
             signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+            //signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+            // com carimbo de tempo
             signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
             			
             /* Realiza a assinatura do conteudo */
@@ -138,13 +138,38 @@ public class CAdESSignerTest {
             
             /* Valida o conteudo depois de gravado */
             System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
-            byte[] singnatureFile = readContent(fileToSign+".p7s");
+            byte[] singnatureFile = readContent(fileDirName+".p7s");
             checked = signer.check(fileToSign, singnatureFile);
+            if (checked) {
+            	System.out.println("A assinatura foi validada.");
+            } else {
+            	System.out.println("A assinatura foi invalidada!");
+            }
 
         } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
-            Logger.getLogger(CAdESSignerTest.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
         }
     }
+    
+    
+    // @Test
+    public void testVerifySignature() {
+        String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
+    	byte[] fileToVerify = readContent(fileToVerifyDirName);
+		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+		byte[] signatureFile = readContent(fileSignatureDirName);
+
+		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+		
+		System.out.println("Efetuando a validacao da assinatura");
+		boolean checked = signer.check(fileToVerify, signatureFile);
+		if (checked) {
+			System.out.println("A assinatura foi validada.");
+		} else {
+			System.out.println("A assinatura foi invalidada!");
+		}
+    }
+    
     
     private byte[] readContent(String parmFile) {
 		
