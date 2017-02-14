@@ -6,7 +6,6 @@
          version="3.0">
     <welcome-file-list>
         <welcome-file>home.html</welcome-file>
-        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
     <session-config>

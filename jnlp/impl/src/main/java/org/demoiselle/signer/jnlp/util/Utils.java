@@ -68,26 +68,27 @@ import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
 import org.demoiselle.signer.jnlp.config.FrameConfig;
+import org.demoiselle.signer.signature.core.util.MessagesBundle;
 
 /**
- * @author SUPST/STDCS
+ *  Commons utilities functions for JNLP 
  */
 public final class Utils {
 
 	private static final int BUFFER_SIZE = 4096;
 
-	private static final Logger LOGGER = Logger.getLogger(Utils.class.getName());
+	private static MessagesBundle messagesBundle = new MessagesBundle();
 	
 	/**
 	 *
 	 * @param content
-	 *            O conteudo a ser enviado
+	 *            Content to be sent
 	 * @param UrlToUpload
-	 *            A url para onde o conteudo sera enviado via HTTPS
+	 *           the url where content will be sent under HTTPS
 	 * @param token
-	 *            Token que identifica o conteudo a ser enviado	 
+	 *            Token that identifies the content to be sent	 
 	 * @param certificate
-	 *            Certificado para conexão HTTPS, para conexão HTTP setar valor null	                         
+	 *            Certificate for security (HTTPS) connection. For HTTP connection set this parameter value to null	                         
 	 */
 	public static void uploadToURL(byte[] content, String UrlToUpload, String token, InputStream certificate) {
 		try {
@@ -111,11 +112,11 @@ public final class Utils {
 
 			int responseCode = con.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-				throw new AuthorizationException("Erro de autorização ao acesso o serviço: " + UrlToUpload + " com o token " + token);
+				throw new AuthorizationException( messagesBundle.getString("error.unauthorized", UrlToUpload,token));
 			}
 
 			if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
-				Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, "Server returned non-OK code: {0}", responseCode);
+				Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, messagesBundle.getString("error.returned.nook",responseCode));
 				throw new ConectionException("HTTP error code: "+ responseCode);
 			}
 
@@ -129,11 +130,11 @@ public final class Utils {
 	/**
 	 *
 	 * @param content
-	 *            O conteudo a ser enviado
+	 *            Content to be sent
 	 * @param UrlToUpload
-	 *            A url para onde o conteudo sera enviado via HTTP
+	 *            the url where content will be sent via HTTP
 	 * @param token
-	 *            Token que identifica o conteudo a ser enviado	 
+	 *            
 	 */
 	public static void uploadToURL(byte[] content, String UrlToUpload, String token) {
 		uploadToURL(content, UrlToUpload, token, null);
@@ -141,10 +142,10 @@ public final class Utils {
 
 	/**
 	 *  @param UrlToDownload
-	 *            A url para onde o conteudo sera enviado via HTTPS
+	 *            the url where content will be sent under HTTPS
 	 *
 	 * @param token
-	 *            Token que identifica o conteudo a ser enviado	 
+	 *            Token that identifies the content to be sent	 
 	 * @param certificate
 	 *            Certificado para conexão HTTPS, para conexão HTTP setar valor null	 * @return
 	 */
@@ -166,11 +167,11 @@ public final class Utils {
 			con.setRequestMethod("GET");
 			int responseCode = con.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-				throw new AuthorizationException("Erro de autorização ao acesso o serviço: " + UrlToDownload + " com o token " + token);
+				throw new AuthorizationException(messagesBundle.getString("error.unauthorized", UrlToDownload,token));
 			}
 			if (responseCode != HttpURLConnection.HTTP_OK) {
-				Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, "Server returned non-OK code: {0}", responseCode);
-				throw new ConectionException("HTTP error code: "+ responseCode);
+				Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, messagesBundle.getString("error.returned.nook",responseCode));
+				throw new ConectionException(messagesBundle.getString("HTTP error code: "+ responseCode));
 			} else {
 				InputStream stream = con.getInputStream();
 
@@ -186,10 +187,10 @@ public final class Utils {
 	
 	/**
 	 * @param UrlToDownload
-	 *            A url para onde o conteudo sera enviado via HTTP
+	 *            The url to which the content will be sent via HTTP
 	 *
 	 * @param token
-	 *            Token que identifica o conteudo a ser enviado	 
+	 *            Token that identifies the content to be sent	 
 	 */
 	public static byte[] downloadFromUrl(String UrlToDownload, String token) {
 		InputStream certificate = null;
@@ -201,9 +202,9 @@ public final class Utils {
 	 * @param message
 	 *            Mensagem customizada para o serviço
 	 * @param urlToCancel
-	 *            A url para onde a mensagem sera enviada via HTTPS
+	 *            The url to which the content will be sent via HTTPS
 	 * @param token
-	 *            Token que identifica a mensagem a ser enviada	 
+	 *            Token that identifies the message to be sent	 
 	 * @param certificate
 	 *            Certificado para conexão HTTPS, para conexão HTTP setar valor null	                         
 	 */
@@ -230,10 +231,10 @@ public final class Utils {
 
 			int responseCode = con.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_UNAUTHORIZED) {
-				throw new AuthorizationException("Erro de autorização ao acesso o serviço: " + urlToCancel + " com o token " + token);
+				throw new AuthorizationException(messagesBundle.getString("error.unauthorized", urlToCancel,token));
 			}
 			if (responseCode != HttpURLConnection.HTTP_NO_CONTENT) {
-				Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, "Server returned non-OK code: {0}", responseCode);
+				Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, messagesBundle.getString("error.returned.nook",responseCode));
 				throw new ConectionException("HTTP error code: "+ responseCode);
 			}
 
@@ -249,9 +250,9 @@ public final class Utils {
 	 * @param message
 	 *            Mensagem customizada para o serviço
 	 * @param urlToCancel
-	 *            A url para onde a mensagem sera enviada via HTTP
+	 *            The url to which the content will be sent via HTTP
 	 * @param token
-	 *            Token que identifica a mensagem a ser enviada	 
+	 *            Token that identifies the message to be sent	 
 	 * @param certificate
 	 *            Certificado para conexão HTTPS, para conexão HTTP setar valor null	                         
 	 */
@@ -315,7 +316,7 @@ public final class Utils {
 	/**
 	 *
 	 * @param content
-	 *            Conteudo a ser gravado
+	 *            Content to be written to disk
 	 * @param file
 	 *            Caminho e nome do arquivo
 	 */
@@ -384,7 +385,7 @@ public final class Utils {
 	            keyStore.setCertificateEntry("ca", ca);
 	        } catch (Exception e) {
 	            keyStore = null;
-	        	Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, "Erro criando keystore a partir do certificado informado");
+	        	Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, messagesBundle.getString("error.create.keystore"));
 	            throw new ConectionException(e.getMessage(), e.getCause());	            
 	        }
 	    }
@@ -398,7 +399,7 @@ public final class Utils {
 	            tmf.init(keyStore);
 	        } catch (Exception e) {
 	        	tmf = null;
-	        	Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, "Erro criando gestor de confiança a partir do certificado informado");
+	        	Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, messagesBundle.getString("error.trust.manager"));
 	            throw new ConectionException(e.getMessage(), e.getCause());
 	        }
 	    }
@@ -411,7 +412,7 @@ public final class Utils {
 	            context.init(null, tmf.getTrustManagers(), null);
 	        } catch (Exception e) {
 	        	context = null;
-	        	Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, "Erro criando contexto SSL a partir do certificado informado");
+	        	Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, messagesBundle.getString("error.context.ssl"));
 	            throw new ConectionException(e.getMessage(), e.getCause());
 	        }
 	    }

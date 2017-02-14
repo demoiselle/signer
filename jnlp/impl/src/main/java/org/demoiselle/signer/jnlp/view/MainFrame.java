@@ -76,7 +76,7 @@ import org.demoiselle.signer.signature.core.keystore.loader.PKCS11NotFoundExcept
 import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
 
 /**
- * To design a main view with digital signature commands Execute and Cancel
+ * To design a main view with digital signature commands: Execute and Cancel
 */
 public class MainFrame extends javax.swing.JFrame {
 

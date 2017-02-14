@@ -42,11 +42,11 @@ import java.security.KeyStore;
 import org.demoiselle.signer.jnlp.view.MainFrame;
 
 /**
- * @author SUPST/STDCS
-*/
+ * Minimal functions for Main Frame: Execute, Cancel and Close.
+ */
 public interface FrameExecute {
 
-    public void execute(KeyStore ks, String alias, MainFrame principal);
+	public void execute(KeyStore ks, String alias, MainFrame principal);
 
     public void cancel(KeyStore ks, String alias, MainFrame principal);
     

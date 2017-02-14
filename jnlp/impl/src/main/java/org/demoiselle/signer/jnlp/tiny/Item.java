@@ -41,6 +41,10 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * List of basic attributes from certificate: alias, subject, initDate, endDate, issuer;  
+ *
+ */
 public class Item {
 
 	private final String alias;

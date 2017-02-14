@@ -71,7 +71,7 @@
 						<mainClass>org.demoiselle.signer.jnlp.view.MainFrame</mainClass>
 					</jnlp>
 
-					<!--<pack200> <enabled>true</enabled> </pack200>
+					<!--<pack200> <enabled>true</enabled> </pack200>-->
 
 					<sign>
 						<keystore>${project.basedir}/src/main/jnlp/newcert.p12</keystore>
@@ -82,7 +82,7 @@
 						<verify>false</verify> // verifica a assinatura depois de assinado 
 					</sign>
 					<unsign>true</unsign> // remove a assinatura de pacotes e assinados e reassina com a minha chave
-					 -->
+					 
 					<verbose>true</verbose>
 				</configuration>
 			</plugin>

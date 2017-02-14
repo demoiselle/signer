@@ -42,6 +42,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.concurrent.CancellationException;
+
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.PasswordCallback;
@@ -53,22 +54,36 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.demoiselle.signer.signature.core.util.MessagesBundle;
+
 /**
- * @author SUPST/STDCS
+ * CallBackHandler implementation to show window to ask user for his certificate's PIN
 */
 public class PinCallbackHandler implements CallbackHandler {
 
-    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
+	private static MessagesBundle messagesBundle = new MessagesBundle();
+	
+	/**
+	 *
+	 * @param passwordCallback
+	 * @throws UnsupportedCallbackException 
+	 */
+	public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
 
         for (Callback callback : callbacks) {
             if (callback instanceof PasswordCallback) {
                 handlePasswordCallback((PasswordCallback) callback);
             } else {
-                throw new UnsupportedCallbackException(callback, "Callback not supported " + callback.getClass().getName());
+                throw new UnsupportedCallbackException(callback, messagesBundle.getString("error.callback.notsupported", callback.getClass().getName()));
             }
         }
     }
 
+    /**
+     * 
+     * @param passwordCallback
+     * @throws UnsupportedCallbackException
+     */
     private void handlePasswordCallback(PasswordCallback passwordCallback) throws UnsupportedCallbackException {
         // dialog
         JPanel panel = new JPanel();
@@ -81,7 +96,7 @@ public class PinCallbackHandler implements CallbackHandler {
         final JTextField txtPwd = new JPasswordField(20);
         panel.add(txtPwd);
         final JOptionPane pane = new JOptionPane(panel, JOptionPane.QUESTION_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-        JDialog dialog = pane.createDialog(null, "Informe o pin do seu certificado digital");
+        JDialog dialog = pane.createDialog(null, messagesBundle.getString("info.pin.required"));
 
         // set focus to password field
         dialog.addWindowListener(new WindowAdapter() {
@@ -106,7 +121,7 @@ public class PinCallbackHandler implements CallbackHandler {
             	System.exit(0);
             default:
                 // canceled by user
-                throw new CancellationException("Password Callback canceled by user");
+                throw new CancellationException(messagesBundle.getString("info.canceled.byuser"));
         }
     }
 }

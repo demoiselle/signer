@@ -37,28 +37,37 @@
 package org.demoiselle.signer.jnlp.factory;
 
 import org.demoiselle.signer.jnlp.action.FrameExecute;
+import org.demoiselle.signer.signature.core.util.MessagesBundle;
 
 /**
- * @author SUPST/STDCS
+ * Factory for frame by class name
 */
 public class FrameExecuteFactory {
+	
+	private static MessagesBundle messagesBundle = new MessagesBundle();
 
+	/**
+	 *  Factory for {@link org.demoiselle.signer.jnlp.action.FrameExecute }
+	 * @param className
+	 * @return
+	 */
     public static FrameExecute factory(String className) {
+    	System.out.println("--------------------- CLASSE      -----: "+className);
         FrameExecute instance = null;
         Class<?> clazz = null;
         try {
             clazz = Class.forName(className);
         } catch (Throwable error) {
-            throw new FactoryException("Class [" + className + "] not found", error);
+        	System.out.println("--------------------- CLASSE      -----: "+className);
+            throw new FactoryException(messagesBundle.getString("error.class.notfound",className),error);
         }
         if (clazz != null) {
             try {
                 instance = (FrameExecute) clazz.newInstance();
             } catch (Throwable error) {
-                throw new FactoryException("incompatible Class [" + clazz.getCanonicalName() + "]", error);
+                throw new FactoryException(messagesBundle.getString("error.incompatible.class",clazz.getCanonicalName()), error);
             }
         }
         return instance;
     }
-
 }

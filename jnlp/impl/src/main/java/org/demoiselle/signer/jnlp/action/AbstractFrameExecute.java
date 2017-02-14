@@ -42,16 +42,25 @@ import java.security.KeyStore;
 import org.demoiselle.signer.jnlp.view.MainFrame;
 
 /**
- * 
+ * Define minimal functions for Main Frame: Execute, Cancel and Close.
  */
 public abstract class AbstractFrameExecute implements FrameExecute {
 
+	/**
+	 * Generate a digital signature
+	 */
     @Override
     public abstract void execute(KeyStore ks, String alias, MainFrame principal);
 
+    /**
+     * To cancel operation and send advise to service
+    */
     @Override
     public abstract void cancel(KeyStore ks, String alias, MainFrame principal);
-    
+ 
+    /**
+     * Close application, it will call cancel
+     */
     @Override
     public abstract void close(MainFrame principal);
 

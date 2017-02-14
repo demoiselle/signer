@@ -1,0 +1,7 @@
+name = Provedor
+slot = 2
+# depende da arquitetura
+library = /usr/lib/x86_64-linux-gnu/nss/libsoftokn3.so
+# library = /usr/lib/i386-linux-gnu/nss/libsoftokn3.so
+nssArgs = "configdir='/home/<usuario>/.mozilla/firefox/<seqNum_usu>.default' certPrefix='' keyPrefix='' secmod='secmod.db'  flags='readWrite'"
+
