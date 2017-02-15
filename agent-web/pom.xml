@@ -1,0 +1,104 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.demoiselle.signer</groupId>
+    <artifactId>agent-web</artifactId>
+    <version>3.0.0-BETA1</version>
+    <name>Javascript project for Signer Agent-Desktop</name>
+ 
+    <organization>
+        <name>SERPRO</name>
+        <url>http://www.demoiselle.org</url>
+    </organization>
+ 
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/javascript</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+ 
+        <plugins>
+            <plugin>
+                <groupId>com.github.searls</groupId>
+                <artifactId>jasmine-maven-plugin</artifactId>
+                <version>1.0.1-beta-6</version>
+<!--                 <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateManualRunner</goal>
+                            <goal>resources</goal>
+                            <goal>testResources</goal>
+                            <goal>test</goal>
+                            <goal>preparePackage</goal>
+                        </goals>
+                    </execution>
+                </executions>  -->
+                <configuration>
+                    <jsSrcDir>src/main/javascript</jsSrcDir>
+                    <jsTestSrcDir>src/test/javascript</jsTestSrcDir>
+                </configuration>
+            </plugin>
+ 
+ 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.1.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+ 
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>yuicompressor-maven-plugin</artifactId>
+                <version>1.1</version>
+<!--                 <executions>
+                    <execution>
+                        <id>compress-js</id>
+                        <goals>
+                            <goal>compress</goal>
+                        </goals>
+                    </execution>
+                </executions> -->
+            </plugin>
+ 
+        </plugins>
+    </build>
+ 
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>gr.abiss.mvn.plugins</groupId>
+                <artifactId>maven-jstools-plugin</artifactId>
+                <version>0.7</version>
+                <configuration>
+                    <jsDir>src/main/javascript</jsDir>
+                    <includePrivate>true</includePrivate>
+                    <includeUndocumented>true</includeUndocumented>
+                </configuration>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>jslint</report>
+                            <report>jsdoc</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+ 
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+        </plugins>
+    </reporting>
+</project>

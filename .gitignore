@@ -3,6 +3,4 @@
 /.classpath
 /.settings
 /.externalToolBuilders
-/impl/policy/target/
-/impl/timestamp/target/
 /.DS_Store

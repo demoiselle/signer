@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<artifactId>bom</artifactId>
+	<packaging>pom</packaging>
+	<modelVersion>4.0.0</modelVersion>
+
+	<name>Demoiselle Signer Bill of Materials</name>
+
+	<description>
+        Contém a lista de todas as dependências utilizadas na construção do Signer.
+    </description>
+	<url>http://signer.demoiselle.io</url>
+
+	<licenses>
+		<license>
+			<name>GNU Lesser General Public License, Version 3</name>
+			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+		</license>
+	</licenses>
+
+	<organization>
+		<name>SERPRO - Serviço Federal de Processamento de Dados</name>
+		<url>http://www.serpro.gov.br</url>
+	</organization>
+
+	<parent>
+		<groupId>org.demoiselle.signer</groupId>
+		<artifactId>build</artifactId>
+		<version>3.0.0-BETA1</version>
+	</parent>
+
+	<properties>
+		<!-- General -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<!-- Dependencies versions -->
+		<eclipse.lifecycle.mapping.plugin.version>1.0.0</eclipse.lifecycle.mapping.plugin.version>
+		<java.version>1.7</java.version>
+		<site.url>file://${project.build.directory}/tmp</site.url>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<signer.signature.version>${project.version}</signer.signature.version>
+		<ca.icpbrasil.version>${project.version}</ca.icpbrasil.version>
+		<!-- Maven plugin versions -->
+		<maven.compiler.plugin.version>3.6.0</maven.compiler.plugin.version>
+		<maven.war.plugin.version>3.0.0</maven.war.plugin.version>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.deploy.plugin.version>2.8.1</maven.deploy.plugin.version>
+		<maven.site.plugin.version>2.2</maven.site.plugin.version>
+		<maven.assembly.plugin.version>2.6</maven.assembly.plugin.version>
+		<maven.javadoc.plugin.version>2.10.4</maven.javadoc.plugin.version>
+		<maven.source.plugin.version>2.4</maven.source.plugin.version>
+		<maven.resources.plugin.version>2.4.3</maven.resources.plugin.version>
+		<maven.cobertura.plugin.version>2.4</maven.cobertura.plugin.version>
+		<maven.install.plugin.version>2.3.1</maven.install.plugin.version>
+		<maven.release.plugin.version>2.5</maven.release.plugin.version>
+		<wagon.plugin.version>1.0-beta-3</wagon.plugin.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- SIGNER -->
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>chain-icp-brasil</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>core</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>criptography</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>policy-engine</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>policy-impl-cades</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>policy-impl-xades</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>policy-impl-pades</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>timestamp</artifactId>
+				<version>${signer.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.6.1</version>
+			</dependency>
+			<dependency>
+				<groupId>junit</groupId>
+				<artifactId>junit</artifactId>
+				<version>4.8.1</version>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcmail-jdk15on</artifactId>
+				<version>1.52</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

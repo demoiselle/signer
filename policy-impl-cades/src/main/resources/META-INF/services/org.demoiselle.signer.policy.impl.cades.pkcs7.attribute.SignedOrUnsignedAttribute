@@ -1,0 +1,12 @@
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.ContentType
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.MessageDigest
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.IdSigningPolicy
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.SigningCertificate
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.SigningCertificateV2
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.TimeStampToken
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.CertificateRefs
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.RevocationRefs
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.CertValues
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.RevocationValues
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.ArchiveTimestampV2
+org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl.EscTimeStamp

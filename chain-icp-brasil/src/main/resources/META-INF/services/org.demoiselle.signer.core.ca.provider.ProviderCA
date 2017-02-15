@@ -1,0 +1,6 @@
+org.demoiselle.signer.chain.icp.brasil.provider.impl.ICPBrasilProviderCA
+org.demoiselle.signer.chain.icp.brasil.provider.impl.ICPBrasilUserHomeProviderCA
+org.demoiselle.signer.chain.icp.brasil.provider.impl.ICPBrasilOnLineSerproProviderCA
+org.demoiselle.signer.chain.icp.brasil.provider.impl.ICPBrasilOnLineITIProviderCA
+
+org.demoiselle.signer.chain.icp.brasil.provider.hom.HomologacaoProviderCA
