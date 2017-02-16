@@ -46,7 +46,6 @@ import java.lang.annotation.Target;
 /**
  * Used to prioritize some execution flow, as methods annoted with @startup or @shutdown
  * 
- * @author SERPRO
  */
 @Target({ TYPE, METHOD })
 @Retention(RUNTIME)

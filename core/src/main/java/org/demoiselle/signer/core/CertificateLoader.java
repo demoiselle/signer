@@ -43,65 +43,67 @@ import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 
 /**
- * Carregamento de Certificados Digitais.
+ * Defines the basic methods for loading a certificate depending on the storage format 
  */
 public interface CertificateLoader {
 
     /**
-     * Obtem o certificado A1 a partir de um arquivo
+     * Obtains the certificate from a file, defined by ICP-BRASIL with the name A1.
      *
-     * @param file O arquivo que contém o certificado
-     * @return O certificado carregado
-     * @throws CertificateCoreException Retorna a exceção
-     * CertificateCoreException
+     * @param file The file that contains the certificate
+     * @return the certificate information in X509Certificate format
+     * @throws CertificateCoreException 
+     * 
      */
     public X509Certificate load(File file) throws CertificateCoreException;
 
     /**
-     * Obtem o certificado A3 a partir de um Token /Smartcard
+     * Obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
      *
-     * @return O certificado carregado
-     * @throws CertificateCoreException Retorna a exceção
-     * CertificateCoreException
+     * @return the certificate information in X509Certificate format
+     * @throws CertificateCoreException
+     * 
      */
     public X509Certificate loadFromToken() throws CertificateCoreException;
 
     /**
-     * Obtem o certificado A3 a partir de um Token /Smartcard
+     * When a PIN(Personal Identification Number) was informed, 
+     * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
      *
-     * @param pinNumber O pin do dispositivo
-     * @return O certificado carregado
-     * @throws CertificateCoreException Retorna a exceção
-     * CertificateCoreException
+     * @param pinNumber
+     * @return the certificate information in X509Certificate format
+     * @throws CertificateCoreException
+     * 
      */
     public X509Certificate loadFromToken(String pinNumber) throws CertificateCoreException;
 
     /**
-     * Obtem o certificado A3 a partir de um Token /Smartcard
+     * When a PIN(Personal Identification Number) and Alias was informed, 
+     * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
      *
-     * @param pinNumber O pin do dispositivo
-     * @param alias O apelido associado ao certificado
-     * @return O certificado carregado
-     * @throws CertificateCoreException Retorna a exceção
-     * CertificateCoreException
+     * @param pinNumber a PIN(Personal Identification Number)
+     * @param alias 
+     * @return  the certificate information in X509Certificate format
+     * @throws CertificateCoreException
+     * 
      */
     public X509Certificate loadFromToken(String pinNumber, String alias) throws CertificateCoreException;
 
     /**
-     * Associa um keystore previamente existente
+     * Associate a previously existing keystore
      *
-     * @param keyStore O keystore fornecido
-     * @throws CertificateCoreException Retorna a exceção
-     * CertificateCoreException
+     * @param keyStore java.security.keystore  
+     * @throws CertificateCoreException 
+     * 
      */
     public void setKeyStore(KeyStore keyStore) throws CertificateCoreException;
 
     /**
-     * Retorna o KeyStore utilizado pelo {@link CertificateLoader}.
+     *Returns the KeyStore used by {@link CertificateLoader}.
      *
-     * @return keyStore O keystore fornecido
+     * @return java.security.keystore 
      * @throws CertificateCoreException Retorna a exceção
-     * CertificateCoreException
+     * 
      */
     public KeyStore getKeyStore() throws CertificateCoreException;
 

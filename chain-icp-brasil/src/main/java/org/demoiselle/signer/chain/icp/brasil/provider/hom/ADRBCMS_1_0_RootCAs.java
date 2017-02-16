@@ -69,6 +69,10 @@ public class ADRBCMS_1_0_RootCAs implements ProviderSignaturePolicyRootCA {
         return result;
     }
 
+    /**
+     * @deprecated  Expired on 31/12/2014
+     */
+    @Deprecated
     @Override
     public String getSignaturePolicyOID() {
         return "2.16.76.1.7.1.1.1";

@@ -40,8 +40,18 @@ import org.demoiselle.signer.core.exception.CertificateValidatorException;
 
 import java.security.cert.X509Certificate;
 
+/**
+ * 
+ * define a method to validate a java.security.cert.X509Certificate 
+ *
+ */
 public interface IValidator {
 
+	/**
+	 * 
+	 * @param x509 java.security.cert.X509Certificate
+	 * @throws CertificateValidatorException
+	 */
     public void validate(X509Certificate x509) throws CertificateValidatorException;
 
 }

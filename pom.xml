@@ -80,7 +80,7 @@
 		<module>agent-web</module>
 		<module>chain-icp-brasil</module>
 		<module>core</module>
-		<module>criptography</module>
+		<module>cryptography</module>
 		<module>policy-engine</module>
 		<module>policy-impl-cades</module>
 		<module>policy-impl-xades</module>

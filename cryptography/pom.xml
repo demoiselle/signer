@@ -38,7 +38,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>criptography</artifactId>
+    <artifactId>cryptography</artifactId>
     <packaging>jar</packaging>
     
     <parent>
@@ -48,9 +48,9 @@
         <relativePath>../parent</relativePath>
     </parent>
 
-    <name>Demoiselle Signature Criptography component</name>
+    <name>Demoiselle Signature Cryptography component</name>
     <description>
-        Demoiselle Signature Criptography Component
+        Demoiselle Signature Cryptography Component
     </description>
     <url>http://www.demoiselle.org</url>
 

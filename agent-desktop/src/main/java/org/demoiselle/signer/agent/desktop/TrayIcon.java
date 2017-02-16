@@ -31,7 +31,7 @@ import org.demoiselle.signer.agent.desktop.ui.ListCertificateData;
 import org.demoiselle.signer.agent.desktop.ui.SignatureInfo;
 import org.demoiselle.signer.agent.desktop.ui.pdf.SignerPDF;
 import org.demoiselle.signer.agent.desktop.web.WSServer;
-import org.demoiselle.signer.signature.core.keystore.loader.configuration.Configuration;
+import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 
 public class TrayIcon {
 	

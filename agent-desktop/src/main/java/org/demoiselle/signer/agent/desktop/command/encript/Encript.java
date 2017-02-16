@@ -9,9 +9,9 @@ import javax.crypto.Cipher;
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.command.cert.Certificate;
 import org.demoiselle.signer.agent.desktop.web.Execute;
-import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
-import org.demoiselle.signer.signature.core.util.Base64Utils;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.demoiselle.signer.core.util.Base64Utils;
 import com.sun.security.auth.callback.DialogCallbackHandler;
 
 public class Encript extends AbstractCommand<EncriptRequest, EncriptResponse> {

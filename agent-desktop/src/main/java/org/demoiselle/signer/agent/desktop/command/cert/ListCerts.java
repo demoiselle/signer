@@ -8,8 +8,8 @@ import java.util.Enumeration;
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.agent.desktop.web.Execute;
-import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 
 public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsResponse> {
 

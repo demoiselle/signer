@@ -52,10 +52,10 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
+import org.junit.Test;
 
 /**
  *
@@ -63,7 +63,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 public class CAdESSignerTest {
 
     // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
-   // @Test
+   @Test
 
     public void testSignAndVerifySignature() {
         try {
@@ -81,7 +81,7 @@ public class CAdESSignerTest {
             Security.addProvider(p);
             
             // ATENÇÃO ALTERAR "SENHA" ABAIXO
-            Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
+            Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("EsS197402".toCharArray()));
             KeyStore ks = builder.getKeyStore();
 
             Certificate[] certificates = null;
@@ -98,7 +98,7 @@ public class CAdESSignerTest {
             X509Certificate c = (X509Certificate) certificates[0];
             System.out.println("Número de série....: {}"+ c.getSerialNumber().toString());
 
-            String fileDirName = "diretorio_e_nome_do_arquivo";
+            String fileDirName = "/home/80621732915/AAssinar/FaturaNet.pdf";
             
             
 			byte[] fileToSign = readContent(fileDirName);
@@ -114,7 +114,7 @@ public class CAdESSignerTest {
             			
             /* Realiza a assinatura do conteudo */
             System.out.println("Efetuando a  assinatura do conteudo");
-            byte[] signature = signer.doDetachedSign(fileToSign);
+            byte[] signature = signer.doAttachedSign(fileToSign);
             /* Valida o conteudo antes de gravar em arquivo */
             System.out.println("Efetuando a validacao da assinatura.");
             boolean checked = signer.check(fileToSign, signature);

@@ -1,9 +1,10 @@
 /*
  * Demoiselle Framework
  * Copyright (C) 2016 SERPRO
- * --import br.gov.frameworkdemoiselle.criptography.Criptography;
-import br.gov.frameworkdemoiselle.criptography.implementation.CriptographyImpl;
-selle Framework is free software; you can redistribute it and/or
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
+ * 
+ * Demoiselle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
  * as published by the Free Software Foundation.
  * 
@@ -34,40 +35,66 @@ selle Framework is free software; you can redistribute it and/or
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography.factory;
+package org.demoiselle.signer.cryptography;
 
-import org.demoiselle.signer.criptography.Criptography;
-import org.demoiselle.signer.criptography.implementation.CriptographyImpl;
+import java.io.File;
+
+import org.demoiselle.signer.cryptography.implementation.DigestImpl;
 
 /**
- * Fábrica especializada em fabricar objetos da interface {@link Criptography}
+ * Define o comportamento padrão para utilização de algoritmos de resumo.
+ * 
+ * @see {@link DigestImpl}
  */
-public class CriptographyFactory extends GenericFactory<Criptography> {
-
-	public static final CriptographyFactory instance = new CriptographyFactory();
-
-	public static final CriptographyFactory getInstance() {
-		return CriptographyFactory.instance;
-	}
+public interface Digest {
 
 	/**
-	 * Define um objeto padrão para a fábrica O Componente possue uma
-	 * implementação default
+	 * Seta o algoritmo utilizado pelo método de resumo.
 	 * 
-	 * @see {@link CriptographyImpl}
+	 * @see {@link DigestAlgorithmEnum}
 	 */
-	@Override
-	public Criptography factoryDefault() {
-		return new CriptographyImpl();
-	}
+	public void setAlgorithm(DigestAlgorithmEnum algorithm);
 
 	/**
-	 * Define a variável de ambiente utilizada pela fábrica abstrata a fim de
-	 * buscar o nome da classe a ser fabricada.
+	 * Seta o algoritmo utilizado pelo método de resumo.
+	 * 
+	 * @see {@link DigestAlgorithmEnum}
 	 */
-	@Override
-	protected String getVariableName() {
-		return "criptography.implementation";
-	}
+	public void setAlgorithm(String algorithm);
+
+	/**
+	 * Método responsável por gerar um resumo do conteudo passado como
+	 * parametro, utilizando para isso o algoritmo setado pelo método
+	 * setAlgorithm()
+	 */
+	public byte[] digest(byte[] content);
+
+	/**
+	 * Retorna o resumo de um array de bytes no formato de caracteres
+	 * hexadecimais.
+	 * 
+	 * @param content
+	 *            Array de bytes
+	 * @return caracteres hexadecimais
+	 */
+	public String digestHex(byte[] content);
+
+	/**
+	 * Retorna o resumo de um arquivo
+	 * 
+	 * @param file
+	 *            Arquivo
+	 * @return array de bytes
+	 */
+	public byte[] digestFile(File file);
+
+	/**
+	 * Retorna o resumo de um arquivo no formato de caracteres hexadecimais
+	 * 
+	 * @param file
+	 *            arquivo
+	 * @return caracteres hexadecimais
+	 */
+	public String digestFileHex(File file);
 
 }

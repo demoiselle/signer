@@ -8,9 +8,7 @@
 
 	<name>Demoiselle Signer Bill of Materials</name>
 
-	<description>
-        Contém a lista de todas as dependências utilizadas na construção do Signer.
-    </description>
+	<description>Contains the list of all dependencies needed for build Demoiselle Signer Project.</description>
 	<url>http://signer.demoiselle.io</url>
 
 	<licenses>
@@ -73,7 +71,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
-				<artifactId>criptography</artifactId>
+				<artifactId>cryptography</artifactId>
 				<version>${signer.version}</version>
 			</dependency>
 			<dependency>

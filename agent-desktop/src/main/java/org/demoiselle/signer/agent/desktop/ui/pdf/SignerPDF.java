@@ -15,11 +15,11 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.ExternalSigningSupport;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.SignatureInterface;
-import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
-import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
-import org.demoiselle.signer.signature.core.ca.manager.CAManager;
-import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
+import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
+import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.core.ca.manager.CAManager;
+import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 
 
 public class SignerPDF {

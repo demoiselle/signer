@@ -37,9 +37,9 @@
 package org.demoiselle.signer.timestamp.connector;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
-import org.demoiselle.signer.criptography.Digest;
-import org.demoiselle.signer.criptography.DigestAlgorithmEnum;
-import org.demoiselle.signer.criptography.factory.DigestFactory;
+import org.demoiselle.signer.cryptography.Digest;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.factory.DigestFactory;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.enumeration.ConnectionType;
 import org.demoiselle.signer.timestamp.enumeration.PKIFailureInfo;

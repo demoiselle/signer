@@ -38,6 +38,7 @@ package org.demoiselle.signer.core;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 
@@ -48,39 +49,92 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * 
+ * Methods to build, initialize and validate a java.security.cert.X509Certificate
+ *
+ */
 public class CertificateManager {
 
     private X509Certificate x509;
     private Collection<IValidator> validators;
+    
+    private static MessagesBundle messagesBundle = new MessagesBundle();
 
+    /**
+     * 
+     * @param x509 java.security.cert.X509Certificate
+     * @param validators Array of {@link IValidator}
+     * @throws CertificateValidatorException
+     */
     public CertificateManager(X509Certificate x509, IValidator... validators) throws CertificateValidatorException {
         this(x509, true, validators);
     }
 
+    /**
+     * 
+     * @param pinNumber
+     * @param validators Array of {@link IValidator}
+     * @throws CertificateValidatorException
+     */
     public CertificateManager(String pinNumber, IValidator... validators) throws CertificateValidatorException {
         this(pinNumber, true, validators);
     }
 
+    /**
+     * 
+     * @param fileX509 a file that contains a java.security.cert.X509Certificate
+     * @param validators Array of {@link IValidator}
+     * @throws CertificateValidatorException
+     */
     public CertificateManager(File fileX509, IValidator... validators) throws CertificateValidatorException {
         this(fileX509, true, validators);
     }
 
+    /**
+     * 
+     * @param x509 java.security.cert.X509Certificate
+     * @param loadDefaultValidators TRUE or FALSE to call this method
+     * @param validators Array of {@link IValidator}
+     * @throws CertificateValidatorException
+     */
     public CertificateManager(X509Certificate x509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
         this.init(x509, loadDefaultValidators, validators);
     }
 
+    /**
+     * 
+     * @param pinNumber
+     * @param loadDefaultValidators TRUE or FALSE to call this method
+     * @param validators Array of {@link IValidator}
+     * @throws CertificateValidatorException
+     */
     public CertificateManager(String pinNumber, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
         CertificateLoader loader = new CertificateLoaderImpl();
         X509Certificate x509 = loader.loadFromToken(pinNumber);
         this.init(x509, loadDefaultValidators, validators);
     }
 
+    /**
+     * 
+     * @param fileX509 a file that contains a java.security.cert.X509Certificate
+     * @param loadDefaultValidators TRUE or FALSE to call this method
+     * @param validators Array of {@link IValidator}
+     * @throws CertificateValidatorException
+     */
     public CertificateManager(File fileX509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
         CertificateLoader loader = new CertificateLoaderImpl();
         X509Certificate x509 = loader.load(fileX509);
         this.init(x509, loadDefaultValidators, validators);
     }
 
+    /**
+     * 
+     * @param x509 java.security.cert.X509Certificate
+     * @param loadDefaultValidators TRUE or FALSE to call this method
+     * @param validators Array of {@link IValidator}
+     * @throws CertificateValidatorException
+     */
     private void init(X509Certificate x509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
         this.x509 = x509;
         this.validators = new ArrayList<>();
@@ -98,6 +152,10 @@ public class CertificateManager {
         }
     }
 
+    /**
+     *  Load a java.security.cert.X509Certificate
+     * @param object
+     */
     public void load(Object object) {
         Field[] fields = object.getClass().getDeclaredFields();
         for (Field field : fields) {
@@ -110,24 +168,32 @@ public class CertificateManager {
                         IOIDExtensionLoader loader = loaderClass.newInstance();
                         loader.load(object, field, x509);
                     } catch (IllegalAccessException | InstantiationException e) {
-                        throw new CertificateCoreException("Error: Could not initialize atribute \"" + field.getName() + "\"", e);
+                        throw new CertificateCoreException(messagesBundle.getString("error.initialize.attribute",field.getName()), e);
                     }
                 }
             }
         }
     }
 
+    /**
+     *  New Instance for a class
+     * @param clazz
+     * @return
+     */
     public <T> T load(Class<T> clazz) {
         T object;
         try {
             object = clazz.newInstance();
         } catch (IllegalAccessException | InstantiationException e) {
-            throw new CertificateCoreException("Error on new instance for " + clazz.getName(), e);
+            throw new CertificateCoreException(messagesBundle.getString("error.new.instace",clazz.getName()), e);
         }
         load(object);
         return object;
     }
 
+    /**
+     * Add {@link PeriodValidator} and {@link CRLValidator}
+     */
     private void loadDefaultValidators() {
         validators.add(new PeriodValidator());
         validators.add(new CRLValidator());

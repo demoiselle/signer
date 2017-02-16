@@ -57,6 +57,11 @@ import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
 
+/**
+ * 
+ * Validate and Load 
+ *
+ */
 public class CAManager {
 
 	private static final CAManager instance = new CAManager();

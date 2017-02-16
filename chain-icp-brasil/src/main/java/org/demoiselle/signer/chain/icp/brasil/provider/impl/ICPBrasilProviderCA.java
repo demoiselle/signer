@@ -58,7 +58,7 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 public class ICPBrasilProviderCA implements ProviderCA {
 	
 	
-	private MessagesBundle messagesBundle = new MessagesBundle();
+	private static MessagesBundle messagesBundle = new MessagesBundle();
 	
 	/**
 	 * read Certificate Authority chain from loaded keystore

@@ -2,7 +2,7 @@ package org.demoiselle.signer.agent.desktop.command.policy;
 
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.web.Execute;
-import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
+import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 
 
 public class ListPolicies extends AbstractCommand<ListPoliciesRequest, ListPoliciesResponse> {

@@ -9,13 +9,13 @@ import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.ui.PinHandler;
-import org.demoiselle.signer.signature.cades.SignerAlgorithmEnum;
-import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
-import org.demoiselle.signer.signature.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.signature.core.keystore.loader.factory.KeyStoreLoaderFactory;
-import org.demoiselle.signer.signature.core.util.Base64Utils;
-import org.demoiselle.signer.signature.policy.engine.factory.PolicyFactory.Policies;
+import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
+import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.demoiselle.signer.core.util.Base64Utils;
+import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 
 public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse>{
 //TODO Arquivo de controle de MENU

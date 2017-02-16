@@ -1,8 +1,8 @@
 /*
  * Demoiselle Framework
  * Copyright (C) 2016 SERPRO
- * ----------------------------------------------------------------------------
- * This file is part of Demoiselle Framework.
+ * --import br.gov.frameworkdemoiselle.criptography.Digest;
+import br.gov.frameworkdemoiselle.criptography.implementation.DigestImpl;
  * 
  * Demoiselle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
@@ -35,25 +35,40 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography;
+package org.demoiselle.signer.cryptography.factory;
+
+import org.demoiselle.signer.cryptography.Digest;
+import org.demoiselle.signer.cryptography.implementation.DigestImpl;
 
 /**
- * Default Exception package
+ * Fábrica especializada em fabricar objetos da interface {@link Digest}
  */
-public class CriptographyException extends RuntimeException {
+public class DigestFactory extends GenericFactory<Digest> {
 
-	private static final long serialVersionUID = 2063536693414468728L;
+	public static final DigestFactory instance = new DigestFactory();
 
-	public CriptographyException() {
-		super();
+	public static final DigestFactory getInstance() {
+		return DigestFactory.instance;
 	}
 
-	public CriptographyException(String message) {
-		super(message);
+	/**
+	 * Define um objeto padrão para a fábrica O Componente possue uma
+	 * implementação default
+	 * 
+	 * @see {@link DigestImpl}
+	 */
+	@Override
+	public Digest factoryDefault() {
+		return new DigestImpl();
 	}
 
-	public CriptographyException(String message, Throwable cause) {
-		super(message, cause);
+	/**
+	 * Define a variável de ambiente utilizada pela fábrica abstrata a fim de
+	 * buscar o nome da classe a ser fabricada.
+	 */
+	@Override
+	protected String getVariableName() {
+		return "digest.implementation";
 	}
 
 }

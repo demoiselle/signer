@@ -35,66 +35,43 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography;
-
-import java.io.File;
-
-import org.demoiselle.signer.criptography.implementation.DigestImpl;
+package org.demoiselle.signer.cryptography.configuration;
 
 /**
- * Define o comportamento padrão para utilização de algoritmos de resumo.
- * 
- * @see {@link DigestImpl}
+ * Classe responsável por concentrar as configurações deste componente
  */
-public interface Digest {
+public class Configuration {
+
+	private static final Configuration instance = new Configuration();
+
+	public static Configuration getInstance() {
+		return Configuration.instance;
+	}
 
 	/**
-	 * Seta o algoritmo utilizado pelo método de resumo.
+	 * Busca nas variaveis de ambiente ou em variavel da JVM um determinado
+	 * valor. Prioridade para as variaveis de ambiente.
 	 * 
-	 * @see {@link DigestAlgorithmEnum}
+	 * @param key
+	 *            Chave de localizacao da variavel
+	 * @return O conteudo definida em uma das variaveis. NULL se nenhuma
+	 *         variavel for definida
 	 */
-	public void setAlgorithm(DigestAlgorithmEnum algorithm);
+	public String getContentFromVariables(String key) {
+		String content = System.getenv(key);
+		if (content == null)
+			content = System.getenv(key.toLowerCase());
+		if (content == null)
+			content = System.getenv(key.toUpperCase());
 
-	/**
-	 * Seta o algoritmo utilizado pelo método de resumo.
-	 * 
-	 * @see {@link DigestAlgorithmEnum}
-	 */
-	public void setAlgorithm(String algorithm);
+		if (content == null)
+			content = System.getProperty(key);
+		if (content == null)
+			content = System.getProperty(key.toLowerCase());
+		if (content == null)
+			content = System.getProperty(key.toUpperCase());
 
-	/**
-	 * Método responsável por gerar um resumo do conteudo passado como
-	 * parametro, utilizando para isso o algoritmo setado pelo método
-	 * setAlgorithm()
-	 */
-	public byte[] digest(byte[] content);
-
-	/**
-	 * Retorna o resumo de um array de bytes no formato de caracteres
-	 * hexadecimais.
-	 * 
-	 * @param content
-	 *            Array de bytes
-	 * @return caracteres hexadecimais
-	 */
-	public String digestHex(byte[] content);
-
-	/**
-	 * Retorna o resumo de um arquivo
-	 * 
-	 * @param file
-	 *            Arquivo
-	 * @return array de bytes
-	 */
-	public byte[] digestFile(File file);
-
-	/**
-	 * Retorna o resumo de um arquivo no formato de caracteres hexadecimais
-	 * 
-	 * @param file
-	 *            arquivo
-	 * @return caracteres hexadecimais
-	 */
-	public String digestFileHex(File file);
+		return content;
+	}
 
 }

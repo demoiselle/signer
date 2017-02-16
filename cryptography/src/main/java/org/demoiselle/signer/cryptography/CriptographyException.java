@@ -35,43 +35,25 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography.configuration;
+package org.demoiselle.signer.cryptography;
 
 /**
- * Classe responsável por concentrar as configurações deste componente
+ * Default Exception package
  */
-public class Configuration {
+public class CriptographyException extends RuntimeException {
 
-	private static final Configuration instance = new Configuration();
+	private static final long serialVersionUID = 2063536693414468728L;
 
-	public static Configuration getInstance() {
-		return Configuration.instance;
+	public CriptographyException() {
+		super();
 	}
 
-	/**
-	 * Busca nas variaveis de ambiente ou em variavel da JVM um determinado
-	 * valor. Prioridade para as variaveis de ambiente.
-	 * 
-	 * @param key
-	 *            Chave de localizacao da variavel
-	 * @return O conteudo definida em uma das variaveis. NULL se nenhuma
-	 *         variavel for definida
-	 */
-	public String getContentFromVariables(String key) {
-		String content = System.getenv(key);
-		if (content == null)
-			content = System.getenv(key.toLowerCase());
-		if (content == null)
-			content = System.getenv(key.toUpperCase());
+	public CriptographyException(String message) {
+		super(message);
+	}
 
-		if (content == null)
-			content = System.getProperty(key);
-		if (content == null)
-			content = System.getProperty(key.toLowerCase());
-		if (content == null)
-			content = System.getProperty(key.toUpperCase());
-
-		return content;
+	public CriptographyException(String message, Throwable cause) {
+		super(message, cause);
 	}
 
 }

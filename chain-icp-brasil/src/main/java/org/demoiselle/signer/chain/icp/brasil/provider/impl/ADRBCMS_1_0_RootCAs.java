@@ -79,6 +79,10 @@ public class ADRBCMS_1_0_RootCAs implements ProviderSignaturePolicyRootCA {
     /**
      * http://pesquisa.in.gov.br/imprensa/jsp/visualiza/index.jsp?jornal=1&pagina=30&data=13/01/2009 
      */
+    /**
+     * @deprecated  Expired on 31/12/2014
+     */
+    @Deprecated 
     @Override
     public String getSignaturePolicyOID() {
         return "2.16.76.1.7.1.1.1";

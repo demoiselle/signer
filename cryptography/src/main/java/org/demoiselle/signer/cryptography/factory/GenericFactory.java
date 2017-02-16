@@ -35,9 +35,9 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography.factory;
+package org.demoiselle.signer.cryptography.factory;
 
-import org.demoiselle.signer.criptography.configuration.Configuration;
+import org.demoiselle.signer.cryptography.configuration.Configuration;
 
 /**
  * Fabrica abstrata que concentra a leitura das configurações para as fábricas

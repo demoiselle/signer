@@ -57,6 +57,10 @@ public class ADRBCMS_2_0_RootCAs implements ProviderSignaturePolicyRootCA {
         return (new ADRBCMS_1_0_RootCAs()).getCAs();
     }
 
+    /**
+     * @deprecated  Repealed http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital/4728-assinatura-digital-com-referencia-basica
+     */
+    @Deprecated
     @Override
     public String getSignaturePolicyOID() {
         return "2.16.76.1.7.1.1.2";

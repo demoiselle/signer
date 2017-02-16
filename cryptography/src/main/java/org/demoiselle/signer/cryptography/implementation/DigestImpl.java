@@ -35,7 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography.implementation;
+package org.demoiselle.signer.cryptography.implementation;
 
 import java.io.BufferedInputStream;
 import java.io.DataInputStream;
@@ -47,9 +47,9 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.demoiselle.signer.criptography.CriptographyException;
-import org.demoiselle.signer.criptography.Digest;
-import org.demoiselle.signer.criptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.CriptographyException;
+import org.demoiselle.signer.cryptography.Digest;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 
 public class DigestImpl implements Digest {
 

@@ -35,7 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography.implementation;
+package org.demoiselle.signer.cryptography.implementation;
 
 import java.security.Key;
 import java.security.Provider;
@@ -45,10 +45,10 @@ import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
 
-import org.demoiselle.signer.criptography.AsymmetricAlgorithmEnum;
-import org.demoiselle.signer.criptography.Criptography;
-import org.demoiselle.signer.criptography.CriptographyException;
-import org.demoiselle.signer.criptography.SymmetricAlgorithmEnum;
+import org.demoiselle.signer.cryptography.AsymmetricAlgorithmEnum;
+import org.demoiselle.signer.cryptography.Criptography;
+import org.demoiselle.signer.cryptography.CriptographyException;
+import org.demoiselle.signer.cryptography.SymmetricAlgorithmEnum;
 
 import com.sun.crypto.provider.SunJCE;
 

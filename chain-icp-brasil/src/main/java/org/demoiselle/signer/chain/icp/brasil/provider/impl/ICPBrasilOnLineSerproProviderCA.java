@@ -80,7 +80,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class.getName());
 	
 	
-	protected MessagesBundle messagesBundle = new MessagesBundle();
+	protected static MessagesBundle messagesBundle = new MessagesBundle();
 
 	/**
 	 *  return the address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.  
@@ -205,6 +205,11 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 		return null;
 	}
 
+	/**
+	 * Get from SERPRO mirror repository
+	 * @param zip
+	 * @return
+	 */
 	public Collection<X509Certificate> getOnline(InputStream zip) {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
 		long timeBefore = 0;

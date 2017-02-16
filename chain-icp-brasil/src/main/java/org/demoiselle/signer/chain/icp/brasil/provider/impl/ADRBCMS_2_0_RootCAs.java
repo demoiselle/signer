@@ -37,6 +37,7 @@
 package org.demoiselle.signer.chain.icp.brasil.provider.impl;
 
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
+
 import java.io.InputStream;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -64,6 +65,10 @@ public class ADRBCMS_2_0_RootCAs implements ProviderSignaturePolicyRootCA {
         return result;
     }
 
+    /**
+     * @deprecated  Repealed http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital/4728-assinatura-digital-com-referencia-basica
+     */
+    @Deprecated
     @Override
     public String getSignaturePolicyOID() {
         return "2.16.76.1.7.1.1.2";

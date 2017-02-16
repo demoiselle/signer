@@ -34,11 +34,11 @@ import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.util.Store;
-import org.demoiselle.signer.signature.cades.SignerException;
-import org.demoiselle.signer.signature.cades.factory.PKCS7Factory;
-import org.demoiselle.signer.signature.cades.pkcs7.PKCS7Signer;
-import org.demoiselle.signer.signature.core.ca.manager.CAManager;
-import org.demoiselle.signer.signature.core.extension.BasicCertificate;
+import org.demoiselle.signer.policy.impl.cades.SignerException;
+import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
+import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.core.ca.manager.CAManager;
+import org.demoiselle.signer.core.extension.BasicCertificate;
 
 public class SignatureInfo extends JDialog{
 

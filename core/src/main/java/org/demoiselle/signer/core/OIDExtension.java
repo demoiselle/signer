@@ -43,6 +43,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * 
+ * Annotation for X.509 Extension OIDs
+ *
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.ANNOTATION_TYPE)

@@ -1,10 +1,9 @@
 /*
  * Demoiselle Framework
  * Copyright (C) 2016 SERPRO
- * ----------------------------------------------------------------------------
- * This file is part of Demoiselle Framework.
- * 
- * Demoiselle Framework is free software; you can redistribute it and/or
+ * --import br.gov.frameworkdemoiselle.criptography.Criptography;
+import br.gov.frameworkdemoiselle.criptography.implementation.CriptographyImpl;
+selle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
  * as published by the Free Software Foundation.
  * 
@@ -35,49 +34,40 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.criptography;
+package org.demoiselle.signer.cryptography.factory;
+
+import org.demoiselle.signer.cryptography.Criptography;
+import org.demoiselle.signer.cryptography.implementation.CriptographyImpl;
 
 /**
- * Define os algoritmos de resumo padrão ICP-Brasil
+ * Fábrica especializada em fabricar objetos da interface {@link Criptography}
  */
-public enum DigestAlgorithmEnum {
+public class CriptographyFactory extends GenericFactory<Criptography> {
 
-	MD5("MD5"),
-	SHA_1("SHA-1"),
-	SHA_224("SHA224"),
-	SHA_256("SHA-256"),
-	SHA_384("SHA384"),
-	SHA_512("SHA-512"),
-	SHA3_224("SHA3-224"), 
-	SHA3_256("SHA3-256"), 
-	SHA3_384("SHA3-384"), 
-	SHA3_512("SHA3-512"), 
-	SHAKE_128("SHAKE128"), 
-	SHAKE_256("SHAKE256");
-	
-		
-	public static DigestAlgorithmEnum DEFAULT = DigestAlgorithmEnum.SHA_256;
+	public static final CriptographyFactory instance = new CriptographyFactory();
 
-	private String algorithm;
-
-	private DigestAlgorithmEnum(String algorithm) {
-		this.algorithm = algorithm;
-	}
-
-	public String getAlgorithm() {
-		return this.algorithm;
+	public static final CriptographyFactory getInstance() {
+		return CriptographyFactory.instance;
 	}
 
 	/**
-	 * Recupera um item do enum correspondente ao parâmetro passado. O parâmetro
-	 * passado deverá ser igual (case insensitive) ao nome do algoritmo de algum
-	 * item deste enum, caso contrário retornará null.
+	 * Define um objeto padrão para a fábrica O Componente possue uma
+	 * implementação default
+	 * 
+	 * @see {@link CriptographyImpl}
 	 */
-	public static DigestAlgorithmEnum getDigestAlgorithmEnum(String algorithm) {
-		for (DigestAlgorithmEnum value : DigestAlgorithmEnum.values())
-			if (value.getAlgorithm().equalsIgnoreCase(algorithm))
-				return value;
-		return null;
+	@Override
+	public Criptography factoryDefault() {
+		return new CriptographyImpl();
+	}
+
+	/**
+	 * Define a variável de ambiente utilizada pela fábrica abstrata a fim de
+	 * buscar o nome da classe a ser fabricada.
+	 */
+	@Override
+	protected String getVariableName() {
+		return "criptography.implementation";
 	}
 
 }

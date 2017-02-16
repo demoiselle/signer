@@ -36,7 +36,7 @@
  */
 package org.demoiselle.signer.policy.impl.cades;
 
-import org.demoiselle.signer.criptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 
 /**
  * 

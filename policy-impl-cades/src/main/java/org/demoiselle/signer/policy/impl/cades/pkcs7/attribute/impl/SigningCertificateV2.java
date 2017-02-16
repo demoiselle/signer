@@ -36,9 +36,9 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
-import org.demoiselle.signer.criptography.Digest;
-import org.demoiselle.signer.criptography.DigestAlgorithmEnum;
-import org.demoiselle.signer.criptography.factory.DigestFactory;
+import org.demoiselle.signer.cryptography.Digest;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.factory.DigestFactory;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;

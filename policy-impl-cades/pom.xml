@@ -65,7 +65,7 @@
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
-            <artifactId>criptography</artifactId>
+            <artifactId>cryptography</artifactId>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>

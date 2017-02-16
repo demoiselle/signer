@@ -40,8 +40,19 @@ package org.demoiselle.signer.core;
 import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
 
+/**
+ * 
+ * define a method to load X.509 Extension OIDs
+ *
+ */
 public interface IOIDExtensionLoader {
 
+	/**
+	 * 
+	 * @param object
+	 * @param field 
+	 * @param x509 java.security.cert.X509Certificate
+	 */
 	public void load(Object object, Field field, X509Certificate x509);
 
 }
