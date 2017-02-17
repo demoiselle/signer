@@ -4,6 +4,9 @@
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>agent-desktop</artifactId>
 	<version>3.0.0-BETA1</version>
+
+	<name>Demoiselle Desktop Agent Component</name>
+
 	<repositories>
 		<repository>
 			<id>jboss</id>
@@ -96,7 +99,7 @@
 						</filter>
 					</filters>
 				</configuration>
-				</plugin>
+			</plugin>
 		</plugins>
 	</build>
 </project>

@@ -4,7 +4,8 @@
     <groupId>org.demoiselle.signer</groupId>
     <artifactId>agent-web</artifactId>
     <version>3.0.0-BETA1</version>
-    <name>Javascript project for Signer Agent-Desktop</name>
+
+    <name>Demoiselle Desktop Agent Javascript Component</name>
  
     <organization>
         <name>SERPRO</name>
