@@ -464,6 +464,7 @@ public class CAdESSigner implements PKCS7Signer {
 					unsignedAttributesTable);
 
 			// Recupera o algoritmo e o tamanho minimo da chave
+			// TODO: permitir setar o Algoritmo e validar com a politica (se ela aceita ou não)
 			AlgAndLength algAndLength = signaturePolicy.getSignPolicyInfo()
 					.getSignatureValidationPolicy().getCommonRules()
 					.getAlgorithmConstraintSet()
