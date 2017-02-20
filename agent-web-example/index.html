@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Demoiselle Signer - Agent UI</title>
+</head>
+<style>
+	table,
+	th,
+	td {
+		border: 1px solid grey;
+		border-collapse: collapse;
+		padding: 5px;
+	}
+	
+	table tr:nth-child(odd) {
+		background-color: #f1f1f1;
+	}
+	
+	table tr:nth-child(even) {
+		background-color: #ffffff;
+	}
+        
+    h2{
+        color:#23527c;
+        text-align: center;
+        margin-left: auto; 
+        margin-right: auto;
+        width:850px;
+    }
+
+    tr{
+        font-size: 14px;
+
+    }
+
+    body{
+        font-family: robotoSlabBold ,'Arial','sans-serif';
+        color:#23527c;
+        padding: 0;
+        margin: 0;
+        background-color: #23527c;
+    }
+
+    #action{
+        display:block;
+        list-style: none;
+        margin:0px;
+        float:right;
+    }
+
+    #action li{
+        float:left;
+        cursor: pointer;
+        background-color: #F1F1F1;
+        color: #777;
+        font-size:13px;
+        padding: 5px;
+    }
+    
+    #action li:not(:first-child):before {
+        content: " | ";
+    }
+
+    #main_list{
+        background-color: #F1F1F1;
+        width:900px;
+        float: left;
+    }
+
+    #main{
+        width:900px; 
+        margin-left: auto; 
+        margin-right: auto;
+        text-align: center;
+        background-color: #FFF;
+    }
+    
+    #into{
+        padding: 10px;
+        text-align: left;
+        height:800px; 
+        display:block;
+    }
+
+    #polices{
+        width:200px;
+        margin-right: 10px;
+        background-color: #FFF;
+    }
+
+    #result{
+        width:700px;
+        height: 150px
+    }
+
+    #errors{
+        width:700px;
+        border: none;
+    }
+
+</style>
+<html>
+<script src="./src/main/javascript/angular.min.js"></script>
+<script src="./src/main/javascript/app.js"></script>
+<script src="./src/main/javascript/agent-desktop.js"></script>
+
+<body>
+	<div id="main" ng-app="agent-desktop" ng-controller="controller">
+        <div id="main_list">
+            <ul id="action">
+                <li ng-click="listarCertificados()">Listar Certificados instalados</li>
+                <li ng-click="status()">Verificar status</li>
+                <li ng-click="assinar()">Assinar</li>
+                <li ng-click="shutdown()">Desligar Agent Desktop</li>
+                <li ng-click="logout()">Deslogar o PIN</li>
+                <li ng-click="getfiles()">Selecionar Arquivo</li>
+            </ul>
+        </div>
+		<h2 style="float:left">Interface do Aplicativo Demoiselle Signer Agent Desktop</h2>
+        <div id="into">
+		<table style="width:850px">
+			<tr>
+				<th>Alias</th>
+				<th>Emitido para</th>
+				<th>Não antes</th>
+				<th>Não depois</th>
+				<th>Provedor</th>
+				<th>Acao</th>
+			</tr>
+			<tr ng-repeat="cert in listaCertificados.certificates">
+				<td>{{ cert.alias }}</td>
+				<td>{{ cert.subject }}</td>
+				<td>{{ cert.notBefore }}</td>
+				<td>{{ cert.notAfter }}</td>
+				<td>{{ cert.provider }}</td>
+				<td>
+                    <button ng-click="assinar(cert.alias, cert.provider, content)">Assinar Texto</button>
+                    <button ng-click="assinarArquivo(cert.alias, cert.provider, content)">Assinar Documento</button>
+                </td>
+			</tr>
+		</table>
+		<br><br>
+		Texto a ser assinado: <input type="text" ng-model="content">
+		<select id="polices" ng-model="politica">
+			<option ng-repeat="p in listaPoliticas" value="{{p}}">{{p}}
+		</select>
+        <input type="button" value="Carregar lista de politicas" ng-click="listarPoliticas()">
+        <div style="margin-top:10px;">
+		Resultado da Assinatura: <textarea id="result" name="signed">{{signed}}</textarea>
+		</div>
+        <div>
+		Erros: <input id="errors" type="text" ng-model="erros">
+        </div>
+        <div>
+		Arquivo: <input id="errors" type="text" ng-model="fileName">
+        </div>
+        <div>
+		Arquivo Assinado: <input id="errors" type="text" ng-model="signedFileName">
+        </div>
+	    <div id="serverstate" style="margin-top:100px"><a href="agent-desktop.jnlp" download> Baixar/Executar Agent-Desktop </a></div>
+        </div>
+	</div>
+</body>
+
+</html>

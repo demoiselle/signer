@@ -1,0 +1,8 @@
+/target
+/.project
+/.classpath
+/.settings
+/.externalToolBuilders
+/target/
+/signer__policy_engine.log
+/signer_core.log
