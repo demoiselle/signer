@@ -85,9 +85,8 @@
 		<module>policy-impl-pades</module>
 		<module>timestamp</module>
 		
-		<!-- Desktop Components -->
-		<module>agent-desktop</module>
-		<module>agent-web</module>
+		<!-- Desktop Component -->
+		<module>agent-desktop</module>		
 	</modules>
 
 	<properties>
