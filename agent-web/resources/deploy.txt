@@ -1,6 +1,0 @@
-publicar os arquivos abaixo, no servidor web:
-
-agent-desktop.jnlp 
-agent-desktop.js 
-app.js 
-index.html 
