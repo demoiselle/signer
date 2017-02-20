@@ -1,5 +1,5 @@
 angular.module('agent-desktop', [])
-    .controller('controller', function ($scope, $http) {
+    .controller('controller', function ($scope, $http, $timeout) {
 
         $scope.listaCertificados = null;
         $scope.listaPoliticas = [];
@@ -10,6 +10,9 @@ angular.module('agent-desktop', [])
         $scope.fileName = null;
         $scope.signedFileName = null;
         connectionStatus = -1;
+
+
+        // console.log(window.SignerDesktopClient);
 
         callback = function (data) {
             connectionStatus = data;
@@ -23,16 +26,18 @@ angular.module('agent-desktop', [])
         }
 
         function tryAgain() {
-            sadService.connect(callback);
+            window.SignerDesktopClient.connect(callback);
         }
 
-        sadService.connect(callback);
+        window.SignerDesktopClient.connect(callback);
 
         $scope.listarCertificados = function () {
-            console.log("Listar");
-            sadService.listcerts($scope.password).then(function (response) {
-                $scope.listaCertificados = response;
-                console.log(response);
+            // console.log("Listar");
+            window.SignerDesktopClient.listcerts($scope.password).then(function (response) {
+                $timeout(function () {
+                    $scope.listaCertificados = response;
+                }, 100);
+                // console.log(response);
             });
         }
 
@@ -43,7 +48,7 @@ angular.module('agent-desktop', [])
         }
 
         $scope.assinar = function (alias, provider, content) {
-            sadService.signer(alias, $scope.password, provider, content, $scope.politica).then(function (response) {
+            window.SignerDesktopClient.signer(alias, $scope.password, provider, content, $scope.politica).then(function (response) {
                 if (response.erro) {
                     $scope.tratarErros(response);
                     return;
@@ -53,7 +58,7 @@ angular.module('agent-desktop', [])
         }
 
         $scope.status = function () {
-            sadService.status().then(function (response) {
+            window.SignerDesktopClient.status().then(function (response) {
                 if (response.erro) {
                     $scope.tratarErros(response);
                     return;
@@ -62,32 +67,40 @@ angular.module('agent-desktop', [])
         }
 
         $scope.listarPoliticas = function () {
-            sadService.listpolicies().then(function (response) {
+            // console.log("Listar POLITICAS");
+            window.SignerDesktopClient.listpolicies().then(function (response) {
+
+
+                // console.log(response);
+
                 if (response.erro) {
                     $scope.tratarErros(response);
                     return;
                 }
-                $scope.listaPoliticas = response.policies;
-                console.log($scope.listaPoliticas);
+
+                $timeout(function () {
+                    $scope.listaPoliticas = response.policies;
+                }, 100);
+                // console.log($scope.listaPoliticas);
             });
         }
 
         $scope.shutdown = function () {
-            sadService.shutdown();
+            window.SignerDesktopClient.shutdown();
         }
 
         $scope.logout = function () {
-            sadService.logoutpkcs11();
+            window.SignerDesktopClient.logoutpkcs11();
         }
 
         $scope.getfiles = function () {
-            sadService.getfiles().then(function (response) {
+            window.SignerDesktopClient.getfiles().then(function (response) {
                 if (response.erro) {
                     $scope.tratarErros(response);
                     return;
                 }
                 $scope.fileName = response.fileName;
-                console.log($scope.fileName);
+                // console.log($scope.fileName);
             });
         }
 
@@ -96,7 +109,7 @@ angular.module('agent-desktop', [])
                 alert("Informe o arquivo e a politica a ser utilizada");
                 return;
             }
-            sadService.signerfile(alias, provider, $scope.fileName, $scope.politica).then(function (response) {
+            window.SignerDesktopClient.signerfile(alias, provider, $scope.fileName, $scope.politica).then(function (response) {
                 if (response.erro) {
                     $scope.tratarErros(response);
                     return;
