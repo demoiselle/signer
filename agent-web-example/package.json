@@ -15,6 +15,7 @@
     "gulp-uglify": "^2.0.1"
   },
   "dependencies": {
-    "gulp-uglifycss": "^1.0.6"
+    "gulp-uglifycss": "^1.0.6",
+    "agent-web": "file:../agent-web/"
   }
 }

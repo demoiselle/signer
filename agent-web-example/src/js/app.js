@@ -11,7 +11,6 @@ angular.module('agent-desktop', [])
         $scope.signedFileName = null;
         connectionStatus = -1;
 
-
         // console.log(window.SignerDesktopClient);
 
         callback = function(data) {
