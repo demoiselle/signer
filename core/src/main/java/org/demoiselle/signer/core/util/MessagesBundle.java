@@ -20,7 +20,8 @@ public class MessagesBundle {
 	public MessagesBundle(String parmBundleName) {
 		super();
 		this.bundleName = parmBundleName;
-		MessagesBundle.setResouceBundle(ResourceBundle.getBundle(this.bundleName));
+		ResourceBundle varResourceBundle = ResourceBundle.getBundle(this.bundleName); 
+		MessagesBundle.setResouceBundle(varResourceBundle);
 	}
 
 	public String getString(String key) {

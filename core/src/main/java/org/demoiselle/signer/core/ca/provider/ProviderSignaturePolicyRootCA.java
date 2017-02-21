@@ -39,9 +39,18 @@ package org.demoiselle.signer.core.ca.provider;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
+/**
+ * Define methods to provides trusted Certificate Authority chain and policy OID 
+ * 
+ *
+ */
 public interface ProviderSignaturePolicyRootCA {
 
     public Collection<X509Certificate> getCAs();
 
+    /**
+     * Policy OID defined by http://www.iti.gov.br/legislacao/
+     * @return
+     */
     public String getSignaturePolicyOID();
 }

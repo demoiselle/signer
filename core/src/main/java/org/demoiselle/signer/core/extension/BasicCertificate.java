@@ -47,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -64,13 +65,19 @@ import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.PolicyInformation;
 import org.bouncycastle.x509.extension.X509ExtensionUtil;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * Basic Certificate information based on ICP-BRASIL (PKI) definitions 
+ *
+ */
 public class BasicCertificate {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicCertificate.class);
-
+    
     public static final String OID_A1_CERTIFICATE = "2.16.76.1.2.1";
     public static final String OID_A2_CERTIFICATE = "2.16.76.1.2.2";
     public static final String OID_A3_CERTIFICATE = "2.16.76.1.2.3";
@@ -80,6 +87,8 @@ public class BasicCertificate {
     public static final String OID_S3_CERTIFICATE = "2.16.76.1.2.103";
     public static final String OID_S4_CERTIFICATE = "2.16.76.1.2.104";
 
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+    
     private X509Certificate certificate = null;
     private ICPBRSubjectAlternativeNames subjectAlternativeNames = null;
     private ICPBRKeyUsage keyUsage = null;
@@ -99,8 +108,8 @@ public class BasicCertificate {
 
     /**
      *
-     * @param data Os bytes do certificado a ser utilizado
-     * @throws Exception Retorna a exceção Exception
+     * @param data The bytes of the certificate to be used
+     * @throws Exception 
      */
     public BasicCertificate(byte[] data) throws Exception {
         this.certificate = getCertificate(data);
@@ -108,9 +117,9 @@ public class BasicCertificate {
 
     /**
      *
-     * @param is O stream do certificado a ser utilizado
-     * @throws IOException Retorna a exceção IOException
-     * @throws Exception Retorna a exceção Exception
+     * @param is The input stream of the certificate to be used
+     * @throws IOException 
+     * @throws Exception 
      */
     public BasicCertificate(InputStream is) throws IOException, Exception {
         this.certificate = getCertificate(is);
@@ -118,7 +127,7 @@ public class BasicCertificate {
 
     /**
      *
-     * @param is -> InputStream
+     * @param is The input stream of the certificate to be used
      * @return X509Certificate
      * @throws CertificateException
      * @throws IOException
@@ -188,11 +197,11 @@ public class BasicCertificate {
     }
 
     /**
-     * Obtem o IssuerDN de um certificado
+     * Gets the IssuerDN (Issuer Distinguished Name) of a certificate
      *
-     * @return O IssuerDN do certificado
+     * @return  {@link ICPBR_DN} IssuerDN of a certificate
      *
-     * @throws IOException Retorna a exceção IOException
+     * @throws IOException 
      */
     public ICPBR_DN getCertificateIssuerDN() throws IOException {
         if (certificateFrom == null) {
@@ -202,7 +211,7 @@ public class BasicCertificate {
     }
 
     /**
-     * Returns the SerialNumber of certificate on String format<br>
+     * Returns the SerialNumber of certificate on String formatr>
      *
      * @return String
      */
@@ -211,10 +220,10 @@ public class BasicCertificate {
     }
 
     /**
-     * Retorna o SubjectDN de um Certificado
+     * Returns the SubjectDN (Subject Distinguished Name) of a Certificate 
      *
-     * @return O SubjectDN
-     * @throws IOException Retorna a exceção IOException
+     * @return {@link ICPBR_DN} SubjectDN of a certificate
+     * @throws IOException 
      */
     public ICPBR_DN getCertificateSubjectDN() throws IOException {
         if (certificateFor == null) {
@@ -247,18 +256,18 @@ public class BasicCertificate {
     }
 
     /**
-     * Retorna a data inicial de validade do certificado
+     * 
      *
-     * @return Date A a data inicial
+     * @return Date the certificate's initial date of validity
      */
     public Date getBeforeDate() {
         return certificate.getNotBefore();
     }
 
     /**
-     * Retorna a data final de validade do certificado
+     * 
      *
-     * @return Date A data final
+     * @return Date The expiration date of the certificate
      */
     public Date getAfterDate() {
         return certificate.getNotAfter();
@@ -325,7 +334,7 @@ public class BasicCertificate {
      * Returns data of "Pessoa Fisica" on certificate in ICPBRCertificatePF
      * format<br>
      * If its not a "Pessoa Fisica" certificate <br>
-     * Returns o valor <b>null</b>
+     * Returns <b>null</b>
      *
      * @return ICPBRCertificatePF
      * @see ICPBRCertificatePF
@@ -354,7 +363,7 @@ public class BasicCertificate {
      * Returns data of "Pessoa Juridica" on certificate in ICPBRCertificatePJ
      * format<br>
      * If its not a "Pessoa Juridica" certificate <br>
-     * Returns o valor <b>null</b>
+     * Returns null
      *
      *
      * @return ICPBRCertificatePJ
@@ -384,7 +393,7 @@ public class BasicCertificate {
      * Returns data of "Equipamento/Aplicacao" on certificate in
      * ICPBRCertificateEquipment format<br>
      * If its not a "Equipamento/Aplicacao" certificate <br>
-     * Returns o valor <b>null</b>
+     * Returns <b>null</b>
      *
      *
      * @return ICPBRCertificateEquipment
@@ -496,10 +505,10 @@ public class BasicCertificate {
 
 
     /**
-     * Obtém o Identificador de chave de autoridade de um certificado
      *
-     * @return O Identificador de chave de autoridade
-     * @throws IOException Retorna a exceção IOException
+     *
+     * @return the authority key identifier of a certificate
+     * @throws IOException 
      */
     public String getAuthorityKeyIdentifier() throws IOException {
         // TODO - Precisa validar este metodo com a RFC
@@ -513,10 +522,10 @@ public class BasicCertificate {
     }
 
     /**
-     * Retorna o Identificador de chave de assunto de um certificado
+     * 
      *
-     * @return O Identificador de chave de assunto
-     * @throws IOException Retorna a exceção
+     * @return The subject key identifier of a certificate 
+     * @throws IOException 
      */
     public String getSubjectKeyIdentifier() throws IOException {
         // TODO - Precisa validar este metodo com a RFC
@@ -529,11 +538,9 @@ public class BasicCertificate {
     }
 
     /**
-     * Retorna uma lista de ulrs que informam a localização das listas de
-     * certificados revogados
-     *
-     * @return Lista de urls das CRLs
-     * @throws IOException Retorna a exceção IOException
+     * 
+     * @return A list of ulrs that inform the location of the certificate revocation lists
+     * @throws IOException
      */
     public List<String> getCRLDistributionPoint() throws IOException {
 
@@ -566,11 +573,11 @@ public class BasicCertificate {
     }
 
     /**
-     * Obtém o conteúdo de um determinado OID
+     * Gets the contents of a given OID
      *
-     * @param oid A identificação do campo
+     * @param oid Object Identifier (OID) 
      *
-     * @return O conteúdo relacionado ao OID informado
+     * @return org.bouncycastle.asn1.ASN1Primitive Content related to the reported OID
      */
     public ASN1Primitive getExtensionValue(String oid) {
         byte[] extensionValue = certificate.getExtensionValue(oid);
@@ -595,62 +602,63 @@ public class BasicCertificate {
             SimpleDateFormat dtValidade = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
             sb.append("*********************************\n");
-            sb.append("Certificado DE  : ").append(this.getCertificateIssuerDN()).append("\n");
-            sb.append("Serial Number . : ").append(this.getSerialNumber()).append("\n");
-            sb.append("Certificado PARA: ").append(this.getCertificateSubjectDN()).append("\n");
-            sb.append("Nome do Certif  : ").append(this.getNome()).append("\n");
-            sb.append("Validade  . . . : de ").append(dtValidade.format(this.getBeforeDate())).append(" ate ").append(dtValidade.format(this.getAfterDate())).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.IssuerDN")).append(this.getCertificateIssuerDN()).append("\n");
+            
+            sb.append(coreMessagesBundle.getString("text.certicate.serialNumber")).append(this.getSerialNumber()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.subjectDN")).append(this.getCertificateSubjectDN()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.name")).append(this.getNome()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.valid.from")).append(dtValidade.format(this.getBeforeDate())).append("ate").append(dtValidade.format(this.getAfterDate())).append("\n");
             sb.append("*********************************\n");
-            sb.append("Email . . . . . : ").append(this.getEmail()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.email")).append(this.getEmail()).append("\n");
             sb.append("*********************************\n");
-            sb.append("Tem dados PF  . : ").append(this.hasCertificatePF()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.is.pf")).append(this.hasCertificatePF()).append("\n");
             if (this.hasCertificatePF()) {
                 ICPBRCertificatePF tdPF = this.getICPBRCertificatePF();
-                sb.append("CPF . . . . . . . : ").append(tdPF.getCPF()).append("\n");
-                sb.append("Data Nascimento . : ").append(tdPF.getDataNascimento()).append("\n");
-                sb.append("PIS . . . . . . . : ").append(tdPF.getNis()).append("\n");
-                sb.append("Rg  . . . . . . . : ").append(tdPF.getRg()).append("\n");
-                sb.append("Orgão Rg  . . . . : ").append(tdPF.getOrgaoExpedidorRg()).append("\n");
-                sb.append("UF Rg  . . . . .  : ").append(tdPF.getUfExpedidorRg()).append("\n");
-                sb.append("CEI  . . . . . .  : ").append(tdPF.getCEI()).append("\n");
-                sb.append("Titulo  . . . . . : ").append(tdPF.getTituloEleitor()).append("\n");
-                sb.append("Seção . . . . . . : ").append(tdPF.getSecaoTituloEleitor()).append("\n");
-                sb.append("Zona  . . . . . . : ").append(tdPF.getZonaTituloEleitor()).append("\n");
-                sb.append("Municipio Titulo. : ").append(tdPF.getMunicipioTituloEleitor()).append("\n");
-                sb.append("UF Titulo . . . . : ").append(tdPF.getUfTituloEleitor()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.cpf")).append(tdPF.getCPF()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.birth.date")).append(tdPF.getDataNascimento()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.pis")).append(tdPF.getNis()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.rg")).append(tdPF.getRg()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.rg.expeditor")).append(tdPF.getOrgaoExpedidorRg()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.rg.uf")).append(tdPF.getUfExpedidorRg()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.cei")).append(tdPF.getCEI()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.voter.document")).append(tdPF.getTituloEleitor()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.section")).append(tdPF.getSecaoTituloEleitor()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.zone")).append(tdPF.getZonaTituloEleitor()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.voter.city")).append(tdPF.getMunicipioTituloEleitor()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.voter.uf")).append(tdPF.getUfTituloEleitor()).append("\n");
             }
 
             sb.append("*********************************\n");
-            sb.append("Tem dados PJ  . : ").append(this.hasCertificatePJ()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.is.pj")).append(this.hasCertificatePJ()).append("\n");
             if (this.hasCertificatePJ()) {
                 ICPBRCertificatePJ tdPJ = this.getICPBRCertificatePJ();
-                sb.append("CNPJ. . . . . . : ").append(tdPJ.getCNPJ()).append("\n");
-                sb.append("CEI. . . . . . : ").append(tdPJ.getCEI()).append("\n");
-                sb.append("NIS . . . . . . : ").append(tdPJ.getNis()).append("\n");
-                sb.append("Responsável . . : ").append(tdPJ.getNomeResponsavel()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.cnpj")).append(tdPJ.getCNPJ()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.cei")).append(tdPJ.getCEI()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.nis")).append(tdPJ.getNis()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.responsible")).append(tdPJ.getNomeResponsavel()).append("\n");
             }
 
             sb.append("*********************************\n");
-            sb.append("Tem dados Equip : ").append(this.hasCertificateEquipment()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.is.equipment")).append(this.hasCertificateEquipment()).append("\n");
             if (this.hasCertificateEquipment()) {
                 ICPBRCertificateEquipment tdEq = this.getICPBRCertificateEquipment();
-                sb.append("CNPJ. . . . . . : ").append(tdEq.getCNPJ()).append("\n");
-                sb.append("NIS . . . . . . : ").append(tdEq.getNis()).append("\n");
-                sb.append("Nome Empresa. . : ").append(tdEq.getNomeEmpresarial()).append("\n");
-                sb.append("Responsável . . : ").append(tdEq.getNomeResponsavel()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.cnpj")).append(tdEq.getCNPJ()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.nis")).append(tdEq.getNis()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.bussiness.name")).append(tdEq.getNomeEmpresarial()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.responsible")).append(tdEq.getNomeResponsavel()).append("\n");
             }
 
             sb.append("*********************************\n");
-            sb.append("Eh CertificadoAC: ").append(this.isCACertificate()).append("\n");
-            sb.append("PathLength  . . : ").append(this.getPathLength()).append("\n");
-            sb.append("Tipo Certificado: ").append(this.getCertificateLevel()).append("\n");
-            sb.append("Tipo de Uso . . : ").append(this.getICPBRKeyUsage()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.is.ca")).append(this.isCACertificate()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.pahtLenth")).append(this.getPathLength()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.type")).append(this.getCertificateLevel()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.type.use")).append(this.getICPBRKeyUsage()).append("\n");
 
             sb.append("*********************************\n");
-            sb.append("Authority KeyID : ").append(this.getAuthorityKeyIdentifier()).append("\n");
-            sb.append("Authority Info Access...[").append(this.getAuthorityInfoAccess()).append("]\n");
-            sb.append("Subject KeyID . : ").append(this.getSubjectKeyIdentifier()).append("\n");
-            sb.append("CRL DistPoint . : ").append(this.getCRLDistributionPoint()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.authority.key")).append(this.getAuthorityKeyIdentifier()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.Authority.info.acess")).append(this.getAuthorityInfoAccess()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.subject.key")).append(this.getSubjectKeyIdentifier()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.crl.url")).append(this.getCRLDistributionPoint()).append("\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -59,7 +59,7 @@ public class CertificateManager {
     private X509Certificate x509;
     private Collection<IValidator> validators;
     
-    private static MessagesBundle messagesBundle = new MessagesBundle();
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     /**
      * 
@@ -168,7 +168,7 @@ public class CertificateManager {
                         IOIDExtensionLoader loader = loaderClass.newInstance();
                         loader.load(object, field, x509);
                     } catch (IllegalAccessException | InstantiationException e) {
-                        throw new CertificateCoreException(messagesBundle.getString("error.initialize.attribute",field.getName()), e);
+                        throw new CertificateCoreException(coreMessagesBundle.getString("error.initialize.attribute",field.getName()), e);
                     }
                 }
             }
@@ -185,7 +185,7 @@ public class CertificateManager {
         try {
             object = clazz.newInstance();
         } catch (IllegalAccessException | InstantiationException e) {
-            throw new CertificateCoreException(messagesBundle.getString("error.new.instace",clazz.getName()), e);
+            throw new CertificateCoreException(coreMessagesBundle.getString("error.new.instace",clazz.getName()), e);
         }
         load(object);
         return object;

@@ -39,9 +39,22 @@ package org.demoiselle.signer.core.ca.provider;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
+/**
+ * 
+ * Define methods to provides trusted Certificate Authority chain of the ICP-BRAZIL (PKI)
+ *
+ */
 public interface ProviderCA {
 
+	/**
+	 * 
+	 * @return the name of provider
+	 */
 	public String getName();
 	
+	/**
+	 * 
+	 * @return Collection of Certificate Authority stored on provider
+	 */
     public Collection<X509Certificate> getCAs();
 }

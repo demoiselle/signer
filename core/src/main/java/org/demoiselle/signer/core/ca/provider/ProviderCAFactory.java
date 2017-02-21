@@ -41,6 +41,13 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
+import org.demoiselle.signer.core.CertificateLoader;
+
+/**
+ * 
+ * Build a Certificate Authority provider
+ *
+ */
 public class ProviderCAFactory {
 
     private static final ProviderCAFactory instance = new ProviderCAFactory();
@@ -52,6 +59,10 @@ public class ProviderCAFactory {
         return ProviderCAFactory.instance;
     }
 
+    /**
+     * 
+     * @return Collection of {@link ProviderCA}
+     */
     public Collection<ProviderCA> factory() {
         Collection<ProviderCA> result = new ArrayList<ProviderCA>();
         ServiceLoader<ProviderCA> loader = ServiceLoader.load(ProviderCA.class);

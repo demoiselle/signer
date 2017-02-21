@@ -56,16 +56,18 @@ import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
  * 
- * Validate and Load 
+ * Validate and Load trusted Certificate Authority chain 
  *
  */
 public class CAManager {
 
 	private static final CAManager instance = new CAManager();
 	private static final Logger LOGGER = Logger.getLogger(CAManager.class.getName());
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 	private CAManager() {
 	}
@@ -84,7 +86,7 @@ public class CAManager {
 			} catch (Throwable error) {
 				// TODO: Nao foi possivel resgatar as raizes confiaveis
 				// de uma determinada politica
-				error.printStackTrace();
+				LOGGER.error(error);
 			}
 		}
 		return result;
@@ -102,22 +104,21 @@ public class CAManager {
 			}
 		}
 		if (!valid) {
-			throw new CAManagerException(
-					"Nenhuma autoridade informada faz parte da cadeia de certificados do certificado informado");
+			throw new CAManagerException(coreMessagesBundle.getString("error.no.authority"));
 		}
 		return true;
 	}
 
 	public boolean validateRootCA(X509Certificate ca, X509Certificate certificate) {
 		if (ca == null) {
-			throw new CAManagerException("Certificado da autoridade raiz não informado");
+			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.informed"));
 		}
 		if (!this.isRootCA(ca)) {
-			throw new CAManagerException("Certificado da autoridade não é raiz");
+			throw new CAManagerException(coreMessagesBundle.getString("error.not.root"));
 		}
 		Collection<X509Certificate> acs = this.getCertificateChain(certificate);
 		if (acs == null || acs.size() <= 0) {
-			throw new CAManagerException("Não foi possível resgatar a cadeia de autoridades do certificado informado");
+			throw new CAManagerException(coreMessagesBundle.getString("error.get.chain"));
 		}
 		X509Certificate rootCA = null;
 		for (X509Certificate x509 : acs) {
@@ -127,13 +128,11 @@ public class CAManager {
 			}
 		}
 		if (rootCA == null) {
-			throw new CAManagerException(
-					"Não foi possível achar um certificado raiz na cadeia do certificado informado");
+			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.found"));
 		}
 
 		if (!this.isCAofCertificate(rootCA, ca)) {
-			throw new CAManagerException(
-					"A autoridade raiz não faz parte da cadeia de certificados do certificado informado");
+			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.chain"));
 		}
 		return true;
 	}
@@ -154,11 +153,11 @@ public class CAManager {
 		} catch (InvalidKeyException error) {
 			return false;
 		} catch (CertificateException error) {
-			throw new CAManagerException("Algum erro ocorreu com o certificado informado", error);
+			throw new CAManagerException(coreMessagesBundle.getString("error.certificate.exception"), error);
 		} catch (NoSuchAlgorithmException error) {
-			throw new CAManagerException("Não há o algoritmo necessário", error);
+			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
 		} catch (NoSuchProviderException error) {
-			throw new CAManagerException("Provider inválido", error);
+			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.provider"), error);
 		}
 	}
 
@@ -194,7 +193,8 @@ public class CAManager {
 		for (ProviderCA provider : providers) {
 			try {
 
-				LOGGER.info(">>> Procurando certificado no Provider: " + provider.getName());
+				String varNameProvider = provider.getName();
+				LOGGER.info(coreMessagesBundle.getString("info.searching.on.provider",varNameProvider ));
 
 				// Get ALL CAs of ONE provider
 				Collection<X509Certificate> acs = provider.getCAs();
@@ -228,19 +228,20 @@ public class CAManager {
 					}
 				}
 
-				LOGGER.log(Level.INFO, ">>> Foram encontrados [" + result.size() + "] níveis na cadeia do provider ["
-						+ provider.getName() + "].");
+				LOGGER.log(Level.INFO,coreMessagesBundle.getString("info.found.levels",result.size(),provider.getName()));
 
+				
+//				"info.found.levels", ,
 				// If chain is created BREAK! Doesn't go to next Provider
 				if (ok) {
 					break;
 				} else {
-					LOGGER.info("Não foi possivel montar a cadeia com o provider: " + provider.getName());
+					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider",provider.getName()));
 				}
 
 			} catch (Throwable error) {
-				// TODO: Nao foi possivel resgatar as CAs de um determinado
-				// provedor
+					LOGGER.error(coreMessagesBundle.getString("error.no.ca",provider.getName()));
+				// TODO: Nao foi possivel resgatar as CAs de um determinado provedor
 			}
 		}
 
@@ -269,14 +270,14 @@ public class CAManager {
 			keyStore.getKey(certificateAlias, privateKeyPass.toCharArray());
 			certificateChain = keyStore.getCertificateChain(certificateAlias);
 			if (certificateChain == null) {
-				throw new CAManagerException("Não há caminho de certificação para o alias informado");
+				throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias",certificateAlias));
 			}
 		} catch (KeyStoreException error) {
-			throw new CAManagerException("O provedor não suporta este tipo de keystore", error);
+			throw new CAManagerException(coreMessagesBundle.getString("error.keystore.type"), error);
 		} catch (UnrecoverableKeyException error) {
-			throw new CAManagerException("Impossível recuperar a chave privada do keystore", error);
+			throw new CAManagerException(coreMessagesBundle.getString("error.unrecoverable.key"), error);
 		} catch (NoSuchAlgorithmException error) {
-			throw new CAManagerException("Não há o algoritmo necessário", error);
+			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
 		}
 		return certificateChain;
 	}
@@ -291,7 +292,7 @@ public class CAManager {
 				result.add((X509Certificate) certificate);
 			}
 		} else {
-			throw new CAManagerException("Não há caminho de certificação para o alias informado");
+			throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias"));
 		}
 		return result;
 	}

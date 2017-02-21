@@ -80,7 +80,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class.getName());
 	
 	
-	protected static MessagesBundle messagesBundle = new MessagesBundle();
+	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
 
 	/**
 	 *  return the address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.  
@@ -139,7 +139,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 					}
 
 				} else {
-					LOGGER.log(Level.WARNING, messagesBundle.getString("error.hash.empty"));
+					LOGGER.log(Level.WARNING, chainMessagesBundle.getString("error.hash.empty"));
 				}
 			}
 
@@ -147,12 +147,12 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			// salva localmente
 			if (!useCache) {
 				// Baixa um novo arquivo
-				LOGGER.log(Level.INFO, messagesBundle.getString("info.file.downloading",getURLZIP() ));
+				LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.file.downloading",getURLZIP() ));
 				InputStream inputStreamZip = getInputStreamFromURL(getURLZIP());
 				Files.copy(inputStreamZip, pathZip, StandardCopyOption.REPLACE_EXISTING);
 				inputStreamZip.close();
 
-				LOGGER.log(Level.INFO, messagesBundle.getString("info.sucess"));	
+				LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.sucess"));	
 			}
 			
 			// Pega os certificados locais
@@ -160,18 +160,18 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			result = getFromZip(inputStreamZipReturn);
 			inputStreamZipReturn.close();
 
-			LOGGER.log(Level.INFO, messagesBundle.getString("info.recovered.certs",result.size()));
+			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.recovered.certs",result.size()));
 
 		} catch (IOException e) {			
-			LOGGER.log(Level.WARNING,messagesBundle.getString("error.recover.file") , e.getMessage());			
+			LOGGER.log(Level.WARNING,chainMessagesBundle.getString("error.recover.file") , e.getMessage());			
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, messagesBundle.getString("error.exception.recorver.chain"), e.getMessage());
+			LOGGER.log(Level.SEVERE, chainMessagesBundle.getString("error.exception.recorver.chain"), e.getMessage());
 		}
 
 		if (result != null) {
-			LOGGER.log(Level.INFO, messagesBundle.getString("info.number.certificates.found",getName(), result.size()));
+			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.number.certificates.found",getName(), result.size()));
 		} else {
-			LOGGER.log(Level.INFO, messagesBundle.getString("info.none.certificates",getName()));
+			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.none.certificates",getName()));
 		}
 
 		return result;
@@ -220,9 +220,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			timeAfter = System.currentTimeMillis();
 		} catch (Throwable error) {
 			timeAfter = System.currentTimeMillis();
-			LOGGER.log(Level.SEVERE, messagesBundle.getString("error.throwable", error.getMessage()));
+			LOGGER.log(Level.SEVERE, chainMessagesBundle.getString("error.throwable", error.getMessage()));
 		} finally {
-			LOGGER.log(Level.INFO, messagesBundle.getString("info.time.total", (timeAfter - timeBefore)));  
+			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.time.total", (timeAfter - timeBefore)));  
 		}
 
 		return result;
@@ -256,9 +256,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				}
 			}
 		} catch (CertificateException error) {
-			throw new RuntimeException(messagesBundle.getString("error.invalid.certificate"), error);
+			throw new RuntimeException(chainMessagesBundle.getString("error.invalid.certificate"), error);
 		} catch (IOException error) {
-			throw new RuntimeException(messagesBundle.getString("error.stream"), error);
+			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
 		return result;
 	}
@@ -277,11 +277,11 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			connection.setReadTimeout(TIMEOUT_READ);
 			return connection.getInputStream();
 		} catch (MalformedURLException error) {
-			throw new RuntimeException(messagesBundle.getString("error.malformedURL"), error);
+			throw new RuntimeException(chainMessagesBundle.getString("error.malformedURL"), error);
 		} catch (UnknownServiceException error) {
-			throw new RuntimeException(messagesBundle.getString("error.unknown.service"), error);
+			throw new RuntimeException(chainMessagesBundle.getString("error.unknown.service"), error);
 		} catch (IOException error) {
-			throw new RuntimeException(messagesBundle.getString("error.io"), error);
+			throw new RuntimeException(chainMessagesBundle.getString("error.io"), error);
 		}
 	}
 
@@ -290,7 +290,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	 */
 	@Override
 	public String getName() {
-		return messagesBundle.getString("info.provider.name.serpro", getURLZIP());
+		return chainMessagesBundle.getString("info.provider.name.serpro", getURLZIP());
 	}
 
 }

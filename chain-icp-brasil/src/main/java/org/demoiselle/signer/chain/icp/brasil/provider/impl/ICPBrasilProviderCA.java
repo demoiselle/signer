@@ -58,7 +58,7 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 public class ICPBrasilProviderCA implements ProviderCA {
 	
 	
-	private static MessagesBundle messagesBundle = new MessagesBundle();
+	private static MessagesBundle chainMessagesBundle = new MessagesBundle();
 	
 	/**
 	 * read Certificate Authority chain from loaded keystore
@@ -77,7 +77,7 @@ public class ICPBrasilProviderCA implements ProviderCA {
 
             }
         } catch (KeyStoreException ex) {
-            throw new ICPBrasilProviderCAException(messagesBundle.getString("error.load.keystore"), ex);
+            throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
         }
         return result;
     }
@@ -92,13 +92,13 @@ public class ICPBrasilProviderCA implements ProviderCA {
             keyStore = KeyStore.getInstance("JKS");
             keyStore.load(is, "changeit".toCharArray());
         } catch (KeyStoreException ex) {
-            throw new ICPBrasilProviderCAException(messagesBundle.getString("error.load.keystore"), ex);
+            throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
         } catch (NoSuchAlgorithmException ex) {
-        	throw new ICPBrasilProviderCAException(messagesBundle.getString("error.no.algorithm"), ex);
+        	throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.no.algorithm"), ex);
 		} catch (CertificateException ex) {
-			throw new ICPBrasilProviderCAException(messagesBundle.getString("error.jks.certificate"), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.jks.certificate"), ex);
 		} catch (IOException ex) {
-			throw new ICPBrasilProviderCAException(messagesBundle.getString("error.io"), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.io"), ex);
 		}
         return keyStore;
     }
@@ -108,6 +108,6 @@ public class ICPBrasilProviderCA implements ProviderCA {
 	 */
 	@Override
 	public String getName() {		
-		return messagesBundle.getString("info.provider.name.demoiselle");
+		return chainMessagesBundle.getString("info.provider.name.demoiselle");
 	}
 }

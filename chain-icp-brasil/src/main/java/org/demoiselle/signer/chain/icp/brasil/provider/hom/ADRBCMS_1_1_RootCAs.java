@@ -45,7 +45,7 @@ import java.util.Collection;
 * 
 *  WARNING: USE ONLY ON HOMOLOGATION ENVIROMENT
 *  
-*  Provides homologation Certificate Authority chain and policy OID for version 1.1 of the ICP-BRAZIL's
+*  Provides homologation Root Certificate Authority and policy OID for version 1.1 of the ICP-BRAZIL's
 *  policy for digital signature with basic reference in CMS format.
 *  
 *

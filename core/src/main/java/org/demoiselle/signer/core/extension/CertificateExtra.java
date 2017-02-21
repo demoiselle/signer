@@ -45,6 +45,7 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_5;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_6;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_7;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_8;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
@@ -57,21 +58,21 @@ import java.util.Map;
  * <br>
  *
  * Extra Informations for ICP-BRASIL (DOC-ICP-04) Certificates. Abstracts the
- * rules to PESSOA FISICA, PESSOA JURIDICA and EQUIPAMENTO/APLICAÇÃO
+ * rules to "PESSOA FISICA", "PESSOA JURIDICA" and "EQUIPAMENTO/APLICAÇÃO"
  *
- * @author CETEC/CTCTA
  */
 public class CertificateExtra {
 
     private static final Integer ZERO = 0;
-    private static final Integer UM = 1;
+    private static final Integer ONE = 1;
 
     private String email = null;
     private final Map<String, OIDGeneric> extras = new HashMap<>();
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     /**
      *
-     * @param certificate O certificado a ser analizado
+     * @param certificate The certificate to be analyzed
      */
     public CertificateExtra(X509Certificate certificate) {
         try {
@@ -80,7 +81,7 @@ public class CertificateExtra {
             }
             for (List<?> list : certificate.getSubjectAlternativeNames()) {
                 if (list.size() != 2) {
-                    throw new Exception("the size of extra informations on certificate is not correct.");
+                    throw new Exception(coreMessagesBundle.getString("error.extra.size.incorret"));
                 }
 
                 Object e1, e2;
@@ -89,7 +90,7 @@ public class CertificateExtra {
                 e2 = list.get(1);
 
                 if (!(e1 instanceof Integer)) {
-                    throw new Exception("Is not java.lang.Integer type.");
+                    throw new Exception(coreMessagesBundle.getString("error.type.not.integer"));
                 }
 
                 Integer tipo = (Integer) e1;
@@ -98,7 +99,7 @@ public class CertificateExtra {
                     byte[] data = (byte[]) e2;
                     OIDGeneric oid = OIDGeneric.getInstance(data);
                     extras.put(oid.getOid(), oid);
-                } else if (tipo.equals(UM)) {
+                } else if (tipo.equals(ONE)) {
                     email = (String) e2;
                 }
             }

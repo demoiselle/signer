@@ -46,7 +46,7 @@ import java.util.List;
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
 
 /**
- * Provides trusted Certificate Authority chain and policy OID for version 2.2 of the ICP-BRAZIL's
+ * Provides Root trusted Certificate Authority and policy OID for version 2.2 of the ICP-BRAZIL's
  * policy for digital signature with basic reference in CMS format. 
  *
  */
