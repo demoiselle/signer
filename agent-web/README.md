@@ -49,9 +49,13 @@ window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbac
 
 ```javascript
 function listAllCertificates() {
-    window.SignerDesktopClient.listCerts(password).then(function (response) {        
-        console.log(response);        
-    });
+    window.SignerDesktopClient.listCerts(password)
+        .success(function (response) {        
+            console.log(response);        
+        })
+        .error(function (error) {        
+            console.log(error);        
+        })
 }
 ```
 
