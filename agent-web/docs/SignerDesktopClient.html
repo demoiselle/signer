@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -155,7 +155,7 @@
 
     
 
-    <h4 class="name" id="connect"><span class="type-signature"></span>connect<span class="signature">(callback)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="connect"><span class="type-signature"></span>connect<span class="signature">(callbackOpen, callbackClose, callbackError)</span><span class="type-signature"></span></h4>
 
     
 
@@ -167,7 +167,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line60">line 60</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line62">line 62</a>
     </li></ul></dd>
     
 
@@ -245,7 +245,7 @@
 
         <tr>
             
-                <td class="name"><code>callback</code></td>
+                <td class="name"><code>callbackOpen</code></td>
             
 
             <td class="type">
@@ -261,7 +261,53 @@
 
             
 
-            <td class="description last"><p>Callback invoked on OPEN and CLOSE connection.</p></td>
+            <td class="description last"><p>Callback  invoked on OPEN connection.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callbackClose</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback invoked on CLOSE connection.</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>callbackError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback invoked on ERROR connection.</p></td>
         </tr>
 
     
@@ -300,7 +346,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line273">line 273</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line299">line 299</a>
     </li></ul></dd>
     
 
@@ -443,7 +489,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line218">line 218</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line244">line 244</a>
     </li></ul></dd>
     
 
@@ -537,7 +583,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line91">line 91</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line117">line 117</a>
     </li></ul></dd>
     
 
@@ -645,7 +691,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line187">line 187</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line213">line 213</a>
     </li></ul></dd>
     
 
@@ -788,7 +834,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line203">line 203</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line229">line 229</a>
     </li></ul></dd>
     
 
@@ -882,7 +928,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line157">line 157</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line183">line 183</a>
     </li></ul></dd>
     
 
@@ -1237,7 +1283,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line258">line 258</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line284">line 284</a>
     </li></ul></dd>
     
 
@@ -1321,7 +1367,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line108">line 108</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line134">line 134</a>
     </li></ul></dd>
     
 
@@ -1533,7 +1579,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line237">line 237</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line263">line 263</a>
     </li></ul></dd>
     
 
@@ -1745,7 +1791,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line135">line 135</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line161">line 161</a>
     </li></ul></dd>
     
 
@@ -1980,7 +2026,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line171">line 171</a>
+        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line197">line 197</a>
     </li></ul></dd>
     
 
@@ -2075,7 +2121,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 10:39:40 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 11:42:57 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

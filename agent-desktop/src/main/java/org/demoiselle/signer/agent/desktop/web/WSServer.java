@@ -65,9 +65,9 @@ public class WSServer extends AbstractReceiveListener {
 			result = new Execute().executeCommand(message.getData());
 			WebSockets.sendText(result, channel, null);
 		} catch (InterpreterException error) {
-			WebSockets.sendText("{ \"erro\": \"Erro ao tentar interpretar o JSON\"}", channel, null);
+			WebSockets.sendText("{ \"error\": \"Erro ao tentar interpretar o JSON\"}", channel, null);
 		} catch (Throwable error) {
-			WebSockets.sendText("{ \"erro\": \"" + error.getMessage() + "\"}", channel, null);
+			WebSockets.sendText("{ \"error\": \"" + error.getMessage() + "\"}", channel, null);
 		}
 	}
 	

@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -60,7 +60,7 @@
     &lt;!-- Code -->
 &lt;/html></code></pre><p><strong>Start Connection</strong></p>
 <pre class="prettyprint source lang-javascript"><code>var tryAgainTimeout;
-function callback(connectionStatus) {
+function callbackOpenClose(connectionStatus) {
     if (connectionStatus === 1) {
         console.log(&quot;Connected on Server&quot;);
         clearInterval(tryAgainTimeout);
@@ -69,12 +69,16 @@ function callback(connectionStatus) {
 
         // Try again in 5000ms
         tryAgainTimeout = setTimeout(function () {
-            window.SignerDesktopClient.connect(callback);
+            window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
         }, 5000);
-    }This client of Signer Desktop Client doesnt depends of any other library.
+    }
 }
 
-window.SignerDesktopClient.connect(callback);</code></pre><p><strong>Lista All Certificates in Token</strong></p>
+function callbackError(event) {
+    console.log(event);
+}
+
+window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);</code></pre><p><strong>Lista All Certificates in Token</strong></p>
 <pre class="prettyprint source lang-javascript"><code>function listAllCertificates() {
     window.SignerDesktopClient.listCerts(password).then(function (response) {        
         console.log(response);        
@@ -94,7 +98,7 @@ window.SignerDesktopClient.connect(callback);</code></pre><p><strong>Lista All C
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 10:39:40 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 11:42:57 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

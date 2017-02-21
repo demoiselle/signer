@@ -32,7 +32,7 @@ public class Execute {
 					return commandLoaded.doCommand(messageData);
 		
 		
-		return "{\"erro\" : \"comando nao localizado\"}";
+		return "{\"error\" : \"comando nao localizado\"}";
 	}
 
 }

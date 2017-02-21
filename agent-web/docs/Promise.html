@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -155,6 +155,376 @@
 
     
 
+    <h4 class="name" id=".this.error"><span class="type-signature">(static) </span>this.error<span class="signature">(cbError)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Then method to use um finish.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>cbError</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Callback to use on error.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".this.hasCallbackError"><span class="type-signature">(static) </span>this.hasCallbackError<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line50">line 50</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Return if exists callback error for this promisse.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>True if has callback error</p>
+</div>
+
+
+
+    
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".this.reject"><span class="type-signature">(static) </span>this.reject<span class="signature">(value)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line60">line 60</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Reject method to us on reject (error) event.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>value</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">object</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Value to send a callback setted on Then.</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id=".this.resolve"><span class="type-signature">(static) </span>this.resolve<span class="signature">(value)</span><span class="type-signature"></span></h4>
 
     
@@ -167,7 +537,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line22">line 22</a>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line40">line 40</a>
     </li></ul></dd>
     
 
@@ -288,7 +658,7 @@
 
     
 
-    <h4 class="name" id=".this.then"><span class="type-signature">(static) </span>this.then<span class="signature">(cb)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".this.success"><span class="type-signature">(static) </span>this.success<span class="signature">(cbSuccess)</span><span class="type-signature"></span></h4>
 
     
 
@@ -300,7 +670,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line13">line 13</a>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line16">line 16</a>
     </li></ul></dd>
     
 
@@ -378,7 +748,7 @@
 
         <tr>
             
-                <td class="name"><code>cb</code></td>
+                <td class="name"><code>cbSuccess</code></td>
             
 
             <td class="type">
@@ -394,7 +764,7 @@
 
             
 
-            <td class="description last"><p>Callback to use on finish.</p></td>
+            <td class="description last"><p>Callback to use on success.</p></td>
         </tr>
 
     
@@ -414,6 +784,16 @@
 
 
 
+<h5>Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>this</p>
+</div>
+
+
+
+    
 
 
         
@@ -434,7 +814,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 10:39:40 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 11:42:57 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

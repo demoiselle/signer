@@ -34,7 +34,7 @@ public abstract class AbstractCommand<Request, Response> implements Command {
 			String resultJson = gson.toJson(response);
 			return resultJson;
 		} catch (Throwable error) {
-			return "{\"erro\": \"" + error.getMessage() + "\"}";
+			return "{\"error\": \"" + error.getMessage() + "\"}";
 		}
 	}
 }

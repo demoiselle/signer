@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -41,27 +41,65 @@
  * @classdesc Implementation of Promise, because as we do not know a library that will be used for development can not depend on any. 
  * @class
  */
-var Promise = (function() {
-    var callback = null;
+var Promise = (function () {
+	var callbackSuccess = null;
+	var callbackError = null;
 
 	/**
 	 * Then method to use um finish.
-	 * @param {function} cb - Callback to use on finish.
+	 * 
+	 * @param {function} cbSuccess - Callback to use on success.
+	 * @return this
 	 * @memberof Promise
 	 */
-    this.then = function(cb) {
-        callback = cb;
-    };
+	this.success = function (cbSucess) {
+		console.log("Then with success");
+		callbackSuccess = cbSucess;
+		return this;
+	};
+
+	/**
+	 * Then method to use um finish.
+	 * 
+	 * @param {function} cbError - Callback to use on error.
+	 * @return this
+	 * @memberof Promise
+	 */
+	this.error = function (cbError) {
+		console.log("Then with error");
+		callbackError = cbError;
+		return this;
+	};
 
 	/**
 	 * Resolve method to us on resolve event.
 	 * @param {object} value - Value to send a callback setted on Then.
 	 * @memberof Promise
 	 */
-    this.resolve = function(value) {
-        callback(value);
-    };
-    
+	this.resolve = function (value) {
+		callbackSuccess(value);
+	};
+
+	/**
+	 * Return if exists callback error for this promisse.
+	 * 
+	 * @return True if has callback error
+	 * @memberof Promise
+	 */
+	this.hasCallbackError = function () {
+		return (callbackError === null ? false : true);
+	}
+
+	/**
+	 * Reject method to us on reject (error) event.
+	 * 
+	 * @param {object} value - Value to send a callback setted on Then.
+	 * @memberof Promise
+	 */
+	this.reject = function (value) {
+		callbackError(value);
+	};
+
 });
 </code></pre>
         </article>
@@ -75,7 +113,7 @@ var Promise = (function() {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 10:39:40 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 11:42:57 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

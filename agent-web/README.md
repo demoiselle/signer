@@ -24,7 +24,7 @@ This client of Signer Desktop Client does not depends of any other library.
 
 ```javascript
 var tryAgainTimeout;
-function callback(connectionStatus) {
+function callbackOpenClose(connectionStatus) {
     if (connectionStatus === 1) {
         console.log("Connected on Server");
         clearInterval(tryAgainTimeout);
@@ -33,12 +33,16 @@ function callback(connectionStatus) {
 
         // Try again in 5000ms
         tryAgainTimeout = setTimeout(function () {
-            window.SignerDesktopClient.connect(callback);
+            window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
         }, 5000);
-    }This client of Signer Desktop Client doesnt depends of any other library.
+    }
 }
 
-window.SignerDesktopClient.connect(callback);
+function callbackError(event) {
+    console.log(event);
+}
+
+window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
 ```
 
 **Lista All Certificates in Token**

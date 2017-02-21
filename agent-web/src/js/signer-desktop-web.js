@@ -18,7 +18,7 @@ var SignerDesktopClient = (function() {
      * @param {string} message - Uri to use.
      * @memberof SignerDesktopClient
      */
-    var log = function(message) {
+    var l = function(message) {
         if (isDebug) {
             console.log(message);
         }
@@ -34,7 +34,7 @@ var SignerDesktopClient = (function() {
          * @memberof SignerDesktopClient
          */
         setUriServer: function(uri) {
-            log("Setting URI to " + uri);
+            l("Setting URI to " + uri);
             uriServer = uri;
         },
 
@@ -46,7 +46,7 @@ var SignerDesktopClient = (function() {
          * @memberof SignerDesktopClient
          */
         setDebug: function(isToDebug) {
-            log("Setting debug on to " + (isToDebug ? "ON" : "OFF"));
+            l("Setting debug on to " + (isToDebug ? "ON" : "OFF"));
             isDebug = isToDebug;
         },
 
@@ -54,29 +54,55 @@ var SignerDesktopClient = (function() {
          * Method used to start connection with local WebSocket server.
          * 
          * @instance
-         * @param {function} callback - Callback invoked on OPEN and CLOSE connection.
+         * @param {function} callbackOpen - Callback  invoked on OPEN connection.
+         * @param {function} callbackClose - Callback invoked on CLOSE connection.
+         * @param {function} callbackError - Callback invoked on ERROR connection.
          * @memberof SignerDesktopClient
          */
-        connect: function(callback) {
+        connect: function(callbackOpen, callbackClose, callbackError) {
             if (ws == null || ws.readyState != 1) {
-                log("Connecting on " + uriServer);
+                l("Connecting on " + uriServer);
                 ws = new WebSocket(uriServer);
 
                 ws.onopen = function(msg) {
-                    log("On Open");
-                    if (callback)
-                        callback(msg.target.readyState);
-                }
+                    l("On Open");
+                    if (callbackOpen)
+                        callbackOpen(msg.target.readyState);
+                };
 
                 ws.onclose = function(msg) {
-                    log("On Close");
-                    if (callback)
-                        callback(msg.target.readyState);
-                }
+                    l("On Close");
+                    if (callbackClose)
+                        callbackClose(msg.target.readyState);
+                };
 
                 ws.onmessage = function(response) {
-                    log("On Message");
-                    defer.resolve(JSON.parse(response.data));
+                    l("On Message");
+
+                    var objResponse = JSON.parse(response.data);
+                    // If has data and data.error is a business error
+                    if (objResponse !== undefined && objResponse.error !== undefined) {
+                        if (defer.hasCallbackError()) {
+                            l("On Error Function Callback");
+                            defer.reject(objResponse);
+                        } else if (callbackError) {
+                            l("On Error Generic Callback");
+                            callbackError(objResponse);
+                        }
+                    } else {
+                        l("On Error Normal Callback");
+                        defer.resolve(objResponse);
+                    }
+                };
+
+                ws.onerror = function(event) {
+                    if (defer.hasCallbackError()) {
+                        l("On Error Function Callback");
+                        defer.reject(event);
+                    } else if (callbackError) {
+                        l("On Error Generic Callback");
+                        callbackError(event);
+                    }
                 };
             }
         },
@@ -202,7 +228,7 @@ var SignerDesktopClient = (function() {
 		 */
         listPolicies: function() {
             var listpoliciesCommand = {
-                command: 'listpolicies'
+                command: 'listpoliciesaaa'
             }
             var promise = services.execute(listpoliciesCommand);
             return promise;
@@ -271,7 +297,12 @@ var SignerDesktopClient = (function() {
 		 * @memberof SignerDesktopClient
 		 */
         execute: function(request) {
-            log("Sending command [" + request.command + "] to URI [" + uri + "]");
+
+            /**
+             * @todo verify if ws was intancialize
+             */
+
+            l("Sending command [" + request.command + "] to URI [" + uriServer + "]");
             defer = new Promise();
             ws.send(JSON.stringify(request));
             return defer;
