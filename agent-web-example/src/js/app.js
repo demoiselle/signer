@@ -1,100 +1,115 @@
-angular.module('agent-desktop', [])
-    .controller('controller', ['$scope', '$http', '$timeout', function ($scope, $http, $timeout) {
+angular.module('agent', [])
+    .controller('MainController', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
 
-        $scope.listaCertificados = null;
-        $scope.listaPoliticas = [];
-        $scope.politica = null;
-        $scope.password = null;
-        $scope.signed = null;
-        $scope.erros = null;
+        $scope.listCertificates = null;
+        $scope.listPolicies = [];
+        $scope.policy = null;
+
+        // $scope.password = null;
+        // $scope.signed = null;
+        $scope.errors;
         $scope.fileName = null;
-        $scope.signedFileName = null;
-        connectionStatus = -1;
+
+        $scope.serverIsOn = false;
+
+        $scope.selectedCertificate = null;
+        // $scope.signedFileName = null;
 
         var tryAgainTimeout;
         function callbackOpenClose(connectionStatus) {
             if (connectionStatus === 1) {
                 console.log("Connected on Server");
+                $scope.serverIsOn = true;
+
+                // Load policies on open connection
+                $scope.listPolicies();
+                // $scope.policy = "AD_BR_CADES_2_2";
+
                 clearInterval(tryAgainTimeout);
             } else {
                 console.log("Warn user to download/execute Agent-Desktop AND try again in 5000ms");
+                $scope.serverIsOn = false;
 
                 // Try again in 5000ms
-                tryAgainTimeout = setTimeout(function () {
+                tryAgainTimeout = setTimeout(function() {
                     window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
                 }, 5000);
             }
         }
 
         function callbackError(event) {
-            console.log(event);
+            $timeout(function() {
+                $scope.errors = event;
+            }, 100);
         }
 
         // window.SignerDesktopClient.setUriServer("ws://dasdasda");
         window.SignerDesktopClient.setDebug(true);
         window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
 
-        $scope.listarCertificados = function () {
-            window.SignerDesktopClient.listCerts($scope.password).success(function (response) {
-                $timeout(function () {
-                    $scope.listaCertificados = response;
+        $scope.listCerts = function() {
+            window.SignerDesktopClient.listCerts($scope.password).success(function(response) {
+                $timeout(function() {
+                    $scope.listCertificates = response;
                 }, 100);
             });
-        }
-
-        var tratarErros = function (error) {
-            console.log(error);
         };
 
-        $scope.assinar = function (alias, provider, content) {
-            window.SignerDesktopClient.signer(alias, $scope.password, provider, content, $scope.politica).success(function (response) {
-                $timeout(function () {
-                    $scope.signed = response.signed;
+        $scope.setCertificate = function(cert) {
+            console.log(cert.alias);
+            $scope.selectedCertificate = cert;
+        };
+
+        $scope.signText = function(content) {
+            window.SignerDesktopClient.signer($scope.selectedCertificate.alias, $scope.selectedCertificate.provider, content, $scope.policy)
+                .success(function(response) {
+                    $timeout(function() {
+                        $scope.signed = response.signed;
+                    }, 100);
+                });
+        }
+
+        // $scope.status = function () {
+        //     window.SignerDesktopClient.status().success(function (response) {
+        //         console.log(response);
+        //     });
+        // }
+
+        $scope.listPolicies = function() {
+            window.SignerDesktopClient.listPolicies().success(function(response) {
+                $timeout(function() {
+                    $scope.listPolicies = response.policies;
                 }, 100);
             });
         }
 
-        $scope.status = function () {
-            window.SignerDesktopClient.status().success(function (response) {
-                console.log(response);
-            });
-        }
+        // $scope.shutdown = function () {
+        //     window.SignerDesktopClient.shutdown();
+        // }
 
-        $scope.listarPoliticas = function () {
-            window.SignerDesktopClient.listPolicies().success(function (response) {
-                $timeout(function () {
-                    $scope.listaPoliticas = response.policies;
-                }, 100);
-            }).error(tratarErros);
-        }
+        // $scope.logout = function () {
+        //     window.SignerDesktopClient.logoutPKCS11();
+        // }
 
-        $scope.shutdown = function () {
-            window.SignerDesktopClient.shutdown();
-        }
-
-        $scope.logout = function () {
-            window.SignerDesktopClient.logoutPKCS11();
-        }
-
-        $scope.getfiles = function () {
-            window.SignerDesktopClient.getFiles().success(function (response) {
-                $timeout(function () {
+        $scope.getfiles = function() {
+            window.SignerDesktopClient.getFiles().success(function(response) {
+                $timeout(function() {
                     $scope.fileName = response.fileName;
                 }, 100);
             });
         }
 
-        $scope.assinarArquivo = function (alias, provider, content) {
-            if (content == null || alias == null) {
-                alert("Informe o arquivo e a politica a ser utilizada");
-                return;
-            }
+        $scope.assinarArquivo = function(content) {
+            // if (content == null || alias == null) {
+            //     alert("Informe o arquivo e a policy a ser utilizada");
+            //     return;
+            // }
 
-            window.SignerDesktopClient.signerFile(alias, provider, $scope.fileName, $scope.politica).success(function (response) {
-                $timeout(function () {
+            window.SignerDesktopClient.signerFile($scope.selectedCertificate.alias, $scope.selectedCertificate.provider, $scope.fileName, $scope.policy).success(function(response) {
+                $timeout(function() {
                     $scope.signedFileName = response.signed;
                 }, 100);
             });
-        }
+        };
 
     }]);

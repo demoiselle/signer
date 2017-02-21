@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html >
 
 <head>
     <meta charset="utf-8">
@@ -19,8 +19,8 @@
         crossorigin="anonymous">
 
     <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
-        crossorigin="anonymous">
+    <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+        crossorigin="anonymous">-->
 
 
 </head>
@@ -29,90 +29,175 @@
 
 
 
-<body>
+<body ng-app="agent" ng-controller="MainController">
 
+    <div class="container">
+        <div class="header clearfix">
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <div id="main" ng-app="agent-desktop" ng-controller="controller">
-        <div id="main_list">
-            <ul id="action">
-                <li ng-click="listarCertificados()">Listar Certificados instalados</li>
-                <li ng-click="status()">Verificar status</li>
-                <li ng-click="assinar()">Assinar</li>
-                <li ng-click="shutdown()">Desligar Agent Desktop</li>
-                <li ng-click="logout()">Deslogar o PIN</li>
-                <li ng-click="getfiles()">Selecionar Arquivo</li>
-            </ul>
+            <div class="col-md-4 text-center vcenter">
+                <span class="glyphicon glyphicon-sunglasses" aria-hidden="true" style="font-size: 120px; color: #d24600;"></span>
+            </div>
+            <div class="col-md-8 text-center vcenter">
+                <h2><b>Signer</b> Project</h2>
+                <p class="lead">WebSocket Server is: {{serverIsOn}}</p>
+            </div>
         </div>
-        <h2 style="float:left">Interface do Aplicativo Demoiselle Signer Agent Desktop</h2>
-        <div id="into">
-            <table style="width:850px">
-                <tr>
-                    <th>Alias</th>
-                    <th>Emitido para</th>
-                    <th>Não antes</th>
-                    <th>Não depois</th>
-                    <th>Provedor</th>
-                    <th>Acao</th>
-                </tr>
-                <tr ng-repeat="cert in listaCertificados.certificates">
-                    <td>{{ cert.alias }}</td>
-                    <td>{{ cert.subject }}</td>
-                    <td>{{ cert.notBefore }}</td>
-                    <td>{{ cert.notAfter }}</td>
-                    <td>{{ cert.provider }}</td>
-                    <td>
-                        <button ng-click="assinar(cert.alias, cert.provider, content)">Assinar Texto</button>
-                        <button ng-click="assinarArquivo(cert.alias, cert.provider, content)">Assinar Documento</button>
-                    </td>
-                </tr>
-            </table>
-            <br><br>
 
-            <div>
-                Texto a ser assinado: <input type="text" ng-model="content">
+        <!-- ERROS -->
+        <div class="row" ng-show="errors">
+            <div class="col-md-12">
+                <div>
+                    {{errors}}
+                </div>
+                <!--<div style="margin-top:100px"><a href="agent-desktop.jnlp" download>Baixar/Executar Agent-Desktop </a></div>-->
             </div>
-
-            <div>
-                <select id="polices" ng-model="politica"><option ng-repeat="p in listaPoliticas" value="{{p}}">{{p}} </select>
-                <input type="button" value="Carregar lista de politicas" ng-click="listarPoliticas()">
-            </div>
-
-            <div style="margin-top:10px;">
-                Resultado da Assinatura: <textarea id="result" name="signed">{{signed}}</textarea>
-            </div>
-            <div>
-                Erros: <input id="errors" type="text" ng-model="erros">
-            </div>
-            <div>
-                Arquivo: <input id="errors" type="text" ng-model="fileName">
-            </div>
-            <div>
-                Arquivo Assinado: <input id="errors" type="text" ng-model="signedFileName">
-            </div>
-            <div id="serverstate" style="margin-top:100px"><a href="agent-desktop.jnlp" download> Baixar/Executar Agent-Desktop </a></div>
         </div>
+
+        <!-- STEP 1 -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1><b>Step 1</b> - Select Policy <small>Subtext for header</small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <select ng-model="policy">
+                    <option ng-repeat="p in listPolicies" value="{{p}}">{{p}} </select>
+                <input type="button" value="Reload list of policies" ng-click="listPolicies()">
+            </div>
+        </div>
+
+        <!-- STEP 2 -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1><b>Step 2</b> - List Certificates <small>Subtext for header</small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <!--<h4>Subheading</h4>
+                <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>-->
+
+                <button class="btn btn-lg btn-success" ng-click="listCerts()" role="button">List All Certificates</button>
+            </div>
+        </div>
+        <div class="row" ng-show="listCertificates.certificates">
+            <div class="col-md-12">
+                <table style="width:850px">
+                    <tr>
+                        <th>Alias</th>
+                        <th>Emitido para</th>
+                        <th>Não antes</th>
+                        <th>Não depois</th>
+                        <th>Provedor</th>
+                        <th>Acao</th>
+                    </tr>
+                    <tr ng-repeat="cert in listCertificates.certificates">
+                        <td>{{ cert.alias }}</td>
+                        <td>{{ cert.subject }}</td>
+                        <td>{{ cert.notBefore }}</td>
+                        <td>{{ cert.notAfter }}</td>
+                        <td>{{ cert.provider }}</td>
+                        <td><button ng-click="setCertificate(cert)">Select</button></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1><b>Step 3</b> - Define Text OR File <small>Subtext for header</small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="col-md-6">
+                    <h4>Text</h4>
+                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+                    <input type="text" ng-model="content">
+
+                    <button ng-click="signText(content)">Assinar Texto</button>
+
+                    <div style="margin-top:10px;">
+                        Resultado da Assinatura: <textarea id="result" name="signed">{{signed}}</textarea>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <h4>File</h4>
+                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+                    <button class="btn btn-lg btn-success" ng-click="getfiles()" role="button">Get File</button>
+
+                    <button ng-click="assinarArquivo(content)">Assinar Documento</button>
+
+                    <div>
+                        Original File: {{fileName}}
+                    </div>
+                    <div>
+                        Signed File: {{signedFileName}}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 3 -->
+        <div class="row" ng-show="false">
+
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1><b>Step 4</b> - Validate Signature <small>Subtext for header</small></h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-6">
+                        <h4>Text</h4>
+                        <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+                        <input type="text" ng-model="">
+
+                        <input type="text" ng-model="">
+
+                        <button ng-click="signText(content)">Assinar Texto</button>
+
+                        <div style="margin-top:10px;">
+                            Resultado da Assinatura: <textarea id="result" name="signed">{{signed}}</textarea>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>File</h4>
+                        <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+
+                        <button class="btn btn-lg btn-success" ng-click="getfiles()" role="button">Get File</button>
+
+                        <button ng-click="assinarArquivo(content)">Assinar Documento</button>
+
+                        <div>
+                            Original File: {{fileName}}
+                        </div>
+                        <div>
+                            Signed File: {{signedFileName}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="footer">
+            <p>SERPRO</p>
+        </footer>
+
     </div>
+
 </body>
 
 </html>

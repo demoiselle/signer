@@ -166,6 +166,32 @@ var SignerDesktopClient = (function () {
         },
 
         /**
+		 * Sign file selected by method getFiles.
+         * 
+         * @instance
+         * @param {string} alias - Alias of certificate to use in sign
+		 * @param {string} provider - The provider (Token, SmartCard...)
+		 * @param {string} content - The text to sign
+		 * @param {string} signaturePolicy - he policy to use in signature 
+		 * @return Promisse - The promisse when is finished.  
+		 * @memberof SignerDesktopClient
+		 */
+        signerFile: function (alias, provider, content, signaturePolicy) {
+            var signerCommand = {
+                command: 'filesigner',
+                type: 'raw',
+                format: 'text',
+                compacted: false,
+                alias: alias,
+                signaturePolicy: signaturePolicy,
+                provider: provider,
+                content: content
+            }
+            var promise = services.execute(signerCommand);
+            return promise;
+        },
+
+        /**
 		 * Logout of access token.
          * 
          * @instance
@@ -237,32 +263,6 @@ var SignerDesktopClient = (function () {
                 command: 'getfiles'
             }
             var promise = services.execute(getfileCommand);
-            return promise;
-        },
-
-        /**
-		 * Sign file selected by method getFiles.
-         * 
-         * @instance
-         * @param {string} alias - Alias of certificate to use in sign
-		 * @param {string} provider - The provider (Token, SmartCard...)
-		 * @param {string} content - The text to sign
-		 * @param {string} signaturePolicy - he policy to use in signature 
-		 * @return Promisse - The promisse when is finished.  
-		 * @memberof SignerDesktopClient
-		 */
-        signerFile: function (alias, provider, content, signaturePolicy) {
-            var signerCommand = {
-                command: 'filesigner',
-                type: 'raw',
-                format: 'text',
-                compacted: false,
-                alias: alias,
-                signaturePolicy: signaturePolicy,
-                provider: provider,
-                content: content
-            }
-            var promise = services.execute(signerCommand);
             return promise;
         },
 
