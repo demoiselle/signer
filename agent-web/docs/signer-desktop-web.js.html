@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -177,26 +177,24 @@ var SignerDesktopClient = (function () {
         },
 
         /**
-		 * Signer content using some parameters and password.
+		 * Sign file selected by method getFiles.
          * 
          * @instance
-		 * @param {string} alias - Alias of certificate to use in sign
-		 * @param {string} password - The password of certificate
+         * @param {string} alias - Alias of certificate to use in sign
 		 * @param {string} provider - The provider (Token, SmartCard...)
 		 * @param {string} content - The text to sign
 		 * @param {string} signaturePolicy - he policy to use in signature 
-		 * @return Promisse - The promisse when is finished. 
+		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        signerWithPassword: function (alias, password, provider, content, signaturePolicy) {
+        signerFile: function (alias, provider, content, signaturePolicy) {
             var signerCommand = {
-                command: 'signer',
+                command: 'filesigner',
                 type: 'raw',
                 format: 'text',
                 compacted: false,
                 alias: alias,
                 signaturePolicy: signaturePolicy,
-                password: password,
                 provider: provider,
                 content: content
             }
@@ -236,14 +234,12 @@ var SignerDesktopClient = (function () {
 		 * List all certificates in Token.
          * 
          * @instance
-		 * @param {string} password - Password of Token
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        listCerts: function (password) {
+        listCerts: function () {
             var listcertsCommand = {
-                command: 'listcerts',
-                password: password
+                command: 'listcerts'
             }
             var promise = services.execute(listcertsCommand);
             return promise;
@@ -276,32 +272,6 @@ var SignerDesktopClient = (function () {
                 command: 'getfiles'
             }
             var promise = services.execute(getfileCommand);
-            return promise;
-        },
-
-        /**
-		 * Sign file selected by method getFiles.
-         * 
-         * @instance
-         * @param {string} alias - Alias of certificate to use in sign
-		 * @param {string} provider - The provider (Token, SmartCard...)
-		 * @param {string} content - The text to sign
-		 * @param {string} signaturePolicy - he policy to use in signature 
-		 * @return Promisse - The promisse when is finished.  
-		 * @memberof SignerDesktopClient
-		 */
-        signerFile: function (alias, provider, content, signaturePolicy) {
-            var signerCommand = {
-                command: 'filesigner',
-                type: 'raw',
-                format: 'text',
-                compacted: false,
-                alias: alias,
-                signaturePolicy: signaturePolicy,
-                provider: provider,
-                content: content
-            }
-            var promise = services.execute(signerCommand);
             return promise;
         },
 
@@ -354,7 +324,7 @@ var SignerDesktopClient = (function () {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 13:40:50 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 16:24:10 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

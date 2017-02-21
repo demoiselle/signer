@@ -201,26 +201,24 @@ var SignerDesktopClient = (function () {
         },
 
         /**
-		 * Signer content using some parameters and password.
+		 * Sign file selected by method getFiles.
          * 
          * @instance
-		 * @param {string} alias - Alias of certificate to use in sign
-		 * @param {string} password - The password of certificate
+         * @param {string} alias - Alias of certificate to use in sign
 		 * @param {string} provider - The provider (Token, SmartCard...)
 		 * @param {string} content - The text to sign
 		 * @param {string} signaturePolicy - he policy to use in signature 
-		 * @return Promisse - The promisse when is finished. 
+		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        signerWithPassword: function (alias, password, provider, content, signaturePolicy) {
+        signerFile: function (alias, provider, content, signaturePolicy) {
             var signerCommand = {
-                command: 'signer',
+                command: 'filesigner',
                 type: 'raw',
                 format: 'text',
                 compacted: false,
                 alias: alias,
                 signaturePolicy: signaturePolicy,
-                password: password,
                 provider: provider,
                 content: content
             }
@@ -260,14 +258,12 @@ var SignerDesktopClient = (function () {
 		 * List all certificates in Token.
          * 
          * @instance
-		 * @param {string} password - Password of Token
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        listCerts: function (password) {
+        listCerts: function () {
             var listcertsCommand = {
-                command: 'listcerts',
-                password: password
+                command: 'listcerts'
             }
             var promise = services.execute(listcertsCommand);
             return promise;
@@ -300,32 +296,6 @@ var SignerDesktopClient = (function () {
                 command: 'getfiles'
             }
             var promise = services.execute(getfileCommand);
-            return promise;
-        },
-
-        /**
-		 * Sign file selected by method getFiles.
-         * 
-         * @instance
-         * @param {string} alias - Alias of certificate to use in sign
-		 * @param {string} provider - The provider (Token, SmartCard...)
-		 * @param {string} content - The text to sign
-		 * @param {string} signaturePolicy - he policy to use in signature 
-		 * @return Promisse - The promisse when is finished.  
-		 * @memberof SignerDesktopClient
-		 */
-        signerFile: function (alias, provider, content, signaturePolicy) {
-            var signerCommand = {
-                command: 'filesigner',
-                type: 'raw',
-                format: 'text',
-                compacted: false,
-                alias: alias,
-                signaturePolicy: signaturePolicy,
-                provider: provider,
-                content: content
-            }
-            var promise = services.execute(signerCommand);
             return promise;
         },
 
