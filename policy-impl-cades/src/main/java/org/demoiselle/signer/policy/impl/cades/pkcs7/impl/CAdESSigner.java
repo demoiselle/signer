@@ -84,6 +84,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
+import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
@@ -165,8 +166,7 @@ public class CAdESSigner implements PKCS7Signer {
 		while (it.hasNext()) {
 			try {
 				SignerInformation signer = (SignerInformation) it.next();
-				Collection<?> certCollection = certStore.getMatches(signer
-						.getSID());
+				Collection<?> certCollection = certStore.getMatches(signer.getSID());
 
 				Iterator<?> certIt = certCollection.iterator();
 				X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt
@@ -402,6 +402,57 @@ public class CAdESSigner implements PKCS7Signer {
 						.getCertificateChainArray(this.certificate);
 			}
 
+			// Recupera a lista de algoritmos da politica e o tamanho minimo da chave
+			List<AlgAndLength>  listOfAlgAndLength = new ArrayList<AlgAndLength>();
+
+			for (AlgAndLength algLength : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
+					.getAlgorithmConstraintSet()
+					.getSignerAlgorithmConstraints().getAlgAndLengths()){
+				listOfAlgAndLength.add(algLength);
+		}
+			AlgAndLength algAndLength = null;
+			
+			// caso o algoritmo tenha sido informado como parâmetro  irá verificar se o mesmo é permitido pela politica
+			if (this.pkcs1.getAlgorithm() != null){
+				String varSetedAlgorithmOID = AlgorithmNames.getOIDByAlgorithmName(this.pkcs1.getAlgorithm());
+				for (AlgAndLength algLength : listOfAlgAndLength){
+					if (algLength.getAlgID().getValue().equalsIgnoreCase(varSetedAlgorithmOID)){
+						algAndLength = algLength;
+						SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum.valueOf(this.pkcs1.getAlgorithm());
+						String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
+						ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
+						varObjectIdentifier.setValue(varOIDAlgorithmHash);
+						AlgorithmIdentifier varAlgorithmIdentifier = signaturePolicy.getSignPolicyHashAlg(); 
+						varAlgorithmIdentifier.setAlgorithm(varObjectIdentifier);
+						signaturePolicy.setSignPolicyHashAlg(varAlgorithmIdentifier);
+					}
+				}
+			}else{
+				algAndLength = listOfAlgAndLength.get(0);
+			}
+			if (algAndLength == null){
+				throw new SignerException("Algoritmo informado no parâmetro não corresponde a nenhum contido na Politica!");
+			}
+			logger.info("AlgID........... {}", algAndLength.getAlgID()
+					.getValue());
+			logger.info("Alg Name........ {}", AlgorithmNames
+					.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
+			logger.info("Defautl Alg OID of Policy {}",
+					AlgorithmNames.getOIDByAlgorithmName(getAlgorithm()));
+			logger.info("MinKeyLength.... {}", algAndLength.getMinKeyLength());
+
+			
+			// Recupera o tamanho minimo da chave para validacao
+			logger.info("Validando o tamanho da chave");
+			if (((RSAKey) certificate.getPublicKey()).getModulus().bitLength() < algAndLength
+					.getMinKeyLength()) {
+				throw new SignerException(
+						"O tamanho mínimo da chave  deve ser de ".concat(
+								algAndLength.getMinKeyLength().toString())
+								.concat(" bits"));
+			}
+			
+			
 			AttributeFactory attributeFactory = AttributeFactory.getInstance();
 
 			// Consulta e adiciona os atributos assinados
@@ -463,51 +514,6 @@ public class CAdESSigner implements PKCS7Signer {
 			CMSAttributeTableGenerator unsignedAttributeGenerator = new SimpleAttributeTableGenerator(
 					unsignedAttributesTable);
 
-			// Recupera o algoritmo e o tamanho minimo da chave
-			// TODO: permitir setar o Algoritmo e validar com a politica (se ela aceita ou não)
-			//
-			List<AlgAndLength>  listOfAlgAndLength = new ArrayList<AlgAndLength>();
-
-			for (AlgAndLength algLength : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-					.getAlgorithmConstraintSet()
-					.getSignerAlgorithmConstraints().getAlgAndLengths()){
-				listOfAlgAndLength.add(algLength);
-		}
-			AlgAndLength algAndLength = null;
-			if (this.pkcs1.getAlgorithm() != null){
-				String varSetedAlgorithmOID = AlgorithmNames.getOIDByAlgorithmName(this.pkcs1.getAlgorithm());
-				for (AlgAndLength algLength : listOfAlgAndLength){
-					if (algLength.getAlgID().getValue().equalsIgnoreCase(varSetedAlgorithmOID)){
-						algAndLength = algLength;
-						signaturePolicy.getSignPolicyHashAlg().setAlgorithm(algLength.getAlgID());
-					}
-				}
-			}else{
-				algAndLength = listOfAlgAndLength.get(0);
-			}
-			if (algAndLength == null){
-				throw new SignerException("Algoritmo informado no parâmetro não corresponde ao contido na Politica!");
-			}
-				
-				
-			logger.info("AlgID........... {}", algAndLength.getAlgID()
-					.getValue());
-			logger.info("Alg Name........ {}", AlgorithmNames
-					.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
-			logger.info("Alg OID of Policy {}",
-					AlgorithmNames.getOIDByAlgorithmName(getAlgorithm()));
-			logger.info("MinKeyLength.... {}", algAndLength.getMinKeyLength());
-
-			
-			// Recupera o tamanho minimo da chave para validacao
-			logger.info("Validando o tamanho da chave");
-			if (((RSAKey) certificate.getPublicKey()).getModulus().bitLength() < algAndLength
-					.getMinKeyLength()) {
-				throw new SignerException(
-						"O tamanho mínimo da chave  deve ser de ".concat(
-								algAndLength.getMinKeyLength().toString())
-								.concat(" bits"));
-			}
 
 			// Recupera o(s) certificado(s) de confianca para validacao
 			Collection<X509Certificate> trustedCAs = new HashSet<X509Certificate>();
@@ -644,27 +650,28 @@ public class CAdESSigner implements PKCS7Signer {
 
 	private enum AlgorithmNames {
 
-		md2("1.2.840.113549.2.1", "MD2"), md2WithRSAEncryption(
-				"1.2.840.113549.1.1.2", "MD2withRSA"), md5(
-				"1.2.840.113549.2.5", "MD5"), md5WithRSAEncryption(
-				"1.2.840.113549.1.1.4", "MD5withRSA"), sha1("1.3.14.3.2.26",
-				"SHA1"), sha1WithDSAEncryption("1.2.840.10040.4.3",
-				"SHA1withDSA"), sha1WithECDSAEncryption("1.2.840.10045.4.1",
-				"SHA1withECDSA"), sha1WithRSAEncryption("1.2.840.113549.1.1.5",
-				"SHA1withRSA"), sha224("2.16.840.1.101.3.4.2.4", "SHA224"), sha224WithRSAEncryption(
-				"1.2.840.113549.1.1.14", "SHA224withRSA"), sha256(
-				"2.16.840.1.101.3.4.2.1", "SHA256"), sha256WithRSAEncryption(
-				"1.2.840.113549.1.1.11", "SHA256withRSA"), sha384(
-				"2.16.840.1.101.3.4.2.2", "SHA384"), sha384WithRSAEncryption(
-				"1.2.840.113549.1.1.12", "SHA384withRSA"), sha512(
-				"2.16.840.1.101.3.4.2.3", "SHA512"), sha512WithRSAEncryption(
-				"1.2.840.113549.1.1.13", "SHA512withRSA"), sha3_224(
-				"2.16.840.1.101.3.4.2.7", "SHA3-224"), sha3_256(
-				"2.16.840.1.101.3.4.2.8", "SHA3-256"), sha3_384(
-				"2.16.840.1.101.3.4.2.9", "SHA3-384"), sha3_512(
-				"2.16.840.1.101.3.4.2.10", "SHA3-512"), shake128(
-				"1.0.10118.3.0.62", "SHAKE128"), shake256("1.0.10118.3.0.63",
-				"SHAKE256");
+		md2("1.2.840.113549.2.1", "MD2"), 
+		md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), 
+		md5("1.2.840.113549.2.5", "MD5"), 
+		md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"), 
+		sha1("1.3.14.3.2.26","SHA1"), 
+		sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"), 
+		sha1WithECDSAEncryption("1.2.840.10045.4.1", "SHA1withECDSA"), 
+		sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"), 
+		sha224("2.16.840.1.101.3.4.2.4", "SHA224"), 
+		sha224WithRSAEncryption("1.2.840.113549.1.1.14", "SHA224withRSA"), 
+		sha256("2.16.840.1.101.3.4.2.1", "SHA256"), 
+		sha256WithRSAEncryption("1.2.840.113549.1.1.11", "SHA256withRSA"), 
+		sha384("2.16.840.1.101.3.4.2.2", "SHA384"), 
+		sha384WithRSAEncryption("1.2.840.113549.1.1.12", "SHA384withRSA"), 
+		sha512("2.16.840.1.101.3.4.2.3", "SHA512"), 
+		sha512WithRSAEncryption("1.2.840.113549.1.1.13", "SHA512withRSA"), 
+		sha3_224("2.16.840.1.101.3.4.2.7", "SHA3-224"), 
+		sha3_256("2.16.840.1.101.3.4.2.8", "SHA3-256"), 
+		sha3_384("2.16.840.1.101.3.4.2.9", "SHA3-384"), 
+		sha3_512("2.16.840.1.101.3.4.2.10", "SHA3-512"), 
+		shake128("1.0.10118.3.0.62", "SHAKE128"), 
+		shake256("1.0.10118.3.0.63", "SHAKE256");
 
 		private final String identifier;
 		private final String algorithmName;
@@ -727,7 +734,7 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 			case "2.16.840.1.101.3.4.2.3": {
 				return sha512.getAlgorithmName();
-			}
+			}     
 			case "1.2.840.113549.1.1.13": {
 				return sha512WithRSAEncryption.getAlgorithmName();
 			}

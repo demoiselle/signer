@@ -65,7 +65,7 @@ import org.junit.Test;
 public class CAdESSignerTest {
 
     // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
-   //@Test
+//   @Test
 
     public void testSignAndVerifySignature() {
         try {
@@ -73,9 +73,9 @@ public class CAdESSignerTest {
             // ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
             
             // Para TOKEN Branco a linha abaixo
-            String pkcs11LibraryPath = "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+            //String pkcs11LibraryPath = "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
           //Para TOKEN Azul a linha abaixo
-            //String pkcs11LibraryPath = "/usr/lib/libeToken.so";
+            String pkcs11LibraryPath = "/usr/lib/libeToken.so";
             
         	StringBuilder buf = new StringBuilder();
         	buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
@@ -100,6 +100,7 @@ public class CAdESSignerTest {
             X509Certificate c = (X509Certificate) certificates[0];
             System.out.println("Número de série....: {}"+ c.getSerialNumber().toString());
 
+            // INFORMAR o arquivo
             String fileDirName = "/home/usuario/arquivo";
             
             
@@ -118,9 +119,12 @@ public class CAdESSignerTest {
             /* Realiza a assinatura do conteudo */
             System.out.println("Efetuando a  assinatura do conteudo");
             byte[] signature = signer.doAttachedSign(fileToSign);
+            //byte[] signature = signer.doDetachedSign(fileToSign);
+            
+            boolean checked = false;
             /* Valida o conteudo antes de gravar em arquivo */
             System.out.println("Efetuando a validacao da assinatura.");
-            boolean checked = signer.check(fileToSign, signature);
+            checked = signer.check(fileToSign, signature);
             
 
             if (checked) {
