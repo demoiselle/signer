@@ -52,7 +52,7 @@ import java.util.List;
 
 /**
  * 
- *  Provides trusted Certificate Authority chain and policy OID for version 1.0 of the ICP-BRAZIL's
+ *  Provides trusted Certificate Authority Root and policy OID for version 1.0 of the ICP-BRAZIL's
  *  policy for digital signature with basic reference in CMS format.
  *  
  *

@@ -69,7 +69,7 @@ public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderC
 	 */
 	@Override
 	public String getName() {
-		return messagesBundle.getString("info.provider.name.iti", getURLZIP());
+		return chainMessagesBundle.getString("info.provider.name.iti", getURLZIP());
 	}
 
 }

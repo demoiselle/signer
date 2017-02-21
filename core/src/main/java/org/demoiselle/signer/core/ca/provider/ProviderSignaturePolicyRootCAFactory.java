@@ -40,6 +40,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ServiceLoader;
 
+/**
+ * 
+ * Build a Provider for Root trusted Certificate Authority
+ *
+ */
 public class ProviderSignaturePolicyRootCAFactory {
 
     private static final ProviderSignaturePolicyRootCAFactory instance = new ProviderSignaturePolicyRootCAFactory();
@@ -52,6 +57,11 @@ public class ProviderSignaturePolicyRootCAFactory {
 
     }
 
+    /**
+     * 
+     * @param signaturePolicyOID
+     * @return Collection of {@link ProviderSignaturePolicyRootCA}
+     */
     public Collection<ProviderSignaturePolicyRootCA> factory(String signaturePolicyOID) {
         Collection<ProviderSignaturePolicyRootCA> result = new ArrayList<>();
         ServiceLoader<ProviderSignaturePolicyRootCA> loader = ServiceLoader.load(ProviderSignaturePolicyRootCA.class);

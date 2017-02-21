@@ -52,7 +52,9 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
+
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.junit.Test;
@@ -63,7 +65,7 @@ import org.junit.Test;
 public class CAdESSignerTest {
 
     // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
-   @Test
+   //@Test
 
     public void testSignAndVerifySignature() {
         try {
@@ -71,9 +73,9 @@ public class CAdESSignerTest {
             // ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
             
             // Para TOKEN Branco a linha abaixo
-            //String pkcs11LibraryPath = "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+            String pkcs11LibraryPath = "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
           //Para TOKEN Azul a linha abaixo
-            String pkcs11LibraryPath = "/usr/lib/libeToken.so";
+            //String pkcs11LibraryPath = "/usr/lib/libeToken.so";
             
         	StringBuilder buf = new StringBuilder();
         	buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
@@ -81,7 +83,7 @@ public class CAdESSignerTest {
             Security.addProvider(p);
             
             // ATENÇÃO ALTERAR "SENHA" ABAIXO
-            Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("EsS197402".toCharArray()));
+            Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
             KeyStore ks = builder.getKeyStore();
 
             Certificate[] certificates = null;
@@ -98,7 +100,7 @@ public class CAdESSignerTest {
             X509Certificate c = (X509Certificate) certificates[0];
             System.out.println("Número de série....: {}"+ c.getSerialNumber().toString());
 
-            String fileDirName = "/home/80621732915/AAssinar/FaturaNet.pdf";
+            String fileDirName = "/home/usuario/arquivo";
             
             
 			byte[] fileToSign = readContent(fileDirName);
@@ -108,9 +110,10 @@ public class CAdESSignerTest {
             PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
             signer.setCertificates(ks.getCertificateChain(alias));
             signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
-            //signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+            signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+            signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
             // com carimbo de tempo
-            signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+            //signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
             			
             /* Realiza a assinatura do conteudo */
             System.out.println("Efetuando a  assinatura do conteudo");

@@ -78,7 +78,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	public static final Path FULL_PATH_HASH = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, FILENAME_HASH);
 
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilUserHomeProviderCA.class.getName());
-	private static final MessagesBundle messagesBundle = new MessagesBundle();
+	private static MessagesBundle chainMessagesBundle = new MessagesBundle();
 
 	/**
 	 * Main method for read trusted Certificate Authorities Chain
@@ -104,7 +104,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	 */
 	public Collection<X509Certificate> getFromLocalZip(Path fileZip) {
 
-		LOGGER.log(Level.INFO, messagesBundle.getString("info.loading.from.file", fileZip.toString()));
+		LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.loading.from.file", fileZip.toString()));
 
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
 		long timeBefore = 0;
@@ -121,16 +121,16 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				result = this.getFromZip(inputStream);
 
 			} else {
-				throw new Exception(messagesBundle.getString("error.filenotfound.userhome",fileZip.toString()));
+				throw new Exception(chainMessagesBundle.getString("error.filenotfound.userhome",fileZip.toString()));
 			}
 
 			timeAfter = System.currentTimeMillis();
 		} catch (Throwable error) {
 			timeAfter = System.currentTimeMillis();
-			LOGGER.log(Level.WARNING, messagesBundle.getString("error.throwable"));
+			LOGGER.log(Level.WARNING, chainMessagesBundle.getString("error.throwable"));
 		} finally {
 			LOGGER.log(Level.INFO,
-					messagesBundle.getString("info.time.file.userhome", timeAfter - timeBefore));
+					chainMessagesBundle.getString("info.time.file.userhome", timeAfter - timeBefore));
 		}
 		return result;
 	}
@@ -180,9 +180,9 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				}
 			}
 		} catch (CertificateException error) {
-			throw new RuntimeException( messagesBundle.getString("error.invalid.certificate"), error);
+			throw new RuntimeException( chainMessagesBundle.getString("error.invalid.certificate"), error);
 		} catch (IOException error) {
-			throw new RuntimeException(messagesBundle.getString("error.stream"), error);
+			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
 		return result;
 	}
@@ -192,7 +192,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	 */
 	@Override
 	public String getName() {
-		return messagesBundle.getString("info.provider.name.userhome", FULL_PATH_ZIP);
+		return chainMessagesBundle.getString("info.provider.name.userhome", FULL_PATH_ZIP);
 
 	}
 }

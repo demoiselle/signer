@@ -465,20 +465,40 @@ public class CAdESSigner implements PKCS7Signer {
 
 			// Recupera o algoritmo e o tamanho minimo da chave
 			// TODO: permitir setar o Algoritmo e validar com a politica (se ela aceita ou não)
-			AlgAndLength algAndLength = signaturePolicy.getSignPolicyInfo()
-					.getSignatureValidationPolicy().getCommonRules()
-					.getAlgorithmConstraintSet()
-					.getSignerAlgorithmConstraints().getAlgAndLengths()
-					.iterator().next();
+			//
+			List<AlgAndLength>  listOfAlgAndLength = new ArrayList<AlgAndLength>();
 
+			for (AlgAndLength algLength : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
+					.getAlgorithmConstraintSet()
+					.getSignerAlgorithmConstraints().getAlgAndLengths()){
+				listOfAlgAndLength.add(algLength);
+		}
+			AlgAndLength algAndLength = null;
+			if (this.pkcs1.getAlgorithm() != null){
+				String varSetedAlgorithmOID = AlgorithmNames.getOIDByAlgorithmName(this.pkcs1.getAlgorithm());
+				for (AlgAndLength algLength : listOfAlgAndLength){
+					if (algLength.getAlgID().getValue().equalsIgnoreCase(varSetedAlgorithmOID)){
+						algAndLength = algLength;
+						signaturePolicy.getSignPolicyHashAlg().setAlgorithm(algLength.getAlgID());
+					}
+				}
+			}else{
+				algAndLength = listOfAlgAndLength.get(0);
+			}
+			if (algAndLength == null){
+				throw new SignerException("Algoritmo informado no parâmetro não corresponde ao contido na Politica!");
+			}
+				
+				
 			logger.info("AlgID........... {}", algAndLength.getAlgID()
 					.getValue());
 			logger.info("Alg Name........ {}", AlgorithmNames
 					.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
-			logger.info("Alg OID........ {}",
+			logger.info("Alg OID of Policy {}",
 					AlgorithmNames.getOIDByAlgorithmName(getAlgorithm()));
 			logger.info("MinKeyLength.... {}", algAndLength.getMinKeyLength());
 
+			
 			// Recupera o tamanho minimo da chave para validacao
 			logger.info("Validando o tamanho da chave");
 			if (((RSAKey) certificate.getPublicKey()).getModulus().bitLength() < algAndLength
@@ -529,13 +549,13 @@ public class CAdESSigner implements PKCS7Signer {
 			// Realiza a assinatura do conteudo
 			CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
 			gen.addCertificates(this.generatedCertStore());
-			String algorithmName = algAndLength.getAlgID().getValue();
+			String algorithmOID = algAndLength.getAlgID().getValue();
 
-			logger.info("algorithmName...: " + algorithmName);
+			logger.info("algorithOID...: " + algorithmOID);
 			SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder()
 					.setSignedAttributeGenerator(signedAttributeGenerator)
 					.setUnsignedAttributeGenerator(unsignedAttributeGenerator)
-					.build(AlgorithmNames.getAlgorithmNameByOID(algorithmName),
+					.build(AlgorithmNames.getAlgorithmNameByOID(algorithmOID),
 							this.pkcs1.getPrivateKey(), this.certificate);
 			gen.addSignerInfoGenerator(signerInfoGenerator);
 
