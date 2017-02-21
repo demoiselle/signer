@@ -4,7 +4,7 @@
 
 **Import in HTML**
 
-This client to access local functions of Signer Desktop Client doesnt depends of any other library.
+This client of Signer Desktop Client does not depends of any other library.
 
 ```html
 <html>
@@ -16,27 +16,39 @@ This client to access local functions of Signer Desktop Client doesnt depends of
         <script src="SignerDesktopClient.min.js" type="text/javascript"></script>
     <head>
 
-    <!-- HTML Code -->
-
-    <!-- ... -->
+    <!-- Code -->
 </html>    
 ```
 
 **Start Connection**
 
 ```javascript
-function callback(connectionStatus) {    
-    if (connectionStatus) {
+var tryAgainTimeout;
+function callback(connectionStatus) {
+    if (connectionStatus === 1) {
         console.log("Connected on Server");
+        clearInterval(tryAgainTimeout);
     } else {
-        console.log("Download/Execute Agent-Desktop");
+        console.log("Warn user to download/execute Agent-Desktop AND try again in 5000ms");
 
-        // Try again in 3000ms
-        setTimeout(callback, 3000);
-    }
+        // Try again in 5000ms
+        tryAgainTimeout = setTimeout(function () {
+            window.SignerDesktopClient.connect(callback);
+        }, 5000);
+    }This client of Signer Desktop Client doesnt depends of any other library.
 }
 
 window.SignerDesktopClient.connect(callback);
+```
+
+**Lista All Certificates in Token**
+
+```javascript
+function listAllCertificates() {
+    window.SignerDesktopClient.listCerts(password).then(function (response) {        
+        console.log(response);        
+    });
+}
 ```
 
 ## Documentation

@@ -11,33 +11,18 @@ angular.module('agent-desktop', [])
         $scope.signedFileName = null;
         connectionStatus = -1;
 
-        // console.log(window.SignerDesktopClient);
-
-        // callback = function(data) {
-        //     connectionStatus = data;
-        //     elementMessage = document.getElementById("serverstate");
-        //     if (data == 1)
-        //         elementMessage.innerHTML = "Conectado ao servidor";
-        //     else {
-        //         elementMessage.innerHTML = "<a href='agent-desktop.jnlp' download> Baixar/Executar Agent-Desktop </a>";
-        //         setTimeout(tryAgain, 3000);
-        //     }
-        // }
-
-        // function tryAgain() {
-        //     window.SignerDesktopClient.connect(callback);
-        // }
-
-        // window.SignerDesktopClient.connect(callback);
-
+        var tryAgainTimeout;
         function callback(connectionStatus) {
-            if (connectionStatus) {
+            if (connectionStatus === 1) {
                 console.log("Connected on Server");
+                clearInterval(tryAgainTimeout);
             } else {
-                console.log("Download/Execute Agent-Desktop");
+                console.log("Warn user to download/execute Agent-Desktop AND try again in 5000ms");
 
-                // Try again in 3000ms
-                setTimeout(callback, 3000);
+                // Try again in 5000ms
+                tryAgainTimeout = setTimeout(function () {
+                    window.SignerDesktopClient.connect(callback);
+                }, 5000);
             }
         }
 
@@ -45,7 +30,7 @@ angular.module('agent-desktop', [])
 
         $scope.listarCertificados = function () {
             // console.log("Listar");
-            window.SignerDesktopClient.listcerts($scope.password).then(function (response) {
+            window.SignerDesktopClient.listCerts($scope.password).then(function (response) {
                 $timeout(function () {
                     $scope.listaCertificados = response;
                 }, 100);
@@ -83,7 +68,7 @@ angular.module('agent-desktop', [])
 
         $scope.listarPoliticas = function () {
             // console.log("Listar POLITICAS");
-            window.SignerDesktopClient.listpolicies().then(function (response) {
+            window.SignerDesktopClient.listPolicies().then(function (response) {
 
 
                 // console.log(response);
@@ -105,11 +90,11 @@ angular.module('agent-desktop', [])
         }
 
         $scope.logout = function () {
-            window.SignerDesktopClient.logoutpkcs11();
+            window.SignerDesktopClient.logoutPKCS11();
         }
 
         $scope.getfiles = function () {
-            window.SignerDesktopClient.getfiles().then(function (response) {
+            window.SignerDesktopClient.getFiles().then(function (response) {
                 if (response.erro) {
                     $scope.tratarErros(response);
                     return;
@@ -126,7 +111,7 @@ angular.module('agent-desktop', [])
                 alert("Informe o arquivo e a politica a ser utilizada");
                 return;
             }
-            window.SignerDesktopClient.signerfile(alias, provider, $scope.fileName, $scope.politica).then(function (response) {
+            window.SignerDesktopClient.signerFile(alias, provider, $scope.fileName, $scope.politica).then(function (response) {
                 if (response.erro) {
                     $scope.tratarErros(response);
                     return;
