@@ -81,5 +81,8 @@ body {
 .vcenter {
     display: inline-block;
     vertical-align: middle;
-    float: none;
+}
+
+.padding {
+  padding: 5px;
 }

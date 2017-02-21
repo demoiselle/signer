@@ -6,12 +6,10 @@ angular.module('agent', [])
         $scope.policy = null;
 
         // $scope.password = null;
-        // $scope.signed = null;
+        $scope.signed = null;
         $scope.errors;
         $scope.fileName = null;
-
         $scope.serverIsOn = false;
-
         $scope.selectedCertificate = null;
         // $scope.signedFileName = null;
 
@@ -67,13 +65,7 @@ angular.module('agent', [])
                         $scope.signed = response.signed;
                     }, 100);
                 });
-        }
-
-        // $scope.status = function () {
-        //     window.SignerDesktopClient.status().success(function (response) {
-        //         console.log(response);
-        //     });
-        // }
+        };
 
         $scope.listPolicies = function() {
             window.SignerDesktopClient.listPolicies().success(function(response) {
@@ -81,15 +73,7 @@ angular.module('agent', [])
                     $scope.listPolicies = response.policies;
                 }, 100);
             });
-        }
-
-        // $scope.shutdown = function () {
-        //     window.SignerDesktopClient.shutdown();
-        // }
-
-        // $scope.logout = function () {
-        //     window.SignerDesktopClient.logoutPKCS11();
-        // }
+        };
 
         $scope.getfiles = function() {
             window.SignerDesktopClient.getFiles().success(function(response) {
@@ -97,7 +81,7 @@ angular.module('agent', [])
                     $scope.fileName = response.fileName;
                 }, 100);
             });
-        }
+        };
 
         $scope.assinarArquivo = function(content) {
             // if (content == null || alias == null) {
@@ -110,6 +94,20 @@ angular.module('agent', [])
                     $scope.signedFileName = response.signed;
                 }, 100);
             });
+        };
+
+        $scope.status = function() {
+            window.SignerDesktopClient.status().success(function(response) {
+                console.log(response);
+            });
+        };
+
+        $scope.shutdown = function() {
+            window.SignerDesktopClient.shutdown();
+        };
+
+        $scope.logout = function() {
+            window.SignerDesktopClient.logoutPKCS11();
         };
 
     }]);

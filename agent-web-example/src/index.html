@@ -33,9 +33,8 @@
 
     <div class="container">
         <div class="header clearfix">
-
             <div class="col-md-4 text-center vcenter">
-                <span class="glyphicon glyphicon-sunglasses" aria-hidden="true" style="font-size: 120px; color: #d24600;"></span>
+                <span class="glyphicon glyphicon-sunglasses" aria-hidden="true" style="font-size: 100px; color: #d24600;"></span>
             </div>
             <div class="col-md-8 text-center vcenter">
                 <h2><b>Signer</b> Project</h2>
@@ -53,6 +52,22 @@
             </div>
         </div>
 
+        <!-- OTHERS -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="page-header">
+                    <h1><b>Others</b> <small>Subtext for header</small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn btn-sm btn-success" ng-click="logout()" role="button">logout</button>
+                <button class="btn btn-sm btn-success" ng-click="shutdown()" role="button">shutdown</button>
+                <button class="btn btn-sm btn-success" ng-click="status()" role="button">status</button>
+            </div>
+        </div>
+
         <!-- STEP 1 -->
         <div class="row">
             <div class="col-md-12">
@@ -64,8 +79,9 @@
         <div class="row">
             <div class="col-md-12">
                 <select ng-model="policy">
-                    <option ng-repeat="p in listPolicies" value="{{p}}">{{p}} </select>
-                <input type="button" value="Reload list of policies" ng-click="listPolicies()">
+                    <option ng-repeat="p in listPolicies" value="{{p}}">{{p}} 
+                </select>
+                <button class="btn btn-md btn-success" ng-click="listPolicies()" role="button">Reload List of Policies</button>
             </div>
         </div>
 
@@ -82,12 +98,12 @@
                 <!--<h4>Subheading</h4>
                 <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>-->
 
-                <button class="btn btn-lg btn-success" ng-click="listCerts()" role="button">List All Certificates</button>
+                <button class="btn btn-md btn-success" ng-click="listCerts()" role="button">List All Certificates</button>
             </div>
         </div>
         <div class="row" ng-show="listCertificates.certificates">
             <div class="col-md-12">
-                <table style="width:850px">
+                <table>
                     <tr>
                         <th>Alias</th>
                         <th>Emitido para</th>
@@ -102,7 +118,7 @@
                         <td>{{ cert.notBefore }}</td>
                         <td>{{ cert.notAfter }}</td>
                         <td>{{ cert.provider }}</td>
-                        <td><button ng-click="setCertificate(cert)">Select</button></td>
+                        <td><button ng-click="setCertificate(cert)" class="btn btn-sm btn-warning">Select</button></td>
                     </tr>
                 </table>
             </div>
@@ -120,28 +136,33 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="col-md-6">
-                    <h4>Text</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-                    <input type="text" ng-model="content">
+                    <h4>Using Text</h4>
+                    <!--<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>-->
 
-                    <button ng-click="signText(content)">Assinar Texto</button>
+                    <div class="form-group">
+                        <label>Text</label>
+                        <input type="text" class="form-control" ng-model="content">
+                    </div>
 
-                    <div style="margin-top:10px;">
-                        Resultado da Assinatura: <textarea id="result" name="signed">{{signed}}</textarea>
+                    <button class="btn btn-md btn-success" ng-click="signText(content)" role="button">Sign Text</button>
+
+                    <div class="form-group" style="margin-top:10px;" ng-show="signed">
+                        <label>Signature</label>
+                        <textarea rows="5" class="form-control">{{signed}}</textarea>
                     </div>
                 </div>
                 <div class="col-md-6">
-                    <h4>File</h4>
-                    <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
+                    <h4>Using File</h4>
+                    <!--<p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>-->
 
-                    <button class="btn btn-lg btn-success" ng-click="getfiles()" role="button">Get File</button>
+                    <button class="btn btn-md btn-success" ng-click="getfiles()" role="button">Get File</button>
 
-                    <button ng-click="assinarArquivo(content)">Assinar Documento</button>
+                    <button class="btn btn-md btn-success" ng-click="assinarArquivo(content)" role="button">Sign File</button>
 
-                    <div>
+                    <div class="padding" style="margin-top: 10px;" ng-show="fileName">
                         Original File: {{fileName}}
                     </div>
-                    <div>
+                    <div class="padding" ng-show="signedFileName">
                         Signed File: {{signedFileName}}
                     </div>
                 </div>
@@ -157,42 +178,13 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-12">
-                    <div class="col-md-6">
-                        <h4>Text</h4>
-                        <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-                        <input type="text" ng-model="">
-
-                        <input type="text" ng-model="">
-
-                        <button ng-click="signText(content)">Assinar Texto</button>
-
-                        <div style="margin-top:10px;">
-                            Resultado da Assinatura: <textarea id="result" name="signed">{{signed}}</textarea>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <h4>File</h4>
-                        <p>Donec id elit non mi porta gravida at eget metus. Maecenas faucibus mollis interdum.</p>
-
-                        <button class="btn btn-lg btn-success" ng-click="getfiles()" role="button">Get File</button>
-
-                        <button ng-click="assinarArquivo(content)">Assinar Documento</button>
-
-                        <div>
-                            Original File: {{fileName}}
-                        </div>
-                        <div>
-                            Signed File: {{signedFileName}}
-                        </div>
-                    </div>
-                </div>
+                Soon.
             </div>
 
         </div>
 
         <!-- FOOTER -->
-        <footer class="footer">
+        <footer class="footer" style="margin-top: 20px;">
             <p>SERPRO</p>
         </footer>
 
