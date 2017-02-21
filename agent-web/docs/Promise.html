@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#.execute">execute</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -43,6 +43,8 @@
         Promise
         </h2>
         
+            <div class="class-description"><p>Implementation of Promise, because as we do not know a library that will be used for development can not depend on any.</p></div>
+        
     
 </header>
 
@@ -51,6 +53,8 @@
     
         
 
+    
+    <h2>Constructor</h2>
     
 
     <h4 class="name" id="Promise"><span class="type-signature"></span>new Promise<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -65,7 +69,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line9">line 9</a>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line5">line 5</a>
     </li></ul></dd>
     
 
@@ -103,11 +107,6 @@
 
 
 
-
-<div class="description">
-    <p>Implementação de Promisse, pois como não sabemos a biblioteca que será usada 
-para o desenvolvimento não podemos depender de alguma.</p>
-</div>
 
 
 
@@ -156,7 +155,7 @@ para o desenvolvimento não podemos depender de alguma.</p>
 
     
 
-    <h4 class="name" id=".this.then"><span class="type-signature">(static) </span>this.then<span class="signature">(x, y, z)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id=".this.resolve"><span class="type-signature">(static) </span>this.resolve<span class="signature">(value)</span><span class="type-signature"></span></h4>
 
     
 
@@ -168,7 +167,7 @@ para o desenvolvimento não podemos depender de alguma.</p>
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="signer-desktop-web.js.html">signer-desktop-web.js</a>, <a href="signer-desktop-web.js.html#line19">line 19</a>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -208,7 +207,7 @@ para o desenvolvimento não podemos depender de alguma.</p>
 
 
 <div class="description">
-    <p>Method.</p>
+    <p>Resolve method to us on resolve event.</p>
 </div>
 
 
@@ -246,13 +245,13 @@ para o desenvolvimento não podemos depender de alguma.</p>
 
         <tr>
             
-                <td class="name"><code>x</code></td>
+                <td class="name"><code>value</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">object</span>
 
 
             
@@ -262,20 +261,130 @@ para o desenvolvimento não podemos depender de alguma.</p>
 
             
 
-            <td class="description last"><p>X param.</p></td>
+            <td class="description last"><p>Value to send a callback setted on Then.</p></td>
         </tr>
 
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id=".this.then"><span class="type-signature">(static) </span>this.then<span class="signature">(cb)</span><span class="type-signature"></span></h4>
+
+    
+
+
+
+
+<dl class="details">
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="promise.js.html">promise.js</a>, <a href="promise.js.html#line13">line 13</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+<div class="description">
+    <p>Then method to use um finish.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
     
 
         <tr>
             
-                <td class="name"><code>y</code></td>
+                <td class="name"><code>cb</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">function</span>
 
 
             
@@ -285,30 +394,7 @@ para o desenvolvimento não podemos depender de alguma.</p>
 
             
 
-            <td class="description last"><p>Y param.</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>z</code></td>
-            
-
-            <td class="type">
-            
-                
-<span class="param-type">string</span>
-
-
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>Z param.</p></td>
+            <td class="description last"><p>Callback to use on finish.</p></td>
         </tr>
 
     
@@ -348,7 +434,7 @@ para o desenvolvimento não podemos depender de alguma.</p>
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 09:14:11 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 10:11:50 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#.execute">execute</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.then">this.then</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerWithPassword">signerWithPassword</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -40,85 +40,110 @@
             <pre class="prettyprint source linenums"><code>// http://usejsdoc.org/
 
 /**
- * Implementação de Promisse, pois como não sabemos a biblioteca que será usada 
- * para o desenvolvimento não podemos depender de alguma. 
- * 
- * @class
- */
-var Promise = (function() {
-    var callback = null;
-
-	/**
-	 * Method.
-	 * @param {string} x - X param.
-	 * @param {string} y - Y param.
-	 * @param {string} z  - Z param.
-	 * @memberof Promise
-	 */
-    this.then = function(cb) {
-        callback = cb;
-    };
-
-    this.resolve = function(value) {
-        callback(value);
-    };
-
-});
-
-/**
- * Object used to comunicate with local WebSocket.
- * 
+ * @classdesc Object used to comunicate with local WebSocket.
  * @class
  */
 var SignerDesktopClient = (function() {
 
     var ws;
     var defer = null;
+    var uriServer = "ws://localhost:9091/";
+    var isDebug = false;
+
+    /**
+     * Set URI to use in communication.
+     * 
+     * @private
+     * @param {string} message - Uri to use.
+     * @memberof SignerDesktopClient
+     */
+    var log = function(message) {
+        if (isDebug) {
+            console.log(message);
+        }
+    };
 
     var services = {
 		/**
-         * Method.
-         * @param {string} x - X param.
-         * @param {string} y - Y param.
-         * @param {string} z  - Z param.
+         * Set URI to use in communication.
+		 * 
+         * @instance
+		 * @default ws://localhost:9091/
+         * @param {string} uri - Uri to use.
          * @memberof SignerDesktopClient
          */
-        execute: function(request) {
-            defer = new Promise();
-            ws.send(JSON.stringify(request));
-            return defer;
+        setUriServer: function(uri) {
+            log("Setting URI to " + uri);
+            uriServer = uri;
         },
 
 		/**
-         * Method.
-         * @param {string} x - X param.
-         * @param {string} y - Y param.
-         * @param {string} z  - Z param.
-         * @memberof MySingleton
+         * Set debug true or false.
+         * 
+         * @instance
+         * @param {boolean} isToDebug - 
+         * @memberof SignerDesktopClient
+         */
+        setDebug: function(isToDebug) {
+            log("Setting debug on to " + (isToDebug ? "ON" : "OFF"));
+            isDebug = isToDebug;
+        },
+
+		/**
+         * Method used to start connection with local WebSocket server.
+         * 
+         * @instance
+         * @param {function} callback - Callback invoked on OPEN and CLOSE connection.
+         * @memberof SignerDesktopClient
          */
         connect: function(callback) {
             if (ws == null || ws.readyState != 1) {
-                ws = new WebSocket("ws://localhost:9091/");
+                log("Connecting on " + uriServer);
+                ws = new WebSocket(uriServer);
+
                 ws.onopen = function(msg) {
+                    log("On Open");
                     if (callback)
                         callback(msg.target.readyState);
                 }
+
                 ws.onclose = function(msg) {
+                    log("On Close");
                     if (callback)
                         callback(msg.target.readyState);
                 }
+
                 ws.onmessage = function(response) {
+                    log("On Message");
                     defer.resolve(JSON.parse(response.data));
                 };
             }
         },
 
+		/**
+         * Verify status of connection with WebSocket server.
+         * 
+         * @instance
+		 * @return {boolean} - True for connection is up, false if is down.  
+         * @memberof SignerDesktopClient
+         */
         isConnected: function() {
             if (ws != null)
                 return ws.readyState == 1 ? true : false;
             return false;
         },
 
+        /**
+		 * Signer content using some parameters.
+         * 
+         * @instance
+		 * @param {string} alias - Alias of certificate to use in sign
+		 * @param {string} provider - The provider (Token, SmartCard...)
+		 * @param {string} content - The text to sign
+		 * @param {string} signaturePolicy - he policy to use in signature 
+		 * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
         signer: function(alias, provider, content, signaturePolicy) {
             var signerCommand = {
                 command: 'signer',
@@ -134,6 +159,18 @@ var SignerDesktopClient = (function() {
             return promise;
         },
 
+        /**
+		 * Signer content using some parameters and password.
+         * 
+         * @instance
+		 * @param {string} alias - Alias of certificate to use in sign
+		 * @param {string} password - The password of certificate
+		 * @param {string} provider - The provider (Token, SmartCard...)
+		 * @param {string} content - The text to sign
+		 * @param {string} signaturePolicy - he policy to use in signature 
+		 * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
         signerWithPassword: function(alias, password, provider, content, signaturePolicy) {
             var signerCommand = {
                 command: 'signer',
@@ -150,13 +187,26 @@ var SignerDesktopClient = (function() {
             return promise;
         },
 
-        logoutpkcs11: function() {
+        /**
+		 * Logout of access token.
+         * 
+         * @instance
+		 * @memberof SignerDesktopClient
+		 */
+        logoutPKCS11: function() {
             var logoutPKCS11Command = {
                 command: 'logoutpkcs11'
             }
             ws.send(JSON.stringify(logoutPKCS11Command));
         },
 
+        /**
+		 * Verify Desktop status. 
+         * 
+         * @instance
+		 * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
         status: function() {
             var statusCommand = {
                 command: 'status'
@@ -165,7 +215,15 @@ var SignerDesktopClient = (function() {
             return promise;
         },
 
-        listcerts: function(password) {
+        /**
+		 * List all certificates in Token.
+         * 
+         * @instance
+		 * @param {string} password - Password of Token
+		 * @return Promisse - The promisse when is finished.  
+		 * @memberof SignerDesktopClient
+		 */
+        listCerts: function(password) {
             var listcertsCommand = {
                 command: 'listcerts',
                 password: password
@@ -174,7 +232,14 @@ var SignerDesktopClient = (function() {
             return promise;
         },
 
-        listpolicies: function() {
+        /**
+		 * List all policies on token.
+         * 
+         * @instance
+		 * @return Promisse - The promisse when is finished.  
+		 * @memberof SignerDesktopClient
+		 */
+        listPolicies: function() {
             var listpoliciesCommand = {
                 command: 'listpolicies'
             }
@@ -182,7 +247,14 @@ var SignerDesktopClient = (function() {
             return promise;
         },
 
-        getfiles: function() {
+        /**
+		 * Get files to sign. 
+         * 
+         * @instance
+		 * @return Promisse - The promisse when is finished.  
+		 * @memberof SignerDesktopClient
+		 */
+        getFiles: function() {
             var getfileCommand = {
                 command: 'getfiles'
             }
@@ -190,7 +262,18 @@ var SignerDesktopClient = (function() {
             return promise;
         },
 
-        signerfile: function(alias, provider, content, signaturePolicy) {
+        /**
+		 * Sign file selected by method getFiles.
+         * 
+         * @instance
+         * @param {string} alias - Alias of certificate to use in sign
+		 * @param {string} provider - The provider (Token, SmartCard...)
+		 * @param {string} content - The text to sign
+		 * @param {string} signaturePolicy - he policy to use in signature 
+		 * @return Promisse - The promisse when is finished.  
+		 * @memberof SignerDesktopClient
+		 */
+        signerFile: function(alias, provider, content, signaturePolicy) {
             var signerCommand = {
                 command: 'filesigner',
                 type: 'raw',
@@ -205,11 +288,32 @@ var SignerDesktopClient = (function() {
             return promise;
         },
 
+        /**
+		 * Shutdown Desktop Client
+         * 
+         * @instance
+		 * @memberof SignerDesktopClient
+		 */
         shutdown: function() {
             var shutdownCommand = {
                 command: 'shutdown'
             }
             ws.send(JSON.stringify(shutdownCommand));
+        },
+
+        /**
+		 * Generic method to sendo commands to Desktop Server.
+         * 
+         * @instance
+		 * @param {json} request - Request JSON content all attributes to run.
+         * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
+        execute: function(request) {
+            log("Sending command [" + request.command + "] to URI [" + uri + "]");
+            defer = new Promise();
+            ws.send(JSON.stringify(request));
+            return defer;
         }
 
     };
@@ -220,7 +324,7 @@ var SignerDesktopClient = (function() {
 // Define globally if it doesn't already exist
 if (window.SignerDesktopClient === undefined) {
     console.log("SignerDesktopClient started.")
-    window.SignerDesktopClient = SignerDesktopClient();
+    window.SignerDesktopClient = new SignerDesktopClient();
 } else {
     console.log("SignerDesktopClient already defined.");
 }</code></pre>
@@ -235,7 +339,7 @@ if (window.SignerDesktopClient === undefined) {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 09:14:11 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 10:11:50 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>

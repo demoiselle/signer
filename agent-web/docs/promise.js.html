@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Home - Documentation</title>
+    <title>promise.js - Documentation</title>
 
     <script src="scripts/prettify/prettify.js"></script>
     <script src="scripts/prettify/lang-css.js"></script>
@@ -27,37 +27,45 @@
 
 <div id="main">
     
+    <h1 class="page-title">promise.js</h1>
+    
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/** 
+ * @classdesc Implementation of Promise, because as we do not know a library that will be used for development can not depend on any. 
+ * @class
+ */
+var Promise = (function() {
+    var callback = null;
 
+	/**
+	 * Then method to use um finish.
+	 * @param {function} cb - Callback to use on finish.
+	 * @memberof Promise
+	 */
+    this.then = function(cb) {
+        callback = cb;
+    };
 
-
-
-
-
-
-
-
+	/**
+	 * Resolve method to us on resolve event.
+	 * @param {object} value - Value to send a callback setted on Then.
+	 * @memberof Promise
+	 */
+    this.resolve = function(value) {
+        callback(value);
+    };
     
-
-
-    <section class="readme">
-        <article><h1>Client for Desktop Signer</h1><h2>Usage</h2><ul>
-<li>Item 1</li>
-</ul>
-<h2>Documentation</h2><ul>
-<li><a href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/demoiselle/signer/master/agent-web/docs/index.html">Full Documentation</a></li>
-</ul>
-<h2>Build</h2><ul>
-<li>Item 2</li>
-</ul></article>
+});
+</code></pre>
+        </article>
     </section>
-
-
 
 
 

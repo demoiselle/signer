@@ -4,7 +4,7 @@ var gulp = require('gulp'),
     uglify = require('gulp-uglify'),
     jsdoc = require('gulp-jsdoc3');
 
-gulp.task('js-fef', function () {
+gulp.task('js', function () {
     return gulp.src(['./src/**/*.js'])
         .pipe(concat('SignerDesktopClient.js'))
         .pipe(gulp.dest('dist'))
@@ -26,6 +26,6 @@ gulp.task('watch', function() {
     gulp.watch('README.md', ['doc']);
 });
 
-gulp.task('default', ['js-fef', 'doc', 'watch'], function () {
+gulp.task('default', ['js', 'doc', 'watch'], function () {
 
 });

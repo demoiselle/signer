@@ -1,13 +1,13 @@
-# Cliente Padrão para Comunicação com o Signer Desktop
+# Client for Desktop Signer
 
-## Utilização
+## Usage
 
 * Item 1
 
-## Documentação para Utilização
+## Documentation
 
-* Link
+* [Full Documentation](https://htmlpreview.github.io/?https://raw.githubusercontent.com/demoiselle/signer/master/agent-web/docs/index.html)
 
-## Compilação
+## Build
 
 * Item 2
