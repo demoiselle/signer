@@ -4,7 +4,7 @@
  * @classdesc Object used to comunicate with local WebSocket.
  * @class
  */
-var SignerDesktopClient = (function() {
+var SignerDesktopClient = (function () {
 
     var ws;
     var defer = null;
@@ -18,7 +18,7 @@ var SignerDesktopClient = (function() {
      * @param {string} message - Uri to use.
      * @memberof SignerDesktopClient
      */
-    var l = function(message) {
+    var l = function (message) {
         if (isDebug) {
             console.log(message);
         }
@@ -33,7 +33,7 @@ var SignerDesktopClient = (function() {
          * @param {string} uri - Uri to use.
          * @memberof SignerDesktopClient
          */
-        setUriServer: function(uri) {
+        setUriServer: function (uri) {
             l("Setting URI to " + uri);
             uriServer = uri;
         },
@@ -45,7 +45,7 @@ var SignerDesktopClient = (function() {
          * @param {boolean} isToDebug - 
          * @memberof SignerDesktopClient
          */
-        setDebug: function(isToDebug) {
+        setDebug: function (isToDebug) {
             l("Setting debug on to " + (isToDebug ? "ON" : "OFF"));
             isDebug = isToDebug;
         },
@@ -59,48 +59,39 @@ var SignerDesktopClient = (function() {
          * @param {function} callbackError - Callback invoked on ERROR connection.
          * @memberof SignerDesktopClient
          */
-        connect: function(callbackOpen, callbackClose, callbackError) {
+        connect: function (callbackOpen, callbackClose, callbackError) {
             if (ws == null || ws.readyState != 1) {
                 l("Connecting on " + uriServer);
                 ws = new WebSocket(uriServer);
 
-                ws.onopen = function(msg) {
-                    l("On Open");
+                ws.onopen = function (msg) {
                     if (callbackOpen)
                         callbackOpen(msg.target.readyState);
                 };
 
-                ws.onclose = function(msg) {
-                    l("On Close");
+                ws.onclose = function (msg) {
                     if (callbackClose)
                         callbackClose(msg.target.readyState);
                 };
 
-                ws.onmessage = function(response) {
-                    l("On Message");
-
+                ws.onmessage = function (response) {
                     var objResponse = JSON.parse(response.data);
                     // If has data and data.error is a business error
                     if (objResponse !== undefined && objResponse.error !== undefined) {
                         if (defer.hasCallbackError()) {
-                            l("On Error Function Callback");
                             defer.reject(objResponse);
                         } else if (callbackError) {
-                            l("On Error Generic Callback");
                             callbackError(objResponse);
                         }
                     } else {
-                        l("On Error Normal Callback");
                         defer.resolve(objResponse);
                     }
                 };
 
-                ws.onerror = function(event) {
+                ws.onerror = function (event) {
                     if (defer.hasCallbackError()) {
-                        l("On Error Function Callback");
                         defer.reject(event);
                     } else if (callbackError) {
-                        l("On Error Generic Callback");
                         callbackError(event);
                     }
                 };
@@ -114,7 +105,7 @@ var SignerDesktopClient = (function() {
 		 * @return {boolean} - True for connection is up, false if is down.  
          * @memberof SignerDesktopClient
          */
-        isConnected: function() {
+        isConnected: function () {
             if (ws != null)
                 return ws.readyState == 1 ? true : false;
             return false;
@@ -131,7 +122,7 @@ var SignerDesktopClient = (function() {
 		 * @return Promisse - The promisse when is finished. 
 		 * @memberof SignerDesktopClient
 		 */
-        signer: function(alias, provider, content, signaturePolicy) {
+        signer: function (alias, provider, content, signaturePolicy) {
             var signerCommand = {
                 command: 'signer',
                 type: 'raw',
@@ -158,7 +149,7 @@ var SignerDesktopClient = (function() {
 		 * @return Promisse - The promisse when is finished. 
 		 * @memberof SignerDesktopClient
 		 */
-        signerWithPassword: function(alias, password, provider, content, signaturePolicy) {
+        signerWithPassword: function (alias, password, provider, content, signaturePolicy) {
             var signerCommand = {
                 command: 'signer',
                 type: 'raw',
@@ -180,7 +171,7 @@ var SignerDesktopClient = (function() {
          * @instance
 		 * @memberof SignerDesktopClient
 		 */
-        logoutPKCS11: function() {
+        logoutPKCS11: function () {
             var logoutPKCS11Command = {
                 command: 'logoutpkcs11'
             }
@@ -194,7 +185,7 @@ var SignerDesktopClient = (function() {
 		 * @return Promisse - The promisse when is finished. 
 		 * @memberof SignerDesktopClient
 		 */
-        status: function() {
+        status: function () {
             var statusCommand = {
                 command: 'status'
             }
@@ -210,7 +201,7 @@ var SignerDesktopClient = (function() {
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        listCerts: function(password) {
+        listCerts: function (password) {
             var listcertsCommand = {
                 command: 'listcerts',
                 password: password
@@ -226,7 +217,7 @@ var SignerDesktopClient = (function() {
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        listPolicies: function() {
+        listPolicies: function () {
             var listpoliciesCommand = {
                 command: 'listpolicies'
             }
@@ -241,7 +232,7 @@ var SignerDesktopClient = (function() {
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        getFiles: function() {
+        getFiles: function () {
             var getfileCommand = {
                 command: 'getfiles'
             }
@@ -260,7 +251,7 @@ var SignerDesktopClient = (function() {
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        signerFile: function(alias, provider, content, signaturePolicy) {
+        signerFile: function (alias, provider, content, signaturePolicy) {
             var signerCommand = {
                 command: 'filesigner',
                 type: 'raw',
@@ -281,7 +272,7 @@ var SignerDesktopClient = (function() {
          * @instance
 		 * @memberof SignerDesktopClient
 		 */
-        shutdown: function() {
+        shutdown: function () {
             var shutdownCommand = {
                 command: 'shutdown'
             }
@@ -296,13 +287,14 @@ var SignerDesktopClient = (function() {
          * @return Promisse - The promisse when is finished. 
 		 * @memberof SignerDesktopClient
 		 */
-        execute: function(request) {
+        execute: function (request) {
 
             /**
              * @todo verify if ws was intancialize
              */
 
             l("Sending command [" + request.command + "] to URI [" + uriServer + "]");
+
             defer = new Promise();
             ws.send(JSON.stringify(request));
             return defer;
@@ -312,11 +304,3 @@ var SignerDesktopClient = (function() {
 
     return services;
 })();
-
-// Define globally if it doesn't already exist
-if (window.SignerDesktopClient === undefined) {
-    console.log("SignerDesktopClient started.")
-    window.SignerDesktopClient = new SignerDesktopClient();
-} else {
-    console.log("SignerDesktopClient already defined.");
-}

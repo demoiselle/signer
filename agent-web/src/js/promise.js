@@ -14,7 +14,6 @@ var Promise = (function () {
 	 * @memberof Promise
 	 */
 	this.success = function (cbSucess) {
-		console.log("Then with success");
 		callbackSuccess = cbSucess;
 		return this;
 	};
@@ -27,7 +26,6 @@ var Promise = (function () {
 	 * @memberof Promise
 	 */
 	this.error = function (cbError) {
-		console.log("Then with error");
 		callbackError = cbError;
 		return this;
 	};
