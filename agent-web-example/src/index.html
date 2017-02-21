@@ -63,8 +63,8 @@
         <div class="row">
             <div class="col-md-12">
                 <button class="btn btn-sm btn-success" ng-click="logout()" role="button">logout</button>
-                <button class="btn btn-sm btn-success" ng-click="shutdown()" role="button">shutdown</button>
-                <button class="btn btn-sm btn-success" ng-click="status()" role="button">status</button>
+                <button class="btn btn-sm btn-danger" ng-click="shutdown()" role="button">shutdown</button>
+                <button class="btn btn-sm btn-info" ng-click="status()" role="button">status</button>
             </div>
         </div>
 
@@ -78,10 +78,8 @@
         </div>
         <div class="row">
             <div class="col-md-12">
-                <select ng-model="policy">
-                    <option ng-repeat="p in listPolicies" value="{{p}}">{{p}} 
-                </select>
-                <button class="btn btn-md btn-success" ng-click="listPolicies()" role="button">Reload List of Policies</button>
+                <select ng-options="p for p in listPolicies" ng-model="policy"></select>
+                <button class="btn btn-md btn-success" ng-click="listAllPolicies()" role="button">Reload List of Policies</button>
             </div>
         </div>
 
@@ -125,15 +123,14 @@
         </div>
 
         <!-- STEP 3 -->
-        <div class="row">
-
+        <div class="row" ng-show="selectedCertificate">
             <div class="col-md-12">
                 <div class="page-header">
                     <h1><b>Step 3</b> - Define Text OR File <small>Subtext for header</small></h1>
                 </div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" ng-show="selectedCertificate">
             <div class="col-md-12">
                 <div class="col-md-6">
                     <h4>Using Text</h4>

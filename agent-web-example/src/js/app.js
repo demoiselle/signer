@@ -2,7 +2,7 @@ angular.module('agent', [])
     .controller('MainController', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
 
         $scope.listCertificates = null;
-        $scope.listPolicies = [];
+        $scope.listAllPolicies = [];
         $scope.policy = null;
 
         // $scope.password = null;
@@ -20,8 +20,7 @@ angular.module('agent', [])
                 $scope.serverIsOn = true;
 
                 // Load policies on open connection
-                $scope.listPolicies();
-                // $scope.policy = "AD_BR_CADES_2_2";
+                $scope.listAllPolicies();
 
                 clearInterval(tryAgainTimeout);
             } else {
@@ -67,10 +66,11 @@ angular.module('agent', [])
                 });
         };
 
-        $scope.listPolicies = function() {
+        $scope.listAllPolicies = function() {
             window.SignerDesktopClient.listPolicies().success(function(response) {
                 $timeout(function() {
                     $scope.listPolicies = response.policies;
+                    $scope.policy = "AD_RB_CADES_2_2";
                 }, 100);
             });
         };
