@@ -228,7 +228,7 @@ var SignerDesktopClient = (function() {
 		 */
         listPolicies: function() {
             var listpoliciesCommand = {
-                command: 'listpoliciesaaa'
+                command: 'listpolicies'
             }
             var promise = services.execute(listpoliciesCommand);
             return promise;
