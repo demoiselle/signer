@@ -5,7 +5,6 @@ angular.module('agent', [])
         $scope.listAllPolicies = [];
         $scope.policy = null;
 
-        // $scope.password = null;
         $scope.signed = null;
         $scope.errors;
         $scope.fileName = null;
@@ -45,7 +44,7 @@ angular.module('agent', [])
         window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
 
         $scope.listCerts = function() {
-            window.SignerDesktopClient.listCerts($scope.password).success(function(response) {
+            window.SignerDesktopClient.listCerts().success(function(response) {
                 $timeout(function() {
                     $scope.listCertificates = response;
                 }, 100);
