@@ -5,3 +5,4 @@
 /.externalToolBuilders
 /target/
 /signer__policy_engine.log
+/signer__policy_engine.log.1

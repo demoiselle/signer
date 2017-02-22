@@ -17,6 +17,7 @@ public abstract class AbstractCommand<Request, Response> implements Command {
 		return this.getClass().getSimpleName().toLowerCase();
 	}
 
+	@SuppressWarnings("unchecked")
 	public String doCommand(String params) {
 		Gson gson = new Gson();
 		Request request = null;

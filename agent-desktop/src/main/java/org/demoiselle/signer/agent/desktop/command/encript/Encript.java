@@ -12,10 +12,13 @@ import org.demoiselle.signer.agent.desktop.web.Execute;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.util.Base64Utils;
+
 import com.sun.security.auth.callback.DialogCallbackHandler;
 
+@SuppressWarnings("restriction")
 public class Encript extends AbstractCommand<EncriptRequest, EncriptResponse> {
 
+	@SuppressWarnings("deprecation")
 	public EncriptResponse doCommand(final EncriptRequest data) {
 		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
 		loader.setCallbackHandler(new DialogCallbackHandler());

@@ -44,7 +44,6 @@ public class WSServer extends AbstractReceiveListener {
 	}
 
 	public void start() {
-		int porta = WSServer.DEFAULT_PORT_WS_SERVER;
 		try {
 			this.undertow.start();
 		} catch (RuntimeException error ) {

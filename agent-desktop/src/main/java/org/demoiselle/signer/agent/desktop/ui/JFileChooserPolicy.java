@@ -1,7 +1,6 @@
 package org.demoiselle.signer.agent.desktop.ui;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -16,7 +15,11 @@ public class JFileChooserPolicy extends JFileChooser{
 
 	private static final long serialVersionUID = 1L;
 	String policy;
+	
+	@SuppressWarnings("rawtypes")
 	JComboBox cmbPolicy;
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public JFileChooserPolicy(HashSet<String> policies){
 		
 		List<String> validPolicies = new ArrayList<String>();

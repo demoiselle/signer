@@ -13,6 +13,7 @@ import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 
 public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsResponse> {
 
+	@SuppressWarnings("deprecation")
 	public ListCertsResponse doCommand(final ListCertsRequest request) {
 		try {
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
