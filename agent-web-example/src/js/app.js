@@ -25,7 +25,6 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
         $scope.fileName = null;
         $scope.serverIsOn = false;
         $scope.selectedCertificate = null;
-        // $scope.signedFileName = null;
 
         var tryAgainTimeout;
         function callbackOpenClose(connectionStatus) {
@@ -41,10 +40,10 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
                 console.log("Warn user to download/execute Agent-Desktop AND try again in 5000ms");
                 $scope.serverIsOn = false;
 
-                // Try again in 5000ms
+                // Try again in 3000ms
                 tryAgainTimeout = setTimeout(function() {
                     window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
-                }, 5000);
+                }, 3000);
             }
         }
 
