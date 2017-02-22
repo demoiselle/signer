@@ -53,7 +53,7 @@ public class TrayIcon {
 					if(enterpriseLicence != null)
 						isEnterpriseLicence = true;
 					
-					final java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image, "Demoiselle Signer 2.0.0-BETA1", popup);
+					final java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image, "Demoiselle Signer 3.0.0-SNAPSHOT", popup);
 					trayIcon.setImageAutoSize(true);
 					
 					MenuItem removeTray = new MenuItem("Remove Tray Icon");

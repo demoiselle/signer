@@ -1,4 +1,4 @@
-Application-Name: Demoiselle Signer Agent Desktop BETA1
+Application-Name: Demoiselle Signer Agent Desktop SNAPSHOT
 Permissions: all-permissions
 Caller-Allowable-Codebase: *
 Codebase: *
