@@ -1,12 +1,27 @@
-angular.module('agent', [])
-    .controller('MainController', ['$scope', '$http', '$timeout', function($scope, $http, $timeout) {
+angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
+
+
+    .config(['NotificationProvider', function(NotificationProvider) {
+
+        // https://github.com/alexcrack/angular-ui-notification
+        NotificationProvider.setOptions({
+            delay: 5000,
+            startTop: 10,
+            startRight: 10,
+            verticalSpacing: 20,
+            horizontalSpacing: 20,
+            positionX: 'right',
+            positionY: 'bottom'
+        });
+
+    }])
+    .controller('MainController', ['$scope', '$http', '$timeout', 'cfpLoadingBar', 'Notification', function($scope, $http, $timeout, cfpLoadingBar, Notification) {
 
         $scope.listCertificates = null;
         $scope.listAllPolicies = [];
         $scope.policy = null;
 
         $scope.signed = null;
-        $scope.errors;
         $scope.fileName = null;
         $scope.serverIsOn = false;
         $scope.selectedCertificate = null;
@@ -35,8 +50,25 @@ angular.module('agent', [])
 
         function callbackError(event) {
             $timeout(function() {
-                $scope.errors = event;
+                if (event.error !== undefined) {
+                    if (event.error !== null && event.error !== 'null') {
+                        Notification.error({ message: event.error });
+                    } else {
+                        Notification.error({ message: 'Unknown error' });
+                    }
+                }
+
+                $scope.stopRequest();
             }, 100);
+        }
+
+        // https://github.com/chieffancypants/angular-loading-bar
+        $scope.startRequest = function() {
+            cfpLoadingBar.start();
+        }
+
+        $scope.stopRequest = function() {
+            cfpLoadingBar.complete();
         }
 
         // window.SignerDesktopClient.setUriServer("ws://localhost:9091");
@@ -44,9 +76,12 @@ angular.module('agent', [])
         window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
 
         $scope.listCerts = function() {
+            $scope.startRequest();
             window.SignerDesktopClient.listCerts().success(function(response) {
                 $timeout(function() {
                     $scope.listCertificates = response;
+
+                    $scope.stopRequest();
                 }, 100);
             });
         };
@@ -57,32 +92,43 @@ angular.module('agent', [])
         };
 
         $scope.signText = function(content) {
+            $scope.startRequest();
             window.SignerDesktopClient.signer($scope.selectedCertificate.alias, $scope.selectedCertificate.provider, content, $scope.policy)
                 .success(function(response) {
                     $timeout(function() {
                         $scope.signed = response.signed;
+
+                        $scope.stopRequest();
                     }, 100);
                 });
         };
 
         $scope.listAllPolicies = function() {
+            $scope.startRequest();
             window.SignerDesktopClient.listPolicies().success(function(response) {
                 $timeout(function() {
                     $scope.listPolicies = response.policies;
                     $scope.policy = "AD_RB_CADES_2_2";
+
+                    $scope.stopRequest();
                 }, 100);
             });
         };
 
         $scope.getfiles = function() {
+            $scope.startRequest();
             window.SignerDesktopClient.getFiles().success(function(response) {
                 $timeout(function() {
                     $scope.fileName = response.fileName;
+
+                    $scope.stopRequest();
                 }, 100);
             });
         };
 
         $scope.assinarArquivo = function(content) {
+            $scope.startRequest();
+
             // if (content == null || alias == null) {
             //     alert("Informe o arquivo e a policy a ser utilizada");
             //     return;
@@ -91,13 +137,19 @@ angular.module('agent', [])
             window.SignerDesktopClient.signerFile($scope.selectedCertificate.alias, $scope.selectedCertificate.provider, $scope.fileName, $scope.policy).success(function(response) {
                 $timeout(function() {
                     $scope.signedFileName = response.signed;
+
+                    $scope.stopRequest();
                 }, 100);
             });
         };
 
         $scope.status = function() {
+            $scope.startRequest();
+
             window.SignerDesktopClient.status().success(function(response) {
                 console.log(response);
+
+                $scope.stopRequest();
             });
         };
 

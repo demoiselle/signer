@@ -8,15 +8,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.2/angular.min.js"></script>
 
     <!-- JS -->
-    <script src="./lib.js"></script>
+    <script src="./lib.min.js"></script>
     <script src="./app.min.js"></script>
 
     <!-- CSS -->
     <link href="./app.min.css" rel="stylesheet" type="text/css" />
+    <link href="./lib.min.css" rel="stylesheet" type="text/css" />
 
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
-        crossorigin="anonymous">
+        crossorigin="anonymous" />
+
+    <link rel="shortcut icon" href="/favicon.ico?v=2" type="image/x-icon" />
+    <link rel="icon" href="/favicon.ico?v=2" type="image/x-icon" />
 
 </head>
 
@@ -40,16 +44,6 @@
         </div>
 
         <div ng-show="serverIsOn">
-
-            <!-- ERROS -->
-            <div class="row" ng-show="errors">
-                <div class="col-md-12">
-                    <div class="alert alert-danger">
-                        {{errors}}
-                    </div>
-                    <!--<div style="margin-top:100px"><a href="agent-desktop.jnlp" download>Baixar/Executar Agent-Desktop </a></div>-->
-                </div>
-            </div>
 
             <!-- OTHERS -->
             <div class="row">

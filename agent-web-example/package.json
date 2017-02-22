@@ -15,7 +15,9 @@
     "gulp-uglify": "^2.0.1"
   },
   "dependencies": {
-    "gulp-uglifycss": "^1.0.6",
-    "agent-web": "file:../agent-web/"
+    "agent-web": "file:../agent-web/",
+    "angular-loading-bar": "^0.9.0",
+    "angular-ui-notification": "^0.3.5",
+    "gulp-uglifycss": "^1.0.6"
   }
 }
