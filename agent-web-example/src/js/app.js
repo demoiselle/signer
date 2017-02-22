@@ -39,7 +39,7 @@ angular.module('agent', [])
             }, 100);
         }
 
-        // window.SignerDesktopClient.setUriServer("ws://dasdasda");
+        window.SignerDesktopClient.setUriServer("ws://10.32.128.25:9091");
         window.SignerDesktopClient.setDebug(true);
         window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
 
