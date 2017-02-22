@@ -46,8 +46,6 @@ import javax.crypto.SecretKey;
 
 import org.demoiselle.signer.cryptography.implementation.CriptographyImpl;
 
-import com.sun.crypto.provider.SunJCE;
-
 /**
  * Define o comportamento padrão para utilização de criptografia. Seja simétrico
  * ou assimétrico, depende apenas de sua implementação.

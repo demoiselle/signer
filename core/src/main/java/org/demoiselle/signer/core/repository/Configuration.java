@@ -36,7 +36,7 @@
  */
 package org.demoiselle.signer.core.repository;
 
-import java.util.logging.Logger;
+// import java.util.logging.Logger;
 
 public class Configuration {
 
@@ -57,7 +57,7 @@ public class Configuration {
      */
     public static final String CRL_PATH = "security.certificate.repository.crl.path";
     public static Configuration instance = new Configuration();
-    private static final Logger logger = Logger.getLogger(Configuration.class.getName());
+    // private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 
     /**
      * Returna a instância única

@@ -15,7 +15,6 @@ import org.demoiselle.signer.core.util.Base64Utils;
 
 import com.sun.security.auth.callback.DialogCallbackHandler;
 
-@SuppressWarnings("restriction")
 public class Encript extends AbstractCommand<EncriptRequest, EncriptResponse> {
 
 	@SuppressWarnings("deprecation")

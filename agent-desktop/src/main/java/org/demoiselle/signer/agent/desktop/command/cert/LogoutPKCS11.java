@@ -7,7 +7,6 @@ import org.demoiselle.signer.agent.desktop.Command;
 
 import sun.security.pkcs11.SunPKCS11;
 
-@SuppressWarnings("restriction")
 public class LogoutPKCS11 implements Command {
 
 	public String doCommand(String params) {
