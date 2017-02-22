@@ -83,10 +83,7 @@
 		<module>policy-impl-cades</module>
 		<module>policy-impl-xades</module>
 		<module>policy-impl-pades</module>
-		<module>timestamp</module>
-		
-		<!-- Desktop Component -->
-		<module>agent-desktop</module>		
+		<module>timestamp</module>				
 	</modules>
 
 	<properties>
