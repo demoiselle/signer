@@ -38,14 +38,10 @@
 package org.demoiselle.signer.core.oid;
 
 /**
- * Classe OID 2.16.76.1.3.3 <br>
+ * Class OID 2.16.76.1.3.3 <br>
  * <br>
- * Possui alguns atributos especificos de pessoa juridica ou equipamento: <br>
- * <b>*</b> Cadastro Nacional de Pessoa Juridica (CNPJ) da pessoa juridica
- * titular do certificado <br>
- * 
- * @author CETEC/CTCTA
- * 
+ * Has some "ICP-BRASIL Equipment" attributes<br>
+ *  Corporate name in the the Brazilian IRS's Bussiness Company Registry Number called CNPJ 
  */
 
 public class OID_2_16_76_1_3_3 extends OIDGeneric {
@@ -61,8 +57,7 @@ public class OID_2_16_76_1_3_3 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return numero do Cadastro Nacional de Pessoa Juridica (CNPJ) da empresa
-	 *         titular do certificado
+	 * @return Corporate name in the the Brazilian IRS's Bussiness Company Registry Number called CNPJ
 	 */
 	public String getCNPJ() {
 		return super.getData();

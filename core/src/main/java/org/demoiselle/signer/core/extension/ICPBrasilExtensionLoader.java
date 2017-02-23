@@ -38,12 +38,20 @@ package org.demoiselle.signer.core.extension;
 
 import org.demoiselle.signer.core.IOIDExtensionLoader;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
 
+/**
+ * 
+ * Load X.509 Extension OIDs for
+ */
 public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
 
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	
+	
     @Override
     public void load(Object object, Field field, X509Certificate x509) {
         if (field.isAnnotationPresent(ICPBrasilExtension.class)) {
@@ -128,12 +136,12 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
                             keyValue = "";
                         }
                         break;
-                    case NOME:
+                    case NAME:
                         keyValue = cert.getNome();
                         break;
-                    case NOME_RESPONSAVEL_PESSOA_JURIDICA:
+                    case NAME_RESPONSIBLE_PESSOA_JURIDICA:
                         if (cert.hasCertificatePJ()) {
-                            keyValue = cert.getICPBRCertificatePJ().getNomeResponsavel();
+                            keyValue = cert.getICPBRCertificatePJ().getResponsibleName();
                         } else {
                             keyValue = "";
                         }
@@ -141,22 +149,22 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
                     case EMAIL:
                         keyValue = cert.getEmail();
                         break;
-                    case DATA_NASCIMENTO:
+                    case BIRTH_DATE:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getDataNascimento();
+                            keyValue = cert.getICPBRCertificatePF().getBirthDate();
                         } else {
                             if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getDataNascimento();
+                                keyValue = cert.getICPBRCertificatePJ().getBirthDate();
                             } else {
                                 if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getDataNascimento().toString();
+                                    keyValue = cert.getICPBRCertificateEquipment().getBirthDate().toString();
                                 } else {
                                     keyValue = "";
                                 }
                             }
                         }
                         break;
-                    case NUMERO_IDENTIDADE:
+                    case ID_NUMBER:
                         if (cert.hasCertificatePF()) {
                             keyValue = cert.getICPBRCertificatePF().getRg();
                         } else {
@@ -171,80 +179,80 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
                             }
                         }
                         break;
-                    case ORGAO_EXPEDIDOR_IDENTIDADE:
+                    case IDENTITY_DISPATCHER:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getOrgaoExpedidorRg();
+                            keyValue = cert.getICPBRCertificatePF().getIssuingAgencyRg();
                         } else {
                             if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getOrgaoExpedidorRg();
+                                keyValue = cert.getICPBRCertificatePJ().getIssuingAgencyRg();
                             } else {
                                 if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getOrgaoExpedidorRg();
+                                    keyValue = cert.getICPBRCertificateEquipment().getIssuingAgencyRg();
                                 } else {
                                     keyValue = "";
                                 }
                             }
                         }
                         break;
-                    case UF_ORGAO_EXPEDIDOR_IDENTIDADE:
+                    case UF_IDENTITY_DISPATCHER:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getUfExpedidorRg();
+                            keyValue = cert.getICPBRCertificatePF().getUfIssuingAgencyRg();
                         } else {
                             if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getUfExpedidorRg();
+                                keyValue = cert.getICPBRCertificatePJ().getUfIssuingAgencyRg();
                             } else {
                                 if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getUfExpedidorRg();
+                                    keyValue = cert.getICPBRCertificateEquipment().getUfIssuingAgencyRg();
                                 } else {
                                     keyValue = "";
                                 }
                             }
                         }
                         break;
-                    case NUMERO_TITULO_ELEITOR:
+                    case NUMBER_ELECTORAL_DOCUMENT:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getTituloEleitor();
+                            keyValue = cert.getICPBRCertificatePF().getElectoralDocument();
                         } else {
                             keyValue = "";
                         }
                         break;
-                    case ZONA_TITULO_ELEITOR:
+                    case ZONE_ELECTORAL_DOCUMENT:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getZonaTituloEleitor();
+                            keyValue = cert.getICPBRCertificatePF().getZoneElectoralDocument();
                         } else {
                             keyValue = "";
                         }
                         break;
-                    case SECAO_TITULO_ELEITOR:
+                    case SECTION_ELECTORAL_DOCUMENT:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getSecaoTituloEleitor();
+                            keyValue = cert.getICPBRCertificatePF().getSectionElectoralDocument();
                         } else {
                             keyValue = "";
                         }
                         break;
-                    case MUNICIPIO_TITULO_ELEITOR:
+                    case CITY_ELECTORAL_DOCUMENT:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getMunicipioTituloEleitor();
+                            keyValue = cert.getICPBRCertificatePF().getCityElectoralDocument();
                         } else {
                             keyValue = "";
                         }
                         break;
-                    case UF_TITULO_ELEITOR:
+                    case UF_ELECTORAL_DOCUMENT:
                         if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getUfTituloEleitor();
+                            keyValue = cert.getICPBRCertificatePF().getUFElectoralDocument();
                         } else {
                             keyValue = "";
                         }
                         break;
 
-                    case NOME_EMPRESARIAL:
+                    case BUSINESS_NAME:
                         if (cert.hasCertificateEquipment()) {
-                            keyValue = cert.getICPBRCertificateEquipment().getNomeEmpresarial();
+                            keyValue = cert.getICPBRCertificateEquipment().getCorporateName();
                         } else {
                             keyValue = "";
                         }
                         break;
-                    case TIPO_CERTIFICADO:
+                    case CERTIFICATE_TYPE:
                         if (cert.hasCertificatePF()) {
                             keyValue = "PF";
                         } else {
@@ -259,22 +267,22 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
                             }
                         }
                         break;
-                    case NIVEL_CERTIFICADO:
+                    case  CERTIFICATE_LEVEL:
                         keyValue = cert.getCertificateLevel();
                         break;
 
                     default:
-                        throw new CertificateCoreException(annotation.type() + " Not Implemented");
+                        throw new CertificateCoreException(coreMessagesBundle.getString("error.field.not.implemented",annotation.type()));
                 }
 
                 try {
                     field.setAccessible(true);
                     field.set(object, keyValue);
                 } catch (Exception e) {
-                    throw new CertificateCoreException("Error on load value in field " + field.getName(), e);
+                    throw new CertificateCoreException(coreMessagesBundle.getString("error.load.value.field", field.getName()), e);
                 }
             } catch (Exception e) {
-                throw new CertificateCoreException("Error trying get Keyvalue " + annotation.type(), e);
+                throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e);
             }
         }
     }

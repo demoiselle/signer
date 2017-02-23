@@ -38,24 +38,21 @@
 package org.demoiselle.signer.core.oid;
 
 /**
- * Classe OID 2.16.76.1.3.4 <br>
- * <br>
- * Possui alguns atributos de pessoa juridica ou equipamento: <br>
- * <b>*</b> Data de nascimento do titular "DDMMAAAA" <br>
- * <b>*</b> Cadastro de pessoa fisica (CPF) do titular <br>
- * <b>*</b> Numero de Identidade Social - NIS (PIS, PASEP ou CI) <br>
- * <b>*</b> Numero do Registro Geral (RG) do titular <br>
- * <b>*</b> Sigla do orgao expedidor do RG <br>
- * <b>*</b> UF do orgao expedidor do RG <br>
- * 
- * @author CETEC/CTCTA
+  * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
+  * <b>*</b> Date of birth of the person responsible for the certificate, in ddmmaaaa format <br>
+  * <b>*</b> the Brazilian IRS Individuals Registry number called CPF (Cadastro de Pessoa Fisica) of the
+  * Responsible <br>
+  * <b>*</b>Brazilian Social Identification number - intials are: NIS (PIS, PASEP or CI)of the responsible <br>
+  * <b>*</b> the Brazilian ID number (called RG) of the responsible for the certificate <br>
+  * <b>*</b> the initials of the issuing agency of the ID (RG) <br>
+  * <b>*</b> Initials for a Brasilian state(UF) of the issuing agency of the ID (RG) <br>
  * 
  */
 public class OID_2_16_76_1_3_4 extends OIDGeneric {
 
 	public static final String OID = "2.16.76.1.3.4";
 
-	protected static final Object FIELDS[] = { "dtNascimento", (int) 8, "cpf", (int) 11, "nis", (int) 11, "rg", (int) 15, "orgaoUfExpedidor", (int) 6 };
+	protected static final Object FIELDS[] = { "birthDate", (int) 8, "cpf", (int) 11, "nis", (int) 11, "rg", (int) 15, "UfIssuingAgencyRg", (int) 6 };
 
 	public OID_2_16_76_1_3_4() {
 	}
@@ -67,15 +64,16 @@ public class OID_2_16_76_1_3_4 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return a data de nascimento do titular
+	 * @return Date of birth of the person responsible for the certificate in ddMMyyyy format
 	 */
-	public String getDataNascimento() {
-		return properties.get("dtNascimento");
+	public String getBirthDate() {
+		return properties.get("birthDate");
 	}
 
 	/**
 	 * 
-	 * @return numero do Cadastro de Pessoa Fisica (CPF) do titular;
+	 * @return the Brazilian IRS Individuals Registry number called CPF (Cadastro de Pessoa Fisica) of the
+     * Responsible
 	 */
 	public String getCPF() {
 		return properties.get("cpf");
@@ -83,7 +81,7 @@ public class OID_2_16_76_1_3_4 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return o numero de Identificacao Social - NIS (PIS, PASEP ou CI)
+	 * @return Brazilian Social Identification number of the responsible - initials are: NIS  
 	 */
 	public String getNIS() {
 		return properties.get("nis");
@@ -91,7 +89,7 @@ public class OID_2_16_76_1_3_4 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return numero do Registro Geral - RG do titular
+	 * @return the Brazilian ID number (called RG) of the responsible for the certificate
 	 */
 	public String getRg() {
 		return properties.get("rg");
@@ -99,11 +97,11 @@ public class OID_2_16_76_1_3_4 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return as siglas do orgao expedidor do RG
+	 * @return initials of the issuing agency of the Brazilian ID (RG)
 	 */
-	public String getOrgaoExpedidorRg() {
+	public String getIssuingAgencyRg() {
 
-		String s = properties.get("orgaoUfExpedidor").trim();
+		String s = properties.get("UfIssuingAgencyRg").trim();
 		int len = s.trim().length();
 		String ret = null;
 		if (len > 0) {
@@ -114,10 +112,10 @@ public class OID_2_16_76_1_3_4 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return a UF do orgao expedidor do RG
+	 * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
 	 */
-	public String getUfExpedidorRg() {
-		String s = properties.get("orgaoUfExpedidor").trim();
+	public String getUfIssuingAgencyRg() {
+		String s = properties.get("UfIssuingAgencyRg").trim();
 		int len = s.trim().length();
 		String ret = null;
 		if (len > 0) {

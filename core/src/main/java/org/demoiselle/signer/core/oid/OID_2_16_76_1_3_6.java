@@ -40,11 +40,9 @@ package org.demoiselle.signer.core.oid;
 /**
  * Classe OID 2.16.76.1.3.6 <br>
  * <br>
- * Possui alguns atributos de pessoa fisica: <br>
- * <b>*</b> Numero do Cadastro Especifico do INSS (CEI) da pessoa fisica titular
- * do certificado <br>
+ * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
+ * <b>*</b> Brazilian Social Identification Number (Called CEI) of the holder of certificate<br>
  * 
- * @author CETEC/CTCTA
  */
 public class OID_2_16_76_1_3_6 extends OIDGeneric {
 
@@ -62,7 +60,7 @@ public class OID_2_16_76_1_3_6 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return string de 12 posicoes com o numero do cadastro no INSS(CEI).
+	 * @return Brazilian Social Identification Number (INSS-CEI) of the holder of certificate
 	 */
 	public String getCEI() {
 		return properties.get("CEI");

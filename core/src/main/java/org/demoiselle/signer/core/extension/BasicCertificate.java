@@ -615,17 +615,17 @@ public class BasicCertificate {
             if (this.hasCertificatePF()) {
                 ICPBRCertificatePF tdPF = this.getICPBRCertificatePF();
                 sb.append(coreMessagesBundle.getString("text.certicate.cpf")).append(tdPF.getCPF()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.birth.date")).append(tdPF.getDataNascimento()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.birth.date")).append(tdPF.getBirthDate()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.pis")).append(tdPF.getNis()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.rg")).append(tdPF.getRg()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.rg.expeditor")).append(tdPF.getOrgaoExpedidorRg()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.rg.uf")).append(tdPF.getUfExpedidorRg()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.rg.issuing.agency")).append(tdPF.getIssuingAgencyRg()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.rg.uf")).append(tdPF.getUfIssuingAgencyRg()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.cei")).append(tdPF.getCEI()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.voter.document")).append(tdPF.getTituloEleitor()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.section")).append(tdPF.getSecaoTituloEleitor()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.zone")).append(tdPF.getZonaTituloEleitor()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.voter.city")).append(tdPF.getMunicipioTituloEleitor()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.voter.uf")).append(tdPF.getUfTituloEleitor()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.voter.document")).append(tdPF.getElectoralDocument()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.section")).append(tdPF.getSectionElectoralDocument()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.zone")).append(tdPF.getZoneElectoralDocument()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.voter.city")).append(tdPF.getCityElectoralDocument()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.voter.uf")).append(tdPF.getUFElectoralDocument()).append("\n");
             }
 
             sb.append("*********************************\n");
@@ -635,7 +635,7 @@ public class BasicCertificate {
                 sb.append(coreMessagesBundle.getString("text.certicate.cnpj")).append(tdPJ.getCNPJ()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.cei")).append(tdPJ.getCEI()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.nis")).append(tdPJ.getNis()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.responsible")).append(tdPJ.getNomeResponsavel()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.responsible")).append(tdPJ.getResponsibleName()).append("\n");
             }
 
             sb.append("*********************************\n");
@@ -644,8 +644,8 @@ public class BasicCertificate {
                 ICPBRCertificateEquipment tdEq = this.getICPBRCertificateEquipment();
                 sb.append(coreMessagesBundle.getString("text.certicate.cnpj")).append(tdEq.getCNPJ()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.nis")).append(tdEq.getNis()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.bussiness.name")).append(tdEq.getNomeEmpresarial()).append("\n");
-                sb.append(coreMessagesBundle.getString("text.certicate.responsible")).append(tdEq.getNomeResponsavel()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.bussiness.name")).append(tdEq.getCorporateName()).append("\n");
+                sb.append(coreMessagesBundle.getString("text.certicate.responsible")).append(tdEq.getResponsibleName()).append("\n");
             }
 
             sb.append("*********************************\n");
