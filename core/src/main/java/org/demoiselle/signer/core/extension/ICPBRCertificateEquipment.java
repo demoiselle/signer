@@ -45,6 +45,11 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_3;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_4;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_8;
 
+/**
+ * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
+ * 
+ *
+ */
 public class ICPBRCertificateEquipment {
 
     private OID_2_16_76_1_3_2 oID_2_16_76_1_3_2 = null;
@@ -54,23 +59,23 @@ public class ICPBRCertificateEquipment {
 
     /**
      *
-     * @param oid1 2.16.76.1.3.2 e conteudo = nome do responsavel pelo
-     * certificado
+     * @param oid1 2.16.76.1.3.2 and content = name of the person responsible for
+     *  the certificate
      *
-     * @param oid2 2.16.76.1.3.3 e conteudo = Cadastro Nacional de Pessoa
-     * Juridica (CNPJ), se o certificado for de pessoa juridica
+     * @param oid2 2.16.76.1.3.3 and content= Brazilian National Registry of Bussiness Entities called
+     *  Cadastro Nacional de Pessoa Juridica (CNPJ), if the certificate is a CNPJ
+     * 
+     *  
+     * @param oid3 2.16.76.1.3.4 and content = In the first 8 (eight) positions, the
+     * Date of birth of the person responsible for the certificate, in ddmmaaaa format;
+     * In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
+     * Responsible; In the 11 (eleven) subsequent positions, the number of
+     * Brazilian Social Identification number - NIS (PIS, PASEP or CI); In the 15 (fifteen) positions
+     * Subsequent, the Brazilian ID number (called RG) of the responsible for the certificate; In the six (6) positions
+     * Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brasilian state).
      *
-     * @param oid3 2.16.76.1.3.4 e conteudo = nas primeiras 8 (oito) posicoes, a
-     * data de nascimento do responsavel pelo certificado, no formato ddmmaaaa;
-     * nas 11 (onze) posicoes subsequentes, o Cadastro de Pessoa Fisica (CPF) do
-     * responsavel; nas 11 (onze) posicoes subsequentes, o numero de
-     * Identificacao Social - NIS (PIS, PASEP ou CI); nas 15 (quinze) posicoes
-     * subsequentes, o numero do RG do responsavel; nas 6 (seis) posicoes
-     * subsequentes, as siglas do orgao expedidor do RG e respectiva UF
-     *
-     * @param oid4 2.16.76.1.3.8 e conteudo = nome empresarial constante do CNPJ
-     * (Cadastro Nacional de Pessoa Juridica), sem abreviacoes, se o certificado
-     * for de pessoa juridica
+     * @param oid4 2.16.76.1.3.8 and content = Corporate name in the the Brazilian IRS's Bussiness Company Registry Number caled CNPJ without abbreviations, 
+     * if its is an equipment certificate
      *
      */
     public ICPBRCertificateEquipment(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_8 oid4) {
@@ -82,24 +87,23 @@ public class ICPBRCertificateEquipment {
 
     /**
      *
-     * @return string com o nome do responsavel pelo certificado
+     * @return string Name of the person responsible for the certificate
      */
-    public String getNomeResponsavel() {
-        return oID_2_16_76_1_3_2.getNome();
+    public String getResponsibleName() {
+        return oID_2_16_76_1_3_2.getName();
     }
 
     /**
      *
-     * @return nome empresarial constante do CNPJ (Cadastro Nacional de Pessoa
-     * Juridica)
+     * @return nome Corporate name in the the Brazilian IRS's Bussiness Company Registry Number 
      */
-    public String getNomeEmpresarial() {
-        return oID_2_16_76_1_3_8.getNome();
+    public String getCorporateName() {
+        return oID_2_16_76_1_3_8.getName();
     }
 
     /**
      *
-     * @return numero do CNPJ (Cadastro Nacional de Pessoa Juridica)
+     * @return the Brazilian IRS's Bussiness Company Registry Number called CNPJ 
      */
     public String getCNPJ() {
         return oID_2_16_76_1_3_3.getCNPJ();
@@ -107,13 +111,12 @@ public class ICPBRCertificateEquipment {
 
     /**
      *
-     * @return data de nascimento do responsavel pelo certificado, no formato
-     * Date
+     * @return Date of birth of the responsible for the certificate
      */
-    public Date getDataNascimento() {
+    public Date getBirthDate() {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
-            return sdf.parse(oID_2_16_76_1_3_4.getDataNascimento());
+            return sdf.parse(oID_2_16_76_1_3_4.getBirthDate());
         } catch (ParseException e) {
             e.printStackTrace();
             return null;
@@ -122,7 +125,7 @@ public class ICPBRCertificateEquipment {
 
     /**
      *
-     * @return o numero de Identificacao Social - NIS (PIS, PASEP ou CI)
+     * @return Brazilian Social Identification number of the responsible - initials are: NIS
      */
     public String getNis() {
         return oID_2_16_76_1_3_4.getNIS();
@@ -130,7 +133,7 @@ public class ICPBRCertificateEquipment {
 
     /**
      *
-     * @return o numero do RG do responsavel
+     * @return the Brazilian ID number (called RG) of the responsible for the certificate
      */
     public String getRg() {
         return oID_2_16_76_1_3_4.getRg();
@@ -138,17 +141,17 @@ public class ICPBRCertificateEquipment {
 
     /**
      *
-     * @return as siglas do orgao expedidor do RG
+     * @return the initials of the issuing agency of the Brazilian ID (RG)
      */
-    public String getOrgaoExpedidorRg() {
-        return oID_2_16_76_1_3_4.getOrgaoExpedidorRg();
+    public String getIssuingAgencyRg() {
+        return oID_2_16_76_1_3_4.getIssuingAgencyRg();
     }
 
     /**
      *
-     * @return UF do orgao expedidor do RG
+     * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
      */
-    public String getUfExpedidorRg() {
-        return oID_2_16_76_1_3_4.getUfExpedidorRg();
+    public String getUfIssuingAgencyRg() {
+        return oID_2_16_76_1_3_4.getUfIssuingAgencyRg();
     }
 }

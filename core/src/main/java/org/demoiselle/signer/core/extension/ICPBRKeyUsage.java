@@ -39,6 +39,10 @@ package org.demoiselle.signer.core.extension;
 
 import java.security.cert.X509Certificate;
 
+/**
+ * ICP-BRASIL's definitions of Key Usage
+ *
+ */
 public class ICPBRKeyUsage {
 
 	private static final String[] KEY_USAGE = { "digitalSignature", "nonRepudiation", "keyEncipherment", "dataEncipherment", "keyAgreement", "keyCertSign", "cRLSign", "encipherOnly", "decipherOnly" };

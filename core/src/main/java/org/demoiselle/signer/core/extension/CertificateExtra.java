@@ -111,29 +111,32 @@ public class CertificateExtra {
     }
 
     /**
-     * Verifica se o certificado é "ICP-BRASIL Pessoa Física"
+     * Checks if the certificate is an "ICP-BRASIL Pessoa Física"
      *
-     * @return True, se for pessoa física. False caso contrário.
+     * @return True if you are an "ICP-BRASIL Pessoa Física". False otherwise.
      */
     public boolean isCertificatePF() {
+    	// oid for dados-pf(1)
         return extras.get("2.16.76.1.3.1") != null;
     }
 
     /**
-     * Verifica se o certificado é "ICP-BRASIL Pessoa Jurídica"
+     * Checks if the certificate is an "ICP-BRASIL Pessoa Jurídica"
      *
-     * @return True, se for pessoa jurídica. False caso contrário.
+     * @return True if you are an "ICP-BRASIL Pessoa Jurídica ". False otherwise.
      */
     public boolean isCertificatePJ() {
+    	// oid for (cei-pj)
         return extras.get("2.16.76.1.3.7") != null;
     }
 
     /**
-     * Verifica se o certificado é "ICP-BRASIL Equipment"
+     * Checks if the certificate is an "ICP-BRASIL Equipment"
      *
-     * @return True, se for de equipamento. False caso contrário.
+     * @return True, True if you are an "ICP-BRASIL Equipment". False otherwise.
      */
     public boolean isCertificateEquipment() {
+    	// OID nome-cnpj(8) only for Equipament
         return extras.get("2.16.76.1.3.8") != null;
     }
 
@@ -141,13 +144,12 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.1 <br>
      * <br>
      * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
-     * <b>*</b> Data de nascimento do titular "DDMMAAAA" <br>
-     * <b>*</b> Cadastro de pessoa fisica (CPF) do titular <br>
-     * <b>*</b> Numero de Identidade Social - NIS (PIS, PASEP ou CI) <br>
-     * <b>*</b> Numero do Registro Geral (RG) do titular <br>
-     * <b>*</b> Sigla do orgao expedidor do RG <br>
-     * <b>*</b> UF do orgao expedidor do RG <br>
-     *
+     *  </ b> Date of birth of the holder on "DDMMAAAA" format<br>
+     * <B> * </ b> The Brazilian IRS Individuals Registry called CPF <br>
+     * <B> * </ b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
+     * <B> * </ b> the Brazilian ID number called RG <br>
+     * <B> * </ b> the initials of the issuing agency of the ID (RG) <br>
+     * <B> * </ b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
      * @return OID_2_16_76_1_3_1
      */
     public OID_2_16_76_1_3_1 getOID_2_16_76_1_3_1() {
@@ -157,12 +159,12 @@ public class CertificateExtra {
     /**
      * Class OID 2.16.76.1.3.5 <br>
      * <br>
-     * Has some "ICP-BRASIL Fisica" attributes<br>
-     * <b>*</b> Numero de inscricao do Titulo de Eleitor <br>
-     * <b>*</b> Zona Eleitoral <br>
-     * <b>*</b> Secao <br>
-     * <b>*</b> Municipio do titulo <br>
-     * <b>*</b> UF do titulo <br>
+     * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
+     * <b>*</b> Number of Electoral document (Titulo de Eleitor) <br>
+     * <b>*</b> Zone of Electoral document <br>
+     * <b>*</b> Section of  Electoral document <br>
+     * <b>*</b> City of  Electoral document <br>
+     * <b>*</b> UF (Initials for a Brasilian state) of Electoral document<br>
      *
      * @return OID_2_16_76_1_3_5
      */
@@ -174,8 +176,7 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.6 <br>
      * <br>
      * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
-     * <b>*</b> Numero do Cadastro Especifico do INSS (CEI) da pessoa fisica
-     * titular do certificado <br>
+     * <b>*</b> Brazilian Social Identification Number (INSS-CEI) of the holder of certificate<br>
      *
      * @return OID_2_16_76_1_3_6
      */
@@ -187,7 +188,7 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.2 <br>
      * <br>
      * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
-     * <b>*</b> Nome do responsavel pelo certificado <br>
+     * <b>*</b> Name of the person responsible for the certificate <br>
      *
      * @return OID_2_16_76_1_3_2
      */
@@ -199,8 +200,7 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.3 <br>
      * <br>
      * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
-     * <b>*</b> Cadastro Nacional de Pessoa Juridica (CNPJ) da pessoa juridica
-     * titular do certificado <br>
+     * <b>*</b> the Brazilian IRS's Bussiness Company Registry Number called CNPJ (Cadastro Nacional de Pessoa Juridica) <br>
      *
      * @return OID_2_16_76_1_3_3
      */
@@ -212,12 +212,13 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.4 <br>
      * <br>
      * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
-     * <b>*</b> Data de nascimento do titular "DDMMAAAA" <br>
-     * <b>*</b> Cadastro de pessoa fisica (CPF) do titular <br>
-     * <b>*</b> Numero de Identidade Social - NIS (PIS, PASEP ou CI) <br>
-     * <b>*</b> Numero do Registro Geral (RG) do titular <br>
-     * <b>*</b> Sigla do orgao expedidor do RG <br>
-     * <b>*</b> UF do orgao expedidor do RG <br>
+     * <b>*</b> Date of birth of the person responsible for the certificate, in ddMMyyyy format <br>
+     * <b>*</b> the Brazilian IRS Individuals Registry number called CPF (Cadastro de Pessoa Fisica) of the
+     * Responsible <br>
+     * <b>*</b>Brazilian Social Identification number - initials are: NIS (PIS, PASEP or CI) of the responsible <br>
+     * <b>*</b> the Brazilian ID number (called RG) of the responsible for the certificate <br>
+     * <b>*</b> the initials of the issuing agency of the ID (RG) <br>
+     * <b>*</b> Initials for a Brasilian state(UF) of the issuing agency of the ID (RG) <br>
      *
      * @return OID_2_16_76_1_3_4
      */
@@ -229,8 +230,8 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.7 <br>
      * <br>
      * Has some "ICP-BRASIL Pessoa Juridica" attributes<br>
-     * <b>*</b> Numero do Cadastro Especifico do INSS (CEI) da pessoa juridica
-     * titular do certificado <br>
+     * <b>*</b> number of Specific Registry (called CEI), on 
+	 * Brazilian National Institute of Social Security,  of the bussines company holding the certificate<br>
      *
      * @return OID_2_16_76_1_3_7
      */
@@ -242,9 +243,8 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.8 <br>
      * <br>
      * Has some "ICP-BRASIL Equipment" attributes<br>
-     * <b>*</b> Nome empresarial constante do Cadastro Nacional de Pessoa
-     * Juridica (CNPJ), sem abreviacoes, se o certificado for de pessoa
-     * juridica<br>
+     *  Corporate name in the the Brazilian IRS's Bussiness Company Registry Number called CNPJ without abbreviations, 
+     * 
      *
      * @return OID_2_16_76_1_3_8
      */

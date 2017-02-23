@@ -45,6 +45,11 @@ import java.lang.annotation.Target;
 
 import org.demoiselle.signer.core.OIDExtension;
 
+/**
+ * 
+ * Java Annotation to identify DefaultExtension
+ *
+ */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.FIELD)

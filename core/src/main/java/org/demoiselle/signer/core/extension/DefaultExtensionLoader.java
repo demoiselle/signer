@@ -38,12 +38,22 @@ package org.demoiselle.signer.core.extension;
 
 import org.demoiselle.signer.core.IOIDExtensionLoader;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
 
+/**
+ * Load X.509 Extension OIDs for
+ * CRL_URL, SERIAL_NUMBER, ISSUER_DN, SUBJECT_DN, KEY_USAGE,
+ * PATH_LENGTH, AUTHORITY_KEY_IDENTIFIER, SUBJECT_KEY_IDENTIFIER,
+* BEFORE_DATE, AFTER_DATE, CERTIFICATION_AUTHORITY
+ *
+ */
 public class DefaultExtensionLoader implements IOIDExtensionLoader {
+	
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     @Override
     public void load(Object object, Field field, X509Certificate x509) {
@@ -59,7 +69,7 @@ public class DefaultExtensionLoader implements IOIDExtensionLoader {
                     try {
                         keyValue = basicCertificate.getCRLDistributionPoint();
                     } catch (IOException e1) {
-                        throw new CertificateCoreException("Error on get value to field " + field.getName(), e1);
+                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field",field.getName()), e1);
                     }
                     break;
                 case SERIAL_NUMBER:
@@ -69,14 +79,14 @@ public class DefaultExtensionLoader implements IOIDExtensionLoader {
                     try {
                         keyValue = basicCertificate.getCertificateIssuerDN().toString();
                     } catch (IOException e1) {
-                        throw new CertificateCoreException("Error on get value to field " + field.getName(), e1);
+                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field",field.getName()), e1);
                     }
                     break;
                 case SUBJECT_DN:
                     try {
                         keyValue = basicCertificate.getCertificateSubjectDN().toString();
                     } catch (IOException e1) {
-                        throw new CertificateCoreException("Error on get value to field " + field.getName(), e1);
+                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field",field.getName()), e1);
                     }
                     break;
                 case KEY_USAGE:
@@ -89,7 +99,7 @@ public class DefaultExtensionLoader implements IOIDExtensionLoader {
                     try {
                         keyValue = basicCertificate.getAuthorityKeyIdentifier();
                     } catch (IOException e1) {
-                        throw new CertificateCoreException("Error on get value to field " + field.getName(), e1);
+                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
                     }
                     break;
 
@@ -97,7 +107,7 @@ public class DefaultExtensionLoader implements IOIDExtensionLoader {
                     try {
                         keyValue = basicCertificate.getSubjectKeyIdentifier();
                     } catch (IOException e1) {
-                        throw new CertificateCoreException("Error on get value to field " + field.getName(), e1);
+                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
                     }
                     break;
 
@@ -112,14 +122,14 @@ public class DefaultExtensionLoader implements IOIDExtensionLoader {
                     break;
 
                 default:
-                    throw new CertificateCoreException(annotation.type() + " Not Implemented");
+                    throw new CertificateCoreException(coreMessagesBundle.getString("error.field.not.implemented",annotation.type()));
             }
 
             try {
                 field.setAccessible(true);
                 field.set(object, keyValue);
             } catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
-                throw new CertificateCoreException("Error on load value in field " + field.getName(), e);
+                throw new CertificateCoreException(coreMessagesBundle.getString("error.load.value.field", field.getName()), e);
             }
         }
     }

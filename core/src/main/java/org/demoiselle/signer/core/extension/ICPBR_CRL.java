@@ -43,9 +43,13 @@ import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
-
 import org.demoiselle.signer.core.util.Base64Utils;
 
+/**
+ * 
+ *  ICP-BRASIL's definitions of Certificate revocation list (CRL) on java.security.cert.X509CRL format 
+ *
+ */
 public class ICPBR_CRL {
 
     private X509CRL x509crl = null;
@@ -53,8 +57,8 @@ public class ICPBR_CRL {
     /**
      *
      * @param is InputStream
-     * @throws CRLException Retorna a exceção CRLException
-     * @throws CertificateException Retorna a exceção CertificateException
+     * @throws CRLException 
+     * @throws CertificateException 
      */
     public ICPBR_CRL(InputStream is) throws CRLException, CertificateException {
         this.x509crl = getInstance(is);
@@ -63,9 +67,9 @@ public class ICPBR_CRL {
     /**
      *
      * @param data byte array
-     * @throws CRLException Retorna a exceção CRLException
-     * @throws CertificateException Retorna a exceção CertificateException
-     * @throws IOException Retorna a exceção IOException
+     * @throws CRLException 
+     * @throws CertificateException 
+     * @throws IOException
      */
     public ICPBR_CRL(byte[] data) throws CRLException, CertificateException, IOException {
         this.x509crl = getInstance(data);
@@ -125,7 +129,7 @@ public class ICPBR_CRL {
     /**
      * returns the CRL
      *
-     * @return Objeto X509CRL
+     * @return Object X509CRL
      * @see java.security.cert.X509CRL
      */
     public X509CRL getCRL() {

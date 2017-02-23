@@ -83,9 +83,9 @@ public class OID_2_16_76_1_3_2 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return nome do responsavel pelo certificado
+	 * @return Name of the person responsible for the certificate
 	 */
-	public String getNome() {
+	public String getName() {
 		return super.getData();
 	}
 }

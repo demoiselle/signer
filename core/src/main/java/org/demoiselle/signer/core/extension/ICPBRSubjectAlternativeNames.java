@@ -39,6 +39,11 @@ package org.demoiselle.signer.core.extension;
 
 import java.security.cert.X509Certificate;
 
+/**
+ * 
+ * ICP-BRASIL's definitions of Subject Alternative Names 
+ *
+ */
 public class ICPBRSubjectAlternativeNames {
 
 	private String email = null;

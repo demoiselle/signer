@@ -56,27 +56,27 @@ public class ICPBRCertificatePF {
 	/**
 	 * 
 	 * @param oid1
-	 *            -> 2.16.76.1.3.1 e conteudo = nas primeiras 8 (oito) posicoes,
-	 *            a data de nascimento do titular, no formato ddmmaaaa; nas 11
-	 *            (onze) posicoes subsequentes, o Cadastro de Pessoa Fisica
-	 *            (CPF) do titular; nas 11 (onze) posicoes subsequentes, o
-	 *            numero de Identificacao Social - NIS (PIS, PASEP ou CI); nas
-	 *            15 (quinze) posicoes subsequentes, o numero do Registro Geral
-	 *            - RG do titular; nas 6 (seis) posicoes subsequentes, as siglas
-	 *            do orgao expedidor do RG e respectiva UF.
+	 *            -> 2.16.76.1.3.1 and content = In the first 8 (eight) positions, the
+     * Date of birth of the holder for the certificate, in ddmmaaaa format;
+     * In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
+     * holder; In the 11 (eleven) subsequent positions, the number of
+     * Brazilian Social Identification number - NIS (PIS, PASEP or CI); In the 15 (fifteen) positions
+     * Subsequent, the Brazilian ID number (called RG) of the responsible for the certificate; In the six (6) positions
+     * Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brazilian state).
+	 *            
 	 * 
 	 * @param oid2
-	 *            -> 2.16.76.1.3.5 e conteudo = nas primeiras 12 (onze)
-	 *            posicoes, o numero de inscricao do Titulo de Eleitor; nas 3
-	 *            (tres) posicoes subsequentes, a Zona Eleitoral; nas 4 (quatro)
-	 *            posicoes seguintes, a Secao; nas 22 (vinte e duas) posicoes
-	 *            subsequentes, o municipio e a UF do Titulo de Eleitor
+	 *            -> 2.16.76.1.3.5 and content = In the first 12 (eleven)
+	 * positions, the number of the Electoral document; In 3
+	 * (Three) subsequent positions, the Electoral document Zone; In the four (4)
+	 * following positions, the Section of Electoral document; In the twenty-two (22)
+	 * Subsequent  positions, the name of City and  and its UF (Initials for a Brazilian state) of the Electoral Document. 
 	 * 
 	 * @param oid3
-	 *            -> 2.16.76.1.3.6 e conteudo = nas 12 (doze) posicoes o numero
-	 *            do Cadastro Especifico do INSS (CEI) da pessoa fisica titular
-	 *            do certificado
+	 *            -> 2.16.76.1.3.6 and content = In the 12 (twelve) positions, the number of the registry 
+	 *            on Brazilian National Social Security Institute (INSS) called CEI .
 	 */
+	
 	public ICPBRCertificatePF(OID_2_16_76_1_3_1 oid1, OID_2_16_76_1_3_5 oid2, OID_2_16_76_1_3_6 oid3) {
 		this.oID_2_16_76_1_3_1 = oid1;
 		this.oID_2_16_76_1_3_5 = oid2;
@@ -85,7 +85,7 @@ public class ICPBRCertificatePF {
 
 	/**
 	 * 
-	 * @return o numero do Cadastro de Pessoa Fisica (CPF) do titular
+	 * @return the Brazilian IRS Individuals Registry number called CPF 
 	 */
 	public String getCPF() {
 		return oID_2_16_76_1_3_1.getCPF();
@@ -93,15 +93,15 @@ public class ICPBRCertificatePF {
 
 	/**
 	 * 
-	 * @return data de nascimento do titular
+	 * @return Date of birth of the responsible for the certificate
 	 */
-	public String getDataNascimento() {
-		return oID_2_16_76_1_3_1.getDataNascimento();
+	public String getBirthDate() {
+		return oID_2_16_76_1_3_1.getBirthDate();
 	}
 
 	/**
 	 * 
-	 * @return o numero de Identificacao Social - NIS (PIS, PASEP ou CI)
+	 * @return Brazilian Social Identification number of the responsible - initials are: NIS
 	 */
 	public String getNis() {
 		return oID_2_16_76_1_3_1.getNIS();
@@ -109,7 +109,7 @@ public class ICPBRCertificatePF {
 
 	/**
 	 * 
-	 * @return o numero do Registro Geral - RG do titular
+	 * @return the Brazilian ID number (called RG), of the certificate's holder 
 	 */
 	public String getRg() {
 		return oID_2_16_76_1_3_1.getRg();
@@ -117,42 +117,42 @@ public class ICPBRCertificatePF {
 
 	/**
 	 * 
-	 * @return as siglas do orgao expedidor do RG
+	 * @return the initials of the issuing agency of the Brazilian ID (RG)
 	 */
-	public String getOrgaoExpedidorRg() {
-		return oID_2_16_76_1_3_1.getOrgaoExpedidorRg();
+	public String getIssuingAgencyRg() {
+		return oID_2_16_76_1_3_1.getIssuingAgencyRg();
 	}
 
 	/**
 	 * 
-	 * @return a UF do orgao expedidor do RG
+	 * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
 	 */
-	public String getUfExpedidorRg() {
-		return oID_2_16_76_1_3_1.getUfExpedidorRg();
+	public String getUfIssuingAgencyRg() {
+		return oID_2_16_76_1_3_1.getUfIssuingAgencyRg();
 	}
 
 	/**
 	 * 
-	 * @return o numero de inscricao do Titulo de Eleitor
+	 * @return String that contains a number (with size = 12) of the Brazilian Electoral Document (Titulo Eleitor)
 	 */
-	public String getTituloEleitor() {
-		return oID_2_16_76_1_3_5.getTitulo();
+	public String getElectoralDocument() {
+		return oID_2_16_76_1_3_5.getElectoralDocument();
 	}
 
 	/**
 	 * 
-	 * @return o numero da Secao do Titulo de Eleitor
+	 * @return String that contains a number (with size = 4) Section of  Electoral document
 	 */
-	public String getSecaoTituloEleitor() {
-		return oID_2_16_76_1_3_5.getSecao();
+	public String getSectionElectoralDocument() {
+		return oID_2_16_76_1_3_5.getSection();
 	}
 
 	/**
 	 * 
-	 * @return numero da Zona Eleitoral do Titulo de Eleitor
+	 * @return String that contains a number (with size = 3) Section of  Electoral document
 	 */
-	public String getZonaTituloEleitor() {
-		return oID_2_16_76_1_3_5.getZona();
+	public String getZoneElectoralDocument() {
+		return oID_2_16_76_1_3_5.getZone();
 	}
 
 	/**
@@ -165,24 +165,23 @@ public class ICPBRCertificatePF {
 
 	/**
 	 * 
-	 * @return o municipio do Titulo de Eleitor
+	 * @return Name of City of  Electoral document
 	 */
-	public String getMunicipioTituloEleitor() {
-		return oID_2_16_76_1_3_5.getMunicipioTitulo();
+	public String getCityElectoralDocument() {
+		return oID_2_16_76_1_3_5.getCityUF();
 	}
 
 	/**
 	 * 
-	 * @return a UF do Titulo de Eleitor
+	 * @return Initials for a Brasilian state  of Electoral document
 	 */
-	public String getUfTituloEleitor() {
-		return oID_2_16_76_1_3_5.getUFTitulo();
+	public String getUFElectoralDocument() {
+		return oID_2_16_76_1_3_5.getUFDocument();
 	}
 
 	/**
 	 * 
-	 * @return o numero do Cadastro Especifico do INSS (CEI) da pessoa fisica
-	 *         titular do certificado
+	 * @return Brazilian Social Identification Number (INSS-CEI) of the holder of certificate
 	 */
 	public String getCEI() {
 		return oID_2_16_76_1_3_6.getCEI();

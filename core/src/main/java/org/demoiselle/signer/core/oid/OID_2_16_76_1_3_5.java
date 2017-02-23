@@ -40,19 +40,19 @@ package org.demoiselle.signer.core.oid;
 /**
  * Classe OID 2.16.76.1.3.5 <br>
  * <br>
- * Possui alguns atributos de pessoa fisica: <br>
- * <b>*</b> Numero de inscricao do Titulo de Eleitor <br>
- * <b>*</b> Zona Eleitoral <br>
- * <b>*</b> Secao <br>
- * <b>*</b> Municipio do titulo <br>
- * <b>*</b> UF do titulo <br>
+ *      * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
+     * <b>*</b> Number of Electoral document <br>
+     * <b>*</b> Number of Zone of Electoral document <br>
+     * <b>*</b> Number Section of  Electoral document <br>
+     * <b>*</b> City of  Electoral document <br>
+     * <b>*</b> UF (Initials for a Brasilian state) of Electoral document<br>
  * 
  */
 public class OID_2_16_76_1_3_5 extends OIDGeneric {
 
 	public static final String OID = "2.16.76.1.3.5";
 
-	protected static final Object FIELDS[] = { "titulo", (int) 12, "zona", (int) 3, "secao", (int) 4, "municipioUf", (int) 22 };
+	protected static final Object FIELDS[] = { "electoralDocument", (int) 12, "zone", (int) 3, "section", (int) 4, "cityUF", (int) 22 };
 
 	public OID_2_16_76_1_3_5() {
 	}
@@ -66,34 +66,34 @@ public class OID_2_16_76_1_3_5 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return String de 12 posicoes com o numero do Titulo de eleitor
+	 * @return String that contains a number (whith size = 12) of the Brazilian Electoral Document  (Titulo de Eleitor)   
 	 */
-	public String getTitulo() {
-		return properties.get("titulo");
+	public String getElectoralDocument() {
+		return properties.get("electoralDocument");
 	}
 
 	/**
 	 * 
-	 * @return String de 3 posicoes com o numero da zona eleitoral
+	 * @return String that contains a number (with size = 3) Section of  Electoral document
 	 */
-	public String getZona() {
-		return properties.get("zona");
+	public String getZone() {
+		return properties.get("zone");
 	}
 
 	/**
 	 * 
-	 * @return String de 4 posicoes com o numero da secao eleitoral
+	 * @return String that contains a number (with size = 4) Section of  Electoral document
 	 */
-	public String getSecao() {
-		return properties.get("secao");
+	public String getSection() {
+		return properties.get("section");
 	}
 
 	/**
 	 * 
-	 * @return String com o nome do municipio
+	 * @return Name of City of  Electoral document
 	 */
-	public String getMunicipioTitulo() {
-		String s = properties.get("municipioUf").trim();
+	public String getCityUF() {
+		String s = properties.get("cityUF").trim();
 		int len = s.trim().length();
 		String ret = null;
 		if (len > 0) {
@@ -105,10 +105,10 @@ public class OID_2_16_76_1_3_5 extends OIDGeneric {
 
 	/**
 	 * 
-	 * @return String com a UF correspondente.
+	 * @return String UF (Initials for a Brasilian state) of Electoral document
 	 */
-	public String getUFTitulo() {
-		String s = properties.get("municipioUf").trim();
+	public String getUFDocument() {
+		String s = properties.get("cityUF").trim();
 		int len = s.trim().length();
 		String ret = null;
 		if (len > 0) {

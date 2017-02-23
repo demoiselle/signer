@@ -37,29 +37,21 @@
 package org.demoiselle.signer.core.oid;
 
 /**
- * Classe OID 2.16.76.1.3.1 <br>
- * <br>
- * Possui alguns atributos de pessoa fisica: <br>
- * <b>*</b> Data de nascimento do titular "DDMMAAAA" <br>
- * <b>*</b> Cadastro de pessoa fisica (CPF) do titular <br>
- * <b>*</b> Numero de Identidade Social - NIS (PIS, PASEP ou CI) <br>
- * <b>*</b> Numero do Registro Geral (RG) do titular <br>
- * <b>*</b> Sigla do orgao expedidor do RG <br>
- * <b>*</b> UF do orgao expedidor do RG <br>
- * <b>*</b> Conforme:<br>
- * nas primeiras 8 (oito) posicoes, a data de nascimento do titular, no formato
- * ddmmaaa; nas 11 (onze) posicoes subsequentes, o Cadastro de Pessoa Fisica
- * (CPF) do titular; nas 11 (onze) posicoes subsequentes, o numero de
- * Identificacao Social - NIS (PIS, PASEP ou CI); nas 15 (quinze) posicoes
- * subsequentes, o numero do Registro Geral - RG do titular; nas 6 (seis)
- * posicoes subsequentes, as siglas do orgao expedidor do RG e respectiva UF
+ *      * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
+     *  </ b> Date of birth of the holder on "DDMMAAAA" format<br>
+     * <B> * </ b> The Brazilian IRS Individuals Registry called CPF <br>
+     * <B> * </ b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
+     * <B> * </ b> the Brazilian ID number called RG <br>
+     * <B> * </ b> the initials of the issuing agency of the ID (RG) <br>
+     * <B> * </ b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
+
  *
  */
 public class OID_2_16_76_1_3_1 extends OIDGeneric {
 
     public static final String OID = "2.16.76.1.3.1";
 
-    protected static final Object FIELDS[] = {"dtNascimento", 8, "cpf", 11, "nis", 11, "rg", 15, "orgaoUfExpedidor", 6};
+    protected static final Object FIELDS[] = {"birthDate", 8, "cpf", 11, "nis", 11, "rg", 15, "UfIssuingAgencyRg", 6};
 
     public OID_2_16_76_1_3_1() {
     }
@@ -71,15 +63,15 @@ public class OID_2_16_76_1_3_1 extends OIDGeneric {
 
     /**
      *
-     * @return a data de nascimento do titular
+     * @return Date of birth of holder the certificate in ddMMyyyy format
      */
-    public String getDataNascimento() {
-        return properties.get("dtNascimento");
+    public String getBirthDate() {
+        return properties.get("birthDate");
     }
 
     /**
      *
-     * @return numero do Cadastro de Pessoa Fisica (CPF) do titular;
+     * @return the Brazilian IRS Individuals Registry number called CPF
      */
     public String getCPF() {
         return properties.get("cpf");
@@ -87,7 +79,7 @@ public class OID_2_16_76_1_3_1 extends OIDGeneric {
 
     /**
      *
-     * @return o numero de Identificacao Social - NIS (PIS, PASEP ou CI)
+     * @return Brazilian Social Identification number of the responsible - initials are: NIS
      */
     public String getNIS() {
         return properties.get("nis");
@@ -95,7 +87,7 @@ public class OID_2_16_76_1_3_1 extends OIDGeneric {
 
     /**
      *
-     * @return numero do Registro Geral - RG do titular
+     * @return the Brazilian ID number (called RG), of the certificate's holder
      */
     public String getRg() {
         return properties.get("rg");
@@ -103,30 +95,30 @@ public class OID_2_16_76_1_3_1 extends OIDGeneric {
 
     /**
      *
-     * @return as siglas do orgao expedidor do RG
+     * @return the initials of the issuing agency of the Brazilian ID (RG)
      */
-    public String getOrgaoExpedidorRg() {
-        String s = properties.get("orgaoUfExpedidor").trim();
+    public String getIssuingAgencyRg() {
+        String s = properties.get("UfIssuingAgencyRg").trim();
         int len = s.trim().length();
-        String retorno = null;
+        String retIssuingAgencyRg = null;
         if (len > 0) {
-            retorno = s.substring(0, len - 2);
+            retIssuingAgencyRg = s.substring(0, len - 2);
         }
-        return retorno;
+        return retIssuingAgencyRg;
     }
 
     /**
      *
-     * @return a UF do orgao expedidor do RG
+     * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
      */
-    public String getUfExpedidorRg() {
-        String s = properties.get("orgaoUfExpedidor").trim();
+    public String getUfIssuingAgencyRg() {
+        String s = properties.get("UfIssuingAgencyRg").trim();
         int len = s.trim().length();
-        String retorno = null;
+        String retUfIssuingAgencyRg = null;
         if (len > 0) {
-            retorno = s.substring(len - 2, len);
+            retUfIssuingAgencyRg = s.substring(len - 2, len);
         }
-        return retorno;
+        return retUfIssuingAgencyRg;
     }
 
 }

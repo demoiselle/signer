@@ -44,6 +44,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
 * 
@@ -55,6 +56,7 @@ import org.demoiselle.signer.core.ca.provider.ProviderCA;
 
 public class HomologacaoProviderCA implements ProviderCA {
 	
+	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
 
     @SuppressWarnings("finally")
 	public Collection<X509Certificate> getCAs() {
@@ -79,6 +81,6 @@ public class HomologacaoProviderCA implements ProviderCA {
     }
 
     public String getName() {
-         return "Homologacao SERPRO Provider";
+         return chainMessagesBundle.getString("info.provider.name.hom.serpro");
     }
 }
