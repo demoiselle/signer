@@ -135,7 +135,7 @@ public class Configuration {
             try {
                 this.addDriver(driver, map.get(driver));
             } catch (Throwable error) {
-                logger.error(DRIVER_ERROR_LOAD + " " + driver);
+                logger.debug(DRIVER_ERROR_LOAD + " " + driver);
             }
         }
 
