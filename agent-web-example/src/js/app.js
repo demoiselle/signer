@@ -37,7 +37,7 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
                 clearInterval(tryAgainTimeout);
             } else {
-                console.log("Warn user to download/execute Agent-Desktop AND try again in 5000ms");
+                console.log("Warn user to download/execute Agent-Desktop AND try again in 3000ms");
                 $scope.serverIsOn = false;
 
                 // Try again in 3000ms
