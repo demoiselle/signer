@@ -23,10 +23,8 @@ public class Execute {
 			for (Provider provider : Security.getProviders())
 				if (provider instanceof SunPKCS11)
 					((SunPKCS11) provider).logout();
-		} catch (LoginException e) {
-			
-			e.printStackTrace();
-			
+		} catch (LoginException e) {			
+			e.printStackTrace();			
 		}
 	}
 

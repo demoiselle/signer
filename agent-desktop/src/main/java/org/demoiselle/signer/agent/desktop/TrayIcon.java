@@ -227,7 +227,7 @@ public class TrayIcon {
 		String signatureFileName = "";
 
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Selecione o Arquivo de Conteúdo");		
+		fileChooser.setDialogTitle("Selecione o Arquivo de Conteúdo");
 
 		int returnValue = fileChooser.showOpenDialog(null);
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
