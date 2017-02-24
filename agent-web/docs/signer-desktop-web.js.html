@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li><li data-type='method'><a href="SignerDesktopClient.html#validate">validate</a></li><li data-type='method'><a href="SignerDesktopClient.html#validateFile">validateFile</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -51,10 +51,10 @@ var SignerDesktopClient = (function () {
     var isDebug = false;
 
     /**
-     * Set URI to use in communication.
+     * Log messages in console if in debug mode.
      * 
      * @private
-     * @param {string} message - Uri to use.
+     * @param {string} message - Message to log.
      * @memberof SignerDesktopClient
      */
     var l = function (message) {
@@ -177,6 +177,28 @@ var SignerDesktopClient = (function () {
         },
 
         /**
+		 * Validate a signature with original content.
+         * The original content and the signature
+         * MUST be in base64.
+         * 
+         * @instance
+		 * @param {string} content - The text that was signed
+		 * @param {string} signed - Signature of the content 
+		 * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
+        validate: function (content, signature) {
+            var validateCommand = {
+                command: 'validate',
+                format: 'base64',
+                content: content,
+                signature: signature
+            }
+            var promise = services.execute(validateCommand);
+            return promise;
+        },
+
+        /**
 		 * Sign file selected by method getFiles.
          * 
          * @instance
@@ -201,6 +223,22 @@ var SignerDesktopClient = (function () {
             var promise = services.execute(signerCommand);
             return promise;
         },
+
+        /**
+		 * Validate a signature on local machine.
+         * 
+         * @instance
+		 * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
+        validateFile: function () {
+            var validateFileCommand = {
+                command: 'validatefile'
+            }
+            var promise = services.execute(validateFileCommand);
+            return promise;
+        },
+        
 
         /**
 		 * Logout of access token.
@@ -324,7 +362,7 @@ var SignerDesktopClient = (function () {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Tue Feb 21 2017 16:24:10 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Feb 24 2017 09:15:28 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
