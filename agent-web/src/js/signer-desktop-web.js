@@ -12,10 +12,10 @@ var SignerDesktopClient = (function () {
     var isDebug = false;
 
     /**
-     * Set URI to use in communication.
+     * Log messages in console if in debug mode.
      * 
      * @private
-     * @param {string} message - Uri to use.
+     * @param {string} message - Message to log.
      * @memberof SignerDesktopClient
      */
     var l = function (message) {
@@ -138,6 +138,28 @@ var SignerDesktopClient = (function () {
         },
 
         /**
+		 * Validate a signature with original content.
+         * The original content and the signature
+         * MUST be in base64.
+         * 
+         * @instance
+		 * @param {string} content - The text that was signed
+		 * @param {string} signed - Signature of the content 
+		 * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
+        validate: function (content, signature) {
+            var validateCommand = {
+                command: 'validate',
+                format: 'base64',
+                content: content,
+                signature: signature
+            }
+            var promise = services.execute(validateCommand);
+            return promise;
+        },
+
+        /**
 		 * Sign file selected by method getFiles.
          * 
          * @instance
@@ -162,6 +184,22 @@ var SignerDesktopClient = (function () {
             var promise = services.execute(signerCommand);
             return promise;
         },
+
+        /**
+		 * Validate a signature on local machine.
+         * 
+         * @instance
+		 * @return Promisse - The promisse when is finished. 
+		 * @memberof SignerDesktopClient
+		 */
+        validateFile: function () {
+            var validateFileCommand = {
+                command: 'validatefile'
+            }
+            var promise = services.execute(validateFileCommand);
+            return promise;
+        },
+        
 
         /**
 		 * Logout of access token.

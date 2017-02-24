@@ -8,3 +8,5 @@ org.demoiselle.signer.agent.desktop.command.policy.ListPolicies
 org.demoiselle.signer.agent.desktop.command.signer.Signer
 org.demoiselle.signer.agent.desktop.command.signer.FileSigner
 org.demoiselle.signer.agent.desktop.command.ui.GetFiles
+org.demoiselle.signer.agent.desktop.command.signer.Validate
+org.demoiselle.signer.agent.desktop.command.signer.ValidateFile

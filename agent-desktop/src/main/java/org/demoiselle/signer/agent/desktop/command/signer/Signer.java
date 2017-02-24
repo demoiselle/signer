@@ -40,8 +40,7 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 	        	policie = Policies.AD_RB_CADES_2_2;
 	        }
 	        signer.setSignaturePolicy(policie);
-	        //byte[] signed = signer.doAttachedSign(this.getContent(request));
-	        byte[] signed = signer.doDetachedSign(this.getContent(request));	        
+	        byte[] signed = signer.doDetachedSign(this.contentToBytes(request.getContent(), request.getFormat(), request.getCompacted()));	        
 	        String encripted = Base64Utils.base64Encode(signed);
 	        SignerResponse result = new SignerResponse();
 	        result.setRequestId(request.getId());
@@ -64,23 +63,4 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 	private void validateRequest(SignerRequest request) {
 	}
 
-	private byte[] getContent(SignerRequest request) {
-		byte[] result = null;
-		if (request.getFormat().equalsIgnoreCase("text")) {
-			result = request.getContent().getBytes();
-		} else if (request.getFormat().equalsIgnoreCase("base64")) {
-			result = Base64Utils.base64Decode(request.getContent());
-		} else if (request.getFormat().equalsIgnoreCase("hexa")) {
-		    int len = request.getContent().length();
-		    byte[] data = new byte[len / 2];
-		    for (int i = 0; i < len; i += 2) {
-		        data[i / 2] = (byte) ((Character.digit(request.getContent().charAt(i), 16) << 4)
-		                             + Character.digit(request.getContent().charAt(i+1), 16));
-		    }
-		    result = data;
-		}
-		if (request.getCompacted()) {
-		}
-		return result;
-	}
 }

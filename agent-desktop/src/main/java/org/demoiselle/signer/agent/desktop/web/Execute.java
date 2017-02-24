@@ -1,16 +1,11 @@
 package org.demoiselle.signer.agent.desktop.web;
 
-import java.security.Provider;
-import java.security.Security;
 import java.util.ServiceLoader;
 
-import javax.security.auth.login.LoginException;
-
 import org.demoiselle.signer.agent.desktop.Command;
+import org.demoiselle.signer.agent.desktop.command.cert.LogoutPKCS11;
 
 import com.google.gson.Gson;
-
-import sun.security.pkcs11.SunPKCS11;
 
 public class Execute {
 
@@ -18,20 +13,10 @@ public class Execute {
 		return this.executeCommand(request.toJson());
 	}
 
-	private void logout() {
-		try {
-			for (Provider provider : Security.getProviders())
-				if (provider instanceof SunPKCS11)
-					((SunPKCS11) provider).logout();
-		} catch (LoginException e) {			
-			e.printStackTrace();			
-		}
-	}
-
 	public String executeCommand(String messageData) {
 		
 		// Always logout before run: This avoid the white hardware have communication problems
-		logout();
+		(new LogoutPKCS11()).doCommand(null);
 
 		final Gson gson = new Gson();
 		Request request = null;
