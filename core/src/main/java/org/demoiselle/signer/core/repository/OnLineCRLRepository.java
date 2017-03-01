@@ -52,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
  * Representa um repositório online. Neste caso não ha necessidade de um serviço
@@ -62,6 +63,7 @@ import org.demoiselle.signer.core.extension.ICPBR_CRL;
 public class OnLineCRLRepository implements CRLRepository {
 
     private final Logger logger = LoggerFactory.getLogger(OnLineCRLRepository.class);
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     @Override
     public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {

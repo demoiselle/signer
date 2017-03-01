@@ -41,14 +41,23 @@ import java.security.KeyStore;
 import javax.security.auth.callback.CallbackHandler;
 
 /**
- * Especificação de um KeyStoreLoader. A maioria dos providers pedem o PIN
- * number na hora de acessar o recurso. Um PIN Number é a senha de acesso ao
- * token/smart card.
+ * Specifying a KeyStoreLoader. 
+ * Most providers ask for a PIN (Personal Identification Number) when accessing the feature. 
+ * A PIN Number is the token or smartcard's access password.
  */
 public interface KeyStoreLoader {
 
+	/**
+	 * 	@return KeyStore
+	 *  @see java.security.KeyStore
+	 */
 	public KeyStore getKeyStore();
 
+	/**
+	 * 
+	 * @param callback
+	 * @see javax.security.auth.callback.CallbackHandler
+	 */
 	public void setCallbackHandler(CallbackHandler callback);
 
 }

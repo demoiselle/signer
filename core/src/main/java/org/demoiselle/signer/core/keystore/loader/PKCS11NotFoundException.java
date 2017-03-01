@@ -37,14 +37,28 @@
 
 package org.demoiselle.signer.core.keystore.loader;
 
+/** 
+ * 
+ * Custo to do unchecked
+ *
+ */
 public class PKCS11NotFoundException extends KeyStoreLoaderException {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 * @param message
+	 * @param e
+	 */
 	public PKCS11NotFoundException(String message, Throwable e) {
 		super(message, e);
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	public PKCS11NotFoundException(String message) {
 		super(message);
 	}

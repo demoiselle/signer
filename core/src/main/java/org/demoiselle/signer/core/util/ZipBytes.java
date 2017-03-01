@@ -53,6 +53,7 @@ public final class ZipBytes {
 
     private static final Logger LOGGER = Logger.getLogger(ZipBytes.class.getName());
     private final static int BUFFER_SIZE = 4096;
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     public static byte[] compressing(Map<String, byte[]> files) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();

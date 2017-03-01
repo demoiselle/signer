@@ -40,6 +40,11 @@ package org.demoiselle.signer.core.keystore.loader;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * 
+ * Custom exception to do unchecked
+ *
+ */
 public class KeyStoreLoaderException extends RuntimeException {
 
 	private static final long serialVersionUID = -8414095761444262719L;
@@ -50,24 +55,44 @@ public class KeyStoreLoaderException extends RuntimeException {
 		super();
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	public KeyStoreLoaderException(String message) {
 		super(message);
 	}
 
+	/**
+	 * 
+	 * @param message
+	 * @param cause
+	 */
 	public KeyStoreLoaderException(String message, Throwable cause) {
 		super(message, cause);
 	}
 
+	/**
+	 *  to include an error occurred on KeyStore Load process.
+	 * @param error
+	 */
 	public void addError(Throwable error) {
 		if (this.errors == null)
 			this.errors = new HashSet<Throwable>();
 		this.errors.add(error);
 	}
 
+	/**
+	 * @return the Set of Thowable erros included by addError method
+	 */
 	public Set<Throwable> getErrors() {
 		return this.errors;
 	}
 
+	/**
+	 * 
+	 * @return true if the Set of Thowable erros isnt empity. 
+	 */
 	public boolean hasErrors() {
 		return !errors.isEmpty();
 	}

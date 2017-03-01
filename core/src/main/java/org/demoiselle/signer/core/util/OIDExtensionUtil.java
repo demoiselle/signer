@@ -47,6 +47,7 @@ public class OIDExtensionUtil {
 	private final X509Certificate x509;
 	private final Map<String, String> oid_2_5_29_17;
 	private final Map<String, String> oid_2_5_29_31;
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 	public OIDExtensionUtil(X509Certificate x509) {
 		this.x509 = x509;

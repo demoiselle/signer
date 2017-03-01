@@ -42,47 +42,50 @@ import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.keystore.loader.implementation.DriverKeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.implementation.FileSystemKeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
-
+import org.demoiselle.signer.core.util.MessagesBundle;
 import java.io.File;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * factory fo an instance of KeyStoreLoader
+ * @see org.demoiselle.signer.core.keystore.loader.KeyStoreLoader
+ */
 public class KeyStoreLoaderFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(KeyStoreLoaderFactory.class);
+    
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     /**
-     * Método responsável por fabricar uma instância de KeyStoreLoader baseado
-     * em PKCS#11.<br>
-     * Normalmente este método fabrica carregadores baseados nas configurações
-     * do ambiente.<br>
-     * Pode-se fabricar instancias voltadas para ambiente windows ou linux, ou
-     * então baseado na versão da JVM.<br>
-     *
-     * @return {@link KeyStoreLoader}
-     */
+    * 
+    * Method responsible for fabricating an instance of KeyStoreLoader based on PKCS#11.
+    * Usually this method builds chargers based on the environment settings.
+    * You can manufacture instances oriented to windows or linux environment, or else based on the JVM version. <br>
+    *
+    * @return {@link KeyStoreLoader}
+    */
     public static KeyStoreLoader factoryKeyStoreLoader() {
 
-        logger.debug("Fabricando KeyStore sem parametros");
+        logger.debug(coreMessagesBundle.getString("info.keystore.no.parameter"));
         if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-            logger.debug("Fabricando KeyStore padrao Windows");
+            logger.debug(coreMessagesBundle.getString("info.keystore.ms"));
             if (Configuration.getInstance().isMSCapiDisabled()) {
-                logger.debug("Fabricando KeyStore no modo PKCS11 para Windows");
+                logger.debug(coreMessagesBundle.getString("info.keystore.ms.pkcs11"));
                 return new DriverKeyStoreLoader();
             } else {
-                logger.debug("Fabricando KeyStore SunMSCAPI");
+                logger.debug(coreMessagesBundle.getString("info.keystore.mscapi"));
                 return new MSKeyStoreLoader();
             }
         } else {
-            logger.debug("Fabricando KeyStore no modo PKCS11 para Nao Windows");
+            logger.debug(coreMessagesBundle.getString("info.keystore.pkcs11"));
             return new DriverKeyStoreLoader();
         }
     }
 
     /**
-     * Método que fabrica uma instância de AbstractKeyStoreLoader para
-     * manipulação de KeyStore padrão PKCS#12.
+     * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
      *
      * @param file
      * @return {@link KeyStoreLoader}
@@ -92,10 +95,8 @@ public class KeyStoreLoaderFactory {
     }
 
     /**
-     * Método responsável por fabricar uma instância de AbstractKeyStoreLoader
-     * baseado em uma classe passada como parâmetro.<br>
-     * Representa um ponto de extensão do componente, o qual permite a aplicação
-     * implementar seu próprio meio de carregamento de KeyStore.<br>
+     * Method responsible for fabricating an instance of AbstractKeyStoreLoader based on a class passed as parameter. 
+     * Represents an extension point of the component, which allows the application to implement its own KeyStore loading method.
      *
      * @param clazz
      *
@@ -104,7 +105,7 @@ public class KeyStoreLoaderFactory {
     public static KeyStoreLoader factoryKeyStoreLoader(Class<? extends KeyStoreLoader> clazz) {
 
         if (clazz == null) {
-            throw new KeyStoreLoaderException("O parametro \"clazz\" nao pode ser nulo");
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.parm.clazz.null"));
         }
         KeyStoreLoader result = null;
 
@@ -112,7 +113,7 @@ public class KeyStoreLoaderFactory {
             result = clazz.newInstance();
 
         } catch (IllegalAccessException | InstantiationException error) {
-            throw new KeyStoreLoaderException("Erro na criacao da instancia de " + clazz.getCanonicalName());
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.class.instance",clazz.getCanonicalName()));
         }
         return result;
     }

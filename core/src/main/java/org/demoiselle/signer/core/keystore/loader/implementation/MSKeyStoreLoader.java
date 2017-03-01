@@ -38,6 +38,7 @@ package org.demoiselle.signer.core.keystore.loader.implementation;
 
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -65,6 +66,8 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
     protected static final String MS_PROVIDER = "SunMSCAPI";
     protected static final String MS_TYPE = "Windows-MY";
     protected static final String MS_ERROR_LOAD = "Error on load a KeyStore from SunMSCAPI";
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+    
     private CallbackHandler callback;
 
     @Override

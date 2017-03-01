@@ -39,6 +39,7 @@ package org.demoiselle.signer.core.repository;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.util.RepositoryUtil;
 
 import java.io.File;
@@ -64,9 +65,10 @@ import org.slf4j.LoggerFactory;
  * algum serviço atualizando constantemente estas CRLs
  */
 public class OffLineCRLRepository implements CRLRepository {
-
-    private final Configuration config;
+	
+	private final Configuration config;
     private final Logger logger = LoggerFactory.getLogger(OffLineCRLRepository.class);
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     public OffLineCRLRepository() {
         config = Configuration.getInstance();

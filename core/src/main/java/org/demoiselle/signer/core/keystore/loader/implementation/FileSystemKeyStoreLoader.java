@@ -45,6 +45,7 @@ import javax.security.auth.callback.CallbackHandler;
 
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
  * Implementação do carregamento de KeyStore baseado no padrão PKCS12 ou JKS
@@ -56,6 +57,7 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
     private static final String FILE_TYPE_JKS = "JKS";
     private static final String FILE_LOAD_ERROR = "Error on load a keystore from file";
     private static final String FILE_NOT_VALID = "File invalid or not exist";
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     private File fileKeyStore = null;
 

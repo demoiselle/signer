@@ -59,6 +59,7 @@ import org.slf4j.LoggerFactory;
 public class RepositoryUtil {
 
     private static Logger logger = LoggerFactory.getLogger(RepositoryUtil.class);
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     public static String urlToMD5(String url) {
         try {

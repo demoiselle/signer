@@ -47,6 +47,7 @@ package org.demoiselle.signer.core.oid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERIA5String;
@@ -55,6 +56,8 @@ import org.bouncycastle.asn1.DERPrintableString;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.bouncycastle.asn1.DLSequence;
+import org.demoiselle.signer.core.util.MessagesBundle;
+
 import sun.security.util.DerValue;
 import sun.security.x509.OtherName;
 
@@ -64,6 +67,7 @@ public class OIDGeneric {
     private String data = null;
     protected Map<String, String> properties = new HashMap<String, String>();
 	private static ASN1InputStream is;
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     protected OIDGeneric() {
     }

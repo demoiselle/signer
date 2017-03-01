@@ -64,9 +64,9 @@ import org.demoiselle.signer.core.keystore.loader.PKCS11NotFoundException;
 import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 
 /**
- * Implementação de KeyStoreLoader baseado em drivers do sistema operacional. É
- * necessário informar o arquivo do driver no sistema operacional e o nome da
- * API.
+ * Implementation of KeyStoreLoader based operating system drivers. 
+ * You must enter the driver file in the operating system and the API name.
+ * 
  */
 public class DriverKeyStoreLoader implements KeyStoreLoader {
 

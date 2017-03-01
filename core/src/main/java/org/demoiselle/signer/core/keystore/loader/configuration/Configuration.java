@@ -48,25 +48,21 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Classe responsável por recuperar informações do sistema tais como versão do
- * sistema operacional e versão da JVM.<br>
- * Manipula também informaões dos drivers PKCS#11 a serem utilizados pelo
- * componente.<br>
- * É possível adicionar um Driver PKCS#11 em tempo de execução, não restringindo
- * a utilização apenas dos drivers configurados no componente.
+ * 
+ * Class responsible for retrieving system information, such as operating system version and JVM version. 
+ * It also manipulates PKCS # 11 driver information to be used by the component. 
+ * You can add a PKCS # 11 Driver at run time, not restricting the use of only the drivers configured on the component.
+ *
  */
 public class Configuration {
 
     private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
-    protected static final String NAME_NULL = "Nome do driver deve ser informado";
-    protected static final String PATH_NULL = "Path do driver deve ser informado";
-    protected static final String PATH_INVALID = "Path do driver é inválido. O path deve conter o diretório e o nome do arquivo";
-    protected static final String DRIVER_ERROR_LOAD = "Impossivel carregar o driver";
-    protected static final String DRIVER_ERROR_LOAD_VARIABLE = "Impossivel carregar o driver definido na variavel de ambiente";
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
     protected static final String KEY_JAVA_VERSION = "java.runtime.version";
     protected static final String KEY_OS_NAME = "os.name";
     protected static final String VAR_PKCS11_CONFIG = "PKCS11_CONFIG_FILE";
@@ -84,6 +80,10 @@ public class Configuration {
     }
     private final Map<String, String> drivers = new HashMap<>();
 
+    /**
+     * Load driver for Token or SmartCard installed on local machine that will use this component
+     * Must to be installed on local machine and on the defined map bellow
+     */
     private Configuration() {
         String winRoot = (System.getenv("SystemRoot") == null) ? "" : System.getenv("SystemRoot").replaceAll("\\\\", "/");
         Map<String, String> map = new HashMap<>();
@@ -135,46 +135,49 @@ public class Configuration {
             try {
                 this.addDriver(driver, map.get(driver));
             } catch (Throwable error) {
-                logger.error(DRIVER_ERROR_LOAD + " " + driver);
+                logger.error(coreMessagesBundle.getString("error.load.driver",driver));
             }
         }
 
         try {
             this.getPKCS11DriverFromVariable();
         } catch (Throwable error) {
-            logger.error(DRIVER_ERROR_LOAD);
+            logger.error(coreMessagesBundle.getString("error.load.driver"));
         }
 
     }
 
     /**
-     * Metodo que retorna a versao da JVM que esta rodando o componente. Busca
-     * esta informacao nas propriedades do sistema.
+     * Method that returns the version of the JVM that is running the component. 
+     * Look for this information in the system properties.
      *
-     * @return versao da JVM atual
+     * @return version of current JVM 
      */
     public String getJavaVersion() {
         return System.getProperty(Configuration.KEY_JAVA_VERSION);
     }
 
+    /**
+     * 
+     * @return true if Microsoft CryptoAPI is DISABLE
+     */
     public boolean isMSCapiDisabled() {
         boolean enabled = Boolean.parseBoolean(this.getContentFromVariables(Configuration.MSCAPI_DISABLED));
         return enabled;
     }
 
     /**
-     * Metodo que retorna o nome do sistema operacional. Busca esta informacao
-     * nas propriedades do sistema.
+     * Method that returns the name of the operating system. 
+     * Look for this information in the system properties.
      *
-     * @return nome do sistema operacional atual
+     * @return name of the operating system
      */
     public String getSO() {
         return System.getProperty(Configuration.KEY_OS_NAME);
     }
 
     /**
-     * Retorna um conjunto de drivers no padrão Map<'nome driver', 'path
-     * driver'>
+     * Returns a set of drivers in the Map, in this pattern: <'driver name', 'path driver'>
      *
      * @return
      */
@@ -195,38 +198,36 @@ public class Configuration {
     public void addDriver(String name, String fileName) {
 
         if (name == null || "".equals(name)) {
-            throw new KeyStoreLoaderException(Configuration.NAME_NULL);
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.name.null"));
         }
 
         if (fileName == null || "".equals(fileName)) {
-            throw new KeyStoreLoaderException(Configuration.PATH_NULL);
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.driver.null"));
         }
 
         File file = new File(fileName);
         if (!file.exists() || !file.isFile()) {
-            throw new KeyStoreLoaderException(Configuration.PATH_INVALID);
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.path.invalid"));
         }
 
-        logger.debug("Adicionando o driver " + name + "::" + fileName + " na lista de drivers");
+        logger.debug(coreMessagesBundle.getString("info.add.driver", name, fileName));
         this.drivers.put(name, fileName);
 
     }
 
     /**
-     * O nome do driver é obrigatório para o devido carregamento da biblioteca,
-     * mas não existe uma obrigatoriedade do nome ser sempre o mesmo e único,
-     * então para facilitar nos casos em que não se saiba o fabricante do driver
-     * pode-se utilizar este método que cria o nome do driver a partir do seu
-     * arquivo fisico. Ex: /etc/driver/driver.so nome do driver = driver.so É
-     * importante frisar que quanto maior for a informação melhor será para
-     * corrigir problemas.
+     * The name of the driver is required for proper loading of the library, 
+     * but there is no obligation for the name to be always the same and unique, 
+     * so to facilitate in cases where the manufacturer of the driver is not known, 
+     * this method can be used to create the Name of the driver from your physical file. 
+     *   Ex: /etc/driver/driver.so driver name = driver.so 
+     * It is important to point out that the higher the information the better it will be to avoid problems.
      *
-     * @param fileName Parametro obrigatorio que informa o path completo do
-     * driver no sistema operacional. Ex: /etc/driver/driver.so
+     * @param fileName Mandatory parameter that informs the full path of the driver in the operating system. Ex: /etc/driver/driver.so
      */
     public void addDriver(String fileName) {
         if (fileName == null || fileName.trim().length() <= 0) {
-            throw new KeyStoreLoaderException("Nome do arquivo é requerido");
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("warn.file.null"));
         }
         String driverName = fileName.replaceAll("\\\\", "/");
         int begin = driverName.lastIndexOf("/");
@@ -239,12 +240,17 @@ public class Configuration {
     }
 
     /**
-     * Recuperar o path do arquivo de configuração para SunPKCS11 de acordo com
-     * o site. Para utilizar o arquivo de configuracao, basta informar o seu
-     * path em uma variavel de ambiente ou então como parametro da JVM Java 1.5
+     * Retrieve the path of the configuration file for SunPKCS11 according to the links below. 
+     * To use the configuration file, simply enter your path in an environment variable or as a JVM parameter
+     * 
+     * Java 1.5
      * - http://java.sun.com/j2se/1.5.0/docs/guide/security/p11guide.html Java
-     * 1.6 -
-     * http://java.sun.com/javase/6/docs/technotes/guides/security/p11guide.html
+     * Java 1.6 
+     * - http://java.sun.com/javase/6/docs/technotes/guides/security/p11guide.html
+     * Java 7
+     * - http://docs.oracle.com/javase/7/docs/technotes/guides/security/p11guide.html
+     * Java 8
+     * - https://docs.oracle.com/javase/8/docs/technotes/guides/security/p11guide.html 
      *
      * @return
      */
@@ -254,14 +260,20 @@ public class Configuration {
     }
 
     /**
-     * Recuperar o driver e seu path a partir de variavel de ambiente ou
-     * variavel da JVM. Exemplo de definicao: JVM:
-     * -DPKCS11_DRIVER=Pronova::/usr/lib/libepsng_p11.so ou
-     * -DPKCS11_DRIVER=/usr/lib/libepsng_p11.so Variavel de ambiente Linux
-     * export PKCS11_DRIVER=Pronova::/usr/lib/libepsng_p11.so ou export
-     * PKCS11_DRIVER=/usr/lib/libepsng_p11.so Variavel de ambiente windows set
-     * PKCS11_DRIVER=Pronova::/WINDOWS/system32/ngp11v211.dll set
-     * PKCS11_DRIVER=/WINDOWS/system32/ngp11v211.dll
+     * Retrieve the driver and its path from the environment variable or JVM variable. 
+     * 
+     * Example of definition: 
+     * 
+     * JVM:
+     * -DPKCS11_DRIVER=Pronova::/usr/lib/libepsng_p11.so or
+     * -DPKCS11_DRIVER=/usr/lib/libepsng_p11.so
+     *  
+     * Environment variable in Linux
+     * export PKCS11_DRIVER=Pronova::/usr/lib/libepsng_p11.so ou 
+     * export PKCS11_DRIVER=/usr/lib/libepsng_p11.so 
+     * Environment variable in window$
+     * set PKCS11_DRIVER=Pronova::/WINDOWS/system32/ngp11v211.dll 
+     * set PKCS11_DRIVER=/WINDOWS/system32/ngp11v211.dll
      */
     public void getPKCS11DriverFromVariable() {
 
@@ -283,12 +295,11 @@ public class Configuration {
     }
 
     /**
-     * Busca nas variaveis de ambiente ou em variavel da JVM um determinado
-     * valor. Prioridade para as variaveis de ambiente.
+     * Search the environment variables or a JVM variable for a given value. 
+     * Priority for environment variables.
      *
-     * @param key Chave de localizacao da variavel
-     * @Creturn O conteudo definida em uma das variaveis. NULL se nenhuma
-     * variavel for definida
+     * @param key Variable location key
+     * @return The content defined in one of the variables. NULL if no variables are defined 
      */
     private String getContentFromVariables(String key) {
         String content = System.getenv(key);
@@ -321,6 +332,11 @@ public class Configuration {
         return content;
     }
     
+    /**
+     * 
+     * load configuration drivers from a file storaged on user machine  
+     * @param map
+     */
     private void loadFromHomeFile(Map<String, String> map){
     	Properties prop = new Properties();
     	InputStream input = null;
@@ -348,6 +364,10 @@ public class Configuration {
    	
     }
     
+    /**
+     * 
+     * @return File path acording to SO
+     */
     public static String getConfigFilePath(){
     	String separator = System.getProperty(FILE_SEPARATOR);
     	return System.getProperty(CUSTOM_CONFIG_PATH)+separator+CONFIG_FILE_DIR+separator+CONFIG_FILE_PATH;

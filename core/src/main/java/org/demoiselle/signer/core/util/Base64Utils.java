@@ -48,6 +48,7 @@ public class Base64Utils {
     private static final String X509_CERTIFICATE_TYPE = "X.509";
     private static final String CERTIFICATION_CHAIN_ENCODING = "PkiPath";
     private static byte[] mBase64EncMap, mBase64DecMap;
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     /**
      * Class initializer. Initializes the Base64 alphabet (specified in

@@ -46,10 +46,12 @@ import java.util.Set;
 
 import org.demoiselle.signer.core.Priority;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 // TODO Criar Exception
 public final class TimeStampGeneratorSelector implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 	private static ServiceLoader<TimeStampGenerator> loader;
 

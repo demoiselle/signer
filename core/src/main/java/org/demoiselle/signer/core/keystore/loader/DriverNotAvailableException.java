@@ -37,14 +37,28 @@
 
 package org.demoiselle.signer.core.keystore.loader;
 
+/**
+ * 
+ * Custom RuntimeException to do unchecked
+ *
+ */
 public class DriverNotAvailableException extends KeyStoreLoaderException {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 * @param message
+	 * @param e Throwble error
+	 */
 	public DriverNotAvailableException(String message, Throwable e) {
 		super(message, e);		
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	public DriverNotAvailableException(String message) {
 		super(message);
 	}

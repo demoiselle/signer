@@ -37,14 +37,28 @@
 
 package org.demoiselle.signer.core.keystore.loader;
 
+/**
+ * 
+ * Custom runtime to do unchecked
+ *
+ */
 public class InvalidPinException extends KeyStoreLoaderException {
 
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * 
+	 * @param message
+	 * @param e error
+	 */
 	public InvalidPinException(String message, Throwable e) {
 		super(message, e);
 	}
 
+	/**
+	 * 
+	 * @param message
+	 */
 	public InvalidPinException(String message) {
 		super(message);
 	}

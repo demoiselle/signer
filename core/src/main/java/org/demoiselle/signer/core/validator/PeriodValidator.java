@@ -38,6 +38,7 @@ package org.demoiselle.signer.core.validator;
 
 import org.demoiselle.signer.core.IValidator;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 import java.security.cert.X509Certificate;
 
@@ -48,6 +49,8 @@ import java.security.cert.X509Certificate;
  */
 public class PeriodValidator implements IValidator {
 
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	
     @Override
     public void validate(X509Certificate x509) throws CertificateValidatorException {
         try {

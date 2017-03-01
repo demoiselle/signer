@@ -41,13 +41,15 @@ import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
 import org.demoiselle.signer.core.repository.CRLRepository;
 import org.demoiselle.signer.core.repository.CRLRepositoryFactory;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
 public class CRLValidator implements IValidator {
-
+	
     private final CRLRepository crlRepository;
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     public CRLValidator() {
         crlRepository = CRLRepositoryFactory.factoryCRLRepository();
