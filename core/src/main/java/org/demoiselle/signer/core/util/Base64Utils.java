@@ -43,6 +43,11 @@ import java.security.cert.CertificateFactory;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * 
+ * Facilities for Base64 operations
+ *
+ */
 public class Base64Utils {
 
     private static final String X509_CERTIFICATE_TYPE = "X.509";
@@ -71,14 +76,14 @@ public class Base64Utils {
     }
 
     /**
-     * Efetua a codificação na base 64 de um conjunto de bytes
+     * Performs encoding in base 64 of a set of bytes
      *
-     * @param aData Conjunto de bytes a serem codificados
-     * @return Texto na base 64 representando os bytes
+     * @param aData of a set of bytes
+     * @return String encoded on base 64
      */
     public static String base64Encode(byte[] aData) {
         if ((aData == null) || (aData.length == 0)) {
-            throw new IllegalArgumentException("Can not encode NULL or empty byte array.");
+            throw new IllegalArgumentException(coreMessagesBundle.getString("error.base64.encode.null"));
         }
 
         byte encodedBuf[] = new byte[((aData.length + 2) / 3) * 4];
@@ -114,14 +119,14 @@ public class Base64Utils {
     }
 
     /**
-     * Efetua a decodificação de um texto na base 64 para um conjunto de bytes
+     * Decodes a text in base 64 to a set of bytes
      *
-     * @param aData Texto a ser decodificado
-     * @return Conjunto de bytes originais
+     * @param aData Text to be decoded
+     * @return byte[] decoded text
      */
     public static byte[] base64Decode(String aData) {
         if ((aData == null) || (aData.length() == 0)) {
-            throw new IllegalArgumentException("Can not decode NULL or empty string.");
+            throw new IllegalArgumentException(coreMessagesBundle.getString("error.base64.decode.null"));
         }
 
         byte[] data = aData.getBytes();
@@ -160,11 +165,11 @@ public class Base64Utils {
 
     /**
      *
-     * Efetua a codificação de uma cadeia de certificados para a base 64
+     * Performs the encoding of a certificate chain to base64
      *
-     * @param aCertificationChain A cadeia de certificados
+     * @param aCertificationChain certificate chain
      * @return ASN.1 DER encoded on Base64, for X.509 certificate
-     * @throws CertificateException Lança a exceção
+     * @throws CertificateException 
      */
     public static String encodeX509CertChainToBase64(Certificate[] aCertificationChain) throws CertificateException {
         List<Certificate> certList = Arrays.asList(aCertificationChain);

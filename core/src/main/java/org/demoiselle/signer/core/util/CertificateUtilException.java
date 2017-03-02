@@ -37,6 +37,11 @@
 
 package org.demoiselle.signer.core.util;
 
+/**
+ * 
+ * To do unchecked
+ *
+ */
 public class CertificateUtilException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;

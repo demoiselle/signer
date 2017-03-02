@@ -36,33 +36,30 @@
  */
 package org.demoiselle.signer.core.repository;
 
-// import java.util.logging.Logger;
 
 public class Configuration {
 
     /**
-     * Chave do System para definir modo online ou offline
+     * System key to set online or offline mode
      */
     public static final String MODE_ONLINE = "security.certificate.repository.online";
 
     /**
-     * Chave do System para definir local de armazenamento do arquivo de index
-     * das crls
+     * System key to set storage location of index file of revoked certificate lists.
      */
     public static final String CRL_INDEX = "security.certificate.repository.crl.index";
 
     /**
-     * Chave do System para definir local de armazenamento do arquivo de index
-     * das crls
+     * System key to set storage location of path file of revoked certificate lists.
      */
     public static final String CRL_PATH = "security.certificate.repository.crl.path";
     public static Configuration instance = new Configuration();
     // private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 
     /**
-     * Returna a instância única
+     * to static single instance
      *
-     * @return A instância
+     * @return 
      */
     public static Configuration getInstance() {
         return instance;
@@ -73,8 +70,7 @@ public class Configuration {
     private boolean isOnline;
 
     /**
-     * Verifica se há variavéis no System. Caso haja, seta nas variaveis de
-     * classes do contrário usa os valores padrões
+     * Check for system variables. If there is, assign in class variables otherwise use default values.
      */
     private Configuration() {
         String mode_online = (String) System.getProperties().get(MODE_ONLINE);
@@ -95,9 +91,9 @@ public class Configuration {
     }
 
     /**
-     * Obtém o local onde está armazenado o arquivo de indice de crl
+     * Gets the location where the revoked certificate lists index file is stored
      *
-     * @return O local do índice da crl
+     * @return 
      */
     public String getCrlIndex() {
         return crlIndex;
@@ -108,36 +104,36 @@ public class Configuration {
     }
 
     /**
-     * Retorna se o repositório está no modo online ou offline
+     * Returns whether the repository is in online (TRUE) or offline (FALSE) mode 
      *
-     * @return se true (online) se false (offline)
+     * @return true (online) or false (offline)
      */
     public boolean isOnline() {
         return isOnline;
     }
 
     /**
-     * Determina se a consulta ao repositório deve ser feita online ou offline
+     * Determines whether the repository query should be done online or offline.
      *
-     * @param isOnline True se acesso foi feito online, False em contrário.
+     * @param isOnline True for online, False for offline.
      */
     public void setOnline(boolean isOnline) {
         this.isOnline = isOnline;
     }
 
     /**
-     * Recupera o local onde esta armazenado o repositório de CRLs
+     * Retrieves the location where the CRL(certificate revoked lists) repository is stored
      *
-     * @return O caminho do armazenamento das CRLs
+     * @return 
      */
     public String getCrlPath() {
         return crlPath;
     }
 
     /**
-     * Configura o local onde será armazenado o repositório de CRLs
+     * Configures the location where the CRL (certificate revoked lists) repository will be stored
      *
-     * @param crlPath O local do repositório
+     * @param crlPath 
      */
     public void setCrlPath(String crlPath) {
         this.crlPath = crlPath;

@@ -36,7 +36,10 @@
  */
 package org.demoiselle.signer.core.repository;
 
-
+/**
+ * to do unchecked
+ * 
+ */
 public class CRLRepositoryException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

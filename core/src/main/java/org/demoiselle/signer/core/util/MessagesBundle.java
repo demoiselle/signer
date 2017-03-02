@@ -4,19 +4,30 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * 
+ *  Custom Messages Bundle implementation to allows parameterization
+ *
+ */
 public class MessagesBundle {
 
 	
 	private String bundleName = "messages";
 	private static ResourceBundle resouceBundle; 
 	
-	
+	/**
+	 * Default constructor using the messages.properties file 
+	 */
 	public MessagesBundle() {
 		super();
 		MessagesBundle.setResouceBundle(ResourceBundle.getBundle(this.bundleName));
 	}
 	
 
+	/**
+	 * 
+	 * @param parmBundleName name for a .properties file
+	 */
 	public MessagesBundle(String parmBundleName) {
 		super();
 		this.bundleName = parmBundleName;
@@ -24,6 +35,12 @@ public class MessagesBundle {
 		MessagesBundle.setResouceBundle(varResourceBundle);
 	}
 
+	/**
+	 * example: getString("key.propertie.name")
+	 * 
+	 * @param key
+	 * @return
+	 */
 	public String getString(String key) {
 		try {
 			return getResouceBundle().getString(key);
@@ -32,6 +49,13 @@ public class MessagesBundle {
 		}
 	}
 
+	/**
+	 * example: getString("key.propertie.name", parm1, parm2 )
+	 * 
+	 * @param key
+	 * @param params
+	 * @return
+	 */
 	public String getString(String key, Object... params) {
 		try {
 			return MessageFormat.format(getResouceBundle().getString(key), params);

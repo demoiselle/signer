@@ -42,15 +42,34 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
 /**
- *
+ * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service 
+ * RFC 3161 
  * @author 07721825741
  */
 public interface TimeStampGenerator {
 
+	/**
+	 * 
+	 * @param content to be sign
+	 * @param privateKey authorized to use a TSA service
+	 * @param certificates trusted chain
+	 * @throws CertificateCoreException
+	 */
     void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates) throws CertificateCoreException;
 
+    /**
+     * 
+     * @return
+     * @throws CertificateCoreException
+     */
     byte[] generateTimeStamp() throws CertificateCoreException;
 
+    /**
+     * 
+     * @param content to be sign
+     * @param response signed timestamp from TSA
+     * @throws CertificateCoreException
+     */
     void validateTimeStamp(byte[] content, byte[] response) throws CertificateCoreException;
 
 }

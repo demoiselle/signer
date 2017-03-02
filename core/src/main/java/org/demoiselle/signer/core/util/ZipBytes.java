@@ -49,19 +49,29 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
+/**
+ * 
+ * Utility class for Compress and Decompress data 
+ *
+ */
 public final class ZipBytes {
 
     private static final Logger LOGGER = Logger.getLogger(ZipBytes.class.getName());
     private final static int BUFFER_SIZE = 4096;
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
+    /**
+     * 
+     * @param files
+     * @return
+     */
     public static byte[] compressing(Map<String, byte[]> files) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         ZipOutputStream zipOut = new ZipOutputStream(out);
 
         try {
             for (String fileName : files.keySet()) {
-                LOGGER.log(Level.INFO, "Adding file {0} to ZIP", fileName);
+                LOGGER.log(Level.INFO, coreMessagesBundle.getString("info.add.file.zip",fileName));
                 zipOut.putNextEntry(new ZipEntry(fileName));
                 zipOut.write(files.get(fileName));
                 zipOut.setLevel(0);
@@ -77,6 +87,11 @@ public final class ZipBytes {
         return out.toByteArray();
     }
 
+    /**
+     * 
+     * @param file
+     * @return
+     */
     public static Map<String, byte[]> decompressing(byte[] file) {
 
         BufferedOutputStream dest = null;

@@ -37,6 +37,10 @@
 package org.demoiselle.signer.core.repository;
 
 
+/**
+ * to do unchecked
+ * 
+ */
 public class CRLOldCertificateException extends RuntimeException {
 
     private static final long serialVersionUID = 1L;

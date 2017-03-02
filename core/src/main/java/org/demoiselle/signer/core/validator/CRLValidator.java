@@ -46,6 +46,11 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
+/**
+ * 
+ * to verify if a certificate is Repealed.
+ *
+ */
 public class CRLValidator implements IValidator {
 	
     private final CRLRepository crlRepository;
@@ -59,11 +64,11 @@ public class CRLValidator implements IValidator {
     public void validate(X509Certificate x509) throws CertificateValidatorException {
         Collection<ICPBR_CRL> crls = crlRepository.getX509CRL(x509);
         if (crls == null || crls.isEmpty()) {
-            throw new CertificateValidatorException("Não foi possível verificar se o certificado está Revogado. Nenhuma lista válida foi encontrada.");
+            throw new CertificateValidatorException(coreMessagesBundle.getString("error.validate.on.crl"));
         }
         for (ICPBR_CRL icpbr_crl : crls) {
             if (icpbr_crl.getCRL().isRevoked(x509)) {
-                throw new CertificateValidatorException("Certificado Revogado");
+                throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.repelead"));
             }
         }
     }

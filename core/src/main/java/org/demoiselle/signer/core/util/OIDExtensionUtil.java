@@ -42,6 +42,11 @@ import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 
+ *  For Certificate Extensions:  oid_2_5_29_17 (subjectAltName) and oid_2_5_29_31(cRLDistributionPoints)
+ *
+ */
 public class OIDExtensionUtil {
 
 	private final X509Certificate x509;
@@ -58,6 +63,10 @@ public class OIDExtensionUtil {
 		process_2_5_29_31();
 	}
 
+	
+	/**
+	 * subjectAltName
+	 */
 	private void process_2_5_29_17() {
 		byte[] extension = x509.getExtensionValue("2.5.29.17");
 
@@ -104,7 +113,7 @@ public class OIDExtensionUtil {
 				try {
 					thisOIDData = new String(extension, thisOIDStart, thisOIDDataLen, "ISO8859_1");
 				} catch (UnsupportedEncodingException e) {
-					throw new CertificateUtilException("Encoding unsupported in oid data", e);
+					throw new CertificateUtilException(coreMessagesBundle.getString("error.encoding.oid", "2.5.29.17"), e);
 				}
 
 				oid_2_5_29_17.put(thisOIDId, thisOIDData);
@@ -117,7 +126,7 @@ public class OIDExtensionUtil {
 				try {
 					thisRFCData = new String(extension, extIndex + 2, thisRFCDataLen, "ISO8859_1");
 				} catch (UnsupportedEncodingException e) {
-					throw new CertificateUtilException("Encoding unsupported in oid data", e);
+					throw new CertificateUtilException(coreMessagesBundle.getString("error.encoding.oid", "2.5.29.17"), e);
 				}
 
 				oid_2_5_29_17.put(thisRFCId, thisRFCData);
@@ -128,6 +137,9 @@ public class OIDExtensionUtil {
 		}
 	}
 
+	/**
+	 * cRLDistributionPoints
+	 */
 	private void process_2_5_29_31() {
 		byte[] extension = x509.getExtensionValue("2.5.29.31");
 
@@ -141,7 +153,7 @@ public class OIDExtensionUtil {
 			try {
 				thisOIDData = new String(extension, extIndex + 2, thisOIDDataLen, "ISO8859_1");
 			} catch (UnsupportedEncodingException e) {
-				throw new CertificateUtilException("Encoding unsupported in oid data", e);
+				throw new CertificateUtilException(coreMessagesBundle.getString("error.encoding.oid", "2.5.29.31"), e);
 			}
 
 			oid_2_5_29_31.put(thisOIDId, thisOIDData);
@@ -173,5 +185,4 @@ public class OIDExtensionUtil {
 			return null;
 		}
 	}
-
 }

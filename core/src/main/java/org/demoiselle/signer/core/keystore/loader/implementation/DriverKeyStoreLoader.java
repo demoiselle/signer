@@ -62,6 +62,7 @@ import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
 import org.demoiselle.signer.core.keystore.loader.PKCS11NotFoundException;
 import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
  * Implementation of KeyStoreLoader based operating system drivers. 
@@ -70,16 +71,17 @@ import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
  */
 public class DriverKeyStoreLoader implements KeyStoreLoader {
 
-    private static final String PINNUMBER_INVALID = "PIN access to token can not be null or invalid";
-    private static final String DRIVER_LOAD_ERROR = "Error on load a module PKCS#11";
-    private static final String DRIVERS_EMPTY = "No driver are available";
-    private static final String DRIVERS_NOT_COMPATIBLE = "No driver in the list is compatible with your hardware";
     private static final String PKCS11_KEYSTORE_TYPE = "PKCS11";
     private static final String PKCS11_CONTENT_CONFIG_FILE = "name = %s\nlibrary = %s";
     private CallbackHandler callback;
 	private Formatter formatter;
-
-    @Override
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	
+	
+	/**
+	 * read the config file
+	 */
+	@Override
     public KeyStore getKeyStore() {
         String configFile = Configuration.getInstance().getPKCS11ConfigFile();
 
@@ -90,6 +92,11 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
         }
     }
 
+	/**
+	 * read by a path on OS.
+	 * @param driverPath
+	 * @return
+	 */
     public KeyStore getKeyStoreFromDriver(String driverPath) {
 
         String driverName = driverPath.replaceAll("\\\\", "/");
@@ -102,6 +109,12 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
     }
 
+    /**
+     * read by a name and path on OS.
+     * @param driverName
+     * @param driverPath
+     * @return
+     */
     public KeyStore getKeyStoreFromDriver(String driverName, String driverPath) {
         Configuration.getInstance().addDriver(driverName, driverPath);
         KeyStore keyStore = null;
@@ -121,20 +134,27 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
             keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
             keyStore.load(null, null);
 
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException | KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException 
+        		| NoSuchMethodException | SecurityException | InvocationTargetException | KeyStoreException | NoSuchAlgorithmException 
+        		| NoSuchProviderException | CertificateException ex) {
             if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
-                throw new InvalidPinException(PINNUMBER_INVALID, ex);
+                throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
             }
 
             if (ex.getCause().toString().equals("javax.security.auth.login.LoginException")) {
-                throw new InvalidPinException(PINNUMBER_INVALID, ex);
+                throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
             } else {
-                throw new PKCS11NotFoundException(DRIVER_LOAD_ERROR, ex);
+                throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
             }
         }
         return keyStore;
     }
 
+    /**
+     * read from a configuration file
+     * @param configFile
+     * @return
+     */
     private KeyStore getKeyStoreFromConfigFile(String configFile) {
 
         KeyStore keyStore = null;
@@ -148,26 +168,32 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
             keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
             keyStore.load(null, null);
 
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException | KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException 
+        		| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException 
+        		| KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
             if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
-                throw new InvalidPinException(PINNUMBER_INVALID, ex);
+                throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
             }
 
             if (ex.getCause().toString().equals("javax.security.auth.login.LoginException")) {
-                throw new InvalidPinException(PINNUMBER_INVALID, ex);
+                throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
             } else {
-                throw new PKCS11NotFoundException(DRIVER_LOAD_ERROR, ex);
+                throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
             }
         }
         return keyStore;
     }
 
+    /**
+     * read from list drivers on configuration class.
+     * @return
+     */
     private KeyStore getKeyStoreFromDrivers() {
-        KeyStoreLoaderException error = new KeyStoreLoaderException(DRIVERS_NOT_COMPATIBLE);
+        KeyStoreLoaderException error = new KeyStoreLoaderException(coreMessagesBundle.getString("error.no.driver.compatible"));
         Map<String, String> drivers = Configuration.getInstance().getDrivers();
 
         if (drivers == null || drivers.isEmpty()) {
-            throw new DriverNotAvailableException(DRIVERS_EMPTY);
+            throw new DriverNotAvailableException(coreMessagesBundle.getString("error.driver.empity"));
         }
 
         Set<String> keyDrivers = drivers.keySet();
@@ -193,7 +219,7 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
         return keyStore;
     }
-
+    
     @Override
     public void setCallbackHandler(CallbackHandler callback) {
         this.callback = callback;

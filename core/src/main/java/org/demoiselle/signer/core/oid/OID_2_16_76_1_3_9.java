@@ -38,8 +38,8 @@ package org.demoiselle.signer.core.oid;
 
 
 /**
- * OID = 2.16.76.1.3.9 e conteúdo = nas primeiras 11 (onze) posições, o número
- * de Registro de Identidade Civil.
+ * OID = 2.16.76.1.3.9 And content = in the first 11 (eleven) positions, 
+ * the Brazilian Civil Identity Registration number.
  *
  * @author Humberto Pacheco - SERVICO FEDERAL DE PROCESSAMENTO DE DADOS
  */
@@ -55,9 +55,9 @@ public class OID_2_16_76_1_3_9 extends OIDGeneric {
     }
 
     /**
-     * Retorna o número de Registro de Identidade Civil.
+     *  the Brazilian Civil Identity Registration number (called RIC - Registro de Identidade Civil).
      *
-     * @return O número de Registro de Identidade Civil.
+     * @return number with size=11.
      */
     public String getRegistroDeIdentidadeCivil() {
         return properties.get("RIC");

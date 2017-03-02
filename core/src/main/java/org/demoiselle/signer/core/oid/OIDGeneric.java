@@ -38,16 +38,14 @@ package org.demoiselle.signer.core.oid;
 
 /**
  *
- * Classe Generica   para   tratamento   de   atributos   de  alguns   atributos
- *   de   Pessoa  Fisica, Pessoa Juridica   e   Equipamento   de   acordo   com
- *   os   padroes  definidos   no  DOC­ICP­04 v2.0 de
- * 18/04/2006, pela ICP­BRASIL
+ * Generic Class for treatment of some attributes of certificates of ICP-BRASIL, 
+ * for: Individual (Pessoa Física) of the Business Entity (Pessoa Jurídica) and Equipment. 
+ * In accordance with the standards defined in DOC-ICP-04 v2.0 dated 04/18/2006.
  *
  */
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERIA5String;
@@ -57,7 +55,6 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.core.util.MessagesBundle;
-
 import sun.security.util.DerValue;
 import sun.security.x509.OtherName;
 
@@ -73,12 +70,12 @@ public class OIDGeneric {
     }
 
     /**
-     * Instance for object.
+     * Instance for OIDGeneric.
      *
-     * @param data Conjunto de bytes com o conteúdo do certificado
+     * @param data  Set of bytes with the contents of the certificate.
      * @return Object GenericOID
-     * @throws IOException Retorna a exceção IOException
-     * @throws Exception Retorna a exceção Exception
+     * @throws IOException 
+     * @throws Exception 
      */
     public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
         is = new ASN1InputStream(data);
@@ -111,9 +108,9 @@ public class OIDGeneric {
         try {
             oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
         } catch (InstantiationException e) {
-            throw new Exception("Can not instace class '" + className + "'.", e);
+            throw new Exception(coreMessagesBundle.getString("error.class.instance",className), e);
         } catch (IllegalAccessException e) {
-            throw new Exception("Was not possible instace class '" + className + "'.", e);
+            throw new Exception(coreMessagesBundle.getString("error.class.illegal.access",className), e);
         } catch (ClassNotFoundException e) {
             oidGenerico = new OIDGeneric();
         }
@@ -141,10 +138,10 @@ public class OIDGeneric {
 
     /**
      *
-     * @param der Certificate DER (sun.security.util.DerValue)
+     * @param der Content of Certificate on sun.security.util.DerValue format
      * @return OIDGenerico
-     * @throws IOException Retorna a exceção IOException
-     * @throws Exception Retorna a exceção Exception
+     * @throws IOException 
+     * @throws Exception 
      */
     public static OIDGeneric getInstance(DerValue der) throws IOException, Exception {
         OtherName on = new OtherName(der);
@@ -154,9 +151,9 @@ public class OIDGeneric {
         try {
             oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
         } catch (InstantiationException e) {
-            throw new Exception("Was not possible instance class '" + className + "'.", e);
+            throw new Exception(coreMessagesBundle.getString("error.class.instance",className ), e);
         } catch (IllegalAccessException e) {
-            throw new Exception("Was not possible instance class '" + className + "'.", e);
+            throw new Exception(coreMessagesBundle.getString("error.class.illegal.access",className), e);
         } catch (ClassNotFoundException e) {
             oidGenerico = new OIDGeneric();
         }
@@ -174,7 +171,7 @@ public class OIDGeneric {
 
     /**
      *
-     * @param fields Campos do certificado
+     * @param fields Fields of a certificate
      */
     protected void initialize(Object[] fields) {
         //TODO fazer alteracao para contemplar o novo tamanho de campo do RG

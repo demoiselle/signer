@@ -38,16 +38,16 @@
 package org.demoiselle.signer.core.repository;
 
 /**
- * Fábrica de Repository.
+ * Factory for repository list of revoked certificates.
  */
 public class CRLRepositoryFactory {
 
 	/**
-	 * Caso o Configuratiron defina o modo online será criado um repositorio
-	 * OnLineCRLRepository, caso contrário será criada um repositorio
-	 * OffLineCRLRepository
+	 * If Configuratiron sets the online mode, 
+	 * an OnLineCRLRepository object will be created, 
+	 * otherwise an OffLineCRLRepository object will be created.
 	 * 
-	 * @return Repositório de CRL
+	 * @return CRLRepository
 	 */
 	public static CRLRepository factoryCRLRepository() {
 		Configuration conf = Configuration.getInstance();

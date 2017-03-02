@@ -57,8 +57,7 @@ public class RepositoryService {
     
     public static void main(String[] args) {
         if (args == null || args.length < 2) {
-            println(" Error: number of invalid arguments.\n " + "Use: java -jar signer-signature-core.jar [operation] <[url]> <[fileindex]>\n " + "Sample for update: java -jar signer-signature-core.jar " + UPDATE + " /tmp/crls/crl_index.txt\n " + "Sample for add url of crl: java -jar signer-signature-core.jar " + ADD
-                    + " http://www.domain.org/file.clr /tmp/crls/crl_index.txt");
+            println(coreMessagesBundle.getString("error.repository.service.args"));
         } else {
 
             String op = args[0];
@@ -80,7 +79,8 @@ public class RepositoryService {
                 Configuration.getInstance().setCrlIndex(file_index);
 
                 if (!fileIndex.exists()) {
-                    println("Index file [" + file_index + "] not found");
+                	
+                    println(coreMessagesBundle.getString("error.file.not.found",file_index));
 
                 } else {
                     Properties prop = new Properties();
@@ -88,7 +88,7 @@ public class RepositoryService {
                     try {
                         prop.load(new FileInputStream(fileIndex));
                     } catch (Exception e) {
-                        throw new CertificateValidatorException("Error on load index file " + fileIndex, e);
+                        throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.load",fileIndex), e);
                     }
 
                     Enumeration<Object> keys = prop.keys();
@@ -101,12 +101,12 @@ public class RepositoryService {
                     try {
                         prop.store(new FileOutputStream(fileIndex), null);
                     } catch (IOException e) {
-                        throw new CertificateValidatorException("Error on load index file " + fileIndex, e);
+                        throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.load",fileIndex), e);
                     }
                 }
 
             } else {
-                println("Invalid operation [" + op + "]");
+                println(coreMessagesBundle.getString("error.repository.service.operation", op));
             }
         }
 
@@ -116,12 +116,12 @@ public class RepositoryService {
         try {
             Configuration config = Configuration.getInstance();
             File fileCLR = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(url));
-            print(" Downloading [" + url + "]...");
+            print(coreMessagesBundle.getString("info.repository.service.download",url));
             RepositoryUtil.saveURL(url, fileCLR);
             println("...[Ok]");
         } catch (CertificateValidatorException e) {
-            println("...[Fail]");
-            println("\tCause: " + e.getMessage());
+            println(coreMessagesBundle.getString("error.repository.service.fail"));
+            println(coreMessagesBundle.getString("error.repository.service.cause")+e.getMessage());
         }
     }
 

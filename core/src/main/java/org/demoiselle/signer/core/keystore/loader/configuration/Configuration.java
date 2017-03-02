@@ -186,14 +186,11 @@ public class Configuration {
     }
 
     /**
-     * Testa cada driver informado, verificando se existe o arquivo. Caso o
-     * arquivo do driver informado nao existe, nao sera acrescentado este driver
-     * na lista de driver para ser carregado.
+     * Tests each driver that has been informed, checking if the file exists. 
+     * If the driver file you entered does not exist, this driver will not be added to the list to be loaded.
      *
-     * @param name Parametro obrigatorio que informa o apelido do Driver a ser
-     * carregado. Ex: Pronova
-     * @param fileName Parametro obrigatorio que informa o path completo do
-     * driver no sistema operacional. Ex: /etc/driver/driver.so
+     * @param name Required parameter that informs the driver's nickname to be loaded. Ex: Pronova
+     * @param fileName Mandatory parameter that informs the full path of the driver in the operating system. Ex: /etc/driver/driver.so
      */
     public void addDriver(String name, String fileName) {
 

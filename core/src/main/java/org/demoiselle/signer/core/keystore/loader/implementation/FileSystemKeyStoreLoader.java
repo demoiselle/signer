@@ -46,37 +46,43 @@ import javax.security.auth.callback.CallbackHandler;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Implementação do carregamento de KeyStore baseado no padrão PKCS12 ou JKS
+ * Implementing KeyStore loading based on PKCS12 or JKS standards
  *
  */
 public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 
     private static final String FILE_TYPE_PKCS12 = "PKCS12";
     private static final String FILE_TYPE_JKS = "JKS";
-    private static final String FILE_LOAD_ERROR = "Error on load a keystore from file";
-    private static final String FILE_NOT_VALID = "File invalid or not exist";
+        
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+    private static final Logger logger = LoggerFactory.getLogger(FileSystemKeyStoreLoader.class);
 
+     
     private File fileKeyStore = null;
 
     /**
-     * Construtor da classe Verifique se o parametro informado existe e se é
-     * arquivo.
+     * Class constructor that checks whether the specified parameter exists and whether it is a file.
      *
-     * @param file File que representa um KeyStore PKCS12 ou JKS
+     * @param file File representing a KeyStore of type PKCS12 or JKS
      */
     public FileSystemKeyStoreLoader(File file) {
 
-        if (file == null || !file.exists() || !file.isFile()) {
-            throw new KeyStoreLoaderException(FILE_NOT_VALID);
+        if (file == null || !file.exists() || !file.isFile()) {        	
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.file.invalid"));           
         }
 
         this.setFileKeyStore(file);
 
     }
 
+    /**
+     * 
+     * @return PCKS12 or JKS keystore file.
+     */
     public File getFileKeyStore() {
         return fileKeyStore;
     }
@@ -86,15 +92,17 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
     }
 
     /**
-     * Tenta carregar o KeyStore primeiro no padrao PKCS12. Caso nao consiga,
-     * armazena a exception recebida e tenta entao carregar um KeyStore no
-     * padrao JKS. Nao conseguindo nas duas tentativas, levanta uma exception,
-     * por isso este método nunca retornará
+     * Attempts to load the KeyStore first in the PKCS12 pattern. 
+     * If this is not possible, it will store the received exception and
+     * then attempt to load a KeyStore into the JKS standard. 
+     * Failing in both attempts, it will throw an exception.
      *
+     * @param pinNumber
+     * @return
      */
     public KeyStore getKeyStore(String pinNumber) {
-
-        System.out.println("FileSystemKeyStoreLoader.getKeyStore()");
+       
+        logger.info("FileSystemKeyStoreLoader.getKeyStore()");
 
         KeyStore result = null;
         try {
@@ -103,7 +111,7 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
             try {
                 result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_JKS);
             } catch (Throwable error) {
-                throw new KeyStoreLoaderException("Error on load a KeyStore from file. KeyStore unknow format", throwable);
+                throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.unknow.format"), throwable);
             }
         }
 
@@ -111,16 +119,22 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
     }
 
     /**
-     * Nao implementado, utilizar getKeyStore(pinNumer)
+     * Not implemented, use getKeyStore (pinNumer)
      *
-     * @return
+     * @return NULL
      */
     @Override
     public KeyStore getKeyStore() {
-        System.out.println("Nao implementado");
+    	logger.error("Nao implementado");
         return null;
     }
 
+    /**
+     * 
+     * @param pinNumber 
+     * @param keyStoreType PKSC12 or JKS
+     * @return
+     */
     private KeyStore getKeyStoreWithType(String pinNumber, String keyStoreType) {
         KeyStore result = null;
         try {
@@ -129,7 +143,7 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
             InputStream is = new FileInputStream(this.fileKeyStore);
             result.load(is, pwd);
         } catch (Throwable error) {
-            throw new KeyStoreLoaderException(FILE_LOAD_ERROR, error);
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.from.file"), error);
         }
         return result;
     }

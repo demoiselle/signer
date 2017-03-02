@@ -47,9 +47,14 @@ import java.util.Set;
 import org.demoiselle.signer.core.Priority;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.util.MessagesBundle;
-// TODO Criar Exception
+
+/**
+ * Recover a TimeStampGenerator service
+ *
+ */
 public final class TimeStampGeneratorSelector implements Serializable {
 
+	// TODO Criar Exception
 	private static final long serialVersionUID = 1L;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
@@ -58,6 +63,7 @@ public final class TimeStampGeneratorSelector implements Serializable {
 	private TimeStampGeneratorSelector() {
 	}
 
+	
 	public static TimeStampGenerator selectReference() {
 		TimeStampGenerator selected = selectClass(getOptions());
 		return selected;
@@ -73,6 +79,11 @@ public final class TimeStampGeneratorSelector implements Serializable {
 		return result;
 	}
 
+	/**
+	 * 
+	 * @param options Collection<TimeStampGenerator>
+	 * @return
+	 */
 	private static TimeStampGenerator selectClass(Collection<TimeStampGenerator> options) {
 		TimeStampGenerator selected = null;
 
@@ -89,6 +100,11 @@ public final class TimeStampGeneratorSelector implements Serializable {
 		return selected;
 	}
 
+	/**
+	 *  verify if have a @Priotity annotation
+	 * @param clazz
+	 * @return
+	 */
 	private static int getPriority(TimeStampGenerator clazz) {
 		int result = Priority.MAX_PRIORITY;
 		Priority priority = clazz.getClass().getAnnotation(Priority.class);
@@ -98,12 +114,18 @@ public final class TimeStampGeneratorSelector implements Serializable {
 		}
 
 		if (priority == null) {
-			new CertificateCoreException("Favor sinalizar a Prioridade em: " + clazz.getClass().getName());
+			new CertificateCoreException(coreMessagesBundle.getString("error.priority.null",clazz.getClass().getName()));
 		}
 
 		return result;
 	}
 
+	/**
+	 *  verify if have a @Priotity ambiguity annotation
+	 * @param type
+	 * @param selected
+	 * @param options
+	 */
 	private static <T> void performAmbiguityCheck(Class<T> type, TimeStampGenerator selected, Collection<TimeStampGenerator> options) {
 		int selectedPriority = getPriority(selected);
 
@@ -118,7 +140,7 @@ public final class TimeStampGeneratorSelector implements Serializable {
 		if (!ambiguous.isEmpty()) {
 			ambiguous.add(selected);
 			
-			throw new CertificateCoreException("@Priority com ambiguidade em: " + selected.getClass().getCanonicalName());
+			throw new CertificateCoreException(coreMessagesBundle.getString("error.priority.ambiguous",selected.getClass().getCanonicalName()));
 		}
 	}
 

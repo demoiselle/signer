@@ -44,16 +44,15 @@ import java.util.Collection;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
 
 /**
- * Representa um repositorio de CRL
+ * Represents a CRL (Certificate Revoked List) repository
  */
 public interface CRLRepository {
 
 	/**
-	 * Retorna uma lista de CRL para IPC Brasil para de determinado certificado
+	 * Returns a CRL (Certificate Revoked List)  from a given authority of IPC-Brasil.
 	 * 
-	 * @param certificate
-	 *            Certificado
-	 * @return Lista de ICPBR_CRL
+	 * @param certificate            
+	 * @return List of ICPBR_CRL
 	 */
 	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate);
 

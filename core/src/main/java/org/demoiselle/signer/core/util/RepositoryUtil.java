@@ -56,11 +56,23 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ *  connections utilities for CRL (Certificate Revocation list)
+ *
+ */
 public class RepositoryUtil {
 
     private static Logger logger = LoggerFactory.getLogger(RepositoryUtil.class);
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private static int byteWritten;
+	private static int byteWritten2;
 
+	/**
+	 * Digest to MD5
+	 * @param url
+	 * @return
+	 */
     public static String urlToMD5(String url) {
         try {
             String ret;
@@ -74,10 +86,16 @@ public class RepositoryUtil {
         }
     }
 
+    /**
+     * 
+     * @param sUrl
+     * @param destinationFile
+     */
     public static void saveURL(String sUrl, File destinationFile) {
         URL url;
         byte[] buf;
-        int ByteRead, ByteWritten = 0;
+        int ByteRead;
+		setByteWritten(0);
         BufferedOutputStream outStream = null;
         URLConnection uCon = null;
         InputStream is = null;
@@ -90,14 +108,14 @@ public class RepositoryUtil {
             buf = new byte[1024];
             while ((ByteRead = is.read(buf)) != -1) {
                 outStream.write(buf, 0, ByteRead);
-                ByteWritten += ByteRead;
+                setByteWritten(getByteWritten() + ByteRead);
             }
         } catch (MalformedURLException e) {
-            throw new CertificateValidatorException("URL [" + sUrl + "] is Malformed", e);
+            throw new CertificateValidatorException(coreMessagesBundle.getString("error.malformed.url",sUrl), e);
         } catch (FileNotFoundException e) {
-            throw new CertificateValidatorException("File [" + sUrl + "] is not found", e);
+            throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found",sUrl), e);
         } catch (IOException e) {
-            logger.info("Error in  url openConnection [" + sUrl + "]" + e.getMessage());
+            logger.info(coreMessagesBundle.getString("error.crl.open.connection",sUrl) + e.getMessage());
         } finally {
             try {
                 if (is != null) {
@@ -107,12 +125,17 @@ public class RepositoryUtil {
                     outStream.close();
                 }
             } catch (Throwable e) {
-                throw new CertificateValidatorException("Is not possible close conection [" + sUrl + "]", e);
+                throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection",sUrl), e);
             }
         }
     }
 
-    public static List<String> filtervalidURLs(List<String> listURL) {
+    /**
+     * 
+     * @param listURL
+     * @return
+     */
+    public static List<String> filterValidURLs(List<String> listURL) {
         List<String> newURLlist = new ArrayList<String>();
         for (String sURL : listURL) {
             if (validateURL(sURL)) {
@@ -126,7 +149,8 @@ public class RepositoryUtil {
     private static boolean validateURL(String sUrl) {
         URL url;
         byte[] buf;
-        int ByteRead, ByteWritten = 0;
+        int ByteRead;
+		setByteWritten2(0);
         URLConnection uCon = null;
         InputStream is = null;
         try {
@@ -136,7 +160,7 @@ public class RepositoryUtil {
             is = uCon.getInputStream();
             buf = new byte[1024];
             while ((ByteRead = is.read(buf)) != -1) {
-                ByteWritten += ByteRead;
+                setByteWritten2(getByteWritten2() + ByteRead);
             }
         } catch (MalformedURLException e) {
             return false;
@@ -150,11 +174,27 @@ public class RepositoryUtil {
                     is.close();
                 }
             } catch (Throwable e) {
-                throw new CertificateValidatorException("Is not possible close conection [" + sUrl + "]", e);
+                throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection",sUrl), e);
             }
         }
 
         return true;
     }
+
+	public static int getByteWritten() {
+		return byteWritten;
+	}
+
+	public static void setByteWritten(int byteWritten) {
+		RepositoryUtil.byteWritten = byteWritten;
+	}
+
+	public static int getByteWritten2() {
+		return byteWritten2;
+	}
+
+	public static void setByteWritten2(int byteWritten2) {
+		RepositoryUtil.byteWritten2 = byteWritten2;
+	}
 
 }

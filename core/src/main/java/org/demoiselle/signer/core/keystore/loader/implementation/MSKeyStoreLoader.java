@@ -57,19 +57,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementação de KeyStoreLoader baseado no Provider específico do Windows que
- * acompanha a distribuição da Sun JVM 1.6.
+ * KeyStoreLoader implementation based on the specific Provider for the so-called windows operating system, 
+ * which is in the JVM distribution (homologated in versions 1.6 and 1.7)
  */
 public class MSKeyStoreLoader implements KeyStoreLoader {
 
     private static final Logger logger = LoggerFactory.getLogger(MSKeyStoreLoader.class);
     protected static final String MS_PROVIDER = "SunMSCAPI";
     protected static final String MS_TYPE = "Windows-MY";
-    protected static final String MS_ERROR_LOAD = "Error on load a KeyStore from SunMSCAPI";
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-    
+        
     private CallbackHandler callback;
 
+    /**
+     * instance for SunMSCAPI 
+     */
     @Override
     public KeyStore getKeyStore() {
         try {
@@ -78,7 +80,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
             fixAliases(result);
             return result;
         } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException | CertificateException ex) {
-            throw new KeyStoreLoaderException(MSKeyStoreLoader.MS_ERROR_LOAD, ex);
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.load.mscapi"), ex);
         }
     }
 
@@ -88,12 +90,12 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
     }
 
     /**
-     * Implementacao do metodo de contorno para evitar a duplicidade de
-     * certificados, conforme descrito em
-     * <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6672015>
+     * Implementation of the boundary method to avoid duplicate certificates, 
+     * as described in <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6672015>
      *
      * @param keyStore
      */
+    //TODO - verificar se o bug é valida para 1.7 e superior.
     private void fixAliases(KeyStore keyStore) {
         Field field;
         KeyStoreSpi keyStoreVeritable;

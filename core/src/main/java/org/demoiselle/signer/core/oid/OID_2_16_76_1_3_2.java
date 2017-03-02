@@ -64,10 +64,10 @@
 package org.demoiselle.signer.core.oid;
 
 /**
- * Classe OID 2.16.76.1.3.2 <br>
+ * Class OID 2.16.76.1.3.2 <br>
  * <br>
- * Possui alguns atributos especificos de pessoa juridica ou equipamento: <br>
- * <b>*</b> Nome do responsavel pelo certificado <br>
+ * It has some specific attributes of ICP-BRASIL'S "Pessoa Juridica" or equipment. <br>
+ * <b>* Name of the person responsible for the certificate </b> <br>
  * 
  */
 public class OID_2_16_76_1_3_2 extends OIDGeneric {

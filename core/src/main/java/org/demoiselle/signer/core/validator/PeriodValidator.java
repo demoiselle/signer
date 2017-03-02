@@ -43,8 +43,8 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 import java.security.cert.X509Certificate;
 
 /**
- *
- * @author CETEC/CTCTA
+ * 
+ * check if a Certificate is out of date
  *
  */
 public class PeriodValidator implements IValidator {
@@ -56,7 +56,7 @@ public class PeriodValidator implements IValidator {
         try {
             x509.checkValidity();
         } catch (Exception e) {
-            throw new CertificateValidatorException("O certificado está fora da data de validade", e);
+            throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date"), e);
         }
     }
 

@@ -74,7 +74,7 @@ public class OnLineCRLRepository implements CRLRepository {
             List<String> ListaURLCRL = cert.getCRLDistributionPoint();
 
             if (ListaURLCRL == null || ListaURLCRL.isEmpty()) {
-                throw new CRLRepositoryException("Could not get a valid CRL from Certificate");
+                throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl"));
             }
 
             for (String URLCRL : ListaURLCRL) {
@@ -82,13 +82,13 @@ public class OnLineCRLRepository implements CRLRepository {
                 ICPBR_CRL crl = getICPBR_CRL(URLCRL);
                 if (crl != null) {
                     list.add(crl);
-                    logger.info("A valid Crl was found. It's not necessary to continue. CRL=[" + URLCRL + "]");
+                    logger.info(coreMessagesBundle.getString("info.crl.found", URLCRL));
                     break;
                 }
             }
 
         } catch (IOException e) {
-            throw new CRLRepositoryException("Could not get the CRL List from Certificate " + e);
+            throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl") + e);
         }
         return list;
     }
@@ -107,7 +107,7 @@ public class OnLineCRLRepository implements CRLRepository {
         } catch (MalformedURLException e) {
             throw new CRLRepositoryException(e.getMessage());
         } catch (IOException e) {
-            logger.info("Nao foi possivel conectar a " + e.getMessage());
+            logger.info(coreMessagesBundle.getString("error.crl.connect", uRLCRL) + e.getMessage());
         } catch (CRLException e) {
             throw new CRLRepositoryException(e.getMessage());
         } catch (CertificateException e) {

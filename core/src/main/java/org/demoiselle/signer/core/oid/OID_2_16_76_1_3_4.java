@@ -38,7 +38,7 @@
 package org.demoiselle.signer.core.oid;
 
 /**
-  * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
+  * Has some ICP-BRASIL's "Pessoa Juridica" and Equipment attributes<br>
   * <b>*</b> Date of birth of the person responsible for the certificate, in ddmmaaaa format <br>
   * <b>*</b> the Brazilian IRS Individuals Registry number called CPF (Cadastro de Pessoa Fisica) of the
   * Responsible <br>
