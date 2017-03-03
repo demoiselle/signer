@@ -29,6 +29,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 
 public class Validate extends AbstractCommand<ValidateRequest, ValidateResponse> {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ValidateResponse doCommand(final ValidateRequest request) {
 		ValidateResponse response = new ValidateResponse();

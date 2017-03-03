@@ -31,13 +31,14 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 
 public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateResponse> {
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public ValidateResponse doCommand(final ValidateFileRequest request) {
 		ValidateResponse response = new ValidateResponse();
 
 		File contentFilePath = null;
 		File signedFilePath = null;
-		
+
 		String contentFile = request.getContent();
 		JFileChooser fileChooser = new JFileChooser();
 		if (contentFile == null || contentFile.isEmpty()) {
@@ -48,12 +49,12 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 		} else {
 			contentFilePath = new File(contentFile);
 		}
-		
+
 		if (contentFilePath == null) {
 			response.setMessage("Favor escolher o arquivo de conteúdo.");
 			return response;
 		}
-		
+
 		String signedFile = request.getSignature();
 		if (signedFile == null || signedFile.isEmpty()) {
 			fileChooser.setDialogTitle("Selecione o Arquivo de Assinatura");
@@ -61,6 +62,7 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 				public String getDescription() {
 					return "Arquivo da Assinatura (.p7s)";
 				}
+
 				public boolean accept(File f) {
 					return f.getName().endsWith(".p7s");
 				}
@@ -75,9 +77,9 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 			response.setMessage("Favor escolher o arquivo de assinatura.");
 			return response;
 		}
-		
-		byte[] content = new byte[(int)contentFilePath.length()];
-		byte[] signed = new byte[(int)signedFilePath.length()];
+
+		byte[] content = new byte[(int) contentFilePath.length()];
+		byte[] signed = new byte[(int) signedFilePath.length()];
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(contentFilePath);
@@ -87,7 +89,7 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 			this.processException(error, response);
 			return response;
 		}
-		
+
 		try {
 			fis = new FileInputStream(signedFilePath);
 			fis.read(signed);
@@ -116,12 +118,12 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 		} catch (Throwable error) {
 			throw new RuntimeException("Erro ao tentar interpretar o conteudo da assinatura.", error);
 		}
-		
+
 		response.setBy(by);
-		
+
 		return response;
 	}
-	
+
 	private void processException(Throwable error, ValidateResponse response) {
 		error.printStackTrace();
 		response.setValid(false);
@@ -129,8 +131,9 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 		if (error.getCause() != null && error.getCause().getMessage() != null)
 			response.setCausedBy(error.getCause().getMessage());
 	}
-	
-	public <T> LinkedList<X509Certificate> getCertData(byte[] content, byte[] signed) throws CertificateException, IOException {
+
+	public <T> LinkedList<X509Certificate> getCertData(byte[] content, byte[] signed)
+			throws CertificateException, IOException {
 		CMSSignedData cmsSignedData = null;
 		try {
 			if (content == null) {
@@ -152,7 +155,8 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 			Iterator<?> certIt = certCollection.iterator();
 			X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
 			X509Certificate cert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
-			LinkedList<X509Certificate> cas = (LinkedList<X509Certificate>)CAManager.getInstance().getCertificateChain(cert);
+			LinkedList<X509Certificate> cas = (LinkedList<X509Certificate>) CAManager.getInstance()
+					.getCertificateChain(cert);
 			return cas;
 		}
 		return null;
@@ -160,9 +164,9 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 
 	public static void main(String[] args) throws Throwable {
 		ValidateRequest request = new ValidateFileRequest();
-//		request.setContent("/home/09275643784/acesso.serpro.HOD.LOC");
+		// request.setContent("/home/09275643784/acesso.serpro.HOD.LOC");
 		request.setSignature("/home/09275643784/acesso.serpro.HOD.LOC.p7s");
 		System.out.println((new Execute()).executeCommand(request));
 	}
-	
+
 }
