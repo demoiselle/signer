@@ -164,6 +164,8 @@ public class ValidateFile extends AbstractCommand<ValidateFileRequest, ValidateR
 
 	public static void main(String[] args) throws Throwable {
 		ValidateRequest request = new ValidateFileRequest();
+		request.setCommand("validatefile");
+		request.setRequestId(15);
 		// request.setContent("/home/09275643784/acesso.serpro.HOD.LOC");
 		request.setSignature("/home/09275643784/acesso.serpro.HOD.LOC.p7s");
 		System.out.println((new Execute()).executeCommand(request));
