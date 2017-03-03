@@ -228,12 +228,12 @@ var SignerDesktopClient = (function () {
          * @instance
          * @param {string} alias - Alias of certificate to use in sign
 		 * @param {string} provider - The provider (Token, SmartCard...)
-		 * @param {string} content - The text to sign
+		 * @param {string} fileName - The file to sign
 		 * @param {string} signaturePolicy - he policy to use in signature 
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        signerFile: function (alias, provider, content, signaturePolicy) {
+        signerFile: function (alias, provider, fileName, signaturePolicy) {
             var signerCommand = {
                 command: 'filesigner',
                 type: 'raw',
@@ -242,7 +242,7 @@ var SignerDesktopClient = (function () {
                 alias: alias,
                 signaturePolicy: signaturePolicy,
                 provider: provider,
-                content: content
+                content: fileName
             }
             var promise = services.execute(signerCommand);
             return promise;
@@ -262,7 +262,26 @@ var SignerDesktopClient = (function () {
             var promise = services.execute(validateFileCommand);
             return promise;
         },
-        
+
+        /**
+		 * Sign file using default parameters: first cert on token, first provider and policy CADES 2_2.
+         * 
+         * @instance
+		 * @param {string} fileName - The file to sign
+		 * @return Promisse - The promisse when is finished.  
+		 * @memberof SignerDesktopClient
+		 */
+        signerFileUsingDefaults: function (fileName) {
+            var signerCommand = {
+                command: 'filesignerdefaults',
+                type: 'raw',
+                format: 'text',
+                compacted: false,
+                content: fileName
+            }
+            var promise = services.execute(signerCommand);
+            return promise;
+        },
 
         /**
 		 * Logout of access token.
@@ -369,6 +388,82 @@ var SignerDesktopClient = (function () {
             defer = new Promise();
             ws.send(JSON.stringify(request));
             return defer;
+        },
+
+        // ******************** Wraper method ********************
+        setUriServer: function (params) {
+            console.log("Wraper called.");
+            services.setUriServer(params.uri);
+        },
+
+        setDebug: function (params) {
+            console.log("Wraper called.");
+            services.setDebug(params.isToDebug);
+        },
+
+        connect: function (params) {
+            console.log("Wraper called.");
+            services.connect(params.callbackOpen, params.callbackClose, params.callbackError);
+        },
+
+        isConnected: function (params) {
+            console.log("Wraper called.");
+            return services.isConnected();
+        },
+
+        signer: function (params) {
+            console.log("Wraper called.");
+            return services.signer(params.alias, params.provider, params.content, params.signaturePolicy);
+        },
+
+        validate: function (params) {
+            console.log("Wraper called.");
+            return services.validate(params.content, params.signature);
+        },
+
+        signerFile: function (params) {
+            console.log("Wraper called.");
+            return services.signerFile(params.alias, params.provider, params.fileName, params.signaturePolicy);
+        },
+
+        validateFile: function (params) {
+            console.log("Wraper called.");
+            return services.validateFile();
+        },
+
+        signerFileUsingDefaults: function (params) {
+            return services.signerFileUsingDefaults(params.fileName);;
+        },
+
+        logoutPKCS11: function (params) {
+            console.log("Wraper called.");
+            services.logoutPKCS11();
+        },
+
+        status: function (params) {
+            console.log("Wraper called.");
+            return services.status();
+        },
+
+        listCerts: function (params) {
+            console.log("Wraper called.");
+            return services.listCerts();
+        },
+
+
+        listPolicies: function () {
+            console.log("Wraper called.");
+            return services.listPolicies();
+        },
+
+        getFiles: function () {
+            console.log("Wraper called.");
+            return services.getFiles();
+        },
+
+        shutdown: function () {
+            console.log("Wraper called.");
+            services.shutdown();
         }
 
     };

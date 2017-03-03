@@ -22,7 +22,7 @@
 <label for="nav-trigger" class="overlay"></label>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li><li data-type='method'><a href="SignerDesktopClient.html#validate">validate</a></li><li data-type='method'><a href="SignerDesktopClient.html#validateFile">validateFile</a></li></ul></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Promise.html">Promise</a><ul class='methods'><li data-type='method'><a href="Promise.html#.this.error">this.error</a></li><li data-type='method'><a href="Promise.html#.this.hasCallbackError">this.hasCallbackError</a></li><li data-type='method'><a href="Promise.html#.this.reject">this.reject</a></li><li data-type='method'><a href="Promise.html#.this.resolve">this.resolve</a></li><li data-type='method'><a href="Promise.html#.this.success">this.success</a></li></ul></li><li><a href="SignerDesktopClient.html">SignerDesktopClient</a><ul class='methods'><li data-type='method'><a href="SignerDesktopClient.html#connect">connect</a></li><li data-type='method'><a href="SignerDesktopClient.html#execute">execute</a></li><li data-type='method'><a href="SignerDesktopClient.html#getFiles">getFiles</a></li><li data-type='method'><a href="SignerDesktopClient.html#isConnected">isConnected</a></li><li data-type='method'><a href="SignerDesktopClient.html#listCerts">listCerts</a></li><li data-type='method'><a href="SignerDesktopClient.html#listPolicies">listPolicies</a></li><li data-type='method'><a href="SignerDesktopClient.html#logoutPKCS11">logoutPKCS11</a></li><li data-type='method'><a href="SignerDesktopClient.html#setDebug">setDebug</a></li><li data-type='method'><a href="SignerDesktopClient.html#setUriServer">setUriServer</a></li><li data-type='method'><a href="SignerDesktopClient.html#shutdown">shutdown</a></li><li data-type='method'><a href="SignerDesktopClient.html#signer">signer</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFile">signerFile</a></li><li data-type='method'><a href="SignerDesktopClient.html#signerFileUsingDefaults">signerFileUsingDefaults</a></li><li data-type='method'><a href="SignerDesktopClient.html#status">status</a></li><li data-type='method'><a href="SignerDesktopClient.html#validate">validate</a></li><li data-type='method'><a href="SignerDesktopClient.html#validateFile">validateFile</a></li></ul></li></ul>
 </nav>
 
 <div id="main">
@@ -204,12 +204,12 @@ var SignerDesktopClient = (function () {
          * @instance
          * @param {string} alias - Alias of certificate to use in sign
 		 * @param {string} provider - The provider (Token, SmartCard...)
-		 * @param {string} content - The text to sign
+		 * @param {string} fileName - The file to sign
 		 * @param {string} signaturePolicy - he policy to use in signature 
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        signerFile: function (alias, provider, content, signaturePolicy) {
+        signerFile: function (alias, provider, fileName, signaturePolicy) {
             var signerCommand = {
                 command: 'filesigner',
                 type: 'raw',
@@ -218,7 +218,7 @@ var SignerDesktopClient = (function () {
                 alias: alias,
                 signaturePolicy: signaturePolicy,
                 provider: provider,
-                content: content
+                content: fileName
             }
             var promise = services.execute(signerCommand);
             return promise;
@@ -238,7 +238,26 @@ var SignerDesktopClient = (function () {
             var promise = services.execute(validateFileCommand);
             return promise;
         },
-        
+
+        /**
+		 * Sign file using default parameters: first cert on token, first provider and policy CADES 2_2.
+         * 
+         * @instance
+		 * @param {string} fileName - The file to sign
+		 * @return Promisse - The promisse when is finished.  
+		 * @memberof SignerDesktopClient
+		 */
+        signerFileUsingDefaults: function (fileName) {
+            var signerCommand = {
+                command: 'filesignerdefaults',
+                type: 'raw',
+                format: 'text',
+                compacted: false,
+                content: fileName
+            }
+            var promise = services.execute(signerCommand);
+            return promise;
+        },
 
         /**
 		 * Logout of access token.
@@ -345,6 +364,82 @@ var SignerDesktopClient = (function () {
             defer = new Promise();
             ws.send(JSON.stringify(request));
             return defer;
+        },
+
+        // ******************** Wraper method ********************
+        setUriServer: function (params) {
+            console.log("Wraper called.");
+            services.setUriServer(params.uri);
+        },
+
+        setDebug: function (params) {
+            console.log("Wraper called.");
+            services.setDebug(params.isToDebug);
+        },
+
+        connect: function (params) {
+            console.log("Wraper called.");
+            services.connect(params.callbackOpen, params.callbackClose, params.callbackError);
+        },
+
+        isConnected: function (params) {
+            console.log("Wraper called.");
+            return services.isConnected();
+        },
+
+        signer: function (params) {
+            console.log("Wraper called.");
+            return services.signer(params.alias, params.provider, params.content, params.signaturePolicy);
+        },
+
+        validate: function (params) {
+            console.log("Wraper called.");
+            return services.validate(params.content, params.signature);
+        },
+
+        signerFile: function (params) {
+            console.log("Wraper called.");
+            return services.signerFile(params.alias, params.provider, params.fileName, params.signaturePolicy);
+        },
+
+        validateFile: function (params) {
+            console.log("Wraper called.");
+            return services.validateFile();
+        },
+
+        signerFileUsingDefaults: function (params) {
+            return services.signerFileUsingDefaults(params.fileName);;
+        },
+
+        logoutPKCS11: function (params) {
+            console.log("Wraper called.");
+            services.logoutPKCS11();
+        },
+
+        status: function (params) {
+            console.log("Wraper called.");
+            return services.status();
+        },
+
+        listCerts: function (params) {
+            console.log("Wraper called.");
+            return services.listCerts();
+        },
+
+
+        listPolicies: function () {
+            console.log("Wraper called.");
+            return services.listPolicies();
+        },
+
+        getFiles: function () {
+            console.log("Wraper called.");
+            return services.getFiles();
+        },
+
+        shutdown: function () {
+            console.log("Wraper called.");
+            services.shutdown();
         }
 
     };
@@ -362,7 +457,7 @@ var SignerDesktopClient = (function () {
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Feb 24 2017 09:15:28 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a> on Fri Mar 03 2017 08:33:28 GMT-0300 (BRT) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
 </footer>
 
 <script>prettyPrint();</script>
