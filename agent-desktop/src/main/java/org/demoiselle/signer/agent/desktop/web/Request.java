@@ -5,7 +5,7 @@ import com.google.gson.Gson;
 public class Request {
 	
 	private String command;
-	private Integer requestId;
+	private long requestId;
 	
 	public String getCommand() {
 		return command;
@@ -15,11 +15,11 @@ public class Request {
 		this.command = command;
 	}
 
-	public Integer getRequestId() {
+	public long getRequestId() {
 		return requestId;
 	}
 
-	public void setRequestId(Integer id) {
+	public void setRequestId(long id) {
 		this.requestId = id;
 	}
 	
