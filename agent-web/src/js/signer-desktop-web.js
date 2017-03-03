@@ -327,44 +327,44 @@ var SignerDesktopClient = (function () {
             return defer;
         },
 
-        // ******************** Wraper method ********************
+        // ******************** Wrapper method ********************
         setUriServer: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             services.setUriServer(params.uri);
         },
 
         setDebug: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             services.setDebug(params.isToDebug);
         },
 
         connect: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             services.connect(params.callbackOpen, params.callbackClose, params.callbackError);
         },
 
         isConnected: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.isConnected();
         },
 
         signer: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.signer(params.alias, params.provider, params.content, params.signaturePolicy);
         },
 
         validate: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.validate(params.content, params.signature);
         },
 
         signerFile: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.signerFile(params.alias, params.provider, params.fileName, params.signaturePolicy);
         },
 
         validateFile: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.validateFile();
         },
 
@@ -373,33 +373,33 @@ var SignerDesktopClient = (function () {
         },
 
         logoutPKCS11: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             services.logoutPKCS11();
         },
 
         status: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.status();
         },
 
         listCerts: function (params) {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.listCerts();
         },
 
 
         listPolicies: function () {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.listPolicies();
         },
 
         getFiles: function () {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             return services.getFiles();
         },
 
         shutdown: function () {
-            console.log("Wraper called.");
+            console.log("Wrapper called.");
             services.shutdown();
         }
 
