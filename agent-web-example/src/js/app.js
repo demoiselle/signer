@@ -29,7 +29,7 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
             cfpLoadingBar.complete();
         };
 
-        $scope.webExtensionId = "ignkfmddfcgkkpkopkafjjbbpagofgka";
+        $scope.webExtensionId = "ckfoendnbnogeekdioilahchhafodkik";
 
         // Função necessária para funcionar no Chrome e Firefox
         $scope.browser = function () {
