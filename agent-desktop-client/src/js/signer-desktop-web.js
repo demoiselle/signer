@@ -7,7 +7,7 @@
 var SignerDesktopClient = (function () {
 
     var ws;
-    var defer = null;
+    var defer = [];
     var uriServer = "ws://localhost:9091/";
     var isDebug = false;
 
@@ -76,23 +76,33 @@ var SignerDesktopClient = (function () {
 
                 ws.onmessage = function (response) {
                     var objResponse = JSON.parse(response.data);
+
                     // If has data and data.error is a business error
                     if (objResponse !== undefined && objResponse.error !== undefined) {
-                        if (defer.hasCallbackError()) {
-                            defer.reject(objResponse);
+                        if (objResponse.requestId !== undefined && defer[objResponse.requestId].hasCallbackError()) {
+                            defer[objResponse.requestId].reject(objResponse);
                         } else if (callbackError) {
                             callbackError(objResponse);
                         }
                     } else {
-                        defer.resolve(objResponse);
+
+                        l("Receiving command with ID [" + objResponse.requestId + "]");
+                        
+                        if (objResponse.requestId != undefined && defer[objResponse.requestId] !== undefined) {
+                            defer[objResponse.requestId].resolve(objResponse);
+                        } else {
+                            l("No callback to success was defined.");
+                            l(objResponse)
+                        }
                     }
                 };
 
-                ws.onerror = function (event) {
-                    if (defer.hasCallbackError()) {
-                        defer.reject(event);
-                    } else if (callbackError) {
-                        callbackError(event);
+                ws.onerror = function (response) {
+                    if (defer[response.requestId] !== undefined) {
+                        defer[response.requestId].reject(response);
+                    } else {
+                        l("No callback to success was defined. Generic error.");
+                        callbackError(response);
                     }
                 };
             }
@@ -318,101 +328,94 @@ var SignerDesktopClient = (function () {
              * @todo verify if ws was intancialize
              */
 
-            l("Sending command [" + request.command + "] to URI [" + uriServer + "]");
+            // If id doesnt exists, create
+            if (request.requestId === undefined || request.requestId === "") {
+                request.requestId = new Date().getTime();
+            }
 
-            defer = new Promise();
+            l("Sending command [" + request.command + "] with ID [" + request.requestId + "] to URI [" + uriServer + "]");
+            l(request);
+
+            defer[request.requestId] = new Promise();
+
             ws.send(JSON.stringify(request));
-            return defer;
+
+            return defer[request.requestId];
         },
 
         // ******************** Wrapper method ********************
         setUriServerWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             services.setUriServer(params.uri);
         },
 
         setDebugWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             services.setDebug(params.isToDebug);
         },
 
         connectWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             services.connect(params.callbackOpen, params.callbackClose, params.callbackError);
         },
 
         isConnectedWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.isConnected();
         },
 
         signerWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.signer(params.alias, params.provider, params.content, params.signaturePolicy);
         },
 
         validateWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.validate(params.content, params.signature);
         },
 
         signerFileWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.signerFile(params.alias, params.provider, params.fileName, params.signaturePolicy);
         },
 
         validateFileWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.validateFile();
         },
 
         signerFileUsingDefaultsWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.signerFileUsingDefaults();
         },
 
         logoutPKCS11Wrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             services.logoutPKCS11();
         },
 
         statusWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.status();
         },
 
         listCertsWrapper: function (params) {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.listCerts();
         },
 
         listPoliciesWrapper: function () {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.listPolicies();
         },
 
         getFilesWrapper: function () {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             return services.getFiles();
         },
 
         shutdownWrapper: function () {
-            console.log("Wrapper called. Params:");
-            console.log(params);
+            l("Wrapper called");
             services.shutdown();
         }
 
