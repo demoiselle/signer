@@ -58,6 +58,14 @@
                 </div>
             </div>
             <div class="text-center padding">
+                <form>
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Extension ID</label>
+                        <input type="text" class="form-control text-center" placeholder="Extension ID" ng-model="webExtensionId">
+                    </div>
+                </form>
+            </div>
+            <div class="text-center padding">
                 1. <a href="./agent-desktop-3.0.0-SNAPSHOT.jar">Download Java Program Here</a><br/> 2. Start program with
                 <b>double click</b> OR <b>java -jar ./agent-desktop-3.0.0-SNAPSHOT.jar</b>
             </div>
@@ -100,11 +108,10 @@
             <div class="row">
                 <div class="col-md-12">
                     <button class="btn btn-md btn-success" ng-click="validateFile()" role="button">Validate File</button>
-                    
+
                     <div class="padding" style="margin-top: 10px;" ng-show="message">
-                         <span ng-show="valid" style="font-weight: bold; font-size: 110%;">Assinatura Válida</span> 
-                         <span ng-show="!valid" style="font-weight: bold; font-size: 110%;">Assinatura NÃO Válida</span> 
-                         {{message}}
+                        <span ng-show="valid" style="font-weight: bold; font-size: 110%;">Assinatura Válida</span>
+                        <span ng-show="!valid" style="font-weight: bold; font-size: 110%;">Assinatura NÃO Válida</span> {{message}}
                     </div>
                     <div class="padding" ng-show="subject">
                         {{subject}}

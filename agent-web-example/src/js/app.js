@@ -71,7 +71,7 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
                     $timeout(function () {
                         $scope.valid = response.valid;
-                        
+
                         if ($scope.subject !== undefined) {
                             $scope.subject = response.by.subject;
 
@@ -129,11 +129,14 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
         };
 
         $scope.verifyAll = function () {
+
+            console.log("webExtensionId: " + $scope.webExtensionId);
+
             $scope.verifyDesktopClientIsOn();
             $scope.verifyWebExtensionIsOn();
 
             // Por enquanto se ativar isso da problema com as requisições do usuário
-            // $timeout($scope.verifyAll, 5000);
+            $timeout($scope.verifyAll, 2000);
         };
 
         $scope.verifyAll();
