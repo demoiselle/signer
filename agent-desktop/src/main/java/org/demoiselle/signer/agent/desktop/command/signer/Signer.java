@@ -43,7 +43,7 @@ public class Signer extends AbstractCommand<SignerRequest, SignerResponse>{
 	        byte[] signed = signer.doDetachedSign(this.contentToBytes(request.getContent(), request.getFormat(), request.getCompacted()));	        
 	        String encripted = Base64Utils.base64Encode(signed);
 	        SignerResponse result = new SignerResponse();
-	        result.setRequestId(request.getId());
+	        result.setRequestId(request.getRequestId());
 	        result.setSigned(encripted);
 	        Certificate by = new Certificate();
 	        by.setAlias(request.getAlias());

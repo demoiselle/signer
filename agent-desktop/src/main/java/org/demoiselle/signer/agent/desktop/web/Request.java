@@ -5,8 +5,8 @@ import com.google.gson.Gson;
 public class Request {
 	
 	private String command;
-	private Integer id;
-
+	private Integer requestId;
+	
 	public String getCommand() {
 		return command;
 	}
@@ -15,12 +15,12 @@ public class Request {
 		this.command = command;
 	}
 
-	public Integer getId() {
-		return id;
+	public Integer getRequestId() {
+		return requestId;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
+	public void setRequestId(Integer id) {
+		this.requestId = id;
 	}
 	
 	public String toJson() {

@@ -30,7 +30,7 @@ public class Encript extends AbstractCommand<EncriptRequest, EncriptResponse> {
 	        byte[] cript = cipherEnc.doFinal(this.getBytes(data));
 	        String encripted = Base64Utils.base64Encode(cript);
 	        EncriptResponse result = new EncriptResponse();
-	        result.setRequestId(data.getId());
+	        result.setRequestId(data.getRequestId());
 	        result.setEncripted(encripted);
 	        Certificate by = new Certificate();
 	        by.setAlias(data.getAlias());

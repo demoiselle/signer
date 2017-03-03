@@ -7,14 +7,17 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.demoiselle.signer.agent.desktop.Command;
 import org.demoiselle.signer.core.util.Base64Utils;
 
+import org.demoiselle.signer.agent.desktop.web.Request;
+import org.demoiselle.signer.agent.desktop.web.Response;
+
 import com.google.gson.Gson;
 
-public abstract class AbstractCommand<Request, Response> implements Command {
+public abstract class AbstractCommand<REQ, RESP> implements Command {
 
 	private static final String ERROR_MESSAGE = "{\"erro\" : \"Erro ao tentar interpretar "
 			+ "os parametros do comando.\" }";
 
-	public abstract Response doCommand(Request request);
+	public abstract RESP doCommand(REQ request);
 
 	public String getCommandName() {
 		return this.getClass().getSimpleName().toLowerCase();
@@ -25,9 +28,9 @@ public abstract class AbstractCommand<Request, Response> implements Command {
 		Security.addProvider(new BouncyCastleProvider());
 
 		Gson gson = new Gson();
-		Request request = null;
+		REQ request = null;
 		try {
-			Class<Request> type = (Class<Request>) ((ParameterizedType) getClass().getGenericSuperclass())
+			Class<REQ> type = (Class<REQ>) ((ParameterizedType) getClass().getGenericSuperclass())
 					.getActualTypeArguments()[0];
 			request = gson.fromJson(params, type);
 		} catch (Throwable errorData) {
@@ -35,8 +38,14 @@ public abstract class AbstractCommand<Request, Response> implements Command {
 		}
 		if (request == null)
 			return AbstractCommand.ERROR_MESSAGE;
+		
 		try {
-			Response response = this.doCommand(request);
+			RESP response = this.doCommand(request);
+			if ((request instanceof Request) && (response instanceof Response)) {
+				Request req = (Request)request;
+				Response resp = (Response)response;
+				resp.setRequestId(req.getRequestId());
+			}
 			String resultJson = gson.toJson(response);
 			return resultJson;
 		} catch (Throwable error) {

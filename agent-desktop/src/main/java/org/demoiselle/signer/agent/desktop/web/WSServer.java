@@ -5,6 +5,8 @@ import static io.undertow.Handlers.websocket;
 
 import java.net.BindException;
 
+import com.google.gson.Gson;
+
 import io.undertow.Undertow;
 import io.undertow.websockets.WebSocketConnectionCallback;
 import io.undertow.websockets.core.AbstractReceiveListener;
@@ -60,13 +62,22 @@ public class WSServer extends AbstractReceiveListener {
 
 	protected void onFullTextMessage(WebSocketChannel channel, BufferedTextMessage message) {
 		String result = null;
+		Request request = null;
 		try {
-			result = new Execute().executeCommand(message.getData());
+			final Gson gson = new Gson();
+			try {
+				request = gson.fromJson(message.getData(), Request.class);
+			} catch (Throwable error) {
+				throw new InterpreterException(error);
+			}
+			result = new Execute().executeCommand(request);
 			WebSockets.sendText(result, channel, null);
 		} catch (InterpreterException error) {
-			WebSockets.sendText("{ \"error\": \"Erro ao tentar interpretar o JSON\"}", channel, null);
+			ErrorResponse response = new ErrorResponse(request, "Error on try to interpreter a JSON message");
+			WebSockets.sendText(response.toJson(), channel, null);
 		} catch (Throwable error) {
-			WebSockets.sendText("{ \"error\": \"" + error.getMessage() + "\"}", channel, null);
+			ErrorResponse response = new ErrorResponse(request, error);
+			WebSockets.sendText(response.toJson(), channel, null);
 		}
 	}
 	
