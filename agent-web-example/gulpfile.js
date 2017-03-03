@@ -18,9 +18,7 @@ gulp.task('js-lib', function() {
         './node_modules/angular-ui-notification/dist/**/*.min.js'
     ])
         .pipe(concat('lib.min.js'))
-        .pipe(uglify('lib.min.js'))
         .pipe(gulp.dest('dist'));
-
 });
 
 gulp.task('css', function() {

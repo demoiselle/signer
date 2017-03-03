@@ -70,8 +70,8 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
             cfpLoadingBar.complete();
         }
 
-        // window.SignerDesktopClient.setUriServer("ws://localhost:9091");
-        window.SignerDesktopClient.setUriServer("wss://localhost:9443");
+        window.SignerDesktopClient.setUriServer("ws://localhost:9091");
+        // window.SignerDesktopClient.setUriServer("wss://localhost:9443");
         window.SignerDesktopClient.setDebug(true);
         window.SignerDesktopClient.connect(callbackOpenClose, callbackOpenClose, callbackError);
 
