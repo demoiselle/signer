@@ -5,10 +5,10 @@ import java.security.Security;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.demoiselle.signer.agent.desktop.Command;
-import org.demoiselle.signer.core.util.Base64Utils;
-
+import org.demoiselle.signer.agent.desktop.web.ErrorResponse;
 import org.demoiselle.signer.agent.desktop.web.Request;
 import org.demoiselle.signer.agent.desktop.web.Response;
+import org.demoiselle.signer.core.util.Base64Utils;
 
 import com.google.gson.Gson;
 
@@ -39,17 +39,23 @@ public abstract class AbstractCommand<REQ, RESP> implements Command {
 		if (request == null)
 			return AbstractCommand.ERROR_MESSAGE;
 		
+		Request req = null; 
+		Response resp = null;
+		if ((request instanceof Request)) {
+			req = (Request)request;
+		}
+
 		try {
 			RESP response = this.doCommand(request);
-			if ((request instanceof Request) && (response instanceof Response)) {
-				Request req = (Request)request;
-				Response resp = (Response)response;
+			if (response instanceof Response) {
+				resp = (Response)response;
 				resp.setRequestId(req.getRequestId());
 			}
 			String resultJson = gson.toJson(response);
 			return resultJson;
 		} catch (Throwable error) {
-			return "{\"error\": \"" + error.getMessage() + "\"}";
+			ErrorResponse errorResponse = new ErrorResponse(req, error);
+			return errorResponse.toJson();
 		}
 	}
 	
