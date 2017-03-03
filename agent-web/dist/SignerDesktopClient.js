@@ -267,17 +267,15 @@ var SignerDesktopClient = (function () {
 		 * Sign file using default parameters: first cert on token, first provider and policy CADES 2_2.
          * 
          * @instance
-		 * @param {string} fileName - The file to sign
 		 * @return Promisse - The promisse when is finished.  
 		 * @memberof SignerDesktopClient
 		 */
-        signerFileUsingDefaults: function (fileName) {
+        signerFileUsingDefaults: function () {
             var signerCommand = {
-                command: 'filesignerdefaults',
+                command: 'filesignerusingdefaults',
                 type: 'raw',
                 format: 'text',
-                compacted: false,
-                content: fileName
+                compacted: false
             }
             var promise = services.execute(signerCommand);
             return promise;
@@ -432,7 +430,7 @@ var SignerDesktopClient = (function () {
         },
 
         signerFileUsingDefaults: function (params) {
-            return services.signerFileUsingDefaults(params.fileName);;
+            return services.signerFileUsingDefaults();
         },
 
         logoutPKCS11: function (params) {
