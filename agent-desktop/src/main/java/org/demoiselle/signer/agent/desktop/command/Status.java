@@ -5,7 +5,7 @@ import org.demoiselle.signer.agent.desktop.Command;
 public class Status implements Command {
 
 	public String doCommand(String params) {
-		return "{ \"status:\" : \"OK\" }";
+		return "{ \"status\" : \"OK\" }";
 	}
 	
 	public String getCommandName() {
