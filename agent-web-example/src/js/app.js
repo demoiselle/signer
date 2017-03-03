@@ -17,8 +17,8 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
     .controller('MainController', ['$scope', '$http', '$timeout', 'cfpLoadingBar', 'Notification', function ($scope, $http, $timeout, cfpLoadingBar, Notification) {
 
-        $scope.webExtensionIsOn = true;
-        $scope.desktopClientIsOn = true;
+        $scope.webExtensionIsOn = false;
+        $scope.desktopClientIsOn = false;
 
         // https://github.com/chieffancypants/angular-loading-bar
         $scope.startRequest = function () {
@@ -136,6 +136,6 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
             // $timeout($scope.verifyAll, 5000);
         };
 
-        //$scope.verifyAll();
+        $scope.verifyAll();
 
     }]);
