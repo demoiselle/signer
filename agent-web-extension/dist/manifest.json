@@ -13,7 +13,7 @@
     "https://localhost/"
   ],
   "externally_connectable": {
-    "matches": ["*://localhost/*"]
+    "matches": ["*://localhost/*", "*://rawgit.com/*"]
   },
   "background": {
     "scripts": [
