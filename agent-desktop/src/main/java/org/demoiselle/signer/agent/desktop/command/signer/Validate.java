@@ -104,7 +104,7 @@ public class Validate extends AbstractCommand<ValidateRequest, ValidateResponse>
 		String contentBase64 = Base64Utils.base64Encode(content);
 		String signedBase64 = Base64Utils.base64Encode(signed);
 		ValidateRequest request = new ValidateRequest();
-		request.setContent(contentBase64);
+		request.setContent("marco");
 		request.setSignature(signedBase64);
 		request.setFormat("base64");
 		System.out.println(request.toJson());

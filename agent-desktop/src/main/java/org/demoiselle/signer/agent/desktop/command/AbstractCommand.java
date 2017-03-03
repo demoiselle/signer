@@ -61,8 +61,12 @@ public abstract class AbstractCommand<Request, Response> implements Command {
 			// if format text, don't needed to be
 			// descompacted, return from here
 			return content.getBytes();
-		} else if (format.equalsIgnoreCase("base64")) {
-			result = Base64Utils.base64Decode(content);
+		} else if ("base64".equalsIgnoreCase(format)) {
+			try {
+				result = Base64Utils.base64Decode(content);
+			} catch (Throwable error) {
+				throw new RuntimeException("Error decoding content", error);
+			}
 		} else if (format.equalsIgnoreCase("hexa")) {
 		    int len = content.length();
 		    byte[] data = new byte[len / 2];

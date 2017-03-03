@@ -3,17 +3,25 @@ package org.demoiselle.signer.agent.desktop.web;
 import static io.undertow.Handlers.path;
 import static io.undertow.Handlers.websocket;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.BindException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
+import org.demoiselle.signer.agent.desktop.ui.PinHandler;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 
 import io.undertow.Undertow;
 import io.undertow.websockets.WebSocketConnectionCallback;
@@ -51,19 +59,23 @@ public class WSServerSSL extends AbstractReceiveListener {
 
 		System.setProperty("javax.net.debug", "all");
 		SSLContext sslContext = SSLContext.getDefault();
-
-		KeyStore localKeyStore = KeyStore.getInstance("JKS");
-		InputStream is = WSServerSSL.class.getResourceAsStream("/localhost.jks");
-		localKeyStore.load(is, "changeit".toCharArray());
-		sslContext = SSLContext.getInstance("TLS");
+		sslContext = SSLContext.getInstance("TLSv1.2");
 		String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
 		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(defaultAlgorithm);
-		keyManagerFactory.init(localKeyStore, "changeit".toCharArray());
+//		keyManagerFactory.init(this.getKeyStoreFromLocal(), "changeit".toCharArray());
+		keyManagerFactory.init(this.getKeyStoreFromToken(), null);
 		KeyManager[] km = keyManagerFactory.getKeyManagers();
 		System.out.println(km);
-		TrustManager[] tm = null;
-		SecureRandom sr = null;
+		TrustManager[] tm = new TrustManager[] {new X509TrustManager() {
+            public X509Certificate[] getAcceptedIssuers() { return null; }
+			public void checkClientTrusted(X509Certificate[] c, String a) throws CertificateException {}
+			public void checkServerTrusted(X509Certificate[] c, String a) throws CertificateException {}
+        }};
+		SecureRandom sr = new SecureRandom();
 		sslContext.init(km, tm , sr);
+		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+            public boolean verify(String h, SSLSession s) { return true; }
+        }); 
 
 		this.undertow = Undertow.builder().addHttpsListener(port, host, sslContext)
 				.setHandler(path().addPrefixPath("/", websocket(new WebSocketConnectionCallback() {
@@ -86,6 +98,23 @@ public class WSServerSSL extends AbstractReceiveListener {
 				}
 			}
 		}
+	}
+	
+	private KeyStore getKeyStoreFromLocal() {
+		try {
+			KeyStore localKeyStore = KeyStore.getInstance("JKS");
+			InputStream is = WSServerSSL.class.getResourceAsStream("/localhost.jks");
+			localKeyStore.load(is, "changeit".toCharArray());
+			return localKeyStore;
+		} catch (Throwable error) {
+			return null;
+		}
+	}
+	
+	private KeyStore getKeyStoreFromToken() {
+		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+		loader.setCallbackHandler(new PinHandler());
+		return loader.getKeyStore();
 	}
 
 	public void stop() {
