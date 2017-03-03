@@ -1,5 +1,5 @@
 {
-  "name": "agent-web",
+  "name": "agent-desktop-client",
   "version": "1.0.0",
   "description": "Client Library to communicate with Signer Desktop",
   "main": "dist/SignerDesktopClient.min.js",
