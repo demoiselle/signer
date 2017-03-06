@@ -105,16 +105,6 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
         };
 
         $scope.verifyDesktopClientIsOn = function () {
-            $scope.sendMessageToWebExtension({ command: "desktopStatus" },
-                function (response) {
-                    $scope.desktopClientIsOn = true;
-                }, function (error) {
-                    $scope.desktopClientIsOn = false;
-                }
-            );
-        };
-
-        $scope.verifyWebExtensionIsOn = function () {
             $scope.sendMessageToWebExtension({ command: "status" },
                 function (response) {
                     $timeout(function () {
@@ -124,6 +114,16 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
                     $timeout(function () {
                         $scope.webExtensionIsOn = false;
                     }, 100);
+                }
+            );            
+        };
+
+        $scope.verifyWebExtensionIsOn = function () {
+            $scope.sendMessageToWebExtension({ command: "desktopStatus" },
+                function (response) {
+                    $scope.desktopClientIsOn = true;
+                }, function (error) {
+                    $scope.desktopClientIsOn = false;
                 }
             );
         };
