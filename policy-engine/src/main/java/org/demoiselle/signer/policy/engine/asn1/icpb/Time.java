@@ -44,6 +44,11 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERUTCTime;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * Parse {@link ASN1Primitive} and transform {@link ASN1GeneralizedTime} to {@link Date}
+ *
+ */
 public class Time extends ASN1Object {
 
     private Date time;

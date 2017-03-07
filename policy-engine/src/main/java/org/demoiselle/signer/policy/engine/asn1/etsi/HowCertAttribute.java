@@ -40,6 +40,15 @@ import org.bouncycastle.asn1.ASN1Enumerated;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The howCertAttribute field specifies whether attributes uncertified attributes "claimed" by the signer,
+ *  or certified in an attribute certificate or either using the signer attributes attribute defined in TS 101 733.
+ *  HowCertAttribute ::= ENUMERATED {
+ *  			claimedAttribute (0),
+ *  			certifiedAttribtes (1),
+ *  			either (2) }
+ *
+ */
 public enum HowCertAttribute {
 
     claimedAttribute(0),

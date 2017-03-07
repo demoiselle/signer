@@ -49,11 +49,20 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
+import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
+/**
+ * The policyIssuerName field identifies the policy issuer in one or more of the general name forms.
+ * 
+ * PolicyIssuerName ::= GeneralNames
+ * 
+ *
+ */
 public class PolicyIssuerName extends ASN1Object {
 
     private Map<ObjectIdentifier, String> issuerNames;
     private String issuerName;
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle();
 
     @Override
     public void parse(ASN1Primitive primitive) {
@@ -85,7 +94,7 @@ public class PolicyIssuerName extends ASN1Object {
                                 } else if (object3 instanceof DERUTF8String) {
                                     name = ((DERUTF8String) object3).getString();
                                 } else {
-                                    System.out.println("Não foi possível reconhecer o objeto da classe [" + object3.getClass() + "]: toString [" + object3.toString() + "]");
+                                    System.out.println(policyMessagesBundle.getString("error.not.recognized.object",object3.getClass(),object3.toString()));
                                 }
                                 if (this.issuerNames == null) {
                                     this.issuerNames = new HashMap<ObjectIdentifier, String>();

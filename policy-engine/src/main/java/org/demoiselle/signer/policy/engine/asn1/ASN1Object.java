@@ -42,9 +42,24 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DLSequence;
+import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
+
+/**
+ * 
+ * Abstract class for provide methods to get org.bouncycastle.asn1.DERSequence 
+ * and  org.bouncycastle.asn1.ASN1Enumerated from org.bouncycastle.asn1.ASN1Primitive 
+ *
+ */
 public abstract class ASN1Object {
+	
+	private static MessagesBundle policyMessagesBundle = new MessagesBundle();
 
+	/**
+	 * 
+	 * @param derObject @see org.bouncycastle.asn1.ASN1Primitive
+	 * @return org.bouncycastle.asn1.DERSequence
+	 */
     public static ASN1Sequence getDERSequence(ASN1Primitive derObject) {
         ASN1Sequence sequence = null;
         if (derObject instanceof DERTaggedObject) {
@@ -61,6 +76,11 @@ public abstract class ASN1Object {
         return sequence;
     }
 
+    /**
+     * 
+     * @param derObject @see org.bouncycastle.asn1.ASN1Primitive
+     * @return org.bouncycastle.asn1.ASN1Enumerated
+     */
     public static ASN1Enumerated getDEREnumerated(ASN1Primitive derObject) {
         ASN1Enumerated derEnumerated = null;
         if (derObject instanceof DERTaggedObject) {
@@ -74,7 +94,11 @@ public abstract class ASN1Object {
         return derEnumerated;
     }
 
+    /**
+     * 
+     * @param derObject
+     */
     public void parse(ASN1Primitive derObject) {
-        System.out.println(this.getClass() + " : não implementado");
+        System.out.println(this.getClass() + policyMessagesBundle.getString("info.not.implemented"));
     }
 }

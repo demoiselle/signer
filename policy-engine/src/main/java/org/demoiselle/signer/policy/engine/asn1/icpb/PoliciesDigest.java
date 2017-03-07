@@ -39,6 +39,15 @@ package org.demoiselle.signer.policy.engine.asn1.icpb;
 import org.bouncycastle.asn1.esf.OtherHashAlgAndValue;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ *  Hash and Algorithm values defined by policy.
+ *
+ *  org.bouncycastle.asn1.esf.OtherHashAlgAndValue textualPolicyDigest;
+ *  org.bouncycastle.asn1.esf.OtherHashAlgAndValue asn1PolicyDigest;
+ *  org.bouncycastle.asn1.esf.OtherHashAlgAndValue xmlPolicyDigest;
+ *
+ */
 public class PoliciesDigest extends ASN1Object {
 
     private OtherHashAlgAndValue textualPolicyDigest;

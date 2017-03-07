@@ -39,7 +39,18 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 import org.bouncycastle.asn1.ASN1Enumerated;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
-
+/**
+ * 
+ * The mandatedCertificateInfo field identifies whether a signer's certificate, 
+ * or all certificates in the certification path to the trust point shall be provided by 
+ * the signer in the certificates field of SignedData.
+ * 
+ * CertInfoReq ::= ENUMERATED {
+ * 					none (0) , -- No mandatory requirements
+ *					signerOnly (1) , -- Only reference to signer cert mandated
+ *					fullPath (2) -- References for full cert path up to a trust point mandated
+ *					}
+ */
 public enum CertInfoReq {
 
     none(0), signerOnly(1), fullPath(2);

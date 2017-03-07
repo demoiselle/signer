@@ -43,6 +43,17 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ *  The acceptablePolicySet field identifies the initial set of certificate policies,
+ *   any of which are acceptable under the signature policy.
+ *   
+ *    AcceptablePolicySet ::= SEQUENCE OF CertPolicyId 
+ *  
+ *    Collection<CertPolicyId> {@link CertPolicyId}
+ * 
+ * 
+ *
+ */
 public class AcceptablePolicySet extends ASN1Object {
 
     private Collection<CertPolicyId> certPolicyIds;

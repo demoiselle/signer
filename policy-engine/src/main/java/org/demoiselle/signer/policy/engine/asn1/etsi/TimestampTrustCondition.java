@@ -41,6 +41,20 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The TimeStampTrustCondition field identifies trust conditions for certificate path processing 
+ * used to authenticate the timstamping authority and constraints on the name of the timestamping authority.
+ *  This applies to the timestamp that shall be present in every ES-T.
+ *  
+ *  TimestampTrustCondition ::= SEQUENCE {
+ *  		ttsCertificateTrustTrees [0] {@link CertificateTrustTrees} OPTIONAL,
+ *  		ttsRevReq [1] {@link CertRevReq} OPTIONAL,
+ *  		ttsNameConstraints [2] {@link NameConstraints} OPTIONAL,
+ *  		cautionPeriod [3] {@link DeltaTime} OPTIONAL,
+ *  		signatureTimestampDelay [4] {@link DeltaTime} OPTIONAL
+ *  	 }
+ *
+ */
 public class TimestampTrustCondition extends ASN1Object {
 
     enum TAG {

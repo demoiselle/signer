@@ -43,11 +43,22 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
+import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
+/**
+ * V1 definition on:
+ *	http://www.iti.gov.br/icp-brasil/repositorio/144-icp-brasil/repositorio/3974-artefatos-de-assinatura-digital
+ *
+ * 	Collection< {@link PolicyInfo}> policyInfos;
+ * 	{@link Time} nextUpdate;
+ *
+ */
 public class LPA extends ASN1Object {
 
     private Collection<PolicyInfo> policyInfos;
     private Time nextUpdate;
+    
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle();
 
     public Collection<PolicyInfo> getPolicyInfos() {
         return policyInfos;
@@ -86,21 +97,21 @@ public class LPA extends ASN1Object {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("===================================================").append("\n");
-        builder.append("Próxima Atualização.: ").append(this.getNextUpdate().getTime()).append("\n");
-        builder.append("Qtds Políticas......: ").append(this.getPolicyInfos().size()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.next.update")).append(this.getNextUpdate().getTime()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.quantity")).append(this.getPolicyInfos().size()).append("\n");
         builder.append("===================================================").append("\n");
         for (org.demoiselle.signer.policy.engine.asn1.icpb.PolicyInfo policyInfo : this.getPolicyInfos()) {
-            builder.append("\tPolítica.............: ").append(policyInfo.getPolicyName()).append("\n");
-            builder.append("\tURI..................: ").append(policyInfo.getPoliciesURI()).append("\n");
-            builder.append("\tAplicação............: ").append(policyInfo.getFieldOfApplication()).append("\n");
-            builder.append("\tPeríodo de Assinatura: ").append(policyInfo.getSigningPeriod()).append("\n");
-            builder.append("\tStatus...............: ");
+            builder.append(policyMessagesBundle.getString("text.name")).append(policyInfo.getPolicyName()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.uri")).append(policyInfo.getPoliciesURI()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.application")).append(policyInfo.getFieldOfApplication()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.valid")).append(policyInfo.getSigningPeriod()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.status"));
             Time revocationDate = policyInfo.getRevocationDate();
             if (revocationDate != null) {
-                builder.append("Esta política está revogada.").append("\n");
-                builder.append("\tData de Revogação....: ").append(revocationDate != null ? revocationDate.getTime() : "não há data de revogação").append("\n");
+                builder.append(policyMessagesBundle.getString("text.repealed")).append("\n");
+                builder.append(policyMessagesBundle.getString("text.revocation.date")).append(revocationDate != null ? revocationDate.getTime() : policyMessagesBundle.getString("text.revocation.no.date")).append("\n");
             } else {
-                builder.append("Esta política ainda está em vigor.").append("\n");
+                builder.append(policyMessagesBundle.getString("text.still.valid")).append("\n");
             }
             builder.append("\t===================================================").append("\n");
         }

@@ -41,8 +41,27 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.x500.DirectoryString;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
+import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
+import org.demoiselle.signer.policy.engine.asn1.etsi.FieldOfApplication;
+import org.demoiselle.signer.policy.engine.asn1.etsi.PolicyIssuerName;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignPolExtensions;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignPolicyId;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignatureValidationPolicy;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SigningPeriod;
 
+/**
+ *
+ * V1 definition on:
+ *	http://www.iti.gov.br/icp-brasil/repositorio/144-icp-brasil/repositorio/3974-artefatos-de-assinatura-digital
+ *
+ *    org.bouncycastle.asn1.x500.DirectoryString policyName;
+ *    org.bouncycastle.asn1.x500.DirectoryString fieldOfApplication;
+ *    {@link SigningPeriod} signingPeriod;
+ *    {@link Time} revocationDate;
+ *    {@link PoliciesURI} policiesURI;
+ *    {@link PoliciesDigest} policiesDigest;
+ *
+ */
 public class PolicyInfo extends ASN1Object {
 
     private DirectoryString policyName;

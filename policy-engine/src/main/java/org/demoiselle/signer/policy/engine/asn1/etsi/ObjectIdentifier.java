@@ -40,6 +40,12 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * 
+ * parse an org.bouncycastle.asn1.ASN1Primitive to get the OID as a string
+ *
+ */
 public class ObjectIdentifier extends ASN1Object {
 
     private String value;
@@ -62,5 +68,4 @@ public class ObjectIdentifier extends ASN1Object {
     public String toString() {
         return this.value;
     }
-
 }

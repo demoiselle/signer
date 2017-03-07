@@ -38,6 +38,13 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * AttributeConstraints ::= SEQUENCE {
+ * 						   attributeTypeConstarints [0] AttributeTypeConstraints OPTIONAL,
+ * 						   attributeValueConstarints [1] AttributeValueConstraints OPTIONAL }
+ * 
+ *
+ */
 public class AttributeConstraints extends ASN1Object {
 
 }

@@ -40,6 +40,18 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * SignPolExtn ::= SEQUENCE {
+ * 				extnID OBJECT IDENTIFIER {@link ObjectIdentifier},
+ * 				extnValue OCTET STRING {@link OctetString}
+ *  	}
+ * 
+ * The extnID field shall contain the object identifier for the extension. 
+ * The extnValue field shall contain the DER(see ITU-T Recommendation X.690 [3]) 
+ * encoded value of the extension. The definition of an extension, as identified by
+ * extnID shall include a definition of the syntax and semantics of the extension.
+ *
+ */
 public class SignPolExtn extends ASN1Object {
 
     private ObjectIdentifier extnID;

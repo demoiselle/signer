@@ -38,6 +38,15 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * DeltaTime ::= SEQUENCE {
+ * deltaSeconds INTEGER,
+ * deltaMinutes INTEGER,
+ * deltaHours INTEGER,
+ * deltaDays INTEGER }
+ * 
+ *
+ */
 public class DeltaTime extends ASN1Object {
 	
 	private Integer deltaSeconds;

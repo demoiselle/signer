@@ -46,6 +46,14 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * (hash, public key cryptography, combined hash and public key cryptography)
  * that may be used for specific purposes and any minimum length. If this field
  * is not present then the policy applies no constraints.
+ * 
+ * AlgorithmConstraintSet ::= SEQUENCE { -- Algorithm constraints on:
+ * 
+ * 	signerAlgorithmConstraints [0] {@link AlgorithmConstraints} OPTIONAL, -- signer
+ * 	eeCertAlgorithmConstraints [1] {@link AlgorithmConstraints} OPTIONAL, -- issuer of end entity certs
+ * 	caCertAlgorithmConstraints [2] {@link AlgorithmConstraints} OPTIONAL, -- issuer of CA certificates
+ * 	aaCertAlgorithmConstraints [3] {@link AlgorithmConstraints} OPTIONAL, -- Attribute Authority
+ * 	tsaCertAlgorithmConstraints [4]{@link AlgorithmConstraints} OPTIONAL -- TimeStamping Authority -- }
  *
  */
 public class AlgorithmConstraintSet extends ASN1Object {

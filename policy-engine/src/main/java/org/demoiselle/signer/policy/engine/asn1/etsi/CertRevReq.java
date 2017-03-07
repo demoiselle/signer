@@ -40,6 +40,21 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ *
+ * The RevocRequirements field specifies minimum requirements for revocation information, 
+ * obtained through CRLs and/or OCSP responses, 
+ * to be used in checking the revocation status of certificates. 
+ * This ASN1 structure is used to define policy for validating the signing certificate, 
+ * the TSA's certificate and attribute certificates
+ * 
+ * Certificate revocation requirements are specified in terms of checks required on:
+ *  	endCertRevReq {@link RevReq } : end certificates (i.e. the signers certificate, 
+ *  					the attribute certificate or the timestamping authority certificate);
+ *  	caCerts  {@link RevReq }: CA certificates.
+ *      
+ *    
+ */
 public class CertRevReq extends ASN1Object {
 
     private RevReq endCertRevReq;

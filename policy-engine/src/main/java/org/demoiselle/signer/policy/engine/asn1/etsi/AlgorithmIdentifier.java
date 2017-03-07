@@ -40,6 +40,12 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * parse an org.bouncycastle.asn1.ASN1Primitive to get
+ *  {@link ObjectIdentifier} 
+ *
+ */
 public class AlgorithmIdentifier extends ASN1Object {
 
     private ObjectIdentifier algorithm;

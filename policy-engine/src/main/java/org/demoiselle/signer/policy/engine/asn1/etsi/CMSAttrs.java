@@ -43,6 +43,14 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ *  
+ *  CMSAttrs ::= SEQUENCE OF OBJECT IDENTIFIER  {@link ObjectIdentifier}
+ *
+ * 	mandatedSignedAttr CMSAttrs, -- Mandated CMS signed attributes
+ * 
+ * 	mandatedUnsignedAttr CMSAttrs, -- Mandated CMS unsigned attributed
+ */
 public class CMSAttrs extends ASN1Object {
 
     private Collection<ObjectIdentifier> objectIdentifiers;

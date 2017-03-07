@@ -40,6 +40,16 @@ import org.bouncycastle.asn1.ASN1Enumerated;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The mandatedCertificateRef identifies whether just the signer's certificate, 
+ * or all the full certificate path shall be provided by the signer
+ *  
+ * CertRefReq ::= ENUMERATED {
+ * 				signerOnly (1), -- Only reference to signer cert mandated
+ * 				fullPath (2) -- References for full cert path up to a trust point required
+ * 				}
+ *
+ */
 public enum CertRefReq {
 
     signerOnly(1), fullPath(2);

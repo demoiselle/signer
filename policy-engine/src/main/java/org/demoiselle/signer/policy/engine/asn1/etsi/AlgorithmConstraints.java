@@ -43,6 +43,15 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ *   
+ * AlgorithmConstraints ::= SEQUENCE OF AlgAndLength
+ * 
+ * Collection<AlgAndLength>
+ * 
+ * {@link AlgAndLength}
+ *
+ */
 public class AlgorithmConstraints extends ASN1Object {
 
     private Collection<AlgAndLength> algAndLengths;

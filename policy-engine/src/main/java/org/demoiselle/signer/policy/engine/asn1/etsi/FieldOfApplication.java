@@ -40,6 +40,13 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The fieldofApplication is a description of the expected application of this policy.
+ * 
+ * FieldOfApplication ::= DirectoryString
+ * 
+ *
+ */
 public class FieldOfApplication extends ASN1Object {
 
     private String value;

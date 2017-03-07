@@ -40,6 +40,15 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The SignerAndVerifierRules consists of signer rule and verification rules as defined below:
+ * 
+ * SignerAndVerifierRules ::= SEQUENCE {
+ * 					signerRules {@link SignerRules},
+ *				verifierRules {@link VerifierRules}
+ *			 }
+ *
+ */
 public class SignerAndVerifierRules extends ASN1Object {
 
     private SignerRules signerRules;

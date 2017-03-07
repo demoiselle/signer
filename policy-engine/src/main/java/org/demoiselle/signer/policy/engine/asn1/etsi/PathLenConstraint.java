@@ -44,6 +44,19 @@ import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * The pathLenConstraint field gives the maximum number of CA certificates
+ *  that may be in a certification path following the trustpoint.
+ *  A value of zero indicates that only the given trustpoint certificate and an end-entity
+ *  certificate may be used. 
+ *  If present, the pathLenConstraint field shall be greater than or equal to zero.
+ *  Where pathLenConstraint is not present, 
+ *  there is no limit to the allowed length of the certification path.
+ *  
+ *  Collection< {@link ObjectIdentifier} > PathLenConstraint ::= INTEGER (0..MAX)
+ *
+ */
 public class PathLenConstraint extends ASN1Object {
 
     private Collection<ObjectIdentifier> pathLenConstraints;

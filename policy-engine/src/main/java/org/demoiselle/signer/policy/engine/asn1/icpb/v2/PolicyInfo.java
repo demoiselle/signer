@@ -48,6 +48,18 @@ import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SigningPeriod;
 
+/**
+ * V2 definition on:
+ *	http://www.iti.gov.br/icp-brasil/repositorio/144-icp-brasil/repositorio/3974-artefatos-de-assinatura-digital
+ * 
+ *  {@link SigningPeriod} signingPeriod;
+ *  {@link GeneralizedTime} revocationDate;
+ *  {@link ObjectIdentifier} policyOID;
+ *  String policyURI;
+ *  org.bouncycastle.asn1.esf.OtherHashAlgAndValue policyDigest;
+ * 
+ *
+ */
 public class PolicyInfo extends ASN1Object {
 
     private SigningPeriod signingPeriod;

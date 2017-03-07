@@ -40,6 +40,16 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The SigningCertTrustCondition field identifies trust conditions for certificate 
+ * path processing used to validate the  signing certificate.
+ * 
+ * 	SigningCertTrustCondition ::= SEQUENCE {
+ * 					signerTrustTrees {@link CertificateTrustTrees},
+ * 					signerRevReq {@link CertRevReq}
+ * 	}
+ *
+ */
 public class SigningCertTrustCondition extends ASN1Object {
 
     private CertificateTrustTrees signerTrustTrees;

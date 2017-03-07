@@ -45,12 +45,23 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
+import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
+/**
+ * V2 definition on:
+ *	http://www.iti.gov.br/icp-brasil/repositorio/144-icp-brasil/repositorio/3974-artefatos-de-assinatura-digital
+ * 
+ * {@link Version} version;
+ * Collection<{@link PolicyInfo}> policyInfos;
+ * {@link GeneralizedTime} nextUpdate;
+ *
+ */
 public class LPA extends ASN1Object {
 
     private Version version;
     private Collection<PolicyInfo> policyInfos;
     private GeneralizedTime nextUpdate;
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle();
 
     public Version getVersion() {
         return version;
@@ -103,22 +114,22 @@ public class LPA extends ASN1Object {
     public String toString() {
         StringBuilder builder = new StringBuilder();
         builder.append("===================================================").append("\n");
-        builder.append("Próxima Atualização.: ").append(this.getNextUpdate().getDate()).append("\n");
-        builder.append("Qtds Políticas......: ").append(this.getPolicyInfos().size()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.next.update")).append(this.getNextUpdate().getDate()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.quantity")).append(this.getPolicyInfos().size()).append("\n");
         builder.append("===================================================");
         for (PolicyInfo policyInfo : this.getPolicyInfos()) {
-            builder.append("\tPeríodo de Assinatura: ").append(policyInfo.getSigningPeriod()).append("\n");
-            builder.append("\tOID da Política......: ").append(policyInfo.getPolicyOID().getValue()).append("\n");
-            builder.append("\tURI da Política......: ").append(policyInfo.getPolicyURI()).append("\n");
-            builder.append("\tAlgoritmo Hash.......: ").append(policyInfo.getPolicyDigest().getHashAlgorithm().getAlgorithm().getId()).append("\n");
-            builder.append("\tHash.................: ").append(policyInfo.getPolicyDigest().getHashValue().toString()).append("\n");
-            builder.append("\tStatus...............: ");
+            builder.append(policyMessagesBundle.getString("text.valid")).append(policyInfo.getSigningPeriod()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.oid")).append(policyInfo.getPolicyOID().getValue()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.uri")).append(policyInfo.getPolicyURI()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.algo.hash")).append(policyInfo.getPolicyDigest().getHashAlgorithm().getAlgorithm().getId()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.hash")).append(policyInfo.getPolicyDigest().getHashValue().toString()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.status"));
             GeneralizedTime revocationDate = policyInfo.getRevocationDate();
             if (revocationDate != null) {
-                builder.append("Esta política está revogada.").append("\n");
-                builder.append("\tData de Revogação....: ").append(revocationDate != null ? revocationDate.getDate() : "não há data de revogação").append("\n");
+                builder.append(policyMessagesBundle.getString("text.repealed")).append("\n");
+                builder.append(policyMessagesBundle.getString("text.revocation.date")).append(revocationDate != null ? revocationDate.getDate() : policyMessagesBundle.getString("text.revocation.no.date")).append("\n");
             } else {
-                builder.append("Esta política ainda está em vigor.").append("\n");
+                builder.append(policyMessagesBundle.getString("text.still.valid")).append("\n");
             }
             builder.append("\t===================================================").append("\n");
         }

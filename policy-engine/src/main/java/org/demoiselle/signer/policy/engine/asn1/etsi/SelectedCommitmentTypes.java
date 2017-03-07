@@ -42,6 +42,18 @@ import org.bouncycastle.asn1.DERNull;
 import org.bouncycastle.asn1.DERSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * If the SelectedCommitmentTypes indicates "empty" then this rule applied when a commitment type
+ *  is not present(i.e. the type of commitment is indicated in the semantics of the message).
+ *   Otherwise, the electronic signature shall contain a commitment type indication
+ *    that shall fit one of the commitments types that are mentioned in CommitmentType
+ * 
+ * SelectedCommitmentTypes ::= SEQUENCE OF CHOICE {
+ * 													empty NULL,
+ * 													recognizedCommitmentType {@link CommitmentType}
+ * 							 }
+ *
+ */
 public class SelectedCommitmentTypes extends ASN1Object {
 
     private CommitmentType recognizedCommitmentType;

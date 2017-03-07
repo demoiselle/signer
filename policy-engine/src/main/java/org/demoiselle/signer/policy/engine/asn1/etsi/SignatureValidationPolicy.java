@@ -40,6 +40,20 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The signature validation policy defines for the signer which data elements shall be present
+ * in the electronic signature he provides and for the verifier which data elements 
+ * shall be present under that signature policy for an electronic signature to be potentially valid.
+ * The signature validation policy is described as follows:
+ * 
+ * SignatureValidationPolicy ::= SEQUENCE {
+ * 				signingPeriod {@link SigningPeriod},
+ * 				commonRules {@link CommonRules},
+ * 				commitmentRules {@link CommitmentRules},
+ *				signPolExtensions {@link SignPolExtensions} OPTIONAL
+ *				}
+ *
+ */
 public class SignatureValidationPolicy extends ASN1Object {
 
     private SigningPeriod signingPeriod;
@@ -95,7 +109,5 @@ public class SignatureValidationPolicy extends ASN1Object {
             this.signPolExtensions = new SignPolExtensions();
             this.signPolExtensions.parse(derSequence.getObjectAt(3).toASN1Primitive());
         }
-
     }
-
 }

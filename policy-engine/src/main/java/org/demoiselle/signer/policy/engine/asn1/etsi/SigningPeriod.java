@@ -41,6 +41,16 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 
+/**
+ * The signingPeriod identifies the date and time before
+ * which the signature policy should not be used for creating signatures, 
+ * and an optional date after which it should not be used for creating signatures.
+ * 
+ * 		SigningPeriod ::= SEQUENCE {
+ * 					notBefore {@link GeneralizedTime},
+ * 					notAfter {@link GeneralizedTime} OPTIONAL }
+ * 
+ */
 public class SigningPeriod extends ASN1Object {
 
     private GeneralizedTime notBefore;
@@ -79,5 +89,4 @@ public class SigningPeriod extends ASN1Object {
     public String toString() {
         return this.notBefore.getDate() + " - " + (this.getNotAfter() != null ? this.getNotAfter().getDate() : "");
     }
-
 }

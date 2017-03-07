@@ -40,6 +40,11 @@ import java.util.Collection;
 
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * SkipCerts ::= INTEGER (0..MAX)
+ *
+ */
 public class SkipCerts extends ASN1Object {
 
     private Collection<Integer> skipCerts;

@@ -40,6 +40,13 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * parse an org.bouncycastle.asn1.ASN1Primitive to get
+ * 
+ * 	{@link EnuRevReq },
+ * 	{@link SignPolExtensions} OPTIONAL
+ *
+ */
 public class RevReq extends ASN1Object {
 
     private EnuRevReq enuRevReq;

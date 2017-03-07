@@ -41,6 +41,22 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * The policyConstraints extension constrains path processing in two ways.
+ *  It can be used to prohibit policy mapping or require that each certificate
+ *  in a path contain an acceptable policy identifier.
+ *  The policyConstraints field, if present specifies requirement for explicit indication 
+ *  of the certificate policy and/or the constraints on policy mapping.
+ *  
+ *  PolicyConstraints ::= SEQUENCE {
+ *  			requireExplicitPolicy [0] SkipCerts OPTIONAL,
+ *  			inhibitPolicyMapping [1] SkipCerts OPTIONAL 
+ *  }
+ *  
+ *  			{@link SkipCerts} ::= INTEGER (0..MAX)
+ *
+ */
 public class PolicyConstraints extends ASN1Object {
 
     enum TAG {

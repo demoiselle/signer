@@ -44,12 +44,36 @@ import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ *  The signer rules identify:
+ *  • if the eContent is empty and the signature is calculated using
+ *  	 a hash of signed data external to CMS structure;
+ *  • the CMS signed attributes that shall be provided by the signer under this policy;
+ *  • the CMS unsigned attribute that shall be provided by the signer under this policy;
+ *  • whether the certificate identifiers from the full certification path up to 
+ *  	the trust point shall be provided by the signer in the SigningCertificate attribute;
+ *  • whether a signer's certificate, or all certificates in the certification path 
+ *  	to the trust point shall be provided by the signer in the certificates field of SignedData.
+ *  
+ *  SignerRules ::= SEQUENCE {
+ *  				externalSignedData BOOLEAN OPTIONAL,
+ *  						-- True if signed data is external to CMS structure
+ *  						-- False if signed data part of CMS structure
+ *  						-- not present if either allowed
+ *  				mandatedSignedAttr {@link CMSAttrs},
+ *  						 -- Mandated CMS signed attributes
+ *  				mandatedUnsignedAttr {@link CMSAttrs}, 
+ *  						-- Mandated CMS unsigned attributed
+ *  				mandatedCertificateRef [0] {@link CertRefReq} DEFAULT signerOnly,
+ *  						-- Mandated Certificate Reference
+ *  				mandatedCertificateInfo [1] {@link CertInfoReq} DEFAULT none,
+ *  						-- Mandated Certificate Info
+ *  				signPolExtensions [2]{@link SignPolExtensions} OPTIONAL
+ *  }
+ *  
+ *  		CMSAttrs ::= SEQUENCE OF OBJECT IDENTIFIER *
+ */
 public class SignerRules extends ASN1Object {
-    /*
-     * True if signed data is external to CMS structure
-     * False if signed data part of CMS structure
-     * not present if either allowed
-     */
 
     private Boolean externalSignedData = null;
 

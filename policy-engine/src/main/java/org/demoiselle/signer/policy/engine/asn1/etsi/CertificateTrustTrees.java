@@ -43,6 +43,16 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * The certificateTrustTrees identifies a set of self signed certificates 
+ * for the trust points used to start (or end) certificate path processing 
+ * and the initial conditions for certificate path validation as defined RFC 2459 [6] clause 6. 
+ * This ASN1 structure is used to define policy for validating the signing certificate, 
+ * the TSA's certificate and attribute certificates
+ * 
+ *  Collection<CertificateTrustPoint> {@link CertificateTrustPoint}
+ *
+ */
 public class CertificateTrustTrees extends ASN1Object {
 
     private Collection<CertificateTrustPoint> certificateTrustPoints;

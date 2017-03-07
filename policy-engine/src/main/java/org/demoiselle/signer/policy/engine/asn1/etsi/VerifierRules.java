@@ -40,6 +40,19 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * The verifier rules identify:
+ *  • The CMS unsigned attributes that shall be present under this policy and 
+ *  shall be added by the verifier if not added by the signer.
+ *  
+ *  VerifierRules ::= SEQUENCE {
+ *  			mandatedUnsignedAttr {@link MandatedUnsignedAttr},
+ *  			signPolExtensions {@link SignPolExtensions} OPTIONAL
+ *  	}
+ *  
+ *
+ */
 public class VerifierRules extends ASN1Object {
 
     private MandatedUnsignedAttr mandatedUnsignedAttr;

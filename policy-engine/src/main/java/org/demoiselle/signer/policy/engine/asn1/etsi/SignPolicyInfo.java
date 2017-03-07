@@ -41,6 +41,19 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 
+/**
+ * ETSI TR 102 272 V1.1.1 (2003-12)
+ * 
+ * SignPolicyInfo ::= SEQUENCE {
+ * 				signPolicyIdentifier {@link SignPolicyId},
+ * 				dateOfIssue {@link GeneralizedTime},
+ * 				policyIssuerName {@link PolicyIssuerName},
+ * 				fieldOfApplication {@link FieldOfApplication},
+ * 				signatureValidationPolicy {@link SignatureValidationPolicy},
+ * 				signPolExtensions {@link SignPolExtensions} OPTIONAL
+}
+ *
+ */
 public class SignPolicyInfo extends ASN1Object {
 
     private SignPolicyId signPolicyIdentifier;

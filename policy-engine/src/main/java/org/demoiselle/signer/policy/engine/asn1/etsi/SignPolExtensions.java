@@ -43,6 +43,27 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * ETSI TR 102 272 V1.1.1 (2003-12)
+ * 
+ * Additional signature policy rules may be added to:
+ * 
+ * 
+ * • the overall signature policy structure, as defined in clause 6.1;
+ * • the signature validation policy structure, as defined in clause 6.2;
+ * • the common rules, as defined in clause 6.3;
+ * • the commitment rules, as defined in clause 6.4;
+ * • the signer rules, as defined in clause 6.5.1;
+ * • the verifier rules, as defined in clause 6.5.2;
+ * • the revocation requirements in clause 6.6.2;
+ * • the algorithm constraints in clause 6.10.
+ * 
+ * These extensions to the signature policy rules shall be defined using
+ *  an ASN.1 syntax with an associated object identifier carried in the SignPolExtn as defined below:
+ *  
+ *  SignPolExtensions ::= SEQUENCE OF {@link SignPolExtn}
+ *
+ */
 public class SignPolExtensions extends ASN1Object {
 
     private Collection<SignPolExtn> extensions;

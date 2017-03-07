@@ -39,6 +39,11 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
+ *	The nameConstraints field indicates a name space within which all subject names 
+ *  in subsequent certificates in a certification path shall be located. 
+ *  Restrictions may apply to the subject distinguished name or subject alternative names. 
+ *  Restrictions apply only when the specified name form is present. 
+ *  If no name of the type is in the certificate, the certificate is acceptable.
  *
  * @author 07721825741
  */

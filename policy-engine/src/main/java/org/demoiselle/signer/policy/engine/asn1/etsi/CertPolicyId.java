@@ -36,6 +36,11 @@
  */
 package org.demoiselle.signer.policy.engine.asn1.etsi;
 
+/**
+ * 
+ * CertPolicyId ::= OBJECT IDENTIFIER
+ *
+ */
 public class CertPolicyId extends ObjectIdentifier {
 
 }

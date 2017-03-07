@@ -46,6 +46,13 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
 
+/**
+ * 
+ *  Factory for the digital signature policies defined by ICP-BRASIL
+ *  
+ *  http://www.iti.gov.br/icp-brasil/repositorio/144-icp-brasil/repositorio/3974-artefatos-de-assinatura-digital
+ *
+ */
 public class PolicyFactory {
 
 
@@ -70,7 +77,7 @@ public class PolicyFactory {
 
     
     /**
-     * @deprecated  politica DESCONTINUADA
+     * @deprecated  Politics DISCONTINUED
      */
 
     @Deprecated
@@ -84,7 +91,7 @@ public class PolicyFactory {
 
     
     /**
-     * @deprecated  politica VIGENTE ATÉ 28/11/2016
+     * @deprecated   Politics DISCONTINUED 28/11/2016
      */
 
     @Deprecated    
@@ -97,7 +104,7 @@ public class PolicyFactory {
     }
     
     /**
-     * Carrega politica de assinatura para padrão CAdES (PKCS)
+     * Load signature policy for CAdES standard (PKCS)
      * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
      */
     
@@ -110,7 +117,7 @@ public class PolicyFactory {
     }
     
     /**
-     *  Carrega politica de assinatura para padrão PAdES (PDF)
+     *  Load signature policy for PAdES standard (PDF)
      * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
      */
     public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdES() {
@@ -122,7 +129,7 @@ public class PolicyFactory {
     }
     
     /**
-     *  Carrega politica de assinatura para padrão XAdES (XML)
+     *  Load signature policy for XAdES (XML) standard
      * @return
      */
     		
@@ -153,7 +160,8 @@ public class PolicyFactory {
 
     /**
      * 
-     * Politicas disponíveis no site do ITI. http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
+     * Policies available on the ITI website. 
+     * http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
      *
      */
     public enum Policies {
@@ -260,7 +268,8 @@ public class PolicyFactory {
 
     /**
      * 
-     * Lista de politicas: http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
+     * List of policies:
+     *  http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
      *
      */
     public enum ListOfSubscriptionPolicies {

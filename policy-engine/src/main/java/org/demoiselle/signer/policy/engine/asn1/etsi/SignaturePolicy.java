@@ -39,15 +39,30 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
+import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 import org.bouncycastle.asn1.DEROctetString;
 
 
+/**
+ * In this structure the policy information is preceded by an identifier 
+ * for the hashing algorithm used to protect the signature policy and followed 
+ * by the hash value which shall be re-calculated and checked whenever the policy is passed
+ * between the issuer and signer/verifier. 
+ * The hash is calculated without the outer type and length fields.
+ * 
+ * 	SignaturePolicy ::= SEQUENCE {
+ * 									signPolicyHashAlg {@link AlgorithmIdentifier},
+ * 									signPolicyInfo {@link SignPolicyInfo},
+ * 									signPolicyHash {@link SignPolicyHash} OPTIONAL }
+ *
+ */
 public class SignaturePolicy {
 
     private AlgorithmIdentifier signPolicyHashAlg;
     private SignPolicyInfo signPolicyInfo;
     private SignPolicyHash signPolicyHash;
     private String signPolicyURI;
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle();
 
     public AlgorithmIdentifier getSignPolicyHashAlg() {
         return signPolicyHashAlg;
@@ -92,46 +107,43 @@ public class SignaturePolicy {
         }
     }
 
-    
-    
-    
-    
+        
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("Algoritmo Hash da Política.......: ").append(this.getSignPolicyHashAlg().getAlgorithm().getValue()).append("\n");
-        builder.append("Hash da Política.................: ").append(this.getSignPolicyHash().getValue()).append("\n");
-        builder.append("OID da Política..................: ").append(this.getSignPolicyInfo().getSignPolicyIdentifier().getValue()).append("\n");
-        builder.append("Data Lancamento da Política......: ").append(this.getSignPolicyInfo().getDateOfIssue().getDate()).append("\n");
-        builder.append("Emissor da Política..............: ").append(this.getSignPolicyInfo().getPolicyIssuerName()).append("\n");
-        builder.append("Campo de aplicação da Política...: ").append(this.getSignPolicyInfo().getFieldOfApplication().getValue()).append("\n");
-        builder.append("Politica válida entre............: ").append(this.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()).append("\n");
-        builder.append("External Signed Data.............: ").append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getExternalSignedData()).append("\n");
-        builder.append("MandatedCertificateRef...........: ").append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateRef()).append("\n");
-        builder.append("MandatedCertificateInfo..........: ").append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateInfo()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.algo.hash")).append(this.getSignPolicyHashAlg().getAlgorithm().getValue()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.hash")).append(this.getSignPolicyHash().getValue()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.oid")).append(this.getSignPolicyInfo().getSignPolicyIdentifier().getValue()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.launch.date")).append(this.getSignPolicyInfo().getDateOfIssue().getDate()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.issuer")).append(this.getSignPolicyInfo().getPolicyIssuerName()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.application")).append(this.getSignPolicyInfo().getFieldOfApplication().getValue()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.valid")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.external")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getExternalSignedData()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.mandated.ref")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateRef()).append("\n");
+        builder.append(policyMessagesBundle.getString("text.mandated.info")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateInfo()).append("\n");
 
         for (AlgAndLength oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getAlgorithmConstraintSet().getSignerAlgorithmConstraints().getAlgAndLengths()) {
-            builder.append("Algoritmo de assinatura..........: ").append(oi.getAlgID()).append("\n");
-            builder.append("Tamanho mínimo da chave..........: ").append(oi.getMinKeyLength()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.algo")).append(oi.getAlgID()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.key.min.size")).append(oi.getMinKeyLength()).append("\n");
         }
 
         builder.append("==============================================================").append("\n");
         for (ObjectIdentifier oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr().getObjectIdentifiers()) {
-            builder.append("OID de atributos assinados.......: ").append(oi.getValue()).append("\n");
+            builder.append(policyMessagesBundle.getString("text.signed.attr.oid")).append(oi.getValue()).append("\n");
         }
 
         builder.append("==============================================================").append("\n");
 
         if (this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
             for (ObjectIdentifier oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers()) {
-                builder.append("OID de atributos nao assinados...: ").append(oi.getValue()).append("\n");
+                builder.append(policyMessagesBundle.getString("text.unsigned.attr.oid")).append(oi.getValue()).append("\n");
             }
         }
 
         if (this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getVerifierRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
             builder.append("==============================================================").append("\n");
             for (ObjectIdentifier oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getVerifierRules().getMandatedUnsignedAttr().getObjectIdentifiers()) {
-                builder.append("OID de atributos nao assinados...: ").append(oi.getValue()).append("\n");
+                builder.append(policyMessagesBundle.getString("text.unsigned.attr.oid")).append(oi.getValue()).append("\n");
             }
         }
 

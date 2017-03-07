@@ -41,6 +41,19 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * If the attributeTrustCondition field is not present then any certified attributes
+ *  may not considered to be valid under this validation policy.
+ *  
+ *  AttributeTrustCondition ::= SEQUENCE {* 
+ * 		attributeMandated BOOLEAN, -- Attribute shall be present
+ * 		{@link HowCertAttribute} 
+ * 		{@link CertificateTrustTrees} OPTIONAL
+ * 		{@link CertRevReq} OPTIONAL
+ * 		{@link AttributeConstraints} OPTIONAL
+ *
+ */
 public class AttributeTrustCondition extends ASN1Object {
 
     enum TAG {

@@ -41,6 +41,19 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * A specific commitment type identifier shall not appear in more than one commitment rule.
+ * 
+ * CommitmentType ::= SEQUENCE {
+ * 			identifier  {@link CommitmentTypeIdentifier},
+ * 			fieldOfApplication [0]  {@link FieldOfApplication} OPTIONAL,
+ * 			semantics [1] DirectoryString OPTIONAL }
+ * 
+ * The fieldOfApplication and semantics fields define the specific use 
+ * and meaning of the commitment within the overall field of application defined for the policy. 
+ * 
+ *
+ */
 public class CommitmentType extends ASN1Object {
 
     enum TAG {

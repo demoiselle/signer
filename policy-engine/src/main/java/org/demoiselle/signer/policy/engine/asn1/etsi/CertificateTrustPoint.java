@@ -46,6 +46,19 @@ import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * parse an org.bouncycastle.asn1.ASN1Primitive to get
+ *     
+ *  trustpoint Certificate, -- self-signed certificate   @see X509Certificate
+ *  {@link PathLenConstraint } OPTIONAL,
+ *  {@link AcceptablePolicySet } OPTIONAL, -- If not present "any policy"
+ *  {@link NameConstraints } OPTIONAL,
+ *  {@link PolicyConstraints } OPTIONAL
+ *
+ *
+ */
+
 public class CertificateTrustPoint extends ASN1Object {
 
     enum TAG {

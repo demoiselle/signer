@@ -38,6 +38,15 @@ package org.demoiselle.signer.policy.engine.asn1.icpb;
 
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
+/**
+ * 
+ * URI defined by policy
+ * 
+ * String textualPolicyURI;
+ * String asn1PolicyURI;
+ * String xmlPolicyURI;
+ *
+ */
 
 public class PoliciesURI extends ASN1Object {
 	
