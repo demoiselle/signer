@@ -19,6 +19,7 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
         $scope.webExtensionIsOn = false;
         $scope.desktopClientIsOn = false;
+        $scope.webExtSupported = true;
 
         // https://github.com/chieffancypants/angular-loading-bar
         $scope.startRequest = function () {
@@ -29,15 +30,11 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
             cfpLoadingBar.complete();
         };
 
-        $scope.webExtensionId = "ckfoendnbnogeekdioilahchhafodkik";
+        $scope.webExtensionId = "ignkfmddfcgkkpkopkafjjbbpagofgka";
 
         // Função necessária para funcionar no Chrome e Firefox
-        $scope.browser = function () {
-            if (chrome !== undefined) {
-                return chrome;
-            } else {
-                return browser;
-            }
+        $scope.browserObject = function () {
+
         };
 
         $scope.signFile = function () {
@@ -58,7 +55,7 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
                     $scope.fileName = "";
                     $scope.signedFileName = "";
 
-                    $scope.stopRequest();
+                    $scope.stopRequest(); 3
                 }
             );
         };
@@ -90,56 +87,96 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
         };
 
         $scope.sendMessageToWebExtension = function (message, callbackSuccess, callbackError) {
-            $scope.browser().runtime.sendMessage($scope.webExtensionId, message, function (response) {
-                // Se o response vir UNDEFINED é erro
-                if (response !== undefined) {
-                    callbackSuccess(response);
-                } else {
-                    callbackError("Verifique se a Extensão do Navegador esta instalada.")
-                }
-            });
+
+
+            // https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+
+            // try {
+            //     chrome.runtime.sendMessage($scope.webExtensionId, message, function (response) {
+            //         // Se o response vir UNDEFINED é erro
+            //         if (response !== undefined) {
+            //             callbackSuccess(response);
+            //         } else {
+            //             $scope.webExtensionIsOn = false;
+            //             $scope.desktopClientIsOn = false;
+            //             $scope.webExtSupported = true;
+            //             $scope.verifyAll();
+            //             callbackError("Verifique se a Extensão do Navegador esta instalada.")
+            //         }
+            //     });
+            //     return chrome;
+            // } catch (Exception) {
+            //     try {
+            //         window.postMessage({
+            //             direction: "from-page-script",
+            //             message: "Message from the page"
+            //         }, "*");
+            //     } catch (Exception) {
+            //         $scope.webExtSupported = false;
+            //         return null;
+            //     }
+            // }
+
         };
 
         $scope.getLastError = function () {
-            console.log($scope.browser().lastError);
+            console.log($scope.browserObject().lastError);
         };
 
-        $scope.verifyDesktopClientIsOn = function () {
-            $scope.sendMessageToWebExtension({ command: "status" },
+        $scope.verifyPreRequisites = function () {
+            $scope.sendMessageToWebExtension({ command: "desktopStatus" },
                 function (response) {
                     $timeout(function () {
-                        $scope.webExtensionIsOn = (response.status === "OK");
-                    }, 100);
+                        $scope.webExtensionIsOn = true;
+                        $scope.desktopClientIsOn = response;
+                    }, 10);
                 }, function (error) {
                     $timeout(function () {
                         $scope.webExtensionIsOn = false;
-                    }, 100);
-                }
-            );            
-        };
-
-        $scope.verifyWebExtensionIsOn = function () {
-            $scope.sendMessageToWebExtension({ command: "desktopStatus" },
-                function (response) {
-                    $scope.desktopClientIsOn = true;
-                }, function (error) {
-                    $scope.desktopClientIsOn = false;
+                        $scope.desktopClientIsOn = false;
+                    }, 10);
                 }
             );
+
         };
+
+        window.addEventListener("returnJulianCesar", function (event) {
+            console.log("RETURN returnJulianCesar");
+            console.log(event);
+        });
 
         $scope.verifyAll = function () {
 
-            if (!$scope.desktopClientIsOn)
-                $scope.verifyDesktopClientIsOn();
+            // window.postMessage({
+            //     message: "AQUI MENSAGEM DA APLICACAO"
+            // }, "http://localhost:8081/");
 
-            if (!$scope.webExtensionIsOn)
-                $scope.verifyWebExtensionIsOn();
+
+            // window.testAAA = function (res) {
+            //     console.log("OK:");
+            //     console.log(res);
+            // };
+
+            window.postMessage({
+                message: "AQUI MENSAGEM DA APLICACAO",
+                eventResponse: 'returnJulianCesar'
+            }, "http://localhost:8081/");
+
+
+            // if (!$scope.webExtensionIsOn || !$scope.desktopClientIsOn)
+            //     $scope.verifyPreRequisites();
+
+
 
             // Por enquanto se ativar isso da problema com as requisições do usuário
-            $timeout($scope.verifyAll, 3000);
+            $timeout($scope.verifyAll, 5000);
         };
 
-        $scope.verifyAll();
+        // $scope.verifyAll();
+        $timeout($scope.verifyAll, 10);
+
+
+
+
 
     }]);
