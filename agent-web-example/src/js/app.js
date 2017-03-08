@@ -32,11 +32,6 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
         $scope.webExtensionId = "ignkfmddfcgkkpkopkafjjbbpagofgka";
 
-        // Função necessária para funcionar no Chrome e Firefox
-        $scope.browserObject = function () {
-
-        };
-
         $scope.signFile = function () {
             $scope.startRequest();
             $scope.sendMessageToWebExtension({ command: "signerFileUsingDefaults" },
@@ -113,10 +108,6 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
         };
 
-        $scope.getLastError = function () {
-            console.log($scope.browserObject().lastError);
-        };
-
         $scope.verifyPreRequisites = function () {
             $scope.sendMessageToWebExtension({ command: "desktopStatus" },
                 function (response) {
@@ -134,11 +125,6 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
         };
 
-        window.addEventListener("returnJulianCesar", function (event) {
-            console.log("RETURN returnJulianCesar");
-            console.log(event);
-        });
-
         $scope.verifyAll = function () {
 
             if (!$scope.webExtensionIsOn || !$scope.desktopClientIsOn)
@@ -150,9 +136,5 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
         // $scope.verifyAll();
         $timeout($scope.verifyAll, 10);
-
-
-
-
 
     }]);
