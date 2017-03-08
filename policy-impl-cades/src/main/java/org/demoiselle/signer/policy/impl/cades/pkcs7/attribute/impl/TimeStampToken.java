@@ -46,17 +46,31 @@ import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
 import org.demoiselle.signer.core.timestamp.TimeStampGeneratorSelector;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ *  * 
+ *  It is defined as a ContentInfo([CMS]) and SHALL encapsulate a signed data content type.
+ *   
+ *   	TimeStampToken ::= ContentInfo
+ *        -- contentType is id-signedData ([CMS])
+ *        -- content is SignedData ([CMS])
+ *        
+ *        
+ *       id-aa-timeStampToken OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ *          us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) aa(2) 14 }
+ *
+ */
 public class TimeStampToken implements UnsignedAttribute {
 
     private static final Logger logger = LoggerFactory.getLogger(TimeStampToken.class);
-
     private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
+    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     private final String identifier = "1.2.840.113549.1.9.16.2.14";
     private PrivateKey privateKey = null;
@@ -78,7 +92,7 @@ public class TimeStampToken implements UnsignedAttribute {
     @Override
     public Attribute getValue() throws SignerException {
         try {
-            logger.info("Carregando o serviço do carimbador de tempo");
+            logger.info(cadesMessagesBundle.getString("info.tsa.connecting"));
 
             if (timeStampGenerator != null) {
                   //Inicializa os valores para o timestmap
@@ -92,7 +106,7 @@ public class TimeStampToken implements UnsignedAttribute {
 
                 return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(ASN1Primitive.fromByteArray(response)));
             } else {
-                throw new SignerException("Não foi localizado nenhum provedor de carimbo de tempo disponível.");
+                throw new SignerException(cadesMessagesBundle.getString("error.tsa.not.found"));
             }
         } catch (SecurityException | IOException ex) {
             throw new SignerException(ex.getMessage());

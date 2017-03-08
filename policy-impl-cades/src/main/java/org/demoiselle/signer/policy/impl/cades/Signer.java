@@ -41,40 +41,40 @@ import java.security.Provider;
 import java.security.PublicKey;
 
 /**
- * Especificação básica para implementação de assinaturas digitais no formato CADES.
+ * Basic specification for implementation of digital signatures in CADES format.
  */
 public interface Signer {
 
     /**
-     * Indica qual o Provider será utilizado.
+     * Indicates which Provider will be used.
      *
      * @param provider
      */
     abstract public void setProvider(Provider provider);
 
     /**
-     * Chave privada necessária para a criptografia assimétrica
+     * Private key required for asymmetric cryptography
      *
      * @param privateKey
      */
     abstract public void setPrivateKey(PrivateKey privateKey);
 
     /**
-     * Chave publica necessária para a criptografia assimétrica
+     * Public key needed for asymmetric cryptography
      *
      * @param publicKey
      */
     abstract public void setPublicKey(PublicKey publicKey);
 
     /**
-     * Algoritmo de Assinatura. Ex: SHA1withRSA
+     * Set a Signature Algorithm. Ex: SHA256withRSA
      *
      * @param algorithm
      */
     abstract public void setAlgorithm(String algorithm);
 
     /**
-     * Algoritmo pré-defido no enum. Compatíveis com ICP-Brasil
+     * Set an algorithm pre-defined in enumeration. Compatible with ICP-Brasil
      *
      * @param algorithm
      */
@@ -108,28 +108,28 @@ public interface Signer {
     abstract public boolean check(byte[] content, byte[] signedData);
 
     /**
-     * Retorna o provider.
+     * Returns the provider.
      *
      * @return
      */
     abstract public Provider getProvider();
 
     /**
-     * Retorna a chave privada.
+     * Returns the private key.
      *
      * @return
      */
     abstract public PrivateKey getPrivateKey();
 
     /**
-     * Retorna o algoritmo.
+     * Returns the algorithm to be used in the signature
      *
      * @return
      */
     abstract public String getAlgorithm();
 
     /**
-     * Retorna a chave publica.
+     * Returns the public key.
      *
      * @return
      */

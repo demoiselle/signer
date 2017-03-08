@@ -37,11 +37,12 @@
  */
 package org.demoiselle.signer.policy.impl.cades.factory;
 
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 
 /**
- * Fabrica abstrata que concentra a leitura das configurações para as fábricas
- * especializadas como também as funcionalidades de reflexão de classes.
+ * Abstract factory that concentrates the reading of the configurations for 
+ * all the other specialized factories as well as the class reflection functionalities.
  *
  * @see {@link PKCS1Factory}, {@link PKCS7Factory}
  *
@@ -49,15 +50,14 @@ import org.demoiselle.signer.policy.impl.cades.SignerException;
 abstract public class GenericFactory<F> {
 
     private String className = null;
+    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     /**
-     * Principal método da fábrica. Este metodo fabrica classes a partir de nome
-     * de classes definidos em variaveis de ambiente. Tais variaveis são
-     * definidas por cada fábrica concreta que implementar a fábrica abstrata
-     * através do método getVariableName(). Uma vez lido a variável de ambiente,
-     * o valor da variavel é armazenada na propriedade "className". Caso a
-     * variável de ambiente não esteja setada, um objeto padrão é construido
-     * através do método abstrato factoryDefault().
+     * Main method of the factory. 
+     * This method makes classes from the names of classes defined in environment variables. 
+     * Such variables are defined by each concrete factory that implements the abstract factory through the getVariableName () method.
+     *  Once the environment variable is read, the value of the variable is stored in the "className" property. 
+     *  If the environment variable is not set, a default object is built through the abstract factoryDefault () method.
      */
     public F factory() {
         F result = null;
@@ -76,7 +76,7 @@ abstract public class GenericFactory<F> {
     }
 
     /**
-     * Instancia um objeto a partir do nome de sua classe
+     * Instantiate an object from the name of your class
      */
     @SuppressWarnings("all")
     public F factoryFromClassName(String className) {
@@ -86,13 +86,13 @@ abstract public class GenericFactory<F> {
         try {
             clazz = Class.forName(className);
         } catch (Throwable error) {
-            throw new SignerException("Class [" + className + "] does not exist", error);
+            throw new SignerException(cadesMessagesBundle.getString("error.class.not.exist", className ), error);
         }
         if (clazz != null) {
             try {
                 result = (F) clazz.newInstance();
             } catch (Throwable error) {
-                throw new SignerException("incompatible Class [" + clazz.getCanonicalName() + "]", error);
+                throw new SignerException(cadesMessagesBundle.getString("error.class.incompatible",clazz.getCanonicalName()), error);
             }
         }
 
@@ -100,12 +100,11 @@ abstract public class GenericFactory<F> {
     }
 
     /**
-     * Busca nas variaveis de ambiente ou em variavel da JVM um determinado
-     * valor. Prioridade para as variaveis de ambiente.
+     * Search the environment variables or JVM variables for a certain value. 
+     * The priority is for the environment variables.
      *
-     * @param key Chave de localizacao da variavel
-     * @return O conteudo definida em uma das variaveis. NULL se nenhuma
-     * variavel for definida
+     * @param key Variable location key
+     * @return the content defined in one of the variables. NULL, if no variable is defined
      */
     private String getContentFromVariables(String key) {
         String content = System.getenv(key);
@@ -130,15 +129,15 @@ abstract public class GenericFactory<F> {
     }
 
     /**
-     * Obriga a classe concreta a fabricar um objeto por padrão
+     * It forces the concrete class to fabricate an object by default
      *
      * @return
      */
     public abstract F factoryDefault();
 
     /**
-     * Toda fábrica concreta precisa definir em qual variavel de ambiente contém
-     * o nome da classe a ser fabricada
+     * Every concrete factory needs to define which environment variable
+     *  contains the name of the class to be fabricated
      *
      * @return
      */

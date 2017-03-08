@@ -42,15 +42,31 @@ import org.demoiselle.signer.policy.impl.cades.Signer;
 import java.security.cert.Certificate;
 
 /**
- * Especificação básica para implementação de assinaturas digitais Formato
- * PKCS7.
+ * Basic specification for implementing digital signatures in PKCS7 Format.
  */
 public interface PKCS7Signer extends Signer {
 
+	/**
+	 *  Assign a Certificate for validate or generate a signature
+	 * @param certificate
+	 */
     abstract public void setCertificates(Certificate certificate[]);
 
+    /**
+     * Assign a Policy for validate or generate a signature 
+     * @param signaturePolicy
+     */
     abstract public void setSignaturePolicy(Policies signaturePolicy);
 
+    /**
+     * 
+     * Extracts the signed content from the digital signature structure, 
+	 * if it is a signature with attached content.
+     * 
+     * @param signed signed content 
+     * @param validate TRUE (to execute validation) or FALSE (not execute validation)
+     * @return
+     */
     abstract public byte[] getAttached(byte[] signed, boolean validate);
     
     

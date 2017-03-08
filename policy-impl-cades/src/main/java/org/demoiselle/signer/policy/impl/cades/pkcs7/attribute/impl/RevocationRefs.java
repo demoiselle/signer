@@ -36,21 +36,40 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
-import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
-import org.demoiselle.signer.policy.impl.cades.SignerException;
-import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
-
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
 import org.bouncycastle.asn1.cms.Attribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.policy.impl.cades.SignerException;
+import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
 
+/**
+ * 
+ * Complete Revocation Refs Attribute Definition
+ * 
+ * The Complete Revocation Refs attribute is an unsigned attribute.
+ * Only a single instance of this attribute must occur with an electronic signature. 
+ * It references the full set of the CRL or OCSP
+ * responses that have been used in the validation of the signer and CA
+ * certificates used in ES with Complete validation data.
+ * 
+ * The following object identifier identifies the CompleteRevocationRefs  attribute:
+ * 
+ *  id-aa-ets-revocationRefs OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ *      		us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-aa(2) 22}
+ *      
+ *  The complete revocation refs attribute value has the ASN.1 syntax CompleteRevocationRefs.
+ *  
+ *  CompleteRevocationRefs ::=  SEQUENCE OF CrlOcspRef
+ * 
+ *
+ */
 public class RevocationRefs implements UnsignedAttribute {
 
-    private static final Logger logger = LoggerFactory.getLogger(RevocationRefs.class);
     private final String identifier = "1.2.840.113549.1.9.16.2.22";
+    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     @Override
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
@@ -64,7 +83,7 @@ public class RevocationRefs implements UnsignedAttribute {
 
     @Override
     public Attribute getValue() throws SignerException {
-        throw new UnsupportedOperationException("Ainda não há suporte.");
+        throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
     }
 
 }

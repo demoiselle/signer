@@ -59,13 +59,10 @@ public enum SignerAlgorithmEnum {
     SHA512withECDSA("SHA512withECDSA", DigestAlgorithmEnum.SHA_512.getAlgorithm(), "2.16.840.1.101.3.4.2.3", "ECDSA", "1.0.14888.3.0.4");
 
     /**
-     * Definicao de algoritmo padrao.
+     * Definition of standard algorithm.
      */
     public static SignerAlgorithmEnum DEFAULT = SignerAlgorithmEnum.SHA256withRSA;
 
-    /**
-     * Definicao de algoritmo padrao.
-     */
     private String algorithm;
     private String algorithmHash;
     private String OIDAlgorithmHash;
@@ -102,9 +99,10 @@ public enum SignerAlgorithmEnum {
     }
 
     /**
-     * Recupera um item do enum correspondente ao parâmetro passado. O parâmetro
-     * passado deverá ser igual (case insensitive) ao nome do algoritmo de algum
-     * item deste enum, caso contrário retornará null.
+     * Retrieves an item from the enumeration corresponding to the parameter,
+     * which is the name of the algorithm (eg SHA256withRSA).
+     * The passed parameter must be equal (case insensitive) to 
+     * the algorithm name of any item in this enumeration, otherwise it will return null.
      *
      * @param algorithm
      * @return
@@ -119,9 +117,10 @@ public enum SignerAlgorithmEnum {
     }
 
     /**
-     * Recupera um item do enum correspondente ao parâmetro passado. O parâmetro
-     * passado deverá ser igual (case insensitive) ao nome do algoritmo de algum
-     * item deste enum, caso contrário retornará null.
+     * Retrieves an item from the enumeration corresponding to the parameter, 
+     * which is the OID of the algorithm (ex: 2.16.840.1.101.3.4.2.1).
+     * The passed parameter must be equal (case insensitive) to
+     * the OID of the algorithm of some item of this enumeration, otherwise it will return null.
      *
      * @param OIDalgorithm
      * @return

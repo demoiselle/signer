@@ -53,7 +53,15 @@ import org.bouncycastle.asn1.esf.SigPolicyQualifierInfo;
 import org.bouncycastle.asn1.esf.SigPolicyQualifiers;
 import org.bouncycastle.asn1.esf.SignaturePolicyId;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-
+/**
+ * 
+ * Identifier Of Policy Of Signing 
+ * 
+ *
+ *	
+ *  
+ *
+ */
 public class IdSigningPolicy implements SignedAttribute {
 
     private final String oid = "1.2.840.113549.1.9.16.2.15";
@@ -64,6 +72,11 @@ public class IdSigningPolicy implements SignedAttribute {
         return oid;
     }
 
+    /**
+     * org.bouncycastle.asn1.ASN1ObjectIdentifier sigPolicyId
+     * org.bouncycastle.asn1.esf.OtherHashAlgAndValue sigPolicyHash
+     * List<org.bouncycastle.asn1.esf.SigPolicyQualifierInfo> sigPolicyQualifierInfos
+     */
     @Override
     public Attribute getValue() {
 

@@ -38,7 +38,7 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute;
 
 /**
- * Padroniza os atributos não assinados.
+ * Standardizes unsigned attributes.
  */
 public interface UnsignedAttribute extends SignedOrUnsignedAttribute {
 

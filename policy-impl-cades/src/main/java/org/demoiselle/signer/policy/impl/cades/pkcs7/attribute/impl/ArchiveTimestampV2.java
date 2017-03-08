@@ -36,21 +36,46 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import org.bouncycastle.asn1.cms.Attribute;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
 
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
+/**
+ * 
+ * archive-time-stamp Attribute Definition
+ * 
+ * The archive-time-stamp attribute is a time-stamp token of many of the
+ * elements of the signedData in the electronic signature.  If the
+ * certificate-values and revocation-values attributes are not present
+ * in the CAdES-BES or CAdES-EPES, then they shall be added to the
+ * electronic signature prior to computing the archive time-stamp token.
+ * 
+ * The archive-time-stamp attribute is an unsigned attribute.  Several
+ * instances of this attribute may occur with an electronic signature
+ * both over time and from different TSUs.
+ * 
+ * The following object identifier identifies the nested
+ * 
+ *   archive-time-stamp attribute:
+ *   
+ *   id-aa-ets-archiveTimestampV2  OBJECT IDENTIFIER ::=
+ *    { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-9(9)
+ *     smime(16) id-aa(2) 48}
+ *     
+ *     Archive-time-stamp attribute values have the ASN.1 syntax ArchiveTimeStampToken
+ *     ArchiveTimeStampToken ::= TimeStampToken
 
-import org.bouncycastle.asn1.cms.Attribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+ *
+ */
 
 public class ArchiveTimestampV2 implements UnsignedAttribute {
 
-    private static final Logger logger = LoggerFactory.getLogger(ArchiveTimestampV2.class);
-    private final String identifier = "1.2.840.113549.1.9.16.2.48";
+	private final String identifier = "1.2.840.113549.1.9.16.2.48";
+    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     @Override
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
@@ -64,7 +89,7 @@ public class ArchiveTimestampV2 implements UnsignedAttribute {
 
     @Override
     public Attribute getValue() throws SignerException {
-        throw new UnsupportedOperationException("Ainda não há suporte.");
+        throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
     }
 
 }

@@ -41,7 +41,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.impl.CAdESSigner;
 
 /**
- * Fábrica especializada em fabricar objetos da interface {@link PKCS7Signer}
+ * Factory specialized in manufacturing objects for interface {@link PKCS7Signer}
  */
 public class PKCS7Factory extends GenericFactory<PKCS7Signer> {
 
@@ -52,8 +52,8 @@ public class PKCS7Factory extends GenericFactory<PKCS7Signer> {
 	}
 
 	/**
-	 * Define um objeto padrão para a fábrica O Componente possue uma
-	 * implementação default
+	 * Defines a default object for the factory.
+	 * The Component has a default implementation
 	 * 
 	 * @see {@link CAdESSigner}
 	 */
@@ -63,8 +63,8 @@ public class PKCS7Factory extends GenericFactory<PKCS7Signer> {
 	}
 
 	/**
-	 * Define a variável de ambiente utilizada pela fábrica abstrata a fim de
-	 * buscar o nome da classe a ser fabricada.
+	 * Defines the environment variable used by the abstract factory 
+	 * to fetch the name of the class to be fabricated.
 	 */
 	@Override
 	protected String getVariableName() {

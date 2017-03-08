@@ -54,7 +54,6 @@ import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
@@ -83,6 +82,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.ca.manager.CAManager;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
@@ -100,6 +100,11 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.factory.Attribute
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * Basic Implementation for digital signatures in PKCS7 Format.
+ *  
+ */
 public class CAdESSigner implements PKCS7Signer {
 
 	private static final Logger logger = LoggerFactory
@@ -112,6 +117,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private boolean attached = false;
 	private SignaturePolicy signaturePolicy = null;
 	private boolean defaultCertificateValidators = true;
+	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
 	// private Collection<IValidator> certificateValidators = null;
 
@@ -128,17 +134,16 @@ public class CAdESSigner implements PKCS7Signer {
 	}
 
 	/**
-	 * A validação se basea apenas em assinaturas com um assinante apenas.
-	 * Valida apenas com o conteúdo do tipo DATA: OID ContentType
+	 * Validation is done only on digital signatures with a single signer. 
+	 * Valid only with content of type DATA.: OID ContentType
 	 * 1.2.840.113549.1.9.3 = OID Data 1.2.840.113549.1.7.1
 	 *
-	 * @params content Necessário informar apenas se o pacote PKCS7 NÃO for do
-	 *         tipo ATTACHED. Caso seja do tipo attached, este parâmetro será
-	 *         substituido pelo conteúdo do pacote PKCS7.
-	 * @params signed Valor em bytes do pacote PKCS7, como por exemplo o
-	 *         conteúdo de um arquivo ".p7s". Não é a assinatura pura como no
-	 *         caso do PKCS1. TODO: Implementar validação de co-assinaturas
+	 * @params content Is only necessary to inform if the PKCS7 package is NOT ATTACHED type. 
+	 * 				   If it is of type attached, this parameter will be replaced by the contents of the PKCS7 package.
+	 * @params signedData Value in bytes of the PKCS7 package, such as the contents of a ".p7s" file. 
+	 * 					 It is not only signature as in the case of PKCS1. 
 	 */
+	// TODO: Implementar validação de co-assinaturas
 	@Override
 	public boolean check(byte[] content, byte[] signedData) {
 		Security.addProvider(new BouncyCastleProvider());
@@ -151,8 +156,7 @@ public class CAdESSigner implements PKCS7Signer {
 						content), signedData);
 			}
 		} catch (CMSException ex) {
-			throw new SignerException(
-					"Bytes inválidos localizados no pacote PKCS7.", ex);
+			throw new SignerException(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"), ex);
 		}
 
 		// Quantidade inicial de assinaturas validadas
@@ -175,72 +179,66 @@ public class CAdESSigner implements PKCS7Signer {
 				if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder()
 						.setProvider("BC").build(certificateHolder))) {
 					verified++;
-					logger.info(
-							"Validada a assinatura digital de sequencia [{}]",
-							verified);
+					logger.info(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
 				}
 
 				// Realiza a verificação dos atributos assinados
-				logger.info("Efetuando a verificação dos atributos assinados");
+				logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
 				AttributeTable signedAttributes = signer.getSignedAttributes();
 				if ((signedAttributes == null)
 						|| (signedAttributes != null && signedAttributes.size() == 0)) {
-					throw new SignerException(
-							"O pacote PKCS7 não contém atributos assinados.");
+					throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.not.found"));
 				}
 
+				logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
 				AttributeTable unsignedAttributes = signer
 						.getUnsignedAttributes();
 				if ((unsignedAttributes == null)
 						|| (unsignedAttributes != null && unsignedAttributes
 								.size() == 0)) {
-					logger.info("O pacote PKCS7 não contem atributos nao assinados.");
+					logger.info(cadesMessagesBundle.getString("error.unsigned.attribute.not.found"));
 				}
 
 				// Mostra a hora da assinatura
-				logger.info(
-						"UTCTime yyMMddHHmmssz : {}",
-						(((ASN1UTCTime) signedAttributes
-								.get(new ASN1ObjectIdentifier(
-										"1.2.840.113549.1.9.5"))
-								.getAttrValues().getObjectAt(0)).getTime()));
+				logger.info(cadesMessagesBundle.getString("info.date.utc",
+						(((ASN1UTCTime) signedAttributes.get(new ASN1ObjectIdentifier("1.2.840.113549.1.9.5")).getAttrValues().getObjectAt(0)).getTime())));
 
-				logger.info("Iniciando a validacao dos atributos");
+				logger.info(cadesMessagesBundle.getString("info.attribute.validation"));
 				// Valida o atributo ContentType
 				Attribute attributeContentType = signedAttributes
 						.get(CMSAttributes.contentType);
 				if (attributeContentType == null) {
-					throw new SignerException(
-							"O pacote PKCS7 não contém o atributo \"ContentType\"");
+					throw new SignerException(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
 				}
 
 				if (!attributeContentType.getAttrValues().getObjectAt(0)
 						.equals(ContentInfo.data)) {
-					throw new SignerException(
-							"\"ContentType\" não é do tipo \"DATA\"");
+					throw new SignerException(cadesMessagesBundle.getString("error.content.not.data"));
 				}
 
 				// Validando o atributo MessageDigest
 				Attribute attributeMessageDigest = signedAttributes
 						.get(CMSAttributes.messageDigest);
 				if (attributeMessageDigest == null) {
-					throw new SignerException(
-							"O pacote PKCS7 não contém o atributo \"MessageDigest\"");
+					throw new SignerException(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 				}
 			} catch (OperatorCreationException
 					| java.security.cert.CertificateException ex) {
 				throw new SignerException(ex);
 			} catch (CMSException ex) {
-				throw new SignerException("A assinatura fornecida é inválida.",
-						ex);
+				throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid"),ex);
 			}
 		}
 
-		logger.info("Verificada(s) {} assinatura(s).", verified);
+		logger.info(cadesMessagesBundle.getString("info.signature.verified", verified));
 		// TODO Efetuar o parsing da estrutura CMS
 		return true;
 	}
 
+	/**
+	 * 
+	 * @return org.bouncycastle.cert.jcajce.JcaCertStore
+	 */
 	private Store<?> generatedCertStore() {
 		Store<?> result = null;
 		try {
@@ -263,25 +261,23 @@ public class CAdESSigner implements PKCS7Signer {
 	}
 
 	/**
-	 * Retorna o conteúdo original do arquivo assinado
+	 * Return the signed file content attached to the signature.
 	 *
-	 * @param signed
-	 *            O conteúdo assinado
-	 * @return O conteúdo original
+	 * @param signed Signature and signed content.
+	 * @return 
 	 */
 	public byte[] getAttached(byte[] signed) {
 		return this.getAttached(signed, true);
 	}
 
 	/**
-	 * Extrai o conteudo assinado da estrutura de assinatura digital, caso
-	 * exista
+	 * Extracts the signed content from the digital signature structure, 
+	 * if it is a signature with attached content.
 	 *
-	 * @param signed
-	 *            O conteudo assinado
-	 * @param validateOnExtract
-	 *            Extrai validando a assinatura, em caso verdadeiro.
-	 * @return O conteudo original
+	 * @param signed  Signature and signed content.
+	 * @param validateOnExtract TRUE (to execute validation) or FALSE (not execute validation)
+	 *          
+	 * @return 
 	 */
 	@Override
 	public byte[] getAttached(byte[] signed, boolean validateOnExtract) {
@@ -296,8 +292,7 @@ public class CAdESSigner implements PKCS7Signer {
 		try {
 			signedData = new CMSSignedData(signed);
 		} catch (CMSException exception) {
-			throw new SignerException("Invalid bytes for a package PKCS7",
-					exception);
+			throw new SignerException(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"),exception);
 		}
 
 		try {
@@ -306,8 +301,7 @@ public class CAdESSigner implements PKCS7Signer {
 				result = (byte[]) contentProcessable.getContent();
 			}
 		} catch (Exception exception) {
-			throw new SignerException("Error on get content from PKCS7",
-					exception);
+			throw new SignerException(cadesMessagesBundle.getString("error.get.content.pkcs7"),exception);
 		}
 
 		return result;
@@ -373,19 +367,17 @@ public class CAdESSigner implements PKCS7Signer {
 	}
 
 	/**
-	 * Método de assinatura de dados e geração do pacote PKCS7 Assina apenas com
-	 * o conteúdo do tipo DATA: OID ContentType 1.2.840.113549.1.9.3 = OID Data
-	 * 1.2.840.113549.1.7.1 Utiliza o algoritmo da propriedade algorithm. Caso
-	 * essa propriedade não seja informada, o algoritmo do enum
-	 * {@link SignerAlgorithmEnum.DEFAULT} será usado. Para este método é
-	 * necessário informar o conteúdo, a chave privada e um certificado digital
-	 * padrão ICP-Brasil.
+	 * Method of data signature and generation of the PKCS7 package. 
+	 * Signs only with content of type DATA: OID ContentType 1.2.840.113549.1.9.3 = OID Data 1.2.840.113549.1.7.1
+	 * It uses the algorithm set in the algorithm property, and if this property is not informed 
+	 * the algorithm of the {@link SignerAlgorithmEnum.DEFAULT} enumeration will be used.
+	 * For this method it is necessary to inform the content, 
+	 * the private key and a digital certificate in the ICP-Brasil (PKI) standard.
 	 *
-	 * @param content
-	 *            Conteúdo a ser assinado. TODO: Implementar co-assinaturas,
-	 *            informar a política de assinatura
+	 * @param content  Content to be signed. 
 	 */
 	
+	//TODO: Implementar co-assinaturas
 	private byte[] doSign(byte[] content) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
@@ -431,25 +423,19 @@ public class CAdESSigner implements PKCS7Signer {
 				algAndLength = listOfAlgAndLength.get(0);
 			}
 			if (algAndLength == null){
-				throw new SignerException("Algoritmo informado no parâmetro não corresponde a nenhum contido na Politica!");
+				throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
 			}
-			logger.info("AlgID........... {}", algAndLength.getAlgID()
-					.getValue());
-			logger.info("Alg Name........ {}", AlgorithmNames
-					.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
-			logger.info("Defautl Alg OID of Policy {}",
-					AlgorithmNames.getOIDByAlgorithmName(getAlgorithm()));
-			logger.info("MinKeyLength.... {}", algAndLength.getMinKeyLength());
+			logger.info(cadesMessagesBundle.getString("info.algorithm.id", algAndLength.getAlgID().getValue()));
+			logger.info(cadesMessagesBundle.getString("info.algorithm.name", AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue())));
+			logger.info(cadesMessagesBundle.getString("info.algorithm.policy.default",	AlgorithmNames.getOIDByAlgorithmName(getAlgorithm())));
+			logger.info(cadesMessagesBundle.getString("info.min.key.length", algAndLength.getMinKeyLength()));
 
 			
 			// Recupera o tamanho minimo da chave para validacao
-			logger.info("Validando o tamanho da chave");
-			if (((RSAKey) certificate.getPublicKey()).getModulus().bitLength() < algAndLength
-					.getMinKeyLength()) {
-				throw new SignerException(
-						"O tamanho mínimo da chave  deve ser de ".concat(
-								algAndLength.getMinKeyLength().toString())
-								.concat(" bits"));
+			logger.info(cadesMessagesBundle.getString("info.validating.key.length"));
+			int keyLegth = ((RSAKey) certificate.getPublicKey()).getModulus().bitLength();
+			if (keyLegth < algAndLength.getMinKeyLength()) {
+				throw new SignerException(cadesMessagesBundle.getString("error.min.key.length",  algAndLength.getMinKeyLength().toString(), keyLegth));
 			}
 			
 			
@@ -458,7 +444,7 @@ public class CAdESSigner implements PKCS7Signer {
 			// Consulta e adiciona os atributos assinados
 			ASN1EncodableVector signedAttributes = new ASN1EncodableVector();
 
-			logger.info("Identificando os atributos assinados");
+			logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
 			if (signaturePolicy.getSignPolicyInfo()
 					.getSignatureValidationPolicy().getCommonRules()
 					.getSignerAndVeriferRules().getSignerRules()
@@ -480,7 +466,7 @@ public class CAdESSigner implements PKCS7Signer {
 
 			// Consulta e adiciona os atributos não assinados
 			ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
-			logger.info("Identificando os atributos não assinados");
+			logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
 			if (signaturePolicy.getSignPolicyInfo()
 					.getSignatureValidationPolicy().getCommonRules()
 					.getSignerAndVeriferRules().getSignerRules()
@@ -523,15 +509,15 @@ public class CAdESSigner implements PKCS7Signer {
 					.getCommonRules().getSigningCertTrustCondition()
 					.getSignerTrustTrees().getCertificateTrustPoints();
 			for (CertificateTrustPoint certificateTrustPoint : ctp) {
-				logger.info("Trust Point... {}", certificateTrustPoint
-						.getTrustpoint().getSubjectDN().toString());
+				logger.info(cadesMessagesBundle.getString("info.trust.point", certificateTrustPoint
+						.getTrustpoint().getSubjectDN().toString()));
 				trustedCAs.add(certificateTrustPoint.getTrustpoint());
 			}
 			// Efetua a validacao das cadeias do certificado baseado na politica
 			CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
 
 			// Recupera a data de validade da politica para validacao
-			logger.info("Verificando o período de validade da politica");
+			logger.info(cadesMessagesBundle.getString("info.policy.valid.period"));
 			Date dateNotBefore = signaturePolicy.getSignPolicyInfo()
 					.getSignatureValidationPolicy().getSigningPeriod()
 					.getNotBefore().getDate();
@@ -545,11 +531,7 @@ public class CAdESSigner implements PKCS7Signer {
 					|| actualDate.after(dateNotAfter)) {
 				SimpleDateFormat sdf = new SimpleDateFormat(
 						"dd/MM/yyyy - hh:mm:ss");
-				throw new SignerException(
-						"Esta política é válida somente entre "
-								.concat(sdf.format(dateNotBefore))
-								.concat(" e ")
-								.concat(sdf.format(dateNotBefore)));
+				throw new SignerException(cadesMessagesBundle.getString("error.policy.valid.period",sdf.format(dateNotBefore),sdf.format(dateNotBefore)));
 			}
 
 			// Realiza a assinatura do conteudo
@@ -557,7 +539,7 @@ public class CAdESSigner implements PKCS7Signer {
 			gen.addCertificates(this.generatedCertStore());
 			String algorithmOID = algAndLength.getAlgID().getValue();
 
-			logger.info("algorithOID...: " + algorithmOID);
+			logger.info(cadesMessagesBundle.getString("info.algorithm.id",algorithmOID));
 			SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder()
 					.setSignedAttributeGenerator(signedAttributeGenerator)
 					.setUnsignedAttributeGenerator(unsignedAttributeGenerator)
@@ -592,7 +574,7 @@ public class CAdESSigner implements PKCS7Signer {
              {
                  SignerInformation oSi = (SignerInformation) iter.next();
       			ASN1EncodableVector newUnsignedAttributes = new ASN1EncodableVector();
-      			logger.info("Identificando os atributos não assinados");
+      			logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
       			if (signaturePolicy.getSignPolicyInfo()
       					.getSignatureValidationPolicy().getCommonRules()
       					.getSignerAndVeriferRules().getSignerRules()
@@ -643,7 +625,8 @@ public class CAdESSigner implements PKCS7Signer {
 
 	/**
 	 * 
-	 * Lista de algoritmos com seus respectivos OID see
+	 * List of algorithms with their respective OID. 
+	 * 
 	 * http://oid-info.com/basic-search.htm
 	 *
 	 */

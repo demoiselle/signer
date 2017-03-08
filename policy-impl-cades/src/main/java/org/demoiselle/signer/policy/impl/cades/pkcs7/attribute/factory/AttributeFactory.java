@@ -41,6 +41,7 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.factory;
 
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedOrUnsignedAttribute;
 
 import java.util.ServiceLoader;
@@ -48,28 +49,33 @@ import java.util.ServiceLoader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * Manufacture for the construction of signed and unsigned attributes 
+ *
+ */
 public class AttributeFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(AttributeFactory.class);
-
     public static final AttributeFactory instance = new AttributeFactory();
+    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     public static AttributeFactory getInstance() {
         return AttributeFactory.instance;
     }
 
     public SignedOrUnsignedAttribute factory(String attributeOID) {
-        logger.info("Consultando o atributo com OID [{}]", attributeOID);
+        logger.info(cadesMessagesBundle.getString("info.search.oid", attributeOID));
         ServiceLoader<SignedOrUnsignedAttribute> loader = ServiceLoader.load(SignedOrUnsignedAttribute.class);
         if (loader != null) {
             for (SignedOrUnsignedAttribute attribute : loader) {
                 if (attribute.getOID().equalsIgnoreCase(attributeOID)) {
-                    logger.info("Retornando o atributo {}", attribute.getClass().getName());
+                    logger.info(cadesMessagesBundle.getString("info.return.oid", attribute.getClass().getName()));
                     return attribute;
                 }
             }
         } else {
-            logger.info("Atributo com OID [{}] nao foi localizado.", attributeOID);
+            logger.info(cadesMessagesBundle.getString("info.oid.not.found", attributeOID));
         }
         return null;
     }

@@ -51,6 +51,11 @@ import org.bouncycastle.util.encoders.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 
+ * Generates a digest of a content, according to the algorithm defined in the policy.
+ *
+ */
 public class MessageDigest implements SignedAttribute {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageDigest.class);

@@ -36,6 +36,7 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
@@ -49,16 +50,43 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * @author 07721825741
+ * This attribute is used for the Type 1 X-Time-Stamped validation data.
+ * The ES-C Time-Stamp attribute is an unsigned attribute. 
+ *  It is time-stamp of a hash of the electronic signature and the complete validation data (ES-C). 
+ *  It is a special purpose TimeStampToken  Attribute which time-stamps the ES-C. 
+ *  Several instances instance of this attribute may occur with an 
+ *  electronic signature from different TSAs.
+ *  
+ *  The following object identifier identifies the ES-C Time-Stamp attribute:
+ *  
+ *  id-aa-ets-escTimeStamp OBJECT IDENTIFIER ::= { iso(1) member-body(2) us(840)
+ *   rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-aa(2) 25}
+ *   
+ *   The ES-C time-stamp attribute value has the ASN.1 syntax ESCTimeStampToken.
+ *   
+ *   ESCTimeStampToken ::= TimeStampToken
+ *   
+ *   The value of messageImprint field within TimeStampToken must be a
+ *   hash of the concatenated values (without the type or length encoding
+ *   for that value) of the following data objects as present in the 
+ *   ES with Complete validation data (ES-C):
+ *   
+ *   signature field within SignerInfo;
+ *   SignatureTimeStampToken attribute;
+ *   CompleteCertificateRefs attribute;
+ *   CompleteRevocationRefs attribute.
+ *   
+ *   
  */
 public class EscTimeStamp implements UnsignedAttribute {
 
     private static final Logger logger = LoggerFactory.getLogger(RevocationRefs.class);
     private final String identifier = "1.2.840.113549.1.9.16.2.25";
+    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     @Override
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
-        logger.info("Not supported yet.");
+        logger.info(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
     }
 
     @Override
@@ -68,7 +96,7 @@ public class EscTimeStamp implements UnsignedAttribute {
 
     @Override
     public Attribute getValue() throws SignerException {
-        throw new UnsupportedOperationException("Ainda não há suporte.");
+        throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
     }
 
 }

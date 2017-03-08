@@ -36,6 +36,7 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs1.impl;
 
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
@@ -49,28 +50,36 @@ import java.security.Signature;
 import java.security.SignatureException;
 
 
+/**
+ * 
+ * Basic implementation of digital signatures in PKCS1 format.
+ *
+ */
 // TODO - verificar se é necessário, 
+
 public class PKCS1SignerImpl implements PKCS1Signer {
 
     private Provider provider = null;
     private PrivateKey privateKey = null;
     private String algorithm = SignerAlgorithmEnum.SHA256withRSA.getAlgorithm();
     private PublicKey publicKey = null;
+    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     /**
-     * Realiza a assinatura utilizando a API Java Utiliza o algoritmo da
-     * propriedade algorithm. Caso essa propriedade não esteja setada, o
-     * algoritmo do enum {@link SignerAlgorithmEnum.DEFAULT} será usado. Para
-     * este método é necessário informar o conteúdo e a chave privada.
+     * Performs the signature using the Java API. 
+     * It uses the algorithm value on property: algorithm. 
+     * If this property is not set, the {@link SignerAlgorithmEnum.DEFAULT} enumeration algorithm
+     * will be used.
+     * For this method it is necessary to inform the content and the private key.
      *
-     * @param content Conteúdo a ser assinado.
+     * @param content Content to be signed.
      */
     private byte[] doSign(byte[] content) {
         if (content == null) {
-            throw new SignerException("O conteudo é nulo.");
+            throw new SignerException(cadesMessagesBundle.getString("error.value.null"));
         }
         if (this.privateKey == null) {
-            throw new SignerException("A chave privada é nula.");
+            throw new SignerException(cadesMessagesBundle.getString("error.private.key.null"));
         }
         if (this.algorithm == null) {
             this.algorithm = SignerAlgorithmEnum.DEFAULT.getAlgorithm();
@@ -91,36 +100,35 @@ public class PKCS1SignerImpl implements PKCS1Signer {
             result = sign.sign();
 
         } catch (NoSuchAlgorithmException exception) {
-            throw new SignerException("Error on load algorithm " + algorithm, exception);
+            throw new SignerException(cadesMessagesBundle.getString("error.load.algorithm", algorithm), exception);
         } catch (InvalidKeyException exception) {
-            throw new SignerException("Invalid key", exception);
+            throw new SignerException(cadesMessagesBundle.getString("error.private.key.invalid"), exception);
         } catch (SignatureException exception) {
-            throw new SignerException("Signature error", exception);
+            throw new SignerException(cadesMessagesBundle.getString("error.sign.exception"), exception);
         }
         return result;
     }
 
     /**
-     * Realiza a checagem de um conteúdo assinado utilizando a API Java. É
-     * necessário informar o conteúdo original e o assinado para a verificação.
-     * Utiliza o algoritmo da propriedade algorithm. Caso essa propriedade não
-     * esteja setada, o algoritmo do enum {@link SignerAlgorithmEnum.DEFAULT}
-     * será usado. Para este método é necessário informar o conteúdo original,
-     * conteúdo assinado e a chave pública.
+     * Performs checking for signed content using the Java API.
+     *  You must enter the original content and signature for verification. 
+     *  It uses the value algorithm of property: algorithm. If this property is not set, 
+     *  the {@link SignerAlgorithmEnum.DEFAULT} enumeration algorithm will be used. 
+     *  For this method it is necessary to inform the original content, signed content and the public key.
      *
-     * @param content Conteúdo original a ser comparado com o conteúdo assinado.
-     * @param signed Conteúdo assinado a ser verificado.
+     * @param content Original content to be compared to signed content.
+     * @param signed Signed content to be verified.
      */
     @Override
     public boolean check(byte[] content, byte[] signed) {
         if (content == null) {
-            throw new SignerException("O conteúdo é nulo.");
+            throw new SignerException(cadesMessagesBundle.getString("error.value.null"));
         }
         if (signed == null) {
-            throw new SignerException("O conteúdo assinado é nulo.");
+            throw new SignerException(cadesMessagesBundle.getString("error.content.signed.null"));
         }
         if (this.publicKey == null) {
-            throw new SignerException("A chave pública é nula.");
+            throw new SignerException(cadesMessagesBundle.getString("error.public.key.null"));
         }
         if (this.algorithm == null) {
             this.algorithm = SignerAlgorithmEnum.DEFAULT.getAlgorithm();
@@ -142,11 +150,11 @@ public class PKCS1SignerImpl implements PKCS1Signer {
             result = signature.verify(signed);
 
         } catch (NoSuchAlgorithmException exception) {
-            throw new SignerException("Error on load algorithm " + this.algorithm, exception);
+            throw new SignerException(cadesMessagesBundle.getString("error.load.algorithm", this.algorithm), exception);
         } catch (InvalidKeyException exception) {
-            throw new SignerException("Invalid key", exception);
+            throw new SignerException(cadesMessagesBundle.getString("error.public.key.invalid"), exception);
         } catch (SignatureException exception) {
-            throw new SignerException("Signature error", exception);
+            throw new SignerException(cadesMessagesBundle.getString("error.check.exception"), exception);
         }
 
         return result;

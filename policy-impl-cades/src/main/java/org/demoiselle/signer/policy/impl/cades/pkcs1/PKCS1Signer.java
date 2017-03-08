@@ -40,8 +40,7 @@ package org.demoiselle.signer.policy.impl.cades.pkcs1;
 import org.demoiselle.signer.policy.impl.cades.Signer;
 
 /**
- * Especificação básica para implementação de assinaturas digitais Formato
- * PKCS1.
+ * Basic specification for implementation of digital signatures in PKCS1 format.
  */
 public interface PKCS1Signer extends Signer {
 

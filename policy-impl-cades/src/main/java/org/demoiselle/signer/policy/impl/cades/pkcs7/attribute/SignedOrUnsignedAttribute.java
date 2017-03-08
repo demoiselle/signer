@@ -46,15 +46,14 @@ import org.bouncycastle.asn1.cms.Attribute;
 
 /**
  *
- * CMS (rfc3852) define alguns atributos que constam nas assinaturas digitais.
- * Há um conjunto de atributos que são por natureza obrigatórios para o formato
- * CAdES. Dependendo da política de assinatura, mais atributos podem ser
- * obrigatórios.
+ * CMS (rfc3852) defines some attributes that appear in digital signatures. 
+ * There is a set of attributes that are required for the CAdES format. 
+ * Depending on the subscription policy, more attributes may be required.
  */
 public interface SignedOrUnsignedAttribute {
 
     /**
-     * Efetua a parametrizacao inicial para recuperacao dos atributos
+     * Performs the initial parameterization for attribute retrieval
      *
      * @param privateKey
      * @param certificates
@@ -64,16 +63,16 @@ public interface SignedOrUnsignedAttribute {
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy);
 
     /**
-     * Valor OID do atributo. Ex: "1.12.2.54.94"
+     * OID value of the attribute. Ex: "1.12.2.54.94"
      *
-     * @return deve retornar o valor do OID do atributo
+     * @return 
      */
     public String getOID();
 
     /**
-     * Representa o próprio atributo.
+     * Represents the value of the attribute itself.
      *
-     * @return O atributo.
+     * @return 
      */
     public Attribute getValue() throws SignerException;
 

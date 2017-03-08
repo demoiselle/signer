@@ -36,13 +36,6 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
-import org.demoiselle.signer.cryptography.Digest;
-import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
-import org.demoiselle.signer.cryptography.factory.DigestFactory;
-import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
-import org.demoiselle.signer.policy.impl.cades.SignerException;
-import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
-
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
@@ -60,12 +53,33 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.IssuerSerial;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.demoiselle.signer.cryptography.Digest;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.factory.DigestFactory;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.policy.impl.cades.SignerException;
+import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 
+/**
+ * The signing certificate attribute is designed to prevent the simple
+ * substitution and re-issue attacks, and to allow for a restricted set
+ *  of authorization certificates to be used in verifying a signature.
+ *  
+ *   The definition of SigningCertificate is
+ *   
+ *    SigningCertificate ::=  SEQUENCE {
+ *         certs        SEQUENCE OF ESSCertID,
+ *         policies     SEQUENCE OF PolicyInformation OPTIONAL
+ *      }
+ *      
+ *      
+ *    id-aa-signingCertificate OBJECT IDENTIFIER ::= { iso(1)
+ *        member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
+ *         smime(16) id-aa(2) 12 }
+ *
+ */
 public class SigningCertificate implements SignedAttribute {
 
-    private static final Logger logger = LoggerFactory.getLogger(SigningCertificate.class);
     private final String identifier = "1.2.840.113549.1.9.16.2.12";
     private Certificate[] certificates = null;
 
