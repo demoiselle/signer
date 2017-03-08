@@ -88,34 +88,28 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
         $scope.sendMessageToWebExtension = function (message, callbackSuccess, callbackError) {
 
-
             // https://developer.mozilla.org/en-US/docs/Web/API/Window/postMessage
+            try {
+                chrome.runtime.sendMessage($scope.webExtensionId, message, function (response) {
+                    // Se o response vir UNDEFINED é erro
+                    if (response !== undefined) {
+                        callbackSuccess(response);
+                    } else {
+                        $scope.webExtensionIsOn = false;
+                        $scope.desktopClientIsOn = false;
+                        $scope.webExtSupported = true;
+                        $scope.verifyAll();
+                        callbackError("Verifique se a Extensão do Navegador esta instalada.")
+                    }
+                });
+                return chrome;
+            } catch (Exception) {
+                $scope.webExtSupported = false;
 
-            // try {
-            //     chrome.runtime.sendMessage($scope.webExtensionId, message, function (response) {
-            //         // Se o response vir UNDEFINED é erro
-            //         if (response !== undefined) {
-            //             callbackSuccess(response);
-            //         } else {
-            //             $scope.webExtensionIsOn = false;
-            //             $scope.desktopClientIsOn = false;
-            //             $scope.webExtSupported = true;
-            //             $scope.verifyAll();
-            //             callbackError("Verifique se a Extensão do Navegador esta instalada.")
-            //         }
-            //     });
-            //     return chrome;
-            // } catch (Exception) {
-            //     try {
-            //         window.postMessage({
-            //             direction: "from-page-script",
-            //             message: "Message from the page"
-            //         }, "*");
-            //     } catch (Exception) {
-            //         $scope.webExtSupported = false;
-            //         return null;
-            //     }
-            // }
+                Notification.error('Este navegador não é suportado.');
+
+                return null;
+            }
 
         };
 
@@ -147,26 +141,8 @@ angular.module('agent', ['cfp.loadingBar', 'ui-notification'])
 
         $scope.verifyAll = function () {
 
-            // window.postMessage({
-            //     message: "AQUI MENSAGEM DA APLICACAO"
-            // }, "http://localhost:8081/");
-
-
-            // window.testAAA = function (res) {
-            //     console.log("OK:");
-            //     console.log(res);
-            // };
-
-            window.postMessage({
-                message: "AQUI MENSAGEM DA APLICACAO",
-                eventResponse: 'returnJulianCesar'
-            }, "http://localhost:8081/");
-
-
-            // if (!$scope.webExtensionIsOn || !$scope.desktopClientIsOn)
-            //     $scope.verifyPreRequisites();
-
-
+            if (!$scope.webExtensionIsOn || !$scope.desktopClientIsOn)
+                $scope.verifyPreRequisites();
 
             // Por enquanto se ativar isso da problema com as requisições do usuário
             $timeout($scope.verifyAll, 5000);
