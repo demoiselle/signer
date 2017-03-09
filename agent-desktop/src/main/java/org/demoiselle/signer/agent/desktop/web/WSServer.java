@@ -46,14 +46,7 @@ public class WSServer extends AbstractReceiveListener {
 	}
 
 	public void start() {
-		try {
-			this.undertow.start();
-		} catch (RuntimeException error ) {
-			Throwable cause = error.getCause();
-			if (cause instanceof BindException) {
-				this.initializeWSServer(WSServer.DEFAULT_HOST_WS_SERVER, WSServer.DEFAULT_PORT_WS_SERVER);
-			}
-		}
+		this.undertow.start();
 	}
 
 	public void stop() {
