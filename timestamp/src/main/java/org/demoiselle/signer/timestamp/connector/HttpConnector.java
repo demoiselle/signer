@@ -38,29 +38,55 @@ package org.demoiselle.signer.timestamp.connector;
 
 import java.io.InputStream;
 
+import org.demoiselle.signer.core.util.MessagesBundle;
+
 /**
+ * Time-Stamp Protocol via HTTP
+ * 
+ * This subsection specifies a means for conveying ASN.1-encoded
+ * messages for the protocol exchanges described in Section 2 and
+ * Appendix D via the HyperText Transfer Protocol.
+ * 
+ * Two MIME objects are specified as follows.
+ * 
+ * Content-Type: application/timestamp-query
+ * 
+ *    <<the ASN.1 DER-encoded Time-Stamp Request message>>
+ *    
+ *       Content-Type: application/timestamp-reply
+ *       
+ *    <<the ASN.1 DER-encoded Time-Stamp Response message>>
+ *    
+ *  These MIME objects can be sent and received using common HTTP
+ *  processing engines over WWW links and provides a simple browser-
+ *  server transport for Time-Stamp messages.
+ *  
+ *  Upon receiving a valid request, the server MUST respond with either a
+ *  valid response with content type application/timestamp-response or with an HTTP error.
  *
  * @author 07721825741
  */
 public class HttpConnector implements Connector {
 
+	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
+	
     @Override
     public InputStream connect(byte[] content) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName() ));
     }
 
     @Override
     public void setHostname(String hostname) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
     }
 
     @Override
     public void setPort(int port) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
     }
 
     @Override
     public void close() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
     }
 }

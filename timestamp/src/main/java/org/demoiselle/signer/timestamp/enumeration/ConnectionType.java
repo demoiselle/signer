@@ -37,7 +37,7 @@
 package org.demoiselle.signer.timestamp.enumeration;
 
 /**
- *
+ * Types: HTTP, SOCKET
  * @author 07721825741
  */
 public enum ConnectionType {

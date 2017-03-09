@@ -56,28 +56,31 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Timestamp request, signed.
+ * 
  * @author 07721825741
  */
 public class RequestSigner {
 
     private static final Logger logger = LoggerFactory.getLogger(RequestSigner.class);
+    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
     /**
-     * Realiza a assinatura de uma requisicao de carimbo de tempo
+     * Signs a time stamp request
      *
      * @param privateKey
      * @param certificates
      * @param request
-     * @return A requisicao assinada
+     * @return The signed request
      */
     public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request, String algorithm) {
         try {
-            logger.info("Efetuando a assinatura da requisicao");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.sign.request"));
             Security.addProvider(new BouncyCastleProvider());
 
             X509Certificate signCert = (X509Certificate) certificates[0];
@@ -96,7 +99,7 @@ public class RequestSigner {
             SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder().build(varAlgorithm, privateKey, signCert);
             generator.addSignerInfoGenerator(signerInfoGenerator);
 
-            Store certStore = new JcaCertStore(certList);
+            Store<?> certStore = new JcaCertStore(certList);
             generator.addCertificates(certStore);
 
 //            Store crlStore = new JcaCRLStore(crlList);

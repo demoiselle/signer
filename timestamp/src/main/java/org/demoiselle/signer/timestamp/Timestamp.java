@@ -47,16 +47,25 @@ import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
 import org.bouncycastle.util.encoders.Hex;
-
-
+import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
+ *
+ *  It is defined as a ContentInfo([CMS]) and SHALL encapsulate a signed data content type.
+ *   
+ *   	TimeStampToken ::= ContentInfo
+ *        -- contentType is id-signedData ([CMS])
+ *        -- content is SignedData ([CMS])        
+ *        
+ *       id-aa-timeStampToken OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ *          us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) aa(2) 14 }
  *
  * @author 07721825741
  */
 public class Timestamp {
 
     private final static Logger logger = Logger.getLogger(Timestamp.class.getName());
+    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
     
 
     private TimeStampToken timeStampToken = null;
@@ -66,12 +75,11 @@ public class Timestamp {
     }
 
     /**
-     * Retorna um fluxo de byte codificado ASN. 1 que representa o objeto
-     * codificado.
+     * Returns a stream of bytes encoded in ASN.1 format, which represents the encoded object.
      *
      * @return
      */
-    public byte[] getCodificado() {
+    public byte[] getEncoded() {
         try {
             return timeStampToken.getEncoded();
         } catch (IOException ex) {
@@ -80,15 +88,17 @@ public class Timestamp {
         return null;
     }
 
-    public String getPolitica() {
+    
+    public String getPolicy() {
         return timeStampToken.getTimeStampInfo().getPolicy().toString();
     }
 
-    public String getNumeroSerie() {
+    
+    public String getSerialNumber() {
         return timeStampToken.getTimeStampInfo().getSerialNumber().toString();
     }
 
-    public String getAlgoritmoDoHash() {
+    public String getHashAlgorithm() {
         return timeStampToken.getTimeStampInfo().getHashAlgorithm().getAlgorithm().toString();
     }
 
@@ -104,41 +114,41 @@ public class Timestamp {
         return Hex.toHexString(timeStampToken.getTimeStampInfo().getMessageImprintDigest()).toUpperCase();
     }
 
-    public Store getCRLs() {
+    public Store<?> getCRLs() {
         return timeStampToken.getCRLs();
     }
 
-    public Store getCertificados() {
+    public Store<?> getCertificates() {
         return timeStampToken.getCertificates();
     }
 
-    public Map<?, ?> getAtributosAssinados() {
+    public Map<?, ?> getSignedAttributes() {
         return timeStampToken.getSignedAttributes().toHashtable();
     }
 
-    public Map<?, ?> getAtributosNaoAssinados() {
+    public Map<?, ?> getUnsignedAttributes() {
         return timeStampToken.getUnsignedAttributes().toHashtable();
     }
 
     /**
-     * Retorna os dados da TSA (Time Stamping Authority)
-     *
-     * @return os atributos do certificado da TSA
+     * 
+     * The attributes of the Time Stamp Authority's certificate.
+     * @return 
      */
-    public String getAutoridadeCarimboTempo() {
+    public String getTimeStampAuthorityInfo() {
         return timeStampToken.getTimeStampInfo().getTsa().toString();
     }
 
     /**
-     * Retorna o valor "nonce", ou retorna nulo se nao existir nenhum
+     * Returns the nonce value, or returns null if there is no
      *
-     * @return o valor "nonce"
+     * @return 
      */
     public BigInteger getNonce() {
         return timeStampToken.getTimeStampInfo().getNonce();
     }
 
-    public String getCarimbodeTempo() {
+    public String getTimeStamp() {
         SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:S z");
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormatGmt.format(timeStampToken.getTimeStampInfo().getGenTime());
@@ -148,13 +158,13 @@ public class Timestamp {
     public String toString() {
         StringBuilder builder = new StringBuilder(0);
         builder.append("\n");
-        builder.append("Data / hora......................: ").append(this.getCarimbodeTempo()).append("\n");
-        builder.append("Politica.........................: ").append(this.getPolitica()).append("\n");
-        builder.append("Numero de serie..................: ").append(this.getNumeroSerie()).append("\n");
-        builder.append("Certificado TSA..................: ").append(this.getAutoridadeCarimboTempo()).append("\n");
-        builder.append("Hash Algorithm...................: ").append(this.getAlgoritmoDoHash()).append("\n");
-        builder.append("Message Imprint Digest (Hex).... : ").append(this.getMessageImprintDigestHex()).append("\n");
-        builder.append("Message Imprint Digest (Base64)..: ").append(this.getMessageImprintDigestBase64()).append("\n");
-        return builder.toString();
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.datetime")).append(this.getTimeStamp()).append("\n");
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.policy")).append(this.getPolicy()).append("\n");
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.serial.number")).append(this.getSerialNumber()).append("\n");
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.certificate")).append(this.getTimeStampAuthorityInfo()).append("\n");
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.hash")).append(this.getHashAlgorithm()).append("\n");
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.hex")).append(this.getMessageImprintDigestHex()).append("\n");
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.base64")).append(this.getMessageImprintDigestBase64()).append("\n");
+        return builder.toString();        
+       }
     }
-}

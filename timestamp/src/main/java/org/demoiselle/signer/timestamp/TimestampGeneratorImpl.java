@@ -44,18 +44,22 @@ import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
+/**
+ * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service
+ * RFC 3161
+  *
+ */
 
 @Priority(Priority.MIN_PRIORITY)
 public class TimestampGeneratorImpl implements TimeStampGenerator {
 
-    //private static final Logger logger = LoggerFactory.getLogger(TimestampGeneratorImpl.class);
 
     private byte[] content;
     private PrivateKey privateKey;
     private Certificate[] certificates;
     
     /**
-     * Inicializa os atributos necessarios para obter o carimbo de tempo
+     * Initializes the attributes needed to get the time stamp
      *
      * @param content
      * @param privateKey
@@ -70,10 +74,9 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
     }
 
     /**
-     * Envia a requisicao de carimbo de tempo para um servidor de carimbo de
-     * tempo
+     * Sends the time stamp request to a time stamp server
      *
-     * @return O carimbo de tempo retornado pelo servidor
+     * @return The time stamp returned by the server
      */
     @Override
     public byte[] generateTimeStamp() throws CertificateCoreException {
@@ -83,17 +86,17 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
     }
 
     /**
-     * Valida um carimnbo de tempo e o documento original
+     * Validate a time stamp and the original content
      *
-     * @param content o conteudo original
-     * @param response O carimbo de tempo a ser validado
+     * @param content 
+     * @param timestamp
      *
      */
     @Override
-    public void validateTimeStamp(byte[] content, byte[] response) throws CertificateCoreException {
+    public void validateTimeStamp(byte[] content, byte[] timestamp) throws CertificateCoreException {
 
         //Valida a assinatura digital do carimbo de tempo
         TimeStampOperator timeStampOperator = new TimeStampOperator();
-        timeStampOperator.validate(content, response);
+        timeStampOperator.validate(content, timestamp);
     }
 }

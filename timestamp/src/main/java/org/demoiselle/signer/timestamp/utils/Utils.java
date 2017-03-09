@@ -46,43 +46,40 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.slf4j.LoggerFactory;
 
 /**
- *
+ * Class with utility methods for the time stamp component.
  * @author 07721825741
  */
 public class Utils {
 
-    private static final org.slf4j.Logger logger = LoggerFactory.getLogger(Utils.class);
-
     /**
-     * Efetua a conversao para Big Endian de acordo com a especificacao RFC 3161
+     * Transforms int to Big Endian according to specification RFC 3161
      *
-     * @param valor
+     * @param value
      * @return
      */
-    public static byte[] intToByteArray(int valor) {
+    public static byte[] intToByteArray(int value) {
         byte buffer[] = new byte[4];
 
-        // PROTOCOLO RFC 3161 - formato big-endian da JVM
-        buffer[0] = (byte) (valor >> 24 & 0xff);
-        buffer[1] = (byte) (valor >> 16 & 0xff);
-        buffer[2] = (byte) (valor >> 8 & 0xff);
-        buffer[3] = (byte) (valor & 0xff);
+        // PROTOCOL RFC 3161 - format big-endian of JVM
+        buffer[0] = (byte) (value >> 24 & 0xff);
+        buffer[1] = (byte) (value >> 16 & 0xff);
+        buffer[2] = (byte) (value >> 8 & 0xff);
+        buffer[3] = (byte) (value & 0xff);
 
         return buffer;
     }
 
     /**
-     * Carrega o conteudo de um arquivo do disco
+     * Loads the contents of a file from the disk
      *
-     * @param arquivo Caminho do arquivo
-     * @return Os bytes do arquivo
+     * @param parmFile Filename and path
+     * @return The array of bytes in the file
      */
-    public static byte[] readContent(String arquivo) throws CertificateCoreException {
+    public static byte[] readContent(String parmFile) throws CertificateCoreException {
         try {
-            File file = new File(arquivo);
+            File file = new File(parmFile);
             InputStream is = new FileInputStream(file);
             byte[] result = new byte[(int) file.length()];
             is.read(result);
@@ -96,16 +93,17 @@ public class Utils {
     }
 
     /**
-     * Escreve um conjunto de bytes em disco
-     *
-     * @param conteudo O conteudo a ser escrito em disco
-     * @param arquivo O caminho e nome do arquivo
+     * Writes a set of bytes to a file on disk
+     * 
+     * @param content Content to be written to disk
+     * @param parmFile Filename and path
+     * @throws CertificateCoreException
      */
-    public static void writeContent(byte[] conteudo, String arquivo) throws CertificateCoreException {
+    public static void writeContent(byte[] content, String parmFile) throws CertificateCoreException {
         try {
-            File file = new File(arquivo);
+            File file = new File(parmFile);
             OutputStream os = new FileOutputStream(file);
-            os.write(conteudo);
+            os.write(content);
             os.flush();
             os.close();
         } catch (IOException ex) {

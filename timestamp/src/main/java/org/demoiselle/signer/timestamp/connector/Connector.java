@@ -39,7 +39,8 @@ package org.demoiselle.signer.timestamp.connector;
 import java.io.InputStream;
 
 /**
- *
+ * Defines the basic methods for connecting to the time stamp authority.
+ * 
  * @author 07721825741
  */
 public interface Connector {

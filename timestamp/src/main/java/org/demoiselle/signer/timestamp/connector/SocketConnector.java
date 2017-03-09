@@ -41,17 +41,36 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.timestamp.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * The following simple TCP-based protocol is to be used for transport of TSA messages.  
+ * This protocol is suitable for cases where an entity
+ * initiates a transaction and can poll to pick up the results.
+ * 
+ * The protocol basically assumes a listener process on a TSA that can
+ * accept TSA messages on a well-defined port (IP port number 318).
+ * 
+ * Typically an initiator binds to this port and submits the initial TSA message.  
+ * The responder replies with a TSA message and/or with a reference number 
+ * to be used later when polling for the actual TSA  message response.
+ * 
+ * If a number of TSA response messages are to be produced for a given
+ * request (say if a receipt must be sent before the actual token can be
+ * produced) then a new polling reference is also returned.
+ * 
+ *  When the final TSA response message has been picked up by the
+ *  initiator then no new polling reference is supplied.
  *
  * @author 07721825741
  */
 public class SocketConnector implements Connector {
 
     private static final Logger logger = LoggerFactory.getLogger(SocketConnector.class);
+    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
     private String hostname = "";
     private int port;
@@ -61,12 +80,12 @@ public class SocketConnector implements Connector {
     @Override
     public InputStream connect(byte[] content) {
         try {
-            logger.info("Envia a solicitacao para o servidor TSA");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.send.request"));
             socket = new Socket(hostname, port);
 
-            logger.info("Conectado [{}] na url [{}] e porta [{}]", new Object[]{socket.isConnected(), hostname, port});
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
 
-            logger.info("Escrevendo no socket");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
             // A "direct TCP-based TSA message" consists of:length (32-bits), flag (8-bits), value
             out = socket.getOutputStream();
             out.write(Utils.intToByteArray(1 + content.length));
@@ -74,7 +93,7 @@ public class SocketConnector implements Connector {
             out.write(content);
             out.flush();
 
-            logger.info("Obtendo o response");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
             return socket.getInputStream();
         } catch (IOException e) {
         	e.printStackTrace();

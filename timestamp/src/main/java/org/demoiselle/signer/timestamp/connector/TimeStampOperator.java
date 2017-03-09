@@ -36,17 +36,6 @@
  */
 package org.demoiselle.signer.timestamp.connector;
 
-import org.demoiselle.signer.core.exception.CertificateCoreException;
-import org.demoiselle.signer.cryptography.Digest;
-import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
-import org.demoiselle.signer.cryptography.factory.DigestFactory;
-import org.demoiselle.signer.timestamp.Timestamp;
-import org.demoiselle.signer.timestamp.enumeration.ConnectionType;
-import org.demoiselle.signer.timestamp.enumeration.PKIFailureInfo;
-import org.demoiselle.signer.timestamp.enumeration.PKIStatus;
-import org.demoiselle.signer.timestamp.signer.RequestSigner;
-import org.demoiselle.signer.timestamp.utils.TimeStampConfig;
-
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,7 +50,6 @@ import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.CMSException;
@@ -78,16 +66,28 @@ import org.bouncycastle.tsp.TimeStampResponse;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
+import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.cryptography.Digest;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.factory.DigestFactory;
+import org.demoiselle.signer.timestamp.Timestamp;
+import org.demoiselle.signer.timestamp.enumeration.ConnectionType;
+import org.demoiselle.signer.timestamp.signer.RequestSigner;
+import org.demoiselle.signer.timestamp.utils.TimeStampConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  *
+ * Performs all time stamp operations: from the connection with the time stamp authority to the stamp validation.
+ * 
  * @author 07721825741
  */
 public class TimeStampOperator {
 
     private static final Logger logger = LoggerFactory.getLogger(TimeStampOperator.class);
+    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
     private InputStream inputStream = null;
     private Timestamp timestamp;
@@ -95,24 +95,24 @@ public class TimeStampOperator {
     private TimeStampResponse timeStampResponse;
 
     /**
-     * Cria uma requisição de carimbo de tempo assinada pelo usuario
+     * Creates a time stamp request, signed with the users's certificate.
      *
      * @param privateKey
      * @param certificates
      * @param content
-     * @return Uma requisicao de carimbo de tempo
+     * @return A time stamp request
      * @throws CertificateCoreException
      */
     public byte[] createRequest(PrivateKey privateKey, Certificate[] certificates, byte[] content) throws CertificateCoreException {
         try {
-            logger.info("Gerando o digest do conteudo");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.digest"));
             Digest digest = DigestFactory.getInstance().factoryDefault();
             digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
             byte[] hashedMessage = digest.digest(content);
             
             logger.info(Base64.toBase64String(hashedMessage));
 
-            logger.info("Montando a requisicao para o carimbador de tempo");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.prepare.request"));
             TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();
                         
             timeStampRequestGenerator.setReqPolicy(new ASN1ObjectIdentifier(TimeStampConfig.getInstance().getTSPOid()));
@@ -120,18 +120,20 @@ public class TimeStampOperator {
             BigInteger nonce = BigInteger.valueOf(100);
             timeStampRequest = timeStampRequestGenerator.generate(new ASN1ObjectIdentifier(TSPAlgorithms.SHA256.getId()), hashedMessage, nonce);
             byte request[] = timeStampRequest.getEncoded();
-            logger.info("Efetuando a  assinatura do conteudo");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.sign.request"));
             RequestSigner requestSigner = new RequestSigner();
             byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request, "SHA256withRSA");
             return signedRequest;
-        } catch (IOException ex) { //catch (IOException | NoSuchAlgorithmException ex
+        } catch (IOException ex) { 
         
             throw new CertificateCoreException(ex.getMessage());
         }
     }
 
     /**
-     *
+     * 
+     * Creates a time stamp request using a certificate of type PKCS12
+     * 
      * @param keystoreLocation
      * @param pin
      * @param alias
@@ -152,21 +154,20 @@ public class TimeStampOperator {
     }
 
     /**
-     * Envia a requisicao de carimbo de tempo para um servidor de carimbo de
-     * tempo
+     * Sends the time stamp request {@link createRequest} to a time stamp server
      *
      * @param request
-     * @return O carimbo de tempo retornado pelo servidor
+     * @return The time stamp returned by the server
      */
     public byte[] invoke(byte[] request) throws CertificateCoreException {
         try {
 
-            logger.info("Iniciando pedido de carimbo de tempo");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.init.request"));
             Connector connector = ConnectorFactory.buildConnector(ConnectionType.SOCKET);
             connector.setHostname(TimeStampConfig.getInstance().getTspHostname());
             connector.setPort(TimeStampConfig.getInstance().getTSPPort());
 
-            logger.info("Obtendo o response");
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.response"));
             inputStream = connector.connect(request);
 
             long tempo;
@@ -196,10 +197,10 @@ public class TimeStampOperator {
                     }
                 }
                 if (System.currentTimeMillis() >= tempo) {
-                    logger.error("Erro timeout ao receber dados");
+                    logger.error(timeStampMessagesBundle.getString("info.timestamp.timeout"));
                 }
             } else {
-                logger.error("Erro timeout ao receber dados");
+                logger.error(timeStampMessagesBundle.getString("info.timestamp.timeout"));
             }
 
             // Lendo flag
@@ -213,80 +214,83 @@ public class TimeStampOperator {
             inputStream.read(retornoCarimboDeTempo, 0, tamanho);
             timeStampResponse = new TimeStampResponse(retornoCarimboDeTempo);
 
-            logger.info("PKIStatus....: {}", timeStampResponse.getStatus());
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.status", timeStampResponse.getStatus()));
 
             switch (timeStampResponse.getStatus()) {
                 case 0: {
-                    logger.info(PKIStatus.granted.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("info.pkistatus.granted"));
                     break;
                 }
                 case 1: {
-                    logger.info(PKIStatus.grantedWithMods.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("info.pkistatus.grantedWithMods"));
                     break;
                 }
                 case 2: {
-                    logger.info(PKIStatus.rejection.getMessage());
-                    throw new CertificateCoreException(PKIStatus.rejection.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkistatus.rejection"));
+                    throw new CertificateCoreException(timeStampMessagesBundle.getString("error.pkistatus.rejection"));
                 }
                 case 3: {
-                    logger.info(PKIStatus.waiting.getMessage());
-                    throw new CertificateCoreException(PKIStatus.waiting.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkistatus.waiting"));
+                    throw new CertificateCoreException(timeStampMessagesBundle.getString("error.pkistatus.waiting"));
                 }
                 case 4: {
-                    logger.info(PKIStatus.revocationWarning.getMessage());
-                    throw new CertificateCoreException(PKIStatus.revocationWarning.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkistatus.revocation.warn"));
+                    throw new CertificateCoreException(timeStampMessagesBundle.getString("error.pkistatus.revocation.warn"));
                 }
                 case 5: {
-                    logger.info(PKIStatus.revocationNotification.getMessage());
-                    throw new CertificateCoreException(PKIStatus.revocationNotification.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkistatus.revocation.notification"));
+                    throw new CertificateCoreException(timeStampMessagesBundle.getString("error.pkistatus.revocation.notification"));
                 }
                 default: {
-                    logger.info(PKIStatus.unknownPKIStatus.getMessage());
-                    throw new CertificateCoreException(PKIStatus.unknownPKIStatus.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkistatus.unknown"));
+                    throw new CertificateCoreException(timeStampMessagesBundle.getString("error.pkistatus.unknown"));
                 }
-            }
+            }          
+            		
 
+            // ok
             int failInfo = -1;
 
             if (timeStampResponse.getFailInfo() != null) {
                 failInfo = Integer.parseInt(new String(timeStampResponse.getFailInfo().getBytes()));
             }
 
-            logger.info("FailInfo....: {}", failInfo);
+            logger.info(timeStampMessagesBundle.getString("info.timestamp.failinfo", failInfo));
 
             switch (failInfo) {
                 case 0:
-                    logger.info(PKIFailureInfo.badAlg.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.badAlg"));
                     break;
                 case 2:
-                    logger.info(PKIFailureInfo.badRequest.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.badRequest"));
                     break;
                 case 5:
-                    logger.info(PKIFailureInfo.badDataFormat.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.badDataFormat"));
                     break;
                 case 14:
-                    logger.info(PKIFailureInfo.timeNotAvailable.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.timeNotAvailable"));
                     break;
                 case 15:
-                    logger.info(PKIFailureInfo.unacceptedPolicy.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.unacceptedPolicy"));
                     break;
                 case 16:
-                    logger.info(PKIFailureInfo.unacceptedExtension.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.unacceptedExtension"));
                     break;
                 case 17:
-                    logger.info(PKIFailureInfo.addInfoNotAvailable.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.addInfoNotAvailable"));
                     break;
                 case 25:
-                    logger.info(PKIFailureInfo.systemFailure.getMessage());
+                    logger.info(timeStampMessagesBundle.getString("error.pkifailureinfo.systemFailure"));
                     break;
-            }
+            }           
+            		
 
             timeStampResponse.validate(timeStampRequest);
             TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
             this.setTimestamp(new Timestamp(timeStampToken));
 
             if (timeStampToken == null) {
-                throw new CertificateCoreException("O Token retornou nulo.");
+                throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.token.null"));
             }
             connector.close();
 
@@ -294,7 +298,7 @@ public class TimeStampOperator {
             logger.info(timestamp.toString());
 
             //Retorna o carimbo de tempo gerado
-            return timestamp.getCodificado();
+            return timestamp.getEncoded();
 
         } catch (CertificateCoreException | TSPException | IOException e) {
             throw new CertificateCoreException(e.getMessage());
@@ -302,27 +306,27 @@ public class TimeStampOperator {
     }
 
     /**
-     * Efetua a validacao de um carimbo de tempo
+     * Validate a time stamp
      *
      * @param content
-     * @param response O carimbo de tempo a ser validado
+     * @param timeStamp
      *
      */
     @SuppressWarnings("unchecked")
-	public void validate(byte[] content, byte[] response) throws CertificateCoreException {
+	public void validate(byte[] content, byte[] timeStamp) throws CertificateCoreException {
         try {
-            TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(response));
+            TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(timeStamp));
             CMSSignedData s = timeStampToken.toCMSSignedData();
 
             int verified = 0;
 
-            Store certStore = s.getCertificates();
+            Store<?> certStore = s.getCertificates();
             SignerInformationStore signers = s.getSignerInfos();
             Collection<SignerInformation> c = signers.getSigners();
             Iterator<SignerInformation> it = c.iterator();
 
             while (it.hasNext()) {
-                SignerInformation signer = (SignerInformation) it.next();
+                SignerInformation signer = it.next();
                 Collection<?> certCollection = certStore.getMatches(signer.getSID());
                 Iterator<?> certIt = certCollection.iterator();
                 X509CertificateHolder cert = (X509CertificateHolder) certIt.next();
@@ -332,7 +336,7 @@ public class TimeStampOperator {
                 cert.getExtension(new ASN1ObjectIdentifier("2.5.29.31")).getExtnValue();
             }
 
-            logger.info("Assinaturas Verificadas....: {}", verified);
+            logger.info(timeStampMessagesBundle.getString("info.signature.verified", verified));
 
             //Valida o hash  incluso no carimbo de tempo com hash do arquivo carimbado
             Digest digest = DigestFactory.getInstance().factoryDefault();
@@ -340,9 +344,9 @@ public class TimeStampOperator {
             digest.digest(content);
 
             if (Arrays.equals(digest.digest(content), timeStampToken.getTimeStampInfo().getMessageImprintDigest())) {
-                logger.info("Hash do documento conferido com sucesso.");
+                logger.info(timeStampMessagesBundle.getString("info.timestamp.hash.ok"));
             } else {
-                throw new CertificateCoreException("O documento fornecido nao corresponde ao do carimbo de tempo!");
+                throw new CertificateCoreException(timeStampMessagesBundle.getString("info.timestamp.hash.nok"));
             }
 
         } catch (TSPException | IOException | CMSException | OperatorCreationException | CertificateException ex) {
@@ -357,5 +361,4 @@ public class TimeStampOperator {
     public Timestamp getTimestamp() {
         return timestamp;
     }
-
 }

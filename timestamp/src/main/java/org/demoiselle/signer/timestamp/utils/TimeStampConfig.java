@@ -39,10 +39,14 @@ package org.demoiselle.signer.timestamp.utils;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ *
+ *	Generates the required settings for time stamp request. 
+ *	Depending on the files: timestamp-config.properties or timestamp-config-default.properties
  *
  * @author 07721825741
  */
@@ -52,15 +56,15 @@ public class TimeStampConfig {
 
     private static TimeStampConfig instance = null;
     private static ResourceBundle bundle = null;
+    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
     
     private String tspHostname;
     private int tspPort;
     private String tspOid;
     
     /**
-     * Retorna uma instancia de TimeStampConfig
-     *
-     * @return a instância
+     * 
+     * @return  Returns an instance of TimeStampConfig
      */
     public static TimeStampConfig getInstance() {
         if (instance == null) {
@@ -91,8 +95,7 @@ public class TimeStampConfig {
     	try {
     		tspHostname = bundle.getString("tsp_hostname");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException("key 'tspHostname' not found for resource");
-		}
+			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));		}
     	return tspHostname;
     }
 
@@ -100,7 +103,7 @@ public class TimeStampConfig {
     	try {
 			tspPort = Integer.parseInt(bundle.getString("tsp_port"));
 		} catch (MissingResourceException e) {
-			throw new RuntimeException("key 'tspPort' not found for resource");
+			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config","tspPort"));
 		}
     	return tspPort;
     }
@@ -109,7 +112,7 @@ public class TimeStampConfig {
     	try {
     		tspOid =  bundle.getString("tsp_oid");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException("key 'tspOid' not found for resource");
+			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config","tspOid"));
 		}
     	return tspOid;
     }
