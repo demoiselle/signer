@@ -35,7 +35,7 @@ public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsRespon
 
 			if (pin.getPwd().equals("") && pin.getActionCanceled()) {
 				throw new ActionCanceled();
-			} else if (pin.getPwd().equals("")) {
+			} else if (keyStore == null || pin.getPwd().equals("")) {
 				throw new RuntimeException(
 						"Ocorreu um erro ao acessar o token, verifique se esta conectado ao computador.");
 			}
@@ -58,7 +58,11 @@ public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsRespon
 		} catch (ActionCanceled e) {
 			throw new RuntimeException("Ação cancelada pelo usuário");
 		} catch (Throwable error) {
-			throw new RuntimeException("Erro ao tentar buscar os certificados digitais. " + error.getMessage());
+			if (!error.getMessage().equals(null)) {
+				throw new RuntimeException("Erro ao tentar buscar os certificados digitais. " + error.getMessage());
+			} else {
+				throw new RuntimeException("Erro ao tentar buscar os certificados digitais. Erro desconhecido.");
+			}
 		}
 	}
 

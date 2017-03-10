@@ -163,7 +163,7 @@ public class PinHandler extends JDialog implements CallbackHandler {
 				initUI();
 				setVisible(true);
 
-				((PasswordCallback) callback).setPassword("".toCharArray());
+				((PasswordCallback) callback).setPassword(pwd.toCharArray());
 			} else {
 				throw new UnsupportedCallbackException(callback,
 						"Callback not supported " + callback.getClass().getName());
