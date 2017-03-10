@@ -23,7 +23,6 @@ public class FileSignerUsingDefaults extends AbstractCommand<SignerRequest, Sign
 		try {
 			return sign();
 		} catch (Throwable error) {
-			error.printStackTrace();
 			throw new RuntimeException(error.getMessage(), error);
 		}
 	}
@@ -37,6 +36,7 @@ public class FileSignerUsingDefaults extends AbstractCommand<SignerRequest, Sign
 		String signatureFileName = "";
 
 		ListCertsRequest requestCert = new ListCertsRequest();
+		requestCert.setUseForSignature(true);
 
 		ListCerts ls = new ListCerts();
 		ListCertsResponse lr = ls.doCommand(requestCert);

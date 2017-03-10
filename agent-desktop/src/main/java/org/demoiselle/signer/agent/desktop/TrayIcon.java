@@ -23,11 +23,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.demoiselle.signer.agent.desktop.command.cert.ListCerts;
 import org.demoiselle.signer.agent.desktop.command.cert.ListCertsRequest;
 import org.demoiselle.signer.agent.desktop.command.cert.ListCertsResponse;
-import org.demoiselle.signer.agent.desktop.command.policy.ListPolicies;
-import org.demoiselle.signer.agent.desktop.command.policy.ListPoliciesRequest;
-import org.demoiselle.signer.agent.desktop.command.policy.ListPoliciesResponse;
 import org.demoiselle.signer.agent.desktop.command.signer.FileSigner;
-import org.demoiselle.signer.agent.desktop.ui.JFileChooserPolicy;
+import org.demoiselle.signer.agent.desktop.command.signer.FileSignerUsingDefaults;
+import org.demoiselle.signer.agent.desktop.command.signer.SignerRequest;
+import org.demoiselle.signer.agent.desktop.command.signer.SignerResponse;
 import org.demoiselle.signer.agent.desktop.ui.ListCertificateData;
 import org.demoiselle.signer.agent.desktop.ui.SignatureInfo;
 import org.demoiselle.signer.agent.desktop.ui.pdf.SignerPDF;
@@ -37,7 +36,16 @@ import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 public class TrayIcon {
 
 	public TrayIcon() {
+		System.out.println("java.version: " + System.getProperty("java.version"));
 		this.makeTrayIcon();
+	}
+
+	public void errorMessage(String title, String message) {
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.ERROR_MESSAGE);
+	}
+
+	public void warnMessage(String title, String message) {
+		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 
 	public void makeTrayIcon() {
@@ -48,12 +56,15 @@ public class TrayIcon {
 					URL urlImagem = getClass().getResource("/icone.png");
 					Image image = Toolkit.getDefaultToolkit().getImage(urlImagem);
 					PopupMenu popup = new PopupMenu();
-					boolean isEnterpriseLicence = true;
 
-					// String enterpriseLicence =
-					// System.getProperty("DESKTOP_LICENCE");
-					// if (enterpriseLicence != null)
-					// isEnterpriseLicence = true;
+					// Variable to enable or disable EE features
+					boolean isEnterpriseLicence = false;
+
+					// java -DDESKTOP_LICENCE="XXX" -jar
+					// ./agent-desktop-3.0.0-SNAPSHOT.jar
+					String enterpriseLicence = System.getProperty("DESKTOP_LICENCE");
+					if (enterpriseLicence != null)
+						isEnterpriseLicence = true;
 
 					final java.awt.TrayIcon trayIcon = new java.awt.TrayIcon(image, "Demoiselle Signer", popup);
 					// popup.addSeparator();
@@ -74,8 +85,8 @@ public class TrayIcon {
 						public void actionPerformed(ActionEvent e) {
 							try {
 								signer();
-							} catch (IOException e1) {
-								e1.printStackTrace();
+							} catch (Throwable error) {
+								errorMessage("Erro", error.getMessage());
 							}
 						}
 					});
@@ -88,8 +99,8 @@ public class TrayIcon {
 
 								try {
 									pdfSigner();
-								} catch (Throwable e1) {
-									e1.printStackTrace();
+								} catch (Throwable error) {
+									errorMessage("Erro", error.getMessage());
 								}
 
 							}
@@ -104,10 +115,8 @@ public class TrayIcon {
 						public void actionPerformed(ActionEvent e) {
 							try {
 								validate();
-							} catch (CertificateException e1) {
-								e1.printStackTrace();
-							} catch (IOException e1) {
-								e1.printStackTrace();
+							} catch (Throwable error) {
+								errorMessage("Erro", error.getMessage());
 							}
 						}
 					});
@@ -152,32 +161,16 @@ public class TrayIcon {
 
 	public void signer() throws IOException {
 
-		String fileName = "";
-		String alias;
+		FileSignerUsingDefaults signer = new FileSignerUsingDefaults();
 
-		ListCertsRequest requestCert = new ListCertsRequest();
+		SignerResponse resp = signer.doCommand(new SignerRequest());
 
-		ListCerts ls = new ListCerts();
-		ListCertsResponse lr = ls.doCommand(requestCert);
-		if (lr.getCertificates().size() > 1) {
-			ListCertificateData lcd = new ListCertificateData(lr);
-			lcd.init();
-			alias = lcd.getAlias();
-		} else
-			alias = lr.getCertificates().iterator().next().getAlias();
-
-		ListPoliciesResponse rp = (new ListPolicies()).doCommand(new ListPoliciesRequest());
-
-		JFileChooserPolicy fileChooser = new JFileChooserPolicy(rp.getPolicies());
-
-		int returnValue = fileChooser.showOpenDialog(null);
-		if (returnValue == JFileChooser.APPROVE_OPTION) {
-			File selectedFile = fileChooser.getSelectedFile();
-			fileName = selectedFile.getAbsolutePath();
-			FileSigner fs = new FileSigner();
-			String signatureFileName = fs.sign(alias, fileChooser.getPolicy(), fileName);
-			JOptionPane.showMessageDialog(null, "Arquivo de assinatuara disponível em: " + signatureFileName, "Sucesso",
+		if (!resp.getSigned().equals("")) {
+			JOptionPane.showMessageDialog(null, "Arquivo de assinatuara disponível em: " + resp.getSigned(), "Sucesso",
 					JOptionPane.INFORMATION_MESSAGE);
+		} else {
+			JOptionPane.showMessageDialog(null, "Ocorreu algum erro ao tentar assinar, tente novamente", "Falha",
+					JOptionPane.ERROR_MESSAGE);
 		}
 
 	}
@@ -226,6 +219,9 @@ public class TrayIcon {
 		String fileName = "";
 		String signatureFileName = "";
 
+		// todo: Fazer uma tela de explica o process: 1. selecione o arquivo do
+		// conteúdo 2. selecione o arquivo p7s
+
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Selecione o Arquivo de Conteúdo");
 
@@ -256,7 +252,6 @@ public class TrayIcon {
 	}
 
 	public static void main(String[] args) throws IOException, InterruptedException {
-		System.out.println(System.getProperty("java.version"));
 		new TrayIcon().signer();
 	}
 

@@ -101,7 +101,7 @@ public class Validate extends AbstractCommand<ValidateRequest, ValidateResponse>
 		byte[] signed = new byte[(int)fileSigned.length()];
 		fis.read(signed);
 		fis.close();
-		String contentBase64 = Base64Utils.base64Encode(content);
+		// String contentBase64 = Base64Utils.base64Encode(content);
 		String signedBase64 = Base64Utils.base64Encode(signed);
 		ValidateRequest request = new ValidateRequest();
 		request.setContent("marco");

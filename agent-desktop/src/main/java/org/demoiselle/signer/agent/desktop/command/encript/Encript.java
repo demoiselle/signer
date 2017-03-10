@@ -23,21 +23,21 @@ public class Encript extends AbstractCommand<EncriptRequest, EncriptResponse> {
 		loader.setCallbackHandler(new DialogCallbackHandler());
 		KeyStore keyStore = loader.getKeyStore();
 		try {
-			X509Certificate cert = (X509Certificate)keyStore.getCertificate(data.getAlias());
-	        final Cipher cipherEnc = Cipher.getInstance(data.getAlgorithm());
-	        PrivateKey privateKey = (PrivateKey) keyStore.getKey(data.getAlias(), null);        
-	        cipherEnc.init(Cipher.ENCRYPT_MODE, privateKey);
-	        byte[] cript = cipherEnc.doFinal(this.getBytes(data));
-	        String encripted = Base64Utils.base64Encode(cript);
-	        EncriptResponse result = new EncriptResponse();
-	        result.setRequestId(data.getRequestId());
-	        result.setEncripted(encripted);
-	        Certificate by = new Certificate();
-	        by.setAlias(data.getAlias());
-	        by.setProvider(keyStore.getProvider().getName());
-	        by.setSubject(cert.getSubjectDN().getName());
-	        by.setNotAfter(cert.getNotAfter().toGMTString());
-	        by.setNotBefore(cert.getNotBefore().toGMTString());
+			X509Certificate cert = (X509Certificate) keyStore.getCertificate(data.getAlias());
+			final Cipher cipherEnc = Cipher.getInstance(data.getAlgorithm());
+			PrivateKey privateKey = (PrivateKey) keyStore.getKey(data.getAlias(), null);
+			cipherEnc.init(Cipher.ENCRYPT_MODE, privateKey);
+			byte[] cript = cipherEnc.doFinal(this.getBytes(data));
+			String encripted = Base64Utils.base64Encode(cript);
+			EncriptResponse result = new EncriptResponse();
+			result.setRequestId(data.getRequestId());
+			result.setEncripted(encripted);
+			Certificate by = new Certificate();
+			by.setAlias(data.getAlias());
+			by.setProvider(keyStore.getProvider().getName());
+			by.setSubject(cert.getSubjectDN().getName());
+			by.setNotAfter(cert.getNotAfter().toGMTString());
+			by.setNotBefore(cert.getNotBefore().toGMTString());
 			result.setBy(by);
 			result.setPublicKey(Base64Utils.base64Encode(cert.getPublicKey().getEncoded()));
 			return result;
@@ -45,7 +45,7 @@ public class Encript extends AbstractCommand<EncriptRequest, EncriptResponse> {
 			throw new RuntimeException(error.getMessage(), error);
 		}
 	}
-	
+
 	private byte[] getBytes(EncriptRequest data) {
 		return data.getContent().getBytes();
 	}
@@ -57,7 +57,7 @@ public class Encript extends AbstractCommand<EncriptRequest, EncriptResponse> {
 		request.setProvider("SunPKCS11-TokenOuSmartCard_30");
 		request.setContent("HELLO WORLD!");
 		System.out.println((new Execute()).executeCommand(request));
-		
+
 	}
-	
+
 }

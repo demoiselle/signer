@@ -3,7 +3,6 @@ package org.demoiselle.signer.agent.desktop.web;
 import static io.undertow.Handlers.path;
 import static io.undertow.Handlers.websocket;
 
-import java.io.InputStream;
 import java.net.BindException;
 import java.security.KeyStore;
 import java.security.SecureRandom;
@@ -36,9 +35,9 @@ public class WSServerSSL extends AbstractReceiveListener {
 	private static final String DEFAULT_HOST_WS_SERVER = "localhost";
 	private static final int DEFAULT_PORT_SSL_WS_SERVER = 9443;
 	private static WSServerSSL instance = null;
-	
+
 	private Undertow undertow = null;
-	
+
 	public static WSServerSSL getInstance() {
 		if (WSServerSSL.instance == null)
 			WSServerSSL.instance = new WSServerSSL();
@@ -62,20 +61,29 @@ public class WSServerSSL extends AbstractReceiveListener {
 		sslContext = SSLContext.getInstance("TLSv1.2");
 		String defaultAlgorithm = KeyManagerFactory.getDefaultAlgorithm();
 		KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(defaultAlgorithm);
-//		keyManagerFactory.init(this.getKeyStoreFromLocal(), "changeit".toCharArray());
+		// keyManagerFactory.init(this.getKeyStoreFromLocal(),
+		// "changeit".toCharArray());
 		keyManagerFactory.init(this.getKeyStoreFromToken(), null);
 		KeyManager[] km = keyManagerFactory.getKeyManagers();
 		System.out.println(km);
-		TrustManager[] tm = new TrustManager[] {new X509TrustManager() {
-            public X509Certificate[] getAcceptedIssuers() { return null; }
-			public void checkClientTrusted(X509Certificate[] c, String a) throws CertificateException {}
-			public void checkServerTrusted(X509Certificate[] c, String a) throws CertificateException {}
-        }};
+		TrustManager[] tm = new TrustManager[] { new X509TrustManager() {
+			public X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+			public void checkClientTrusted(X509Certificate[] c, String a) throws CertificateException {
+			}
+
+			public void checkServerTrusted(X509Certificate[] c, String a) throws CertificateException {
+			}
+		} };
 		SecureRandom sr = new SecureRandom();
-		sslContext.init(km, tm , sr);
+		sslContext.init(km, tm, sr);
 		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            public boolean verify(String h, SSLSession s) { return true; }
-        }); 
+			public boolean verify(String h, SSLSession s) {
+				return true;
+			}
+		});
 
 		this.undertow = Undertow.builder().addHttpsListener(port, host, sslContext)
 				.setHandler(path().addPrefixPath("/", websocket(new WebSocketConnectionCallback() {
@@ -89,31 +97,31 @@ public class WSServerSSL extends AbstractReceiveListener {
 	public void start() {
 		try {
 			this.undertow.start();
-		} catch (RuntimeException error ) {
+		} catch (RuntimeException error) {
 			Throwable cause = error.getCause();
 			if (cause instanceof BindException) {
 				try {
 					this.initializeWSServer(WSServerSSL.DEFAULT_HOST_WS_SERVER, WSServerSSL.DEFAULT_PORT_SSL_WS_SERVER);
-				} catch (Throwable error2){
+				} catch (Throwable error2) {
 				}
 			}
 		}
 	}
-	
-	private KeyStore getKeyStoreFromLocal() {
-		try {
-			KeyStore localKeyStore = KeyStore.getInstance("JKS");
-			InputStream is = WSServerSSL.class.getResourceAsStream("/localhost.jks");
-			localKeyStore.load(is, "changeit".toCharArray());
-			return localKeyStore;
-		} catch (Throwable error) {
-			return null;
-		}
-	}
-	
+
+	// private KeyStore getKeyStoreFromLocal() {
+	// try {
+	// KeyStore localKeyStore = KeyStore.getInstance("JKS");
+	// InputStream is = WSServerSSL.class.getResourceAsStream("/localhost.jks");
+	// localKeyStore.load(is, "changeit".toCharArray());
+	// return localKeyStore;
+	// } catch (Throwable error) {
+	// return null;
+	// }
+	// }
+
 	private KeyStore getKeyStoreFromToken() {
 		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-		loader.setCallbackHandler(new PinHandler());
+		loader.setCallbackHandler(new PinHandler("Utilizar seu certificado para criar um programa local com uma conexão segura"));
 		return loader.getKeyStore();
 	}
 
@@ -132,7 +140,7 @@ public class WSServerSSL extends AbstractReceiveListener {
 			WebSockets.sendText("{ \"error\": \"" + error.getMessage() + "\"}", channel, null);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		WSServerSSL.getInstance();
 	}

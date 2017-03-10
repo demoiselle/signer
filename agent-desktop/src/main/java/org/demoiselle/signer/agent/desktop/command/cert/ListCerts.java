@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
+import org.demoiselle.signer.agent.desktop.exception.ActionCanceled;
 import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.agent.desktop.web.Execute;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 
 public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsResponse> {
@@ -16,9 +18,28 @@ public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsRespon
 	@SuppressWarnings("deprecation")
 	public ListCertsResponse doCommand(final ListCertsRequest request) {
 		try {
+
+			String action = (request.isUseForSignature() ? "Assinar um Documento" : "Listar os certificados");
+
+			PinHandler pin = new PinHandler(action);
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-			loader.setCallbackHandler(new PinHandler());
-			KeyStore keyStore = loader.getKeyStore();
+			loader.setCallbackHandler(pin);
+			KeyStore keyStore = null;
+
+			try {
+				keyStore = loader.getKeyStore();
+			} catch (KeyStoreLoaderException e) {
+				// Ignore error because maybe the user dont fill pass
+				// e.printStackTrace();
+			}
+
+			if (pin.getPwd().equals("") && pin.getActionCanceled()) {
+				throw new ActionCanceled();
+			} else if (pin.getPwd().equals("")) {
+				throw new RuntimeException(
+						"Ocorreu um erro ao acessar o token, verifique se esta conectado ao computador.");
+			}
+
 			Enumeration<String> aliases = keyStore.aliases();
 			ListCertsResponse response = new ListCertsResponse();
 			response.setCertificates(new ArrayList<Certificate>());
@@ -34,8 +55,10 @@ public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsRespon
 				response.getCertificates().add(certJson);
 			}
 			return response;
+		} catch (ActionCanceled e) {
+			throw new RuntimeException("Ação cancelada pelo usuário");
 		} catch (Throwable error) {
-			throw new RuntimeException("Erro ao tentar buscar os certificados digitais");
+			throw new RuntimeException("Erro ao tentar buscar os certificados digitais. " + error.getMessage());
 		}
 	}
 

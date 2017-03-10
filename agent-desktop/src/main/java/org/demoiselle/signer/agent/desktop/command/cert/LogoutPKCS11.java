@@ -9,14 +9,14 @@ import org.demoiselle.signer.agent.desktop.web.Response;
 
 import sun.security.pkcs11.SunPKCS11;
 
-public class LogoutPKCS11 extends AbstractCommand<Request, Response>{
+public class LogoutPKCS11 extends AbstractCommand<Request, Response> {
 
 	@Override
 	public Response doCommand(Request request) {
 		try {
 			for (Provider provider : Security.getProviders())
 				if (provider instanceof SunPKCS11)
-					((SunPKCS11)provider).logout();
+					((SunPKCS11) provider).logout();
 		} catch (Throwable error) {
 		}
 		return new Response(request);

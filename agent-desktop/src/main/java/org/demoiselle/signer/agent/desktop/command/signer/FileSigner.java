@@ -40,7 +40,7 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse> {
 
 	public byte[] makeSignature(String alias, String signaturePolicy, String fileName) {
 		KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-		loader.setCallbackHandler(new PinHandler());
+		loader.setCallbackHandler(new PinHandler("Assinar um documento"));
 		KeyStore keyStore = loader.getKeyStore();
 		try {
 			PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, null);

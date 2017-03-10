@@ -3,8 +3,6 @@ package org.demoiselle.signer.agent.desktop.web;
 import static io.undertow.Handlers.path;
 import static io.undertow.Handlers.websocket;
 
-import java.net.BindException;
-
 import com.google.gson.Gson;
 
 import io.undertow.Undertow;
@@ -20,9 +18,9 @@ public class WSServer extends AbstractReceiveListener {
 	private static final String DEFAULT_HOST_WS_SERVER = "localhost";
 	private static final int DEFAULT_PORT_WS_SERVER = 9091;
 	private static WSServer instance = null;
-	
+
 	private Undertow undertow = null;
-	
+
 	public static WSServer getInstance() {
 		if (WSServer.instance == null)
 			WSServer.instance = new WSServer();
@@ -73,7 +71,7 @@ public class WSServer extends AbstractReceiveListener {
 			WebSockets.sendText(response.toJson(), channel, null);
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		WSServer.getInstance();
 	}
