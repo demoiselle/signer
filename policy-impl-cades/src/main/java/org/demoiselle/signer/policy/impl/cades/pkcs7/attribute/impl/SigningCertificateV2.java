@@ -36,13 +36,6 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
-import org.demoiselle.signer.cryptography.Digest;
-import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
-import org.demoiselle.signer.cryptography.factory.DigestFactory;
-import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
-import org.demoiselle.signer.policy.impl.cades.SignerException;
-import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
-
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
@@ -61,65 +54,70 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.IssuerSerial;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.demoiselle.signer.cryptography.Digest;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.factory.DigestFactory;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.policy.impl.cades.SignerException;
+import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 
 /**
- *  ESS signing-certificate-v2 Attribute Definition
-
-   The ESS signing-certificate-v2 attribute is similar to the ESS
-   signing-certificate defined above, except that this attribute can be
-   used with hashing algorithms other than SHA-1.
-
-   The syntax of the signing-certificate-v2 attribute type of the ES is
-   as defined in "ESS Update: Adding CertID Algorithm Agility", RFC 5035
-   [15], and further qualified in the present document.
-
-   The sequence of the policy information field is not used in the
-   present document.
-
-   This attribute shall be used in the same manner as defined above for
-   the ESS signing-certificate attribute.
-
-   The object identifier for this attribute is:
-         id-aa-signingCertificateV2 OBJECT IDENTIFIER ::=
-         { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
-           smime(16) id-aa(2) 47 }
- *  *
+ * ESS signing-certificate-v2 Attribute Definition
+ * 
+ * The ESS signing-certificate-v2 attribute is similar to the ESS
+ * signing-certificate defined above, except that this attribute can be used
+ * with hashing algorithms other than SHA-1.
+ * 
+ * The syntax of the signing-certificate-v2 attribute type of the ES is as
+ * defined in "ESS Update: Adding CertID Algorithm Agility", RFC 5035 [15], and
+ * further qualified in the present document.
+ * 
+ * The sequence of the policy information field is not used in the present
+ * document.
+ * 
+ * This attribute shall be used in the same manner as defined above for the ESS
+ * signing-certificate attribute.
+ * 
+ * The object identifier for this attribute is: id-aa-signingCertificateV2
+ * OBJECT IDENTIFIER ::= { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
+ * pkcs9(9) smime(16) id-aa(2) 47 } *
  */
 public class SigningCertificateV2 implements SignedAttribute {
 
-    private static final Logger logger = LoggerFactory.getLogger(SigningCertificateV2.class);
-    private final String identifier = "1.2.840.113549.1.9.16.2.47";
-    private Certificate[] certificates = null;
+	// private static final Logger logger =
+	// LoggerFactory.getLogger(SigningCertificateV2.class);
+	private final String identifier = "1.2.840.113549.1.9.16.2.47";
+	private Certificate[] certificates = null;
 
-    @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
-        this.certificates = certificates;
-    }
+	@Override
+	public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content,
+			SignaturePolicy signaturePolicy) {
+		this.certificates = certificates;
+	}
 
-    @Override
-    public String getOID() {
-        return identifier;
-    }
+	@Override
+	public String getOID() {
+		return identifier;
+	}
 
-    @Override
-    public Attribute getValue() throws SignerException {
-        try {
-            X509Certificate cert = (X509Certificate) certificates[0];
-            Digest digest = DigestFactory.getInstance().factoryDefault();
-            digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
-            byte[] certHash = digest.digest(cert.getEncoded());
-            X500Name dirName = new X500Name(cert.getSubjectDN().getName());
-            GeneralName name = new GeneralName(dirName);
-            GeneralNames issuer = new GeneralNames(name);
-            ASN1Integer serialNumber = new ASN1Integer(cert.getSerialNumber());
-            IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
-            AlgorithmIdentifier algId = new AlgorithmIdentifier(new ASN1ObjectIdentifier("2.16.840.1.101.3.4.2.1"));//SHA-256
-            ESSCertIDv2 essCertIDv2 = new ESSCertIDv2(algId, certHash, issuerSerial);
-            return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(new ASN1Encodable[]{new DERSequence(essCertIDv2), new DERSequence(DERNull.INSTANCE)})));
-        } catch (CertificateEncodingException ex) {
-            throw new SignerException(ex.getMessage());
-        }
-    }
+	@Override
+	public Attribute getValue() throws SignerException {
+		try {
+			X509Certificate cert = (X509Certificate) certificates[0];
+			Digest digest = DigestFactory.getInstance().factoryDefault();
+			digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+			byte[] certHash = digest.digest(cert.getEncoded());
+			X500Name dirName = new X500Name(cert.getSubjectDN().getName());
+			GeneralName name = new GeneralName(dirName);
+			GeneralNames issuer = new GeneralNames(name);
+			ASN1Integer serialNumber = new ASN1Integer(cert.getSerialNumber());
+			IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
+			AlgorithmIdentifier algId = new AlgorithmIdentifier(new ASN1ObjectIdentifier("2.16.840.1.101.3.4.2.1"));// SHA-256
+			ESSCertIDv2 essCertIDv2 = new ESSCertIDv2(algId, certHash, issuerSerial);
+			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(
+					new ASN1Encodable[] { new DERSequence(essCertIDv2), new DERSequence(DERNull.INSTANCE) })));
+		} catch (CertificateEncodingException ex) {
+			throw new SignerException(ex.getMessage());
+		}
+	}
 }

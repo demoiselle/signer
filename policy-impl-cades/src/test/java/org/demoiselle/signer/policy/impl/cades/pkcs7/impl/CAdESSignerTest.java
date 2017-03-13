@@ -57,117 +57,116 @@ import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
-import org.junit.Test;
 
 /**
  *
  */
 public class CAdESSignerTest {
 
-    // TODO teste depende de configuração de ambiente do usuário, devemos criar uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
-//   @Test
+	// TODO teste depende de configuração de ambiente do usuário, devemos criar
+	// uma alternativa, ESTÁ COMENTADO PARA PASSAR NO BUILD
+	// @Test
 
-    public void testSignAndVerifySignature() {
-        try {
-           
-            // ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
-            
-            // Para TOKEN Branco a linha abaixo
-            //String pkcs11LibraryPath = "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
-          //Para TOKEN Azul a linha abaixo
-            String pkcs11LibraryPath = "/usr/lib/libeToken.so";
-            
-        	StringBuilder buf = new StringBuilder();
-        	buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-        	Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
-            Security.addProvider(p);
-            
-            // ATENÇÃO ALTERAR "SENHA" ABAIXO
-            Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
-            KeyStore ks = builder.getKeyStore();
+	@SuppressWarnings("restriction")
+	public void testSignAndVerifySignature() {
+		try {
 
-            Certificate[] certificates = null;
+			// ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
 
-            String alias = "";
+			// Para TOKEN Branco a linha abaixo
+			// String pkcs11LibraryPath =
+			// "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+			// Para TOKEN Azul a linha abaixo
+			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
 
-            Enumeration<String> e = ks.aliases();
-            while (e.hasMoreElements()) {
-                alias = e.nextElement();
-                System.out.println("alias..............: {}"+ alias);
-                certificates = ks.getCertificateChain(alias);
-            }
+			StringBuilder buf = new StringBuilder();
+			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
+			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
+			Security.addProvider(p);
 
-            X509Certificate c = (X509Certificate) certificates[0];
-            System.out.println("Número de série....: {}"+ c.getSerialNumber().toString());
+			// ATENÇÃO ALTERAR "SENHA" ABAIXO
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
+					new KeyStore.PasswordProtection("senha".toCharArray()));
+			KeyStore ks = builder.getKeyStore();
 
-            // INFORMAR o arquivo
-            String fileDirName = "/home/usuario/arquivo";
-            
-            
+			Certificate[] certificates = null;
+
+			String alias = "";
+
+			Enumeration<String> e = ks.aliases();
+			while (e.hasMoreElements()) {
+				alias = e.nextElement();
+				System.out.println("alias..............: {}" + alias);
+				certificates = ks.getCertificateChain(alias);
+			}
+
+			X509Certificate c = (X509Certificate) certificates[0];
+			System.out.println("Número de série....: {}" + c.getSerialNumber().toString());
+
+			// INFORMAR o arquivo
+			String fileDirName = "/home/usuario/arquivo";
+
 			byte[] fileToSign = readContent(fileDirName);
-			
-						
-            /* Parametrizando o objeto doSign */
-            PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-            signer.setCertificates(ks.getCertificateChain(alias));
-            signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
-            signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
-            signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-            // com carimbo de tempo
-            //signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
-            			
-            /* Realiza a assinatura do conteudo */
-            System.out.println("Efetuando a  assinatura do conteudo");
-            byte[] signature = signer.doAttachedSign(fileToSign);
-            //byte[] signature = signer.doDetachedSign(fileToSign);
-            
-            boolean checked = false;
-            /* Valida o conteudo antes de gravar em arquivo */
-            System.out.println("Efetuando a validacao da assinatura.");
-            checked = signer.check(fileToSign, signature);
-            
 
-            if (checked) {
-            	System.out.println("A assinatura foi validada.");
-            } else {
-            	System.out.println("A assinatura foi invalidada!");
-            }
+			/* Parametrizando o objeto doSign */
+			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+			signer.setCertificates(ks.getCertificateChain(alias));
+			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			// com carimbo de tempo
+			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
-            try {
-    			File file = new File(fileDirName+".p7s");
-    			FileOutputStream os = new FileOutputStream(file);
-    			os.write(signature);
-    			os.flush();
-    			os.close();
-    		} catch (IOException ex) {
-    			ex.printStackTrace();
-    		}
-            
-            /* Valida o conteudo depois de gravado */
-            System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
-            byte[] singnatureFile = readContent(fileDirName+".p7s");
-            checked = signer.check(fileToSign, singnatureFile);
-            if (checked) {
-            	System.out.println("A assinatura foi validada.");
-            } else {
-            	System.out.println("A assinatura foi invalidada!");
-            }
+			/* Realiza a assinatura do conteudo */
+			System.out.println("Efetuando a  assinatura do conteudo");
+			byte[] signature = signer.doAttachedSign(fileToSign);
+			// byte[] signature = signer.doDetachedSign(fileToSign);
 
-        } catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
-            ex.printStackTrace();
-        }
-    }
-    
-    
-    // @Test
-    public void testVerifySignature() {
-        String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
-    	byte[] fileToVerify = readContent(fileToVerifyDirName);
+			boolean checked = false;
+			/* Valida o conteudo antes de gravar em arquivo */
+			System.out.println("Efetuando a validacao da assinatura.");
+			checked = signer.check(fileToSign, signature);
+
+			if (checked) {
+				System.out.println("A assinatura foi validada.");
+			} else {
+				System.out.println("A assinatura foi invalidada!");
+			}
+
+			try {
+				File file = new File(fileDirName + ".p7s");
+				FileOutputStream os = new FileOutputStream(file);
+				os.write(signature);
+				os.flush();
+				os.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+
+			/* Valida o conteudo depois de gravado */
+			System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
+			byte[] singnatureFile = readContent(fileDirName + ".p7s");
+			checked = signer.check(fileToSign, singnatureFile);
+			if (checked) {
+				System.out.println("A assinatura foi validada.");
+			} else {
+				System.out.println("A assinatura foi invalidada!");
+			}
+
+		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	// @Test
+	public void testVerifySignature() {
+		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
+		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
 		byte[] signatureFile = readContent(fileSignatureDirName);
 
 		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-		
+
 		System.out.println("Efetuando a validacao da assinatura");
 		boolean checked = signer.check(fileToVerify, signatureFile);
 		if (checked) {
@@ -175,11 +174,10 @@ public class CAdESSignerTest {
 		} else {
 			System.out.println("A assinatura foi invalidada!");
 		}
-    }
-    
-    
-    private byte[] readContent(String parmFile) {
-		
+	}
+
+	private byte[] readContent(String parmFile) {
+
 		byte[] result = null;
 		try {
 			File file = new File(parmFile);

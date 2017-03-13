@@ -55,11 +55,12 @@ import com.sun.crypto.provider.SunJCE;
 /**
  * Implementação padrão da interface {@link Criptography}
  */
+@SuppressWarnings("restriction")
 public class CriptographyImpl implements Criptography {
 
 	private String algorithm;
 	private String keyAlgorithm;
-	private Integer size;
+	private Integer size;	
 	private Provider provider = new SunJCE();
 	private Key key;
 	private Cipher cipher;

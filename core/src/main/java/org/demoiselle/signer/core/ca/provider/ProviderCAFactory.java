@@ -41,8 +41,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.ServiceLoader;
 
-import org.demoiselle.signer.core.CertificateLoader;
-
 /**
  * 
  * Build a Certificate Authority provider
