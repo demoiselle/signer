@@ -9,6 +9,7 @@ import org.demoiselle.signer.agent.desktop.web.Response;
 
 import sun.security.pkcs11.SunPKCS11;
 
+@SuppressWarnings("restriction")
 public class LogoutPKCS11 extends AbstractCommand<Request, Response> {
 
 	@Override
