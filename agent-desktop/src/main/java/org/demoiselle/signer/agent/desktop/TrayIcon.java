@@ -17,6 +17,7 @@ import java.net.URL;
 import java.security.cert.CertificateException;
 
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
@@ -53,7 +54,7 @@ public class TrayIcon {
 	/**
 	 * Set default font to all aplication
 	 * 
-	 * @param defaultFont 
+	 * @param defaultFont
 	 */
 	private static void setUIFont(javax.swing.plaf.FontUIResource defaultFont) {
 		java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
@@ -240,8 +241,16 @@ public class TrayIcon {
 		String fileName = "";
 		String signatureFileName = "";
 
-		// todo: Fazer uma tela de explica o process: 1. selecione o arquivo do
-		// conteúdo 2. selecione o arquivo p7s
+		// Dialog with instructions to validate file
+		JLabel label = new JLabel(
+				"<html>Este processo de validação de assinatura permite verificar se o arquivo de conteúdo e seu arquivo no formato P7S são válidos. <br/>"
+				+ "Para isso é necessário seguir os seguintes passos: <br/>"
+						+ "1 - Informe o arquivo do conteúdo <br/>" + "2 - Informe o arquivo P7S <br/>"
+						+ "3 - Uma janela informará se o certificado é válido ou não");
+		label.setFont(new Font("Arial", Font.PLAIN, 12));
+
+		JOptionPane.showMessageDialog(null, label, "Processo de Validação de Assinatura",
+				JOptionPane.INFORMATION_MESSAGE);
 
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogTitle("Selecione o Arquivo de Conteúdo");

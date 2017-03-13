@@ -37,8 +37,8 @@ public class Main {
 		Main.logger.info("URL Version Checker: " + urlVersionChecker);
 		try {
 			if (Main.hasNewVersion(urlVersionChecker, version)) {
-				JLabel label = new JLabel("Há uma nova versão disponível do Demoiselle Desktop Agent Component.\n"
-						+ "É importante atualizar o aplicativo. Acesse o site e baixe a nova versão.");
+				JLabel label = new JLabel("<html>Há uma nova versão disponível do Demoiselle Desktop Agent Component.<br/>"
+						+ "É importante atualizar o aplicativo. Acesse o site e baixe a nova versão.</html>");
 				label.setFont(new Font("Arial", Font.PLAIN, 14));
 
 				JOptionPane.showMessageDialog(null, label, "Demoiselle Desktop Agent Component",
@@ -107,6 +107,8 @@ public class Main {
 		URLConnection connection;
 		try {
 			connection = url.openConnection();
+			connection.setConnectTimeout(2000);
+			connection.setReadTimeout(2000);
 			connection.connect();
 		} catch (IOException e) {
 			return false;
