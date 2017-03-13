@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.cert.CertificateException;
 
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -187,7 +188,10 @@ public class TrayIcon {
 
 		SignerResponse resp = signer.doCommand(new SignerRequest());
 
-		if (!resp.getSigned().equals("")) {
+		if (resp.getActionCanceled()) {
+			JOptionPane.showMessageDialog(null, "Ação cancelada pelo usuário", "Cancelado",
+					JOptionPane.INFORMATION_MESSAGE);
+		} else if (!resp.getSigned().equals("")) {
 			JOptionPane.showMessageDialog(null, "Arquivo de assinatuara disponível em: " + resp.getSigned(), "Sucesso",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
@@ -244,7 +248,7 @@ public class TrayIcon {
 		// Dialog with instructions to validate file
 		JLabel label = new JLabel(
 				"<html>Este processo de validação de assinatura permite verificar se o arquivo de conteúdo e seu arquivo no formato P7S são válidos. <br/>"
-				+ "Para isso é necessário seguir os seguintes passos: <br/>"
+						+ "Para isso é necessário seguir os seguintes passos: <br/>"
 						+ "1 - Informe o arquivo do conteúdo <br/>" + "2 - Informe o arquivo P7S <br/>"
 						+ "3 - Uma janela informará se o certificado é válido ou não");
 		label.setFont(new Font("Arial", Font.PLAIN, 12));

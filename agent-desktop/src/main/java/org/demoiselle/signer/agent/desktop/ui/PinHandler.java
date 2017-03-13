@@ -43,6 +43,7 @@ public class PinHandler extends JDialog implements CallbackHandler {
 
 	public PinHandler(String action) {
 		this.action = action;
+		this.setAlwaysOnTop(true);
 	}
 
 	private void initUI() {

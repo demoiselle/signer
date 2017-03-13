@@ -56,6 +56,8 @@ public class FileSignerUsingDefaults extends AbstractCommand<SignerRequest, Sign
 			fileName = selectedFile.getAbsolutePath();
 			FileSigner fs = new FileSigner();
 			signatureFileName = fs.sign(alias, fileChooser.getPolicy(), fileName);
+		} else if (returnValue == JFileChooser.CANCEL_OPTION) {
+			result.setActionCanceled(true);
 		}
 
 		result.setSigned(signatureFileName);
