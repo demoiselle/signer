@@ -94,6 +94,7 @@ public class Configuration {
 
 		loadFromHomeFile(map);
 
+		// ------------ Windows ------------
 		map.put("TokenOuSmartCard_00", winRoot.concat("/system32/ngp11v211.dll"));
 		map.put("TokenOuSmartCard_01", winRoot.concat("/system32/aetpkss1.dll"));
 		map.put("TokenOuSmartCard_02", winRoot.concat("/system32/gclib.dll"));
@@ -111,13 +112,17 @@ public class Configuration {
 		map.put("TokenOuSmartCard_14", winRoot.concat("/System32/Watchdata/Watchdata Brazil CSP v1.0/WDPKCS.dll"));
 		map.put("TokenOuSmartCard_15", "/Arquivos de programas/Gemplus/GemSafe Libraries/BIN/gclib.dll");
 		map.put("TokenOuSmartCard_16", "/Program Files/Gemplus/GemSafe Libraries/BIN/gclib.dll");
+		
+		// ------------ Linux ------------
 		map.put("TokenOuSmartCard_17", "/usr/lib/libaetpkss.so");
 		map.put("TokenOuSmartCard_18", "/usr/lib/libgpkcs11.so");
 		map.put("TokenOuSmartCard_19", "/usr/lib/libgpkcs11.so.2");
+		
 		// Token Verde do Serpro
 		map.put("TokenOuSmartCard_20", "/usr/lib/libepsng_p11.so");
 		map.put("TokenOuSmartCard_21", "/usr/lib/libepsng_p11.so.1");
 		map.put("TokenOuSmartCard_22", "/usr/local/ngsrv/libepsng_p11.so.1");
+		
 		// Token Azul do Serpro
 		map.put("TokenOuSmartCard_23", "/usr/lib/libeTPkcs11.so");
 		map.put("TokenOuSmartCard_24", "/usr/lib/libeToken.so");
@@ -134,6 +139,12 @@ public class Configuration {
 		map.put("TokenOuSmartCard_35", "/usr/lib/libwdpkcs.dylib");
 		map.put("TokenOuSmartCard_36", "/usr/local/lib/libwdpkcs.dylib");
 		map.put("TokenOuSmartCard_37", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
+		
+		// ------------ Mac ------------
+		// Token Branco do Serpro
+		map.put("TokenOuSmartCard_38", "//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
+		map.put("TokenOuSmartCard_39", "//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//tools//libwdpkcsutil.dylib");
+		map.put("TokenOuSmartCard_40", "//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//tools//libpkcs11wrapper.jnilib");
 
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {
@@ -143,6 +154,7 @@ public class Configuration {
 				successLoad = true;
 			} catch (Throwable error) {
 				// logger.error(coreMessagesBundle.getString("error.load.driver",driver));
+				logger.warn("Tentando carregar: " + driver + " - " + map.get(driver));
 			}
 		}
 

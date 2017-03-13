@@ -7,9 +7,7 @@ import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 public class JFileChooserPolicy extends JFileChooser {
 
@@ -43,19 +41,20 @@ public class JFileChooserPolicy extends JFileChooser {
 		String strPolicies[] = (String[]) validPolicies.toArray(new String[validPolicies.size()]);
 		cmbPolicy = new JComboBox();
 		cmbPolicy.setModel(new DefaultComboBoxModel(strPolicies));
-		
+
 		// Select default policy
 		cmbPolicy.setSelectedIndex(index_2_2);
 
-		JPanel pMain = (JPanel) this.getComponent(3);
-		JPanel pData = (JPanel) pMain.getComponent(2);
+		// This code was removed because hhave error in MacOS, then use DETAULT Police
+		// JPanel pMain = (JPanel) this.getComponent(3);
+		// JPanel pData = (JPanel) pMain.getComponent(2);
 
-		JLabel c1 = (JLabel) pData.getComponent(0);
-		c1.setText("Potitica");
-		pData.removeAll();
-
-		pData.add(c1);
-		pData.add(cmbPolicy);
+		// JLabel c1 = (JLabel) pData.getComponent(0);
+		// c1.setText("Potitica");
+		// pData.removeAll();
+		//
+		// pData.add(c1);
+		// pData.add(cmbPolicy);
 
 	}
 
