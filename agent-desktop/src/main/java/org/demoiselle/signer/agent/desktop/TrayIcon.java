@@ -16,7 +16,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.cert.CertificateException;
 
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
