@@ -147,13 +147,13 @@ public class Configuration {
 		}
 
 		if (!successLoad) {
-			logger.error(coreMessagesBundle.getString("error.load.driver"));
+			logger.error(coreMessagesBundle.getString("error.load.driver.null"));
 		}
 
 		try {
 			this.getPKCS11DriverFromVariable();
 		} catch (Throwable error) {
-			logger.error(coreMessagesBundle.getString("error.load.driver"));
+			logger.error(coreMessagesBundle.getString("error.load.driver.null"));
 		}
 
 	}
