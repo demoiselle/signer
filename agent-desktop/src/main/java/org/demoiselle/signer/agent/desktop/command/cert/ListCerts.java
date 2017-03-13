@@ -33,9 +33,9 @@ public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsRespon
 				// e.printStackTrace();
 			}
 
-			if (pin.getPwd().equals("") && pin.getActionCanceled()) {
+			if (pin.getActionCanceled()) {
 				throw new ActionCanceled();
-			} else if (keyStore == null || pin.getPwd().equals("")) {
+			} else if (keyStore == null) {
 				throw new RuntimeException(
 						"Ocorreu um erro ao acessar o token, verifique se esta conectado ao computador.");
 			}

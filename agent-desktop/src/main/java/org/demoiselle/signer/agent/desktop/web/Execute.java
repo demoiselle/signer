@@ -14,9 +14,10 @@ public class Execute {
 	}
 
 	public String executeCommand(String messageData) {
-		
-		// Always logout before run: This avoid the white hardware have communication problems
-		(new LogoutPKCS11()).doCommand((String)null);
+
+		// Always logout before run (only on WebSocket): This avoid the white
+		// hardware have communication problems
+		(new LogoutPKCS11()).doCommand((String) null);
 
 		final Gson gson = new Gson();
 		Request request = null;
