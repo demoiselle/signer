@@ -2,6 +2,7 @@ package org.demoiselle.signer.agent.desktop;
 
 import java.awt.AWTException;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.MenuItem;
 import java.awt.PopupMenu;
@@ -17,6 +18,7 @@ import java.security.cert.CertificateException;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -48,9 +50,28 @@ public class TrayIcon {
 		JOptionPane.showMessageDialog(null, message, title, JOptionPane.WARNING_MESSAGE);
 	}
 
+	/**
+	 * Set default font to all aplication
+	 * 
+	 * @param defaultFont 
+	 */
+	private static void setUIFont(javax.swing.plaf.FontUIResource defaultFont) {
+		java.util.Enumeration<Object> keys = UIManager.getDefaults().keys();
+		while (keys.hasMoreElements()) {
+			Object key = keys.nextElement();
+			Object value = UIManager.get(key);
+			if (value instanceof javax.swing.plaf.FontUIResource) {
+				UIManager.put(key, defaultFont);
+			}
+		}
+	}
+
 	public void makeTrayIcon() {
 		Runnable runner = new Runnable() {
 			public void run() {
+
+				setUIFont(new javax.swing.plaf.FontUIResource(new Font("Arial", Font.PLAIN, 12)));
+
 				if (SystemTray.isSupported()) {
 					final SystemTray tray = SystemTray.getSystemTray();
 					URL urlImagem = getClass().getResource("/icone.png");

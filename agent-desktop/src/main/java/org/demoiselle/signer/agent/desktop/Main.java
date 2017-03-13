@@ -1,5 +1,6 @@
 package org.demoiselle.signer.agent.desktop;
 
+import java.awt.Font;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.BindException;
@@ -17,6 +18,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 import javax.servlet.ServletException;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
 import org.demoiselle.signer.agent.desktop.web.WSServer;
@@ -24,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class Main {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
 	public static void main(String[] args) throws ServletException {
@@ -35,14 +37,19 @@ public class Main {
 		Main.logger.info("URL Version Checker: " + urlVersionChecker);
 		try {
 			if (Main.hasNewVersion(urlVersionChecker, version)) {
-				JOptionPane.showMessageDialog(null,
-						"Há uma nova versão disponível do Demoiselle Desktop Agent Component.\n" + 
-						"É importante atualizar o aplicativo. Acesso o site e baixe a nova versão.",
-						"Demoiselle Desktop Agent Component", JOptionPane.WARNING_MESSAGE);
+				JLabel label = new JLabel("Há uma nova versão disponível do Demoiselle Desktop Agent Component.\n"
+						+ "É importante atualizar o aplicativo. Acesse o site e baixe a nova versão.");
+				label.setFont(new Font("Arial", Font.PLAIN, 14));
+
+				JOptionPane.showMessageDialog(null, label, "Demoiselle Desktop Agent Component",
+						JOptionPane.WARNING_MESSAGE);
 			}
 		} catch (Throwable error) {
-			JOptionPane.showMessageDialog(null, "Não foi possível verificar se a aplicação está atualizada.",
-					"Demoiselle Desktop Agent Component", JOptionPane.WARNING_MESSAGE);
+			JLabel label = new JLabel("Não foi possível verificar se a aplicação está atualizada.");
+			label.setFont(new Font("Arial", Font.PLAIN, 14));
+
+			JOptionPane.showMessageDialog(null, label, "Demoiselle Desktop Agent Component",
+					JOptionPane.WARNING_MESSAGE);
 			System.exit(1);
 		}
 
@@ -51,9 +58,12 @@ public class Main {
 		} catch (RuntimeException error) {
 			Throwable cause = error.getCause();
 			if (cause instanceof BindException) {
-				JOptionPane.showMessageDialog(null,
-						"Verifique se há outra instância da aplicação em execução e tente novamente.",
-						"Demoiselle Desktop Agent Component", JOptionPane.WARNING_MESSAGE);
+				JLabel label = new JLabel(
+						"Verifique se há outra instância da aplicação em execução e tente novamente.");
+				label.setFont(new Font("Arial", Font.PLAIN, 14));
+
+				JOptionPane.showMessageDialog(null, label, "Demoiselle Desktop Agent Component",
+						JOptionPane.WARNING_MESSAGE);
 				System.exit(0);
 			}
 			System.exit(1);
