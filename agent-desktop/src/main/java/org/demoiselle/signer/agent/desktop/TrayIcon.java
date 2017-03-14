@@ -35,9 +35,13 @@ import org.demoiselle.signer.agent.desktop.ui.SignatureInfo;
 import org.demoiselle.signer.agent.desktop.ui.pdf.SignerPDF;
 import org.demoiselle.signer.agent.desktop.web.WSServer;
 import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class TrayIcon {
 
+	private static final Logger logger = LoggerFactory.getLogger(TrayIcon.class);
+	
 	public TrayIcon() {
 		System.out.println("java.version: " + System.getProperty("java.version"));
 		this.makeTrayIcon();
@@ -108,6 +112,8 @@ public class TrayIcon {
 							try {
 								signer();
 							} catch (Throwable error) {
+								error.printStackTrace();
+								logger.error("Erro ao tentar assinar um documento", error);
 								errorMessage("Erro", error.getMessage());
 							}
 						}

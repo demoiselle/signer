@@ -12,8 +12,12 @@ import org.demoiselle.signer.agent.desktop.web.Execute;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsResponse> {
+
+	private static final Logger logger = LoggerFactory.getLogger(ListCerts.class);
 
 	@SuppressWarnings("deprecation")
 	public ListCertsResponse doCommand(final ListCertsRequest request) {
@@ -25,12 +29,17 @@ public class ListCerts extends AbstractCommand<ListCertsRequest, ListCertsRespon
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
 			loader.setCallbackHandler(pin);
 			KeyStore keyStore = null;
-
+			
 			try {
 				keyStore = loader.getKeyStore();
 			} catch (KeyStoreLoaderException e) {
 				// Ignore error because maybe the user dont fill pass
 				// e.printStackTrace();
+				if (keyStore == null) {
+					logger.error("Erro grave", e);
+					throw new RuntimeException(
+							"Ocorreu um erro ao acessar o token, verifique se esta conectado ao computador.", e);
+				}
 			}
 
 			if (pin.getActionCanceled()) {
