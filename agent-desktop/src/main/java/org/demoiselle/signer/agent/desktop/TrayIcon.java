@@ -41,9 +41,9 @@ import org.slf4j.LoggerFactory;
 public class TrayIcon {
 
 	private static final Logger logger = LoggerFactory.getLogger(TrayIcon.class);
-	
+
 	public TrayIcon() {
-		System.out.println("java.version: " + System.getProperty("java.version"));
+		logger.info("java.version: " + System.getProperty("java.version"));
 		this.makeTrayIcon();
 	}
 
@@ -112,9 +112,12 @@ public class TrayIcon {
 							try {
 								signer();
 							} catch (Throwable error) {
-								error.printStackTrace();
 								logger.error("Erro ao tentar assinar um documento", error);
-								errorMessage("Erro", error.getMessage());
+								logger.error("Erro visível: " + error.getMessage());
+								if (error.getMessage().equals("") || error.getMessage() == null)
+									errorMessage("Erro", "Um erro inesperado ocorreu, reinicie o aplicativo.");
+								else
+									errorMessage("Erro", error.getMessage());
 							}
 						}
 					});
