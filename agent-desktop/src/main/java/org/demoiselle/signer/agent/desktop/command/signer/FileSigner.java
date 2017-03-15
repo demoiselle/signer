@@ -10,14 +10,19 @@ import java.security.PrivateKey;
 import org.demoiselle.signer.agent.desktop.command.AbstractCommand;
 import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.util.Base64Utils;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse> {
+
+	private static final Logger logger = LoggerFactory.getLogger(FileSigner.class);
 
 	// TODO Arquivo de controle de MENU
 	// TODO Opção atachado e desatachado
@@ -48,6 +53,21 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse> {
 			signer.setCertificates(keyStore.getCertificateChain(alias));
 			signer.setPrivateKey(privateKey);
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+
+			// If is Java 8 AND White Token (By WatchData) is ONLY WORKS with
+			// SHA256
+			if (System.getProperty("java.version").contains("1.8")
+					&& keyStore.getProvider().getName().contains("TokenOuSmartCard_30")) {
+				logger.info("WatchData with Java 8 detected, Algorithm setted to SHA256");
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
+
+			// If is WINDOWS, is ONLY WORKS with SHA256
+			if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				logger.info("Windows detected, Algorithm setted to SHA256");
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
+
 			Policies policie = null;
 			try {
 				policie = Policies.valueOf(signaturePolicy);
