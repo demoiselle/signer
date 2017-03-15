@@ -143,8 +143,6 @@ public class Configuration {
 		// ------------ Mac ------------
 		// Token Branco do Serpro
 		map.put("TokenOuSmartCard_38", "//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
-		map.put("TokenOuSmartCard_39", "//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//tools//libwdpkcsutil.dylib");
-		map.put("TokenOuSmartCard_40", "//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//tools//libpkcs11wrapper.jnilib");
 
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {

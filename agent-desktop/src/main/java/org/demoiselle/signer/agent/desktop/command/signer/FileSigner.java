@@ -59,7 +59,8 @@ public class FileSigner extends AbstractCommand<SignerRequest, SignerResponse> {
 			// If is Java 8 AND White Token (By WatchData) is ONLY WORKS with
 			// SHA256 (TokenOuSmartCard_30 - Windows)
 			if (System.getProperty("java.version").contains("1.8")
-					&& keyStore.getProvider().getName().contains("TokenOuSmartCard_30")) {
+					&& (keyStore.getProvider().getName().contains("TokenOuSmartCard_30")
+							|| keyStore.getProvider().getName().contains("TokenOuSmartCard_38"))) {
 				logger.info("WatchData with Java 8 detected, Algorithm setted to SHA256");
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
