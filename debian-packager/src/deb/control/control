@@ -1,0 +1,8 @@
+Package: [[name]]
+Version: 3.0.0-SNAPSHOT
+Section: universe/devel
+Priority: optional
+Architecture: all
+Depends: java-7-serpro | openjdk-7-jdk | openjdk-8-jdk | oracle-jdk7-installer | oracle-java7-installer | oracle-java8-installer 
+Maintainer: Demoiselle Framework <demoiselle-users@lists.sourceforge.net>
+Description: [[description]]
