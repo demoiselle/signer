@@ -38,22 +38,21 @@
 package org.demoiselle.signer.cryptography;
 
 /**
- * Define os algoritmos usados para criptografia simétrica padrão ICP-Brasil
- * 
- * Guarda da Chave Privada da Entidade Titular e de seu Backup Normativo
- * ICP-Brasil = DOC-ICP-04 - item 6.1.1.3, DOC-ICP-04 - item 6.2.4.3, DOC-ICP-05
- * - item 6.2.4.4 Algoritmo e Tamanho de chave = 3DES - 112 bits, AES - 128 ou
- * 256 bits Modo de operação = CBC ou GCM
- * 
- * Para mais informações, ler documento PADRÕES E ALGORITMOS CRIPTOGRÁFICOS DA
- * ICP-BRASIL (DOC ICP-01.01)
+ *Defines the algorithms used for ICP-Brasil (PKI) standard symmetric encryption.
+ *
+ * Private Document Security of the Proprietary Entity and its Normative Backup 
+ * ICP-Brasil = DOC-ICP-04 - item 6.1.1.3, DOC-ICP-04 - item 6.2.4.3, DOC-ICP-05 - item 6.2.4.4
+ *  Algorithm e Key size = 3DES - 112 bits, AES - 128 or 
+ *  256 bits Operating mode = CBC or GCM
+ *  For more information, read document ICP-BRAZIL CRYPTOGRAPHY PATTERNS AND ALGORITHMS (DOC ICP-01.01)
  */
 public enum SymmetricAlgorithmEnum {
 
-	TRI_DES("DESede", "DESede/ECB/PKCS5Padding", 112), AES("AES", "AES/ECB/PKCS5Padding", 128);
+	TRI_DES("DESede", "DESede/ECB/PKCS5Padding", 112), 
+	AES("AES", "AES/ECB/PKCS5Padding", 128);
 
 	/**
-	 * Definicao de algoritmo padrao.
+	 * Definition of standard algorithm.
 	 */
 	public static SymmetricAlgorithmEnum DEFAULT = SymmetricAlgorithmEnum.AES;
 
@@ -80,9 +79,9 @@ public enum SymmetricAlgorithmEnum {
 	}
 
 	/**
-	 * Recupera um item do enum correspondente ao parâmetro passado. O parâmetro
-	 * passado deverá ser igual (case insensitive) ao nome do algoritmo de algum
-	 * item deste enum, caso contrário retornará null.
+	 * Retrieves an item from the enumeration corresponding to the passed parameter.
+	 * The passed parameter must be equal (case insensitive) to the algorithm name
+	 * of any item in this enumeration, otherwise it will return null.
 	 */
 	public static SymmetricAlgorithmEnum getSymmetricAlgorithm(String algorithm) {
 		for (SymmetricAlgorithmEnum value : SymmetricAlgorithmEnum.values())

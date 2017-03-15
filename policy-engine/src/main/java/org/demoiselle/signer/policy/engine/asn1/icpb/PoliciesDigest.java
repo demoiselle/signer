@@ -36,41 +36,44 @@
  */
 package org.demoiselle.signer.policy.engine.asn1.icpb;
 
+import org.bouncycastle.asn1.esf.OtherHashAlgAndValue;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  * 
- * Hash and Algorithm values defined by policy.
+ *  Hash and Algorithm values defined by policy.
  *
- * org.bouncycastle.asn1.esf.OtherHashAlgAndValue textualPolicyDigest;
- * org.bouncycastle.asn1.esf.OtherHashAlgAndValue asn1PolicyDigest;
- * org.bouncycastle.asn1.esf.OtherHashAlgAndValue xmlPolicyDigest;
+ *  org.bouncycastle.asn1.esf.OtherHashAlgAndValue textualPolicyDigest;
+ *  org.bouncycastle.asn1.esf.OtherHashAlgAndValue asn1PolicyDigest;
+ *  org.bouncycastle.asn1.esf.OtherHashAlgAndValue xmlPolicyDigest;
  *
  */
 public class PoliciesDigest extends ASN1Object {
 
-	// private OtherHashAlgAndValue textualPolicyDigest;
-	// private OtherHashAlgAndValue asn1PolicyDigest;
-	// private OtherHashAlgAndValue xmlPolicyDigest;
+    private OtherHashAlgAndValue textualPolicyDigest;
+    private OtherHashAlgAndValue asn1PolicyDigest;
+    private OtherHashAlgAndValue xmlPolicyDigest;
 
-	enum TAG {
+    enum TAG {
 
-		textualPolicyDigest(0), asn1PolicyDigest(1), xmlPolicyDigest(2);
+        textualPolicyDigest(0),
+        asn1PolicyDigest(1),
+        xmlPolicyDigest(2);
 
-		int value;
+        int value;
 
-		private TAG(int value) {
-			this.value = value;
-		}
+        private TAG(int value) {
+            this.value = value;
+        }
 
-		public static TAG getTag(int value) {
-			for (TAG tag : TAG.values()) {
-				if (tag.value == value) {
-					return tag;
-				}
-			}
-			return null;
-		}
-	}
+        public static TAG getTag(int value) {
+            for (TAG tag : TAG.values()) {
+                if (tag.value == value) {
+                    return tag;
+                }
+            }
+            return null;
+        }
+    }
 
 }

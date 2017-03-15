@@ -37,58 +37,81 @@
 
 package org.demoiselle.signer.cryptography;
 
-import java.io.File;
+import java.security.Key;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.security.PublicKey;
 
-import org.demoiselle.signer.cryptography.implementation.DigestImpl;
+import javax.crypto.SecretKey;
 
 /**
- * Defines the default behavior for using digest algorithms.
+ * Defines the default behavior for using encryption. 
+ * Can be symmetric or asymmetric, it depends only on its implementation.
  * 
- * @see {@link DigestImpl}
+ * @see {@link CryptographyImpl}
  */
-public interface Digest {
+public interface Cryptography {
 
 	/**
-	 * Set the algorithm used by the digest method.
+	 * Changes the algorithm and symmetric encryption settings to be used.
 	 * 
-	 * @see {@link DigestAlgorithmEnum}
+	 * @see {@link SymmetricAlgorithmEnum}
 	 */
-	public void setAlgorithm(DigestAlgorithmEnum algorithm);
+	public void setAlgorithm(SymmetricAlgorithmEnum algorithm);
 
 	/**
-	 * Set the algorithm used by the digest method.
-	 *
-	 * */
+	 * Changes the algorithm and settings for asymmetric cryptography to be used.
+	 * 
+	 * @param algorithm
+	 * @see {@link AsymmetricAlgorithmEnum}
+	 */
+	public void setAlgorithm(AsymmetricAlgorithmEnum algorithm);
+
+	/**
+	 * Changes only the encryption algorithm to be used.
+	 * 
+	 * @param algorithm
+	 */
 	public void setAlgorithm(String algorithm);
 
 	/**
-	 * Method responsible for generating a digest of the content passed as a parameter, 
-	 * using the algorithm set by the setAlgorithm () method.
+	 * Alters only the key of the algorithm to be used
+	 * 
+	 * @param keyAlgorithm
 	 */
-	public byte[] digest(byte[] content);
+	public void setKeyAlgorithm(String keyAlgorithm);
 
 	/**
-	 * Returns the digest of an array of bytes in hexadecimal character format.
+	 * Changes the encryption provider to be used.
 	 * 
-	 * @param content
-	 * @return 
+	 * @see {@link SunJCE}
 	 */
-	public String digestHex(byte[] content);
+	public void setProvider(Provider provider);
 
 	/**
-	 * Returns the Digest of a file
-	 * 
-	 * @param file
-	 * @return 
+	 * Change the size of the key if it is necessary to generate the key.
 	 */
-	public byte[] digestFile(File file);
+	public void setSize(int size);
 
 	/**
-	 * Returns the summary of a file in hexadecimal character format
-	 * 
-	 * @param file
-	 * @return 
+	 * A cryptographic key is required to perform encryption.
+	 * Symmetric Encryption uses {@link SecretKey}
+	 * Asymmetric encryption uses {@link PublicKey} and {@link PrivateKey}
 	 */
-	public String digestFileHex(File file);
+	public void setKey(Key key);
 
+	/**
+	 * Returns the content passed as parameter, encrypted.
+	 */
+	public byte[] cipher(byte[] content);
+
+	/**
+	 * Returns the content passed as a parameter, decrypted.
+	 */
+	public byte[] decipher(byte[] content);
+
+	/**
+	 * Generates key for encryption.
+	 */
+	public Key generateKey();
 }

@@ -53,7 +53,7 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
  */
 public abstract class ASN1Object {
 	
-	private static MessagesBundle policyMessagesBundle = new MessagesBundle();
+	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
 	/**
 	 * 

@@ -53,7 +53,7 @@ public class OctetString extends ASN1Object {
 	private String value;
 	protected DEROctetString derOctetString;
 	
-	private static MessagesBundle policyMessagesBundle = new MessagesBundle();
+	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
 	public String getValue() {
 		return value;

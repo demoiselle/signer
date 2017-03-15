@@ -34,35 +34,26 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.policy.engine.asn1.icpb;
 
-import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
+package org.demoiselle.signer.cryptography;
 
 /**
- * 
- * URI defined by policy
- * 
- * String textualPolicyURI;
- * String asn1PolicyURI;
- * String xmlPolicyURI;
- *
+ * Default Exception package
  */
+public class CryptographyException extends RuntimeException {
 
-public class PoliciesURI extends ASN1Object {
-	
-	enum TAG {
-		textualPolicyURI(0), asn1PolicyURI(1), xmlPolicyURI(2);
-		int value;
-		private TAG(int value) { this.value = value; }
-		public static TAG getTag(int value) {
-			for (TAG tag : TAG.values()) if (tag.value == value) {
-                            return tag;
-                        } return null;
-		}
+	private static final long serialVersionUID = 2063536693414468728L;
+
+	public CryptographyException() {
+		super();
 	}
-	
-	private String textualPolicyURI;
-	private String asn1PolicyURI;
-	private String xmlPolicyURI;
+
+	public CryptographyException(String message) {
+		super(message);
+	}
+
+	public CryptographyException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

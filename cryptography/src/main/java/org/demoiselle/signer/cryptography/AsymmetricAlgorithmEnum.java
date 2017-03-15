@@ -38,21 +38,17 @@
 package org.demoiselle.signer.cryptography;
 
 /**
- * Define os algoritmos usados para criptografia assimétrica padrão ICP-Brasil<br/>
- * Para mais informações, ler documento PADRÕES E ALGORITMOS CRIPTOGRÁFICOS DA
- * ICP-BRASIL (<i>DOC ICP-01.01</i>)<br/>
- * <br/>
- * <b>Geração de Chaves Assimétricas de AC</b><br>
- * Normativo ICP-Brasil = DOC-ICP-01 - item 6.1.1.3, DOC-ICP-04 - item 6.1.1.3,
- * DOC-ICP-01 - item 6.1.5, DOC-ICP-05 - item 6.1.5<br/>
- * Algoritmo = RSA, ECDSA (conforme RFC 5480)<br/>
- * Tamanho de chave = RSA 2048, RSA 4096, ECDSA 512<br/>
- * <br/>
- * <b>Geração de Chaves Assimétricas de Usuário Final</b><br/>
- * Normativo ICP-Brasil = DOC-ICP-04 - item 6.1.5.2<br/>
- * Algoritmo = RSA, ECDSA (conforme RFC 5480)<br/>
- * Tamanho da chave A1, A2, A3, S1, S2, S3, T3 = RSA 1024, RSA 2048, ECDSA 256<br/>
- * Tamanho da chave A4, S4, T4 = RSA 2048, RSA 4096, ECDSA 512<br/>
+ * Defines the algorithms used for standard ICP-Brazil asymmetric encryption
+ * For more information, read ICP-BRAZIL'S CRYPTOGRAPHIC PATTERNS AND ALGORITHMS (DOC ICP-01.01)
+ *  Generation of AC Asymmetric Keys ICP-Brazil Standard = DOC-ICP-01 - item 6.1.1.3, 
+ *  DOC-ICP-04 - item 6.1.1.3, DOC-ICP-01 - item 6.1.5, DOC-ICP-05 - item 6.1.5
+ *   Algorithm = RSA, ECDSA (according to RFC 5480)
+ *   Key size = RSA 2048, RSA 4096, ECDSA 512
+ *   End-User Asymmetric Key Generation
+ *     ICP-Brazil Standard = DOC-ICP-04 - item 6.1.5.2
+ *     Algorithm = RSA, ECDSA (according to RFC 5480)
+ *     Key size A1, A2, A3, S1, S2, S3, T3 = RSA 1024, RSA 2048, ECDSA 256
+ *     Key size A4, S4, T4 = RSA 2048, RSA 4096, ECDSA 512
  * 
  */
 public enum AsymmetricAlgorithmEnum {
@@ -72,13 +68,10 @@ public enum AsymmetricAlgorithmEnum {
 	// ECDSA 256, ECDSA 512
 
 	/**
-	 * Definicao de algoritmo padrao.
+	 * Definition of standard algorithm.
 	 */
 	public static AsymmetricAlgorithmEnum DEFAULT = AsymmetricAlgorithmEnum.RSA;
 
-	/**
-	 * Definicao de algoritmo padrao.
-	 */
 	private String algorithm;
 
 	private AsymmetricAlgorithmEnum(String algorithm) {
@@ -90,9 +83,9 @@ public enum AsymmetricAlgorithmEnum {
 	}
 
 	/**
-	 * Recupera um item do enum correspondente ao parâmetro passado. O parâmetro
-	 * passado deverá ser igual (case insensitive) ao nome do algoritmo de algum
-	 * item deste enum, caso contrário retornará null.
+	 * Retrieves an item from the enumeration corresponding to the passed parameter.
+	 * The passed parameter must be equal (case insensitive) to the algorithm name of
+	 *  any item in this enumeration, otherwise it will return null.
 	 */
 	public static AsymmetricAlgorithmEnum getAsymmetricAlgorithmEnum(String algorithm) {
 		for (AsymmetricAlgorithmEnum value : AsymmetricAlgorithmEnum.values()) {

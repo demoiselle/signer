@@ -47,14 +47,21 @@ import java.security.DigestInputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.demoiselle.signer.cryptography.CriptographyException;
+import org.demoiselle.signer.cryptography.CryptographyException;
 import org.demoiselle.signer.cryptography.Digest;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.cryptography.util.MessagesBundle;
 
+/**
+ * Implementation of the Digest methods.
+ * 
+ *
+ */
 public class DigestImpl implements Digest {
 
 	private String algorithm = DigestAlgorithmEnum.DEFAULT.getAlgorithm();
 	private final int BUFSIZE = 256;
+	private static MessagesBundle crytographyMessagesBundle = new MessagesBundle("messages_cryptography");
 
 	@Override
 	public void setAlgorithm(String algorithm) {
@@ -62,8 +69,8 @@ public class DigestImpl implements Digest {
 	}
 
 	/**
-	 * Método responsável por gerar um resumo dos bytes passados como parâmetro.
-	 * Utiliza o algoritmo MD5 como default.
+	 * Method responsible for generating a summary of bytes passed as parameter. 
+	 * It uses the SHA256 algorithm as default.
 	 */
 	@Override
 	public byte[] digest(byte[] content) {
@@ -73,14 +80,14 @@ public class DigestImpl implements Digest {
 			this.algorithm = DigestAlgorithmEnum.DEFAULT.getAlgorithm();
 
 		if (content == null)
-			throw new CriptographyException("The content can not be null");
+			throw new CryptographyException(crytographyMessagesBundle.getString("error.content.null"));
 
 		try {
 			MessageDigest digest = MessageDigest.getInstance(this.algorithm);
 			digest.update(content);
 			result = digest.digest();
 		} catch (Throwable error) {
-			throw new CriptographyException("Error on digest content", error);
+			throw new CryptographyException(crytographyMessagesBundle.getString("error.digest.generate"), error);
 		}
 
 		return result;
@@ -100,11 +107,11 @@ public class DigestImpl implements Digest {
 			digin.close();
 			return md.digest();
 		} catch (NoSuchAlgorithmException e) {
-			throw new CriptographyException("Failed to set algorithm", e);
+			throw new CryptographyException(crytographyMessagesBundle.getString("error.set.algorithm"), e);
 		} catch (FileNotFoundException e) {
-			throw new CriptographyException("File [" + file + "] not found", e);
+			throw new CryptographyException(crytographyMessagesBundle.getString("error.file.not.found",file), e);
 		} catch (IOException e) {
-			throw new CriptographyException("Error reading file [" + file + "]", e);
+			throw new CryptographyException(crytographyMessagesBundle.getString("error.reading.file",file), e);
 		}
 	}
 
@@ -122,6 +129,11 @@ public class DigestImpl implements Digest {
 		return hex;
 	}
 
+	/**
+	 * convert a byte[] into HEXADECIMAL base content.
+	 * @param data
+	 * @return
+	 */
 	private String convertToHex(byte[] data) {
 		StringBuffer buf = new StringBuffer();
 		for (int i = 0; i < data.length; i++) {

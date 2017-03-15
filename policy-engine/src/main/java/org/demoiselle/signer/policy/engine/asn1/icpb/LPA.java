@@ -58,7 +58,7 @@ public class LPA extends ASN1Object {
     private Collection<PolicyInfo> policyInfos;
     private Time nextUpdate;
     
-    private static MessagesBundle policyMessagesBundle = new MessagesBundle();
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
     public Collection<PolicyInfo> getPolicyInfos() {
         return policyInfos;

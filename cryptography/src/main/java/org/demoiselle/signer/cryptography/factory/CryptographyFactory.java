@@ -1,10 +1,7 @@
 /*
  * Demoiselle Framework
  * Copyright (C) 2016 SERPRO
- * ----------------------------------------------------------------------------
- * This file is part of Demoiselle Framework.
- * 
- * Demoiselle Framework is free software; you can redistribute it and/or
+ * Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
  * as published by the Free Software Foundation.
  * 
@@ -34,35 +31,41 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.policy.engine.asn1.icpb;
 
-import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
+package org.demoiselle.signer.cryptography.factory;
+
+import org.demoiselle.signer.cryptography.Cryptography;
+import org.demoiselle.signer.cryptography.implementation.CriyptographyImpl;
 
 /**
- * 
- * URI defined by policy
- * 
- * String textualPolicyURI;
- * String asn1PolicyURI;
- * String xmlPolicyURI;
- *
+ * Factory specialized in creating objects for interface {@link Cryptography}.
  */
+public class CryptographyFactory extends GenericFactory<Cryptography> {
 
-public class PoliciesURI extends ASN1Object {
-	
-	enum TAG {
-		textualPolicyURI(0), asn1PolicyURI(1), xmlPolicyURI(2);
-		int value;
-		private TAG(int value) { this.value = value; }
-		public static TAG getTag(int value) {
-			for (TAG tag : TAG.values()) if (tag.value == value) {
-                            return tag;
-                        } return null;
-		}
+	public static final CryptographyFactory instance = new CryptographyFactory();
+
+	public static final CryptographyFactory getInstance() {
+		return CryptographyFactory.instance;
 	}
-	
-	private String textualPolicyURI;
-	private String asn1PolicyURI;
-	private String xmlPolicyURI;
+
+	/**
+	 * Defines a default object for the factory.
+	 *  The Component has a default implementation
+	 * 
+	 * @see {@link CryptographyImpl}
+	 */
+	@Override
+	public Cryptography factoryDefault() {
+		return new CriyptographyImpl();
+	}
+
+	/**
+	 * Defines the environment variable used by the abstract factory 
+	 * to fetch the name of the class to be fabricated.
+	 */
+	@Override
+	protected String getVariableName() {
+		return "cryptography.implementation";
+	}
 
 }

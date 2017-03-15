@@ -62,7 +62,7 @@ public class PolicyIssuerName extends ASN1Object {
 
     private Map<ObjectIdentifier, String> issuerNames;
     private String issuerName;
-    private static MessagesBundle policyMessagesBundle = new MessagesBundle();
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
     @Override
     public void parse(ASN1Primitive primitive) {

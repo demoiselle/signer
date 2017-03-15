@@ -38,7 +38,7 @@
 package org.demoiselle.signer.cryptography.configuration;
 
 /**
- * Classe responsável por concentrar as configurações deste componente
+ * Class responsible for concentrating this component's settings
  */
 public class Configuration {
 
@@ -49,13 +49,12 @@ public class Configuration {
 	}
 
 	/**
-	 * Busca nas variaveis de ambiente ou em variavel da JVM um determinado
-	 * valor. Prioridade para as variaveis de ambiente.
+	 * Search the environment variables of the operating system, 
+	 * or in a JVM variable, for a certain value. 
+	 * With priority for the environment variables.
 	 * 
-	 * @param key
-	 *            Chave de localizacao da variavel
-	 * @return O conteudo definida em uma das variaveis. NULL se nenhuma
-	 *         variavel for definida
+	 * @param key Variable location key
+	 * @return The content defined in one of the variables. NULL if no variable is defined
 	 */
 	public String getContentFromVariables(String key) {
 		String content = System.getenv(key);

@@ -38,26 +38,29 @@
 package org.demoiselle.signer.cryptography.factory;
 
 import org.demoiselle.signer.cryptography.configuration.Configuration;
+import org.demoiselle.signer.cryptography.util.MessagesBundle;
+
 
 /**
- * Fabrica abstrata que concentra a leitura das configurações para as fábricas
- * especializadas como também as funcionalidades de reflexão de classes.
+ * Abstract factory that concentrates the reading of the configurations for the specialized factories, as well as the class reflection functionalities.
  * 
- * @see {@link CriptographyFactory}, {@link DigestFactory}
+ * @see {@link CryptographyFactory}, {@link DigestFactory}
  * 
  */
 public abstract class GenericFactory<F> {
 
 	private String className = null;
+	private static MessagesBundle crytographyMessagesBundle = new MessagesBundle("messages_cryptography");
 
 	/**
-	 * Principal método da fábrica. Este metodo fabrica classes a partir de nome
-	 * de classes definidos em variaveis de ambiente. Tais variaveis são
-	 * definidas por cada fábrica concreta que implementar a fábrica abstrata
-	 * através do método getVariableName(). Uma vez lido a variável de ambiente,
-	 * o valor da variavel é armazenada na propriedade "className". Caso a
-	 * variável de ambiente não esteja setada, um objeto padrão é construido
-	 * através do método abstrato factoryDefault().
+	 * Main method of this factory.
+	 * This method makes classes from the class names defined in environment variables.
+	 * Such variables are defined by each concrete factory, which implement the abstract factory 
+	 * through the getVariableName () method.
+	 * Once the environment variable is read, 
+	 * the value of the variable is stored in the "className" property.
+	 * If the environment variable is not set,
+	 * a default object is built using the abstract method called factoryDefault().
 	 */
 	public F factory() {
 		F result = null;
@@ -76,7 +79,7 @@ public abstract class GenericFactory<F> {
 	}
 
 	/**
-	 * Instancia um objeto a partir do nome de sua classe
+	 * Instantiate an object from the name of this class
 	 */
 	@SuppressWarnings("all")
 	protected F factoryFromClassName(String className) {
@@ -86,13 +89,13 @@ public abstract class GenericFactory<F> {
 		try {
 			clazz = Class.forName(className);
 		} catch (Throwable error) {
-			throw new RuntimeException("Class [" + className + "] does not exist", error);
+			throw new RuntimeException(crytographyMessagesBundle.getString("error.class.not.exist", className), error);
 		}
 		if (clazz != null) {
 			try {
 				result = (F) clazz.newInstance();
 			} catch (Throwable error) {
-				throw new RuntimeException("incompatible Class [" + clazz.getCanonicalName() + "]", error);
+				throw new RuntimeException(crytographyMessagesBundle.getString("error.class.incompatible",clazz.getCanonicalName()), error);
 			}
 		}
 
@@ -100,13 +103,13 @@ public abstract class GenericFactory<F> {
 	}
 
 	/**
-	 * Obriga a classe concreta a fabricar um objeto por padrão
+	 * It forces the concrete class to fabricate an default object 
 	 */
 	public abstract F factoryDefault();
 
 	/**
-	 * Toda fábrica concreta precisa definir em qual variavel de ambiente contém
-	 * o nome da classe a ser fabricada
+	 * Every concrete factory must define in which environment variable
+	 *  it contains the name of the class to be fabricated.
 	 */
 	protected abstract String getVariableName();
 

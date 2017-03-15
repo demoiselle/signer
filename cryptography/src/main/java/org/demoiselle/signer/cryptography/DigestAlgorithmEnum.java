@@ -38,7 +38,8 @@
 package org.demoiselle.signer.cryptography;
 
 /**
- * Define os algoritmos de resumo padrão ICP-Brasil
+ * Defines the Digest algorithms, 
+ * according to the standard defined by the Brazilian public key infrastructure (ICP-Brasil).
  */
 public enum DigestAlgorithmEnum {
 
@@ -69,9 +70,9 @@ public enum DigestAlgorithmEnum {
 	}
 
 	/**
-	 * Recupera um item do enum correspondente ao parâmetro passado. O parâmetro
-	 * passado deverá ser igual (case insensitive) ao nome do algoritmo de algum
-	 * item deste enum, caso contrário retornará null.
+	 * Retrieves an enumeration item that matches the passed parameter. 
+	 * The passed parameter must be equal (case insensitive) 
+	 * to the algorithm name of any item in this enumeration, otherwise it will return null.
 	 */
 	public static DigestAlgorithmEnum getDigestAlgorithmEnum(String algorithm) {
 		for (DigestAlgorithmEnum value : DigestAlgorithmEnum.values())

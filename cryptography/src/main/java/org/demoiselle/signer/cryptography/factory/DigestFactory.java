@@ -1,8 +1,6 @@
 /*
  * Demoiselle Framework
  * Copyright (C) 2016 SERPRO
- * --import br.gov.frameworkdemoiselle.criptography.Digest;
-import br.gov.frameworkdemoiselle.criptography.implementation.DigestImpl;
  * 
  * Demoiselle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
@@ -41,7 +39,7 @@ import org.demoiselle.signer.cryptography.Digest;
 import org.demoiselle.signer.cryptography.implementation.DigestImpl;
 
 /**
- * Fábrica especializada em fabricar objetos da interface {@link Digest}
+ * Factory specialized in creating objects for interface {@link Digest}
  */
 public class DigestFactory extends GenericFactory<Digest> {
 
@@ -52,8 +50,7 @@ public class DigestFactory extends GenericFactory<Digest> {
 	}
 
 	/**
-	 * Define um objeto padrão para a fábrica O Componente possue uma
-	 * implementação default
+	 * Defines a default object for this class. The component has a default implementation
 	 * 
 	 * @see {@link DigestImpl}
 	 */
@@ -63,8 +60,8 @@ public class DigestFactory extends GenericFactory<Digest> {
 	}
 
 	/**
-	 * Define a variável de ambiente utilizada pela fábrica abstrata a fim de
-	 * buscar o nome da classe a ser fabricada.
+	 * Defines the environment variable used by the abstract factory
+	 *  to fetch the name of the class to be fabricated.
 	 */
 	@Override
 	protected String getVariableName() {

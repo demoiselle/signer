@@ -44,44 +44,43 @@ import org.slf4j.LoggerFactory;
 
 public class PolicyFactoryTest {
 
-	private static final Logger logger = LoggerFactory.getLogger(PolicyFactoryTest.class);
+    private static final Logger logger = LoggerFactory.getLogger(PolicyFactoryTest.class);
 
-	@Test
-	public void testLoadPolicy() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		Policies[] policies = PolicyFactory.Policies.values();
+    @Test
+    public void testLoadPolicy() {
+        PolicyFactory factory = PolicyFactory.getInstance();
+        Policies[] policies = PolicyFactory.Policies.values();
 
-		for (Policies policy : policies) {
-			// TODO - falta implentar policy para XADES
-			if (policy.toString().contains("CADES") || policy.toString().contains("PADES")) {
-				logger.info(factory.loadPolicy(policy).toString());
-			}
-		}
-	}
+        
+        for (Policies policy : policies) {
+        	// TODO - falta implentar policy para XADES
+        	if (policy.toString().contains("CADES") || policy.toString().contains("PADES")){
+        		logger.info(factory.loadPolicy(policy).toString());
+        	}           
+        }
+    }
 
-	/**
-	 * Test of loadLPA method, of class PolicyFactory.
-	 */
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testLoadLPA() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		logger.info(factory.loadLPA().toString());
-	}
+    /**
+     * Test of loadLPA method, of class PolicyFactory.
+     */
+    @Test
+    public void testLoadLPA() {
+        PolicyFactory factory = PolicyFactory.getInstance();
+        logger.info(factory.loadLPA().toString());
+    }
 
-	/**
-	 * Test of loadLPAv2 method, of class PolicyFactory.
-	 */
-	@SuppressWarnings("deprecation")
-	@Test
-	public void testLoadLPAv2() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		logger.info(factory.loadLPAv2().toString());
-	}
-
-	@Test
-	public void testLoadCades() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		logger.info(factory.loadLPACAdES().toString());
-	}
+    /**
+     * Test of loadLPAv2 method, of class PolicyFactory.
+     */
+    @Test
+    public void testLoadLPAv2() {
+        PolicyFactory factory = PolicyFactory.getInstance();
+        logger.info(factory.loadLPAv2().toString());
+    }
+    
+    @Test
+    public void testLoadCades() {
+        PolicyFactory factory = PolicyFactory.getInstance();
+        logger.info(factory.loadLPACAdES().toString());
+    }
 }

@@ -62,7 +62,7 @@ public class SignaturePolicy {
     private SignPolicyInfo signPolicyInfo;
     private SignPolicyHash signPolicyHash;
     private String signPolicyURI;
-    private static MessagesBundle policyMessagesBundle = new MessagesBundle();
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
     public AlgorithmIdentifier getSignPolicyHashAlg() {
         return signPolicyHashAlg;
