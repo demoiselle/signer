@@ -16,7 +16,7 @@ import io.undertow.websockets.spi.WebSocketHttpExchange;
 public class WSServer extends AbstractReceiveListener {
 
 	private static final String DEFAULT_HOST_WS_SERVER = "localhost";
-	private static final int DEFAULT_PORT_WS_SERVER = 9091;
+	private static final int DEFAULT_PORT_WS_SERVER = 71517;
 	private static WSServer instance = null;
 
 	private Undertow undertow = null;
