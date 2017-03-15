@@ -491,11 +491,14 @@ public class BasicCertificate {
 	public List<String> getAuthorityInfoAccess() {
 		List<String> address = new ArrayList<String>();
 		try {
-			AuthorityInformationAccess infoAccess = AuthorityInformationAccess.getInstance(X509ExtensionUtil
-					.fromExtensionValue(certificate.getExtensionValue(Extension.authorityInfoAccess.getId())));
-			for (AccessDescription desc : infoAccess.getAccessDescriptions())
-				if (desc.getAccessLocation().getTagNo() == GeneralName.uniformResourceIdentifier)
-					address.add(((DERIA5String) desc.getAccessLocation().getName()).getString());
+			byte[] authorityInfoAccess = certificate.getExtensionValue(Extension.authorityInfoAccess.getId());
+			if (authorityInfoAccess != null && authorityInfoAccess.length > 0) {
+				AuthorityInformationAccess infoAccess = AuthorityInformationAccess.getInstance(X509ExtensionUtil
+						.fromExtensionValue(authorityInfoAccess));
+				for (AccessDescription desc : infoAccess.getAccessDescriptions())
+					if (desc.getAccessLocation().getTagNo() == GeneralName.uniformResourceIdentifier)
+						address.add(((DERIA5String) desc.getAccessLocation().getName()).getString());
+			}
 			return address;
 		} catch (IOException error) {
 			logger.info(error.getMessage());
