@@ -50,6 +50,7 @@ import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
+import java.util.Map;
 
 import javax.security.auth.callback.CallbackHandler;
 
@@ -57,84 +58,102 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * KeyStoreLoader implementation based on the specific Provider for the so-called windows operating system, 
- * which is in the JVM distribution (homologated in versions 1.6 and 1.7)
+ * KeyStoreLoader implementation based on the specific Provider for the
+ * so-called windows operating system, which is in the JVM distribution
+ * (homologated in versions 1.6 and 1.7)
  */
 public class MSKeyStoreLoader implements KeyStoreLoader {
 
-    private static final Logger logger = LoggerFactory.getLogger(MSKeyStoreLoader.class);
-    protected static final String MS_PROVIDER = "SunMSCAPI";
-    protected static final String MS_TYPE = "Windows-MY";
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-        
-    private CallbackHandler callback;
+	private static final Logger logger = LoggerFactory
+			.getLogger(MSKeyStoreLoader.class);
+	protected static final String MS_PROVIDER = "SunMSCAPI";
+	protected static final String MS_TYPE = "Windows-MY";
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    /**
-     * instance for SunMSCAPI 
-     */
-    @Override
-    public KeyStore getKeyStore() {
-        try {
-            KeyStore result = KeyStore.getInstance(MSKeyStoreLoader.MS_TYPE, MSKeyStoreLoader.MS_PROVIDER);
-            result.load(null, null);
-            fixAliases(result);
-            return result;
-        } catch (KeyStoreException | NoSuchProviderException | IOException | NoSuchAlgorithmException | CertificateException ex) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.load.mscapi"), ex);
-        }
-    }
+	private CallbackHandler callback;
 
-    @Override
-    public void setCallbackHandler(CallbackHandler callback) {
-        this.setCallback(callback);
-    }
+	/**
+	 * instance for SunMSCAPI
+	 */
+	@Override
+	public KeyStore getKeyStore() {
+		try {
+			KeyStore result = KeyStore.getInstance(MSKeyStoreLoader.MS_TYPE,
+					MSKeyStoreLoader.MS_PROVIDER);
+			result.load(null, null);
+			fixAliases(result);
+			return result;
+		} catch (KeyStoreException | NoSuchProviderException | IOException
+				| NoSuchAlgorithmException | CertificateException ex) {
+			throw new KeyStoreLoaderException(
+					coreMessagesBundle.getString("error.load.mscapi"), ex);
+		}
+	}
 
-    /**
-     * Implementation of the boundary method to avoid duplicate certificates, 
-     * as described in <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6672015>
-     *
-     * @param keyStore
-     */
-    //TODO - verificar se o bug é valida para 1.7 e superior.
-    private void fixAliases(KeyStore keyStore) {
-        Field field;
-        KeyStoreSpi keyStoreVeritable;
+	@Override
+	public void setCallbackHandler(CallbackHandler callback) {
+		this.setCallback(callback);
+	}
 
-        try {
-            field = keyStore.getClass().getDeclaredField("keyStoreSpi");
-            field.setAccessible(true);
-            keyStoreVeritable = (KeyStoreSpi) field.get(keyStore);
+	/**
+	 * Implementation of the boundary method to avoid duplicate certificates, as
+	 * described in <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6672015>
+	 *
+	 * @param keyStore
+	 */
+	// TODO - verificar se o bug é valida para 1.7 e superior.
+	private void fixAliases(KeyStore keyStore) {
+		Field field;
+		KeyStoreSpi keyStoreVeritable;
 
-            if ("sun.security.mscapi.KeyStore$MY".equals(keyStoreVeritable.getClass().getName())) {
-                Collection<?> entries;
-                String alias, hashCode;
-                X509Certificate[] certificates;
+		try {
+			field = keyStore.getClass().getDeclaredField("keyStoreSpi");
+			field.setAccessible(true);
+			keyStoreVeritable = (KeyStoreSpi) field.get(keyStore);
 
-                field = keyStoreVeritable.getClass().getEnclosingClass().getDeclaredField("entries");
-                field.setAccessible(true);
-                entries = (Collection<?>) field.get(keyStoreVeritable);
+			/**
+			 * Atualização 26/07/2016: o bug 6672015 foi agrupado no bug 6483657
+			 * e resolvido na build 101 do Java 1.8.
+			 * (http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6483657)
+			 */
+			field = keyStoreVeritable.getClass().getEnclosingClass().getDeclaredField("entries");
+			field.setAccessible(true);
+			if (field.get(keyStoreVeritable) instanceof Map)
+				return;
 
-                for (Object entry : entries) {
-                    field = entry.getClass().getDeclaredField("certChain");
-                    field.setAccessible(true);
-                    certificates = (X509Certificate[]) field.get(entry);
+			if ("sun.security.mscapi.KeyStore$MY".equals(keyStoreVeritable
+					.getClass().getName())) {
+				Collection<?> entries;
+				String alias, hashCode;
+				X509Certificate[] certificates;
 
-                    hashCode = Integer.toString(certificates[0].hashCode());
+				field = keyStoreVeritable.getClass().getEnclosingClass()
+						.getDeclaredField("entries");
+				field.setAccessible(true);
+				entries = (Collection<?>) field.get(keyStoreVeritable);
 
-                    field = entry.getClass().getDeclaredField("alias");
-                    field.setAccessible(true);
-                    alias = (String) field.get(entry);
+				for (Object entry : entries) {
+					field = entry.getClass().getDeclaredField("certChain");
+					field.setAccessible(true);
+					certificates = (X509Certificate[]) field.get(entry);
 
-                    if (!alias.equals(hashCode)) {
-                        field.set(entry, alias.concat(" - ").concat(hashCode));
-                    }
-                }
-            }
-        } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException | SecurityException ex) {
-            logger.info(ex.getMessage());
-            ex.printStackTrace();
-        }
-    }
+					hashCode = Integer.toString(certificates[0].hashCode());
+
+					field = entry.getClass().getDeclaredField("alias");
+					field.setAccessible(true);
+					alias = (String) field.get(entry);
+
+					if (!alias.equals(hashCode)) {
+						field.set(entry, alias.concat(" - ").concat(hashCode));
+					}
+				}
+			}
+		} catch (IllegalAccessException | IllegalArgumentException
+				| NoSuchFieldException | SecurityException ex) {
+			logger.info(ex.getMessage());
+			ex.printStackTrace();
+		}
+	}
 
 	public CallbackHandler getCallback() {
 		return callback;
