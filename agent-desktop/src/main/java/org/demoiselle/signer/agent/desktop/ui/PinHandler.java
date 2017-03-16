@@ -28,7 +28,7 @@ import javax.swing.SwingConstants;
 public class PinHandler extends JDialog implements CallbackHandler {
 
 	private static final long serialVersionUID = 1L;
-	private String pwd = "";
+	private char[] pwd = new char[] {};
 	private String action;
 	private boolean actionCanceled = false;
 
@@ -141,7 +141,7 @@ public class PinHandler extends JDialog implements CallbackHandler {
 
 		btnValidate.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				pwd = new String(text.getPassword());
+				pwd = text.getPassword();
 				me.dispose();
 			}
 		});
@@ -150,7 +150,7 @@ public class PinHandler extends JDialog implements CallbackHandler {
 
 	}
 
-	public String getPwd() {
+	public char[] getPwd() {
 		return pwd;
 	}
 
@@ -164,7 +164,7 @@ public class PinHandler extends JDialog implements CallbackHandler {
 				initUI();
 				setVisible(true);
 
-				((PasswordCallback) callback).setPassword(pwd.toCharArray());
+				((PasswordCallback) callback).setPassword(pwd);
 			} else {
 				throw new UnsupportedCallbackException(callback,
 						"Callback not supported " + callback.getClass().getName());
