@@ -79,7 +79,8 @@ public class TrayIcon {
 
 				if (SystemTray.isSupported()) {
 					final SystemTray tray = SystemTray.getSystemTray();
-					URL urlImagem = getClass().getResource("/icone.png");
+					
+					URL urlImagem = getClass().getResource("/icone-linux.png");
 					Image image = Toolkit.getDefaultToolkit().getImage(urlImagem);
 					PopupMenu popup = new PopupMenu();
 
