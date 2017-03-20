@@ -29,7 +29,12 @@ public class Main {
 
 	private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
+	private static final SplashScreenThread splash = new SplashScreenThread();
+
 	public static void main(String[] args) throws ServletException {
+
+		splash.start();
+
 		Main.logger.info("Iniciando o Demoiselle Desktop Agent.");
 		String version = ResourceBundle.getBundle("agent-desktop").getString("version");
 		String urlVersionChecker = ResourceBundle.getBundle("agent-desktop").getString("urlVersionChecker");
@@ -37,8 +42,9 @@ public class Main {
 		Main.logger.info("URL Version Checker: " + urlVersionChecker);
 		try {
 			if (Main.hasNewVersion(urlVersionChecker, version)) {
-				JLabel label = new JLabel("<html>Há uma nova versão disponível do Demoiselle Desktop Agent Component.<br/>"
-						+ "É importante atualizar o aplicativo. Acesse o site e baixe a nova versão.</html>");
+				JLabel label = new JLabel(
+						"<html>Há uma nova versão disponível do Demoiselle Desktop Agent Component.<br/>"
+								+ "É importante atualizar o aplicativo. Acesse o site e baixe a nova versão.</html>");
 				label.setFont(new Font("Arial", Font.PLAIN, 14));
 
 				JOptionPane.showMessageDialog(null, label, "Demoiselle Desktop Agent Component",
@@ -70,6 +76,7 @@ public class Main {
 		}
 
 		new TrayIcon();
+
 	}
 
 	private static boolean hasNewVersion(String stringURL, String currentVersion) {
