@@ -61,6 +61,10 @@ public class FileSignerUsingDefaults extends AbstractCommand<SignerRequest, Sign
 			ListCertificateData lcd = new ListCertificateData(lr);
 			lcd.init();
 			alias = lcd.getAlias();
+			if (alias == null || alias.equals("")) {
+				result.setActionCanceled(true);
+				return result;
+			}
 		} else {
 			ArrayList<Certificate> list = (ArrayList<Certificate>) lr.getCertificates();
 			Certificate cert = list.iterator().next();

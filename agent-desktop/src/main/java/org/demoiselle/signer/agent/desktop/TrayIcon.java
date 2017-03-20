@@ -201,7 +201,7 @@ public class TrayIcon {
 			JOptionPane.showMessageDialog(null, "Ação cancelada pelo usuário", "Cancelado",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else if (!resp.getSigned().equals("")) {
-			JOptionPane.showMessageDialog(null, "Arquivo de assinatuara disponível em: " + resp.getSigned(), "Sucesso",
+			JOptionPane.showMessageDialog(null, "Arquivo de assinatura disponível em: " + resp.getSigned(), "Sucesso",
 					JOptionPane.INFORMATION_MESSAGE);
 		} else {
 			JOptionPane.showMessageDialog(null, "Ocorreu algum erro ao tentar assinar, tente novamente", "Falha",
@@ -240,7 +240,7 @@ public class TrayIcon {
 			try {
 				pdf.doSigner(fileName, fileName + ".p7s.pdf", signature);
 
-				JOptionPane.showMessageDialog(null, "Arquivo de assinatuara disponível em: " + fileName, "Sucesso",
+				JOptionPane.showMessageDialog(null, "Arquivo de assinatura disponível em: " + fileName, "Sucesso",
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (Exception e) {
 				JOptionPane.showMessageDialog(null, "Falha ao assinar: " + e.getMessage(), "Falha",
