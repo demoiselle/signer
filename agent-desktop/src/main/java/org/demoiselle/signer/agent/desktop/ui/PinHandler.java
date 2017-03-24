@@ -81,7 +81,7 @@ public class PinHandler extends JDialog implements CallbackHandler {
 
 		BufferedImage img = null;
 		try {
-			InputStream path = this.getClass().getClassLoader().getResourceAsStream("META-INF/ui/logo_serpro.png");
+			InputStream path = this.getClass().getClassLoader().getResourceAsStream("META-INF/ui/logo-signer.png");
 			img = ImageIO.read(path);
 		} catch (IOException e1) {
 			e1.printStackTrace();

@@ -44,6 +44,7 @@ public class TrayIcon {
 
 	public TrayIcon() {
 		logger.info("java.version: " + System.getProperty("java.version"));
+		logger.info("SO: " + Configuration.getInstance().getSO());
 		this.makeTrayIcon();
 	}
 
@@ -79,8 +80,15 @@ public class TrayIcon {
 
 				if (SystemTray.isSupported()) {
 					final SystemTray tray = SystemTray.getSystemTray();
+
+					URL urlImagem = getClass().getResource("/icone-96.png");
 					
-					URL urlImagem = getClass().getResource("/icone-linux.png");
+					System.out.println(Configuration.getInstance().getSO().toLowerCase());
+					
+					if (Configuration.getInstance().getSO().toLowerCase().indexOf("linux") != -1) {
+						urlImagem = getClass().getResource("/icone-linux.png");
+					}
+
 					Image image = Toolkit.getDefaultToolkit().getImage(urlImagem);
 					PopupMenu popup = new PopupMenu();
 

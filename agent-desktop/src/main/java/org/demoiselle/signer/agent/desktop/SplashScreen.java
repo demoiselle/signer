@@ -45,7 +45,7 @@ public class SplashScreen extends JWindow {
 
 		BufferedImage img = null;
 		try {
-			InputStream path = this.getClass().getClassLoader().getResourceAsStream("META-INF/ui/logo_serpro.png");
+			InputStream path = this.getClass().getClassLoader().getResourceAsStream("META-INF/ui/logo-signer.png");
 			img = ImageIO.read(path);
 		} catch (IOException e1) {
 			e1.printStackTrace();
@@ -57,7 +57,7 @@ public class SplashScreen extends JWindow {
 		content.add(lblImg);
 
 		// Action
-		JLabel lblTitle = new JLabel("Assinador Digital SERPRO (Demoiselle Signer)");
+		JLabel lblTitle = new JLabel("Assinador Digital (Demoiselle Signer)");
 		lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		lblTitle.setFont(new Font("Arial", Font.PLAIN, 15));
 		lblTitle.setBounds(0, 170, 400, 30);
