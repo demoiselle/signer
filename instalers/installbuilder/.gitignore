@@ -1,0 +1,7 @@
+/target
+/.project
+/.classpath
+/.settings
+/src/bin/lib/agent-desktop-*.*
+/src/jre1.7.0_79-osx/java-osx/
+/src/jre1.7.0_79-windows-x64/java-windows/

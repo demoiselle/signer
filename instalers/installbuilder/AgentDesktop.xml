@@ -1,0 +1,461 @@
+<project>
+    <shortName>DemoiselleSignerAgent</shortName>
+    <fullName>Demoiselle Signer</fullName>
+    <version>3.0.0-SNAPSHOT</version>
+    <installerFilename>${project.shortName}-${project.version}-${platform_name}-installer.${platform_exec_suffix}</installerFilename>
+    <readmeFile>/home/80621732915/git/signer/instalers/installbuilder/src/docs/readme.txt</readmeFile>
+    <licenseFile>/home/80621732915/git/signer/instalers/installbuilder/src/docs/license.txt</licenseFile>
+    <htmlLicenseFile>/home/80621732915/git/signer/instalers/installbuilder/src/docs/licence.html</htmlLicenseFile>
+    <leftImage>/home/80621732915/git/signer/instalers/installbuilder/src/lateral.png</leftImage>
+    <logoImage>/home/80621732915/git/signer/instalers/installbuilder/src/logo_demoiselle.png</logoImage>
+    <splashImage>/home/80621732915/git/signer/instalers/installbuilder/src/desktop_demoiselle.png</splashImage>
+    <defaultLanguage>pt_BR</defaultLanguage>
+    <componentList>
+        <component>
+            <name>DemoiselleSignerAgent</name>
+            <description>Demoiselle Signer Agent</description>
+            <canBeEdited>1</canBeEdited>
+            <selected>1</selected>
+            <show>1</show>
+            <desktopShortcutList>
+                <shortcut>
+                    <comment>Demoiselle Signer Agent</comment>
+                    <exec>/bin/bash ${installdir}/bin/signerDesktopAgent.sh</exec>
+                    <icon>${installdir}/bin/agent-desktop.png</icon>
+                    <name>Demoiselle Signer Agent</name>
+                    <path></path>
+                    <platforms>all</platforms>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/bin/hidecmd.vbs</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/bin/agent-desktop.ico</windowsIcon>
+                    <windowsPath></windowsPath>
+                </shortcut>
+            </desktopShortcutList>
+            <folderList>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}</destination>
+                    <name>programfiles</name>
+                    <platforms>all</platforms>
+                    <distributionFileList>
+                        <distributionDirectory>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/docs</origin>
+                        </distributionDirectory>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}/bin</destination>
+                    <name>programfileswin</name>
+                    <platforms>windows</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/signerDesktopAgent.bat</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/agent-desktop.ico</origin>
+                        </distributionFile>
+                        <distributionDirectory>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/lib</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/hidecmd.vbs</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}/bin</destination>
+                    <name>programfilesunix</name>
+                    <platforms>linux</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/agent-desktop.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/signerDesktopAgent.sh.inc</origin>
+                        </distributionFile>
+                        <distributionDirectory>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/lib</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/postinstallation.sh</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+                <folder>
+                    <description>Program Files</description>
+                    <destination>${installdir}/bin</destination>
+                    <name>programfilesmac</name>
+                    <platforms>osx</platforms>
+                    <distributionFileList>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/agent-desktop.png</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/signerDesktopAgent.sh</origin>
+                        </distributionFile>
+                        <distributionDirectory>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/lib</origin>
+                        </distributionDirectory>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/agent-desktop.icns</origin>
+                        </distributionFile>
+                        <distributionFile>
+                            <origin>/home/80621732915/git/signer/instalers/installbuilder/src/bin/signerDesktopAgent.command</origin>
+                        </distributionFile>
+                    </distributionFileList>
+                </folder>
+            </folderList>
+            <postInstallationActionList>
+                <createJavaLaunchers>
+                    <breakpoint>1</breakpoint>
+                    <customErrorMessage>erro ao criar launcher</customErrorMessage>
+                    <destination>${installdir}</destination>
+                    <explanation>criar launcher</explanation>
+                    <progressText>criando launcher</progressText>
+                    <javaLauncherList>
+                        <javaLauncher>
+                            <allowCommandLineArguments>0</allowCommandLineArguments>
+                            <arguments></arguments>
+                            <binaryName>Iniciar_Demoiselle_Signer</binaryName>
+                            <classpath></classpath>
+                            <jarFile>${installdir}/bin/lib/agent-desktop-3.0.0-SNAPSHOT.jar</jarFile>
+                            <mainClass></mainClass>
+                            <osxApplicationBundleIcon>${installdir}/bin/agent-desktop.icns</osxApplicationBundleIcon>
+                            <preferredJavaBinary>${java_executable}</preferredJavaBinary>
+                            <runInBackground>1</runInBackground>
+                            <runInConsole>1</runInConsole>
+                            <usePropertiesFile>0</usePropertiesFile>
+                            <vmParameters></vmParameters>
+                            <windowsExecutableIcon>${installdir}/bin/agent-desktop.ico</windowsExecutableIcon>
+                            <windowsResourceFileVersion>1.0.0.0</windowsResourceFileVersion>
+                            <workingDirectory>${java_launcher_destination}</workingDirectory>
+                        </javaLauncher>
+                    </javaLauncherList>
+                    <onErrorActionList>
+                        <showInfo>
+                            <text>Erro ao criar launcher</text>
+                        </showInfo>
+                    </onErrorActionList>
+                    <ruleList>
+                        <platformTest>
+                            <negate>1</negate>
+                            <type>linux</type>
+                        </platformTest>
+                    </ruleList>
+                </createJavaLaunchers>
+                <createJavaLaunchers>
+                    <customErrorMessage>errro ao criar launcher</customErrorMessage>
+                    <destination>${installdir}</destination>
+                    <explanation>criando launcher linux</explanation>
+                    <progressText>criando launcher</progressText>
+                    <javaLauncherList>
+                        <javaLauncher>
+                            <allowCommandLineArguments>1</allowCommandLineArguments>
+                            <arguments></arguments>
+                            <binaryName>Iniciar_Demoiselle_Signer</binaryName>
+                            <classpath></classpath>
+                            <jarFile>${installdir}/bin/lib/agent-desktop-3.0.0-SNAPSHOT.jar</jarFile>
+                            <mainClass></mainClass>
+                            <preferredJavaBinary>${java_autodetected}</preferredJavaBinary>
+                            <runInBackground>1</runInBackground>
+                            <runInConsole>1</runInConsole>
+                            <usePropertiesFile>0</usePropertiesFile>
+                            <vmParameters></vmParameters>
+                            <windowsResourceFileVersion>1.0.0.0</windowsResourceFileVersion>
+                            <workingDirectory></workingDirectory>
+                        </javaLauncher>
+                    </javaLauncherList>
+                    <ruleList>
+                        <platformTest>
+                            <type>linux</type>
+                        </platformTest>
+                    </ruleList>
+                </createJavaLaunchers>
+                <createOSXService>
+                    <abandonProcessGroup>0</abandonProcessGroup>
+                    <customErrorMessage>Erro ao criar serviço</customErrorMessage>
+                    <explanation>Criar serviço do Signer Desktop</explanation>
+                    <groupname>wheel</groupname>
+                    <keepAlive>0</keepAlive>
+                    <program>${installdir}/bin/signerDesktopAgent.sh</program>
+                    <programArguments>--service</programArguments>
+                    <progressText>Criando serviço</progressText>
+                    <serviceName>DemoiselleSignerAgentService</serviceName>
+                    <username>${system_username}</username>
+                    <ruleList>
+                        <platformTest>
+                            <type>osx</type>
+                        </platformTest>
+                    </ruleList>
+                </createOSXService>
+                <startOSXService>
+                    <customErrorMessage>Erro ao iniciar o serviço, clique na área de trabalho.</customErrorMessage>
+                    <explanation>Iniciar o serviço do signer desktop</explanation>
+                    <progressText>Iniciando o signer destkop</progressText>
+                    <serviceName>DemoiselleSignerAgentService</serviceName>
+                    <ruleList>
+                        <platformTest>
+                            <type>osx</type>
+                        </platformTest>
+                    </ruleList>
+                </startOSXService>
+                <createSymLink>
+                    <explanation>Criar atalho</explanation>
+                    <linkName>~/Desktop/DemoiselleSignerAgent</linkName>
+                    <progressText>Criando atalho para Demoiselle Signer Agent </progressText>
+                    <target>${installdir}/Iniciar_Demoiselle_Signer.app</target>
+                    <ruleList>
+                        <platformTest type="osx"/>
+                    </ruleList>
+                </createSymLink>
+                <createWindowsService>
+                    <account>${system_username}</account>
+                    <customErrorMessage>Erro ao criar o serviço</customErrorMessage>
+                    <description>Serviço do Demoiselle Signer Agent</description>
+                    <displayName>Demoiselle Signer Agent</displayName>
+                    <explanation>criar servicço do demoiselle signer agent</explanation>
+                    <program>${installdir}/bin/hidecmd.vbs</program>
+                    <programArguments>--service</programArguments>
+                    <progressText>criando serviço do demoiselle signer</progressText>
+                    <serviceName>service_demoiselle_signer_agent</serviceName>
+                    <startType>auto</startType>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </createWindowsService>
+                <startWindowsService>
+                    <customErrorMessage>Erro ao iniciar o serviço... clique no icone da área de trabalho</customErrorMessage>
+                    <delay>15000</delay>
+                    <displayName>Serviço do Signer Agent Desktop</displayName>
+                    <explanation>Inicar o serviço</explanation>
+                    <progressText>Iniciando o serviço</progressText>
+                    <serviceName>service_demoiselle_signer_agent</serviceName>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </startWindowsService>
+                <removeDirectoryFromPath>
+                    <explanation>Remover diretorio</explanation>
+                    <path>${installdir}/DemoiselleSignerAgent-launcher.app/</path>
+                    <progressText>Removendo diretório..</progressText>
+                    <scope>user</scope>
+                    <onErrorActionList>
+                        <showInfo>
+                            <text>Erro ao remover diretorio</text>
+                        </showInfo>
+                    </onErrorActionList>
+                    <ruleList>
+                        <platformTest>
+                            <type>osx</type>
+                        </platformTest>
+                    </ruleList>
+                </removeDirectoryFromPath>
+                <deleteFile>
+                    <explanation>excluir run</explanation>
+                    <path>${installdir}/DemoiselleSignerAgent-launcher.run</path>
+                    <progressText>...</progressText>
+                    <onErrorActionList>
+                        <showInfo>
+                            <text>erro ao excluir arquivo</text>
+                        </showInfo>
+                    </onErrorActionList>
+                    <ruleList>
+                        <platformTest>
+                            <type>linux</type>
+                        </platformTest>
+                    </ruleList>
+                </deleteFile>
+                <deleteFile>
+                    <path>${installdir}/DemoiselleSignerAgent-launcher.exe</path>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </deleteFile>
+            </postInstallationActionList>
+            <postUninstallationActionList>
+                <deleteFile>
+                    <path>${user_home_directory}/.config/autostart/SignerAgentDesktop.desktop</path>
+                    <ruleList>
+                        <platformTest>
+                            <type>linux</type>
+                        </platformTest>
+                    </ruleList>
+                </deleteFile>
+                <removeFilesFromUninstaller>
+                    <customErrorMessage>erro ao excluir arquivos instalados</customErrorMessage>
+                    <files>${installdir}</files>
+                    <matchHiddenFiles>1</matchHiddenFiles>
+                    <progressText>Excluindo arquivos ...</progressText>
+                </removeFilesFromUninstaller>
+            </postUninstallationActionList>
+            <preInstallationActionList>
+                <autodetectJava>
+                    <customErrorMessage>Instale uma JRE antes de instalar o Demoiselle Signer</customErrorMessage>
+                    <explanation>Detectar Java</explanation>
+                    <progressText>Detectando Java</progressText>
+                    <promptUser>1</promptUser>
+                    <ruleList>
+                        <platformTest>
+                            <type>linux</type>
+                        </platformTest>
+                    </ruleList>
+                </autodetectJava>
+            </preInstallationActionList>
+            <preUninstallationActionList>
+                <stopWindowsService>
+                    <customErrorMessage>Erro ao parar o serviço</customErrorMessage>
+                    <delay>15000</delay>
+                    <displayName>Serviço do Signer Agent Desktop</displayName>
+                    <explanation>Parar o serviço do signer</explanation>
+                    <progressText>Parando o serviço do signer...</progressText>
+                    <serviceName>service_demoiselle_signer_agent</serviceName>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </stopWindowsService>
+                <deleteWindowsService>
+                    <customErrorMessage>Erro ao excluir o serviço</customErrorMessage>
+                    <displayName>Signer Agent Desktop</displayName>
+                    <explanation>Excluir seriviço de inicialização.</explanation>
+                    <progressText>Apagando serviço..</progressText>
+                    <serviceName>service_demoiselle_signer_agent</serviceName>
+                    <ruleList>
+                        <platformTest>
+                            <type>windows</type>
+                        </platformTest>
+                    </ruleList>
+                </deleteWindowsService>
+                <stopOSXService>
+                    <explanation>Parar o serviço do signer desktop</explanation>
+                    <progressText>parando o serviço</progressText>
+                    <serviceName>DemoiselleSignerAgentService</serviceName>
+                    <ruleList>
+                        <platformTest>
+                            <type>osx</type>
+                        </platformTest>
+                    </ruleList>
+                </stopOSXService>
+                <deleteOSXService>
+                    <explanation>Excluir o serviço</explanation>
+                    <progressText>Excluindo o serviço</progressText>
+                    <serviceName>DemoiselleSignerAgentService</serviceName>
+                    <ruleList>
+                        <platformTest>
+                            <type>osx</type>
+                        </platformTest>
+                    </ruleList>
+                </deleteOSXService>
+                <deleteFile>
+                    <path>${installdir}/bin/signerDesktopAgent.sh</path>
+                    <ruleList>
+                        <platformTest>
+                            <type>linux</type>
+                        </platformTest>
+                    </ruleList>
+                </deleteFile>
+            </preUninstallationActionList>
+            <startMenuShortcutList>
+                <startMenuShortcut>
+                    <comment>Demoiselle Signer Agent</comment>
+                    <name>Demoiselle Signer Agent</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/bin/hidecmd.vbs</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/bin/agent-desktop.ico</windowsIcon>
+                    <windowsPath></windowsPath>
+                </startMenuShortcut>
+                <startMenuShortcut>
+                    <comment>Desinstalar Signer Agent</comment>
+                    <name>Desinstalar Signer Agent</name>
+                    <runAsAdmin>0</runAsAdmin>
+                    <runInTerminal>0</runInTerminal>
+                    <windowsExec>${installdir}/uninstall.exe</windowsExec>
+                    <windowsExecArgs></windowsExecArgs>
+                    <windowsIcon>${installdir}/uninstall.exe</windowsIcon>
+                    <windowsPath></windowsPath>
+                </startMenuShortcut>
+            </startMenuShortcutList>
+        </component>
+        <include>
+            <file>/home/80621732915/git/signer/instalers/installbuilder/src/java.xml</file>
+        </include>
+    </componentList>
+    <postInstallationScriptArguments>${installdir}</postInstallationScriptArguments>
+    <showPostInstallationScriptResult>1</showPostInstallationScriptResult>
+    <enableRollback>1</enableRollback>
+    <enableTimestamp>1</enableTimestamp>
+    <osxApplicationBundleIcon>/home/80621732915/git/signer/instalers/installbuilder/src/bin/agent-desktop.icns</osxApplicationBundleIcon>
+    <osxUninstallerApplicationBundleIcon>/home/80621732915/git/signer/instalers/installbuilder/src/bin/agent-desktop.icns</osxUninstallerApplicationBundleIcon>
+    <projectSchemaVersion>1.0</projectSchemaVersion>
+    <startMenuGroupName>${project.fullName}</startMenuGroupName>
+    <vendor>Serpro - Serviço Federal de Processamento de Dados</vendor>
+    <finalPageActionList>
+        <runProgram>
+            <customErrorMessage>erro ao executar o programa</customErrorMessage>
+            <explanation>Executar Demoiselle Signer</explanation>
+            <program>${installdir}/Iniciar_Demoiselle_Signer</program>
+            <programArguments></programArguments>
+            <runAs>${system_username}</runAs>
+            <useMSDOSPath>0</useMSDOSPath>
+            <ruleList>
+                <platformTest>
+                    <type>linux</type>
+                </platformTest>
+            </ruleList>
+        </runProgram>
+    </finalPageActionList>
+    <parameterList>
+        <directoryParameter>
+            <name>installdir</name>
+            <description>Installer.Parameter.installdir.description</description>
+            <explanation>Installer.Parameter.installdir.explanation</explanation>
+            <value>${platform_install_prefix}/${project.shortName}</value>
+            <default>${platform_install_prefix}/${project.shortName}</default>
+            <allowEmptyValue>0</allowEmptyValue>
+            <cliOptionName>prefix</cliOptionName>
+            <mustBeWritable>1</mustBeWritable>
+            <mustExist>0</mustExist>
+            <width>30</width>
+        </directoryParameter>
+    </parameterList>
+    <platformOptionsList>
+        <platformOptions>
+            <postInstallationScriptArguments>${installdir.dos}</postInstallationScriptArguments>
+            <platform>windows</platform>
+        </platformOptions>
+        <platformOptions>
+            <version>3.0.0_SNAPSHOT</version>
+            <platform>rpm</platform>
+        </platformOptions>
+        <platformOptions>
+            <fullName>Signer Agent Desktop</fullName>
+            <postInstallationScript>${installdir}/bin/postinstallation.sh</postInstallationScript>
+            <platform>deb</platform>
+        </platformOptions>
+        <platformOptions>
+            <platform>osx</platform>
+        </platformOptions>
+        <platformOptions>
+            <postInstallationScript>${installdir}/bin/postinstallation.sh</postInstallationScript>
+            <platform>linux-x64</platform>
+        </platformOptions>
+        <platformOptions>
+            <postInstallationScript>${installdir}/bin/postinstallation.sh</postInstallationScript>
+            <platform>linux</platform>
+        </platformOptions>
+    </platformOptionsList>
+</project>
+
