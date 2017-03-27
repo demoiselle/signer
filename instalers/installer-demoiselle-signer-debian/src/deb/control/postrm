@@ -1,0 +1,7 @@
+#!/bin/bash
+
+USUARIO=$(who | awk '{print $1}')
+export USUARIO
+rm -f /home/$USUARIO/Desktop/signer-desktop.desktop
+
+exit 0
