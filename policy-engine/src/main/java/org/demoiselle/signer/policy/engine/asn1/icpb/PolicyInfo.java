@@ -41,12 +41,6 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.x500.DirectoryString;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
-import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
-import org.demoiselle.signer.policy.engine.asn1.etsi.FieldOfApplication;
-import org.demoiselle.signer.policy.engine.asn1.etsi.PolicyIssuerName;
-import org.demoiselle.signer.policy.engine.asn1.etsi.SignPolExtensions;
-import org.demoiselle.signer.policy.engine.asn1.etsi.SignPolicyId;
-import org.demoiselle.signer.policy.engine.asn1.etsi.SignatureValidationPolicy;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SigningPeriod;
 
 /**

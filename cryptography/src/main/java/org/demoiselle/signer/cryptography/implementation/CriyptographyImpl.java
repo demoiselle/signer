@@ -56,6 +56,7 @@ import com.sun.crypto.provider.SunJCE;
 /**
  * Standard implementation for the {@link Cryptography} interface
  */
+@SuppressWarnings("restriction")
 public class CriyptographyImpl implements Cryptography {
 
 	private String algorithm;

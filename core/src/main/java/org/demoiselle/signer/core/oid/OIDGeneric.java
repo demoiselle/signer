@@ -46,6 +46,7 @@ package org.demoiselle.signer.core.oid;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERIA5String;
@@ -55,150 +56,155 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DERUTF8String;
 import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.core.util.MessagesBundle;
+
 import sun.security.util.DerValue;
 import sun.security.x509.OtherName;
 
+@SuppressWarnings("restriction")
 public class OIDGeneric {
 
-    private String oid = null;
-    private String data = null;
-    protected Map<String, String> properties = new HashMap<String, String>();
+	private String oid = null;
+	private String data = null;
+	protected Map<String, String> properties = new HashMap<String, String>();
 	private static ASN1InputStream is;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    protected OIDGeneric() {
-    }
+	protected OIDGeneric() {
+	}
 
-    /**
-     * Instance for OIDGeneric.
-     *
-     * @param data  Set of bytes with the contents of the certificate.
-     * @return Object GenericOID
-     * @throws IOException 
-     * @throws Exception 
-     */
-    public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
-        is = new ASN1InputStream(data);
-        DLSequence sequence = (DLSequence) is.readObject();
-        ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) sequence.getObjectAt(0);
-        DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(1);
-        DERTaggedObject taggedObject2 = (DERTaggedObject) taggedObject.getObject();
+	/**
+	 * Instance for OIDGeneric.
+	 *
+	 * @param data
+	 *            Set of bytes with the contents of the certificate.
+	 * @return Object GenericOID
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
+		is = new ASN1InputStream(data);
+		DLSequence sequence = (DLSequence) is.readObject();
+		ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) sequence.getObjectAt(0);
+		DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(1);
+		DERTaggedObject taggedObject2 = (DERTaggedObject) taggedObject.getObject();
 
-        DEROctetString octet = null;
-        DERPrintableString print = null;
-        DERUTF8String utf8 = null;
-        DERIA5String ia5 = null;
+		DEROctetString octet = null;
+		DERPrintableString print = null;
+		DERUTF8String utf8 = null;
+		DERIA5String ia5 = null;
 
-        try {
-            octet = (DEROctetString) taggedObject2.getObject();
-        } catch (Exception e) {
-            try {
-                print = (DERPrintableString) taggedObject2.getObject();
-            } catch (Exception e1) {
-                try {
-                    utf8 = (DERUTF8String) taggedObject2.getObject();
-                } catch (Exception e2) {
-                    ia5 = (DERIA5String) taggedObject2.getObject();
-                }
-            }
-        }
+		try {
+			octet = (DEROctetString) taggedObject2.getObject();
+		} catch (Exception e) {
+			try {
+				print = (DERPrintableString) taggedObject2.getObject();
+			} catch (Exception e1) {
+				try {
+					utf8 = (DERUTF8String) taggedObject2.getObject();
+				} catch (Exception e2) {
+					ia5 = (DERIA5String) taggedObject2.getObject();
+				}
+			}
+		}
 
-        String className = "org.demoiselle.signer.oid.OID_" + oid.getId().replaceAll("[.]", "_");
-        OIDGeneric oidGenerico;
-        try {
-            oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
-        } catch (InstantiationException e) {
-            throw new Exception(coreMessagesBundle.getString("error.class.instance",className), e);
-        } catch (IllegalAccessException e) {
-            throw new Exception(coreMessagesBundle.getString("error.class.illegal.access",className), e);
-        } catch (ClassNotFoundException e) {
-            oidGenerico = new OIDGeneric();
-        }
+		String className = "org.demoiselle.signer.oid.OID_" + oid.getId().replaceAll("[.]", "_");
+		OIDGeneric oidGenerico;
+		try {
+			oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
+		} catch (InstantiationException e) {
+			throw new Exception(coreMessagesBundle.getString("error.class.instance", className), e);
+		} catch (IllegalAccessException e) {
+			throw new Exception(coreMessagesBundle.getString("error.class.illegal.access", className), e);
+		} catch (ClassNotFoundException e) {
+			oidGenerico = new OIDGeneric();
+		}
 
-        oidGenerico.oid = oid.getId();
+		oidGenerico.oid = oid.getId();
 
-        if (octet != null) {
-            oidGenerico.data = new String(octet.getOctets());
-        } else {
-            if (print != null) {
-                oidGenerico.data = print.getString();
-            } else {
-                if (utf8 != null) {
-                    oidGenerico.data = utf8.getString();
-                } else {
-                    oidGenerico.data = ia5.getString();
-                }
-            }
-        }
+		if (octet != null) {
+			oidGenerico.data = new String(octet.getOctets());
+		} else {
+			if (print != null) {
+				oidGenerico.data = print.getString();
+			} else {
+				if (utf8 != null) {
+					oidGenerico.data = utf8.getString();
+				} else {
+					oidGenerico.data = ia5.getString();
+				}
+			}
+		}
 
-        oidGenerico.initialize();
+		oidGenerico.initialize();
 
-        return oidGenerico;
-    }
+		return oidGenerico;
+	}
 
-    /**
-     *
-     * @param der Content of Certificate on sun.security.util.DerValue format
-     * @return OIDGenerico
-     * @throws IOException 
-     * @throws Exception 
-     */
-    public static OIDGeneric getInstance(DerValue der) throws IOException, Exception {
-        OtherName on = new OtherName(der);
-        String className = "org.demoiselle.signer.oid.OID_" + on.getOID().toString().replaceAll("[.]", "_");
+	/**
+	 *
+	 * @param der
+	 *            Content of Certificate on sun.security.util.DerValue format
+	 * @return OIDGenerico
+	 * @throws IOException
+	 * @throws Exception
+	 */
+	public static OIDGeneric getInstance(DerValue der) throws IOException, Exception {
+		OtherName on = new OtherName(der);
+		String className = "org.demoiselle.signer.oid.OID_" + on.getOID().toString().replaceAll("[.]", "_");
 
-        OIDGeneric oidGenerico;
-        try {
-            oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
-        } catch (InstantiationException e) {
-            throw new Exception(coreMessagesBundle.getString("error.class.instance",className ), e);
-        } catch (IllegalAccessException e) {
-            throw new Exception(coreMessagesBundle.getString("error.class.illegal.access",className), e);
-        } catch (ClassNotFoundException e) {
-            oidGenerico = new OIDGeneric();
-        }
+		OIDGeneric oidGenerico;
+		try {
+			oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
+		} catch (InstantiationException e) {
+			throw new Exception(coreMessagesBundle.getString("error.class.instance", className), e);
+		} catch (IllegalAccessException e) {
+			throw new Exception(coreMessagesBundle.getString("error.class.illegal.access", className), e);
+		} catch (ClassNotFoundException e) {
+			oidGenerico = new OIDGeneric();
+		}
 
-        oidGenerico.oid = on.getOID().toString();
-        oidGenerico.data = new String(on.getNameValue()).substring(6);
-        oidGenerico.initialize();
+		oidGenerico.oid = on.getOID().toString();
+		oidGenerico.data = new String(on.getNameValue()).substring(6);
+		oidGenerico.initialize();
 
-        return oidGenerico;
-    }
+		return oidGenerico;
+	}
 
-    protected void initialize() {
-        // Inicializa as propriedades do conteudo DATA
-    }
+	protected void initialize() {
+		// Inicializa as propriedades do conteudo DATA
+	}
 
-    /**
-     *
-     * @param fields Fields of a certificate
-     */
-    protected void initialize(Object[] fields) {
-        //TODO fazer alteracao para contemplar o novo tamanho de campo do RG
+	/**
+	 *
+	 * @param fields
+	 *            Fields of a certificate
+	 */
+	protected void initialize(Object[] fields) {
+		// TODO fazer alteracao para contemplar o novo tamanho de campo do RG
 
-        int tmp = 0;
+		int tmp = 0;
 
-        for (int i = 0; i < fields.length; i += 2) {
-            String key = (String) fields[i];
-            int size = ((Integer) fields[i + 1]);
-            properties.put(key, data.substring(tmp, Math.min(tmp + size, data.length())));
-            tmp += size;
-        }
-    }
+		for (int i = 0; i < fields.length; i += 2) {
+			String key = (String) fields[i];
+			int size = ((Integer) fields[i + 1]);
+			properties.put(key, data.substring(tmp, Math.min(tmp + size, data.length())));
+			tmp += size;
+		}
+	}
 
-    /**
-     *
-     * @return set of OID on String format
-     */
-    public String getOid() {
-        return oid;
-    }
+	/**
+	 *
+	 * @return set of OID on String format
+	 */
+	public String getOid() {
+		return oid;
+	}
 
-    /**
-     *
-     * @return content on String format
-     */
-    public String getData() {
-        return data;
-    }
+	/**
+	 *
+	 * @return content on String format
+	 */
+	public String getData() {
+		return data;
+	}
 }
