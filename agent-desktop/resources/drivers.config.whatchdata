@@ -1,3 +1,0 @@
-name = Provedor
-description = Token Watchdata
-library = /usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so
