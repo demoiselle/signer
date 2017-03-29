@@ -1,6 +1,0 @@
-Application-Name: Demoiselle Signer Agent Desktop SNAPSHOT
-Permissions: all-permissions
-Caller-Allowable-Codebase: *
-Codebase: *
-Application-Library-Allowable-Codebase: *
-Trusted-Library: true

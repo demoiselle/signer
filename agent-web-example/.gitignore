@@ -1,8 +1,0 @@
-/target
-/.project
-/.classpath
-/.settings
-/.externalToolBuilders
-/signer_desktop.log
-/node_modules
-/**/signer_desktop.log
