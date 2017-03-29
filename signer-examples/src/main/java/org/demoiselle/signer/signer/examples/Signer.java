@@ -67,7 +67,7 @@ public class Signer {
 		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 
 		if (pinHandler == null) {
-			pinHandler = new PinHandler();
+			pinHandler = new PinHandler("Ações");
 		}
 
 		if (keyStoreLoader == null) {
