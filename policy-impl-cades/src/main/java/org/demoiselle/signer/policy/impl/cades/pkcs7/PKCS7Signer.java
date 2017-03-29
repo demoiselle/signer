@@ -36,10 +36,10 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7;
 
+import java.security.cert.Certificate;
+
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.Signer;
-
-import java.security.cert.Certificate;
 
 /**
  * Basic specification for implementing digital signatures in PKCS7 Format.
@@ -68,6 +68,31 @@ public interface PKCS7Signer extends Signer {
      * @return
      */
     abstract public byte[] getAttached(byte[] signed, boolean validate);
+    
+    /**
+     * 
+     * Generates a digital co-signature from a content, 
+     * the result file does not contains the content that was signed
+     * @param content
+     * @param previewSigned CMS content from preview signed
+     * @return
+     */
+    abstract public byte[] doDetachedSign (byte[] content, byte[] previewSigned);
+    
+    /**
+     * Generates a digital co-signature from a content and attaches this content on result file
+     * @param content
+     * @param previewSigned CMS content from preview signed
+     * @return
+     */
+    abstract public byte[] doAttachedSign(byte[] content, byte[] previewSigned);
+    
+    /**
+     * Generates a digital couter-signature
+     * @param previewCMSSignature CMS content from preview signed
+     * @return new CMS Signature bytes
+     */
+    abstract public byte[] doCounterSign(byte[] previewCMSSignature);
     
     
  }

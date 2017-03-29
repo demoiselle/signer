@@ -36,11 +36,6 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs1.impl;
 
-import org.demoiselle.signer.core.util.MessagesBundle;
-import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
-import org.demoiselle.signer.policy.impl.cades.SignerException;
-import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
-
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -48,6 +43,11 @@ import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+
+import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
+import org.demoiselle.signer.policy.impl.cades.SignerException;
+import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
 
 
 /**

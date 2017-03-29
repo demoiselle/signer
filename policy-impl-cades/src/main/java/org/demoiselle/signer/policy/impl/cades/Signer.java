@@ -80,14 +80,13 @@ public interface Signer {
      */
     abstract public void setAlgorithm(SignerAlgorithmEnum algorithm);
 
-    
     /**
      * Generates a digital signature from a content and attaches this content on result file
      * @param content
      * @return
      */
     abstract public byte[] doAttachedSign(byte[] content);
-    
+
     /**
      * 
      * Generates a digital signature from a content, 
@@ -96,7 +95,6 @@ public interface Signer {
      * @return
      */
     abstract public byte[] doDetachedSign (byte[] content);
-    
     
     /**
      * Check if a digital signature, informed by parameter signedData, is valid for content

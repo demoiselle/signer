@@ -43,6 +43,7 @@ import java.security.PublicKey;
 import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAKey;
 import java.text.SimpleDateFormat;
@@ -64,6 +65,7 @@ import org.bouncycastle.asn1.cms.CMSAttributes;
 import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaCertStore;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cms.CMSAbsentContent;
 import org.bouncycastle.cms.CMSAttributeTableGenerator;
 import org.bouncycastle.cms.CMSException;
@@ -73,6 +75,7 @@ import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.DefaultSignedAttributeTableGenerator;
+import org.bouncycastle.cms.SignerId;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
@@ -171,6 +174,10 @@ public class CAdESSigner implements PKCS7Signer {
 		while (it.hasNext()) {
 			try {
 				SignerInformation signer = (SignerInformation) it.next();
+				
+				SignerInformationStore s = signer.getCounterSignatures();
+				logger.info("Foi(ram) encontrada(s) " + s.size() + " contra-assinatura(s).");
+				
 				Collection<?> certCollection = certStore.getMatches(signer.getSID());
 
 				Iterator<?> certIt = certCollection.iterator();
@@ -378,11 +385,34 @@ public class CAdESSigner implements PKCS7Signer {
 	 *            Content to be signed.
 	 */
 
-	// TODO: Implementar co-assinaturas
 	private byte[] doSign(byte[] content) {
+		return this.doSign(content, null);
+	}
+	
+	private Collection<X509Certificate> getSignersCertificates(CMSSignedData previewSignerData) {
+		Collection<X509Certificate> result = new HashSet<X509Certificate>();
+		Store certStore = previewSignerData.getCertificates();
+		SignerInformationStore signers = previewSignerData.getSignerInfos();
+		Iterator<?> it = signers.getSigners().iterator();
+		while (it.hasNext()) {
+			SignerInformation signer = (SignerInformation) it.next();
+			@SuppressWarnings("unchecked")
+			Collection certCollection = certStore.getMatches(signer.getSID());
+			Iterator certIt = certCollection.iterator();
+			X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
+			try {
+				result.add(new JcaX509CertificateConverter().getCertificate(certificateHolder));
+			} catch (CertificateException error) {
+			}
+		}
+		return result;
+		
+	}
+
+	private byte[] doSign(byte[] content, byte[] previewSignature) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-
+			
 			// Completa os certificados ausentes da cadeia, se houver
 			if (this.certificate == null && this.certificateChain != null && this.certificateChain.length > 0) {
 				this.certificate = (X509Certificate) this.certificateChain[0];
@@ -390,6 +420,18 @@ public class CAdESSigner implements PKCS7Signer {
 
 			if (this.certificateChain == null || this.certificateChain.length <= 1) {
 				this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
+			}
+
+			CMSSignedData cmsPreviewSignedData = null;
+			// Caso seja co-assinatura ou contra-assinatura
+			// Importar todos os certificados da assinatura anterior
+			if (previewSignature != null && previewSignature.length > 0) {
+				cmsPreviewSignedData = new CMSSignedData(new CMSAbsentContent(), previewSignature);
+				Collection<X509Certificate> previewCerts = this.getSignersCertificates(cmsPreviewSignedData);
+				for (Certificate cert : this.certificateChain) {
+					previewCerts.add((X509Certificate)cert);
+				}
+				this.certificateChain = previewCerts.toArray(new Certificate[]{});
 			}
 
 			// Recupera a lista de algoritmos da politica e o tamanho minimo da
@@ -540,7 +582,10 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 
 			// TODO Estudar este método de contra-assinatura posteriormente
-			// gen.generateCounterSigners(null);
+			if (previewSignature != null && previewSignature.length > 0) {
+				gen.addSigners(cmsPreviewSignedData.getSignerInfos());
+			}
+
 			// Efetua a assinatura digital do conteúdo
 			CMSSignedData cmsSignedData = gen.generate(cmsTypedData, this.attached);
 
@@ -574,9 +619,11 @@ public class CAdESSigner implements PKCS7Signer {
 				AttributeTable newUnsignedAttributesTable = new AttributeTable(newUnsignedAttributes);
 				vNewSigners.add(SignerInformation.replaceUnsignedAttributes(oSi, newUnsignedAttributesTable));
 			}
+
 			SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(vNewSigners);
 
 			CMSSignedData oSignedData = cmsSignedData;
+
 			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
 
 			byte[] result = cmsSignedData.getEncoded();
@@ -605,36 +652,28 @@ public class CAdESSigner implements PKCS7Signer {
 
 	private enum AlgorithmNames {
 
-		md2("1.2.840.113549.2.1", "MD2"), md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), md5(
-				"1.2.840.113549.2.5",
-				"MD5"), md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"), sha1("1.3.14.3.2.26",
-						"SHA1"), sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"), sha1WithECDSAEncryption(
-								"1.2.840.10045.4.1",
-								"SHA1withECDSA"), sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"), sha224(
-										"2.16.840.1.101.3.4.2.4",
-										"SHA224"), sha224WithRSAEncryption("1.2.840.113549.1.1.14",
-												"SHA224withRSA"), sha256("2.16.840.1.101.3.4.2.1",
-														"SHA256"), sha256WithRSAEncryption("1.2.840.113549.1.1.11",
-																"SHA256withRSA"), sha384("2.16.840.1.101.3.4.2.2",
-																		"SHA384"), sha384WithRSAEncryption(
-																				"1.2.840.113549.1.1.12",
-																				"SHA384withRSA"), sha512(
-																						"2.16.840.1.101.3.4.2.3",
-																						"SHA512"), sha512WithRSAEncryption(
-																								"1.2.840.113549.1.1.13",
-																								"SHA512withRSA"), sha3_224(
-																										"2.16.840.1.101.3.4.2.7",
-																										"SHA3-224"), sha3_256(
-																												"2.16.840.1.101.3.4.2.8",
-																												"SHA3-256"), sha3_384(
-																														"2.16.840.1.101.3.4.2.9",
-																														"SHA3-384"), sha3_512(
-																																"2.16.840.1.101.3.4.2.10",
-																																"SHA3-512"), shake128(
-																																		"1.0.10118.3.0.62",
-																																		"SHAKE128"), shake256(
-																																				"1.0.10118.3.0.63",
-																																				"SHAKE256");
+		md2("1.2.840.113549.2.1", "MD2"),
+		md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), 
+		md5("1.2.840.113549.2.5","MD5"),
+		md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"),
+		sha1("1.3.14.3.2.26", "SHA1"),
+		sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"),
+		sha1WithECDSAEncryption("1.2.840.10045.4.1", "SHA1withECDSA"),
+		sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"),
+		sha224("2.16.840.1.101.3.4.2.4", "SHA224"),
+		sha224WithRSAEncryption("1.2.840.113549.1.1.14", "SHA224withRSA"),
+		sha256("2.16.840.1.101.3.4.2.1", "SHA256"),
+		sha256WithRSAEncryption("1.2.840.113549.1.1.11", "SHA256withRSA"),
+		sha384("2.16.840.1.101.3.4.2.2", "SHA384"),
+		sha384WithRSAEncryption("1.2.840.113549.1.1.12", "SHA384withRSA"),
+		sha512("2.16.840.1.101.3.4.2.3", "SHA512"),
+		sha512WithRSAEncryption("1.2.840.113549.1.1.13", "SHA512withRSA"),
+		sha3_224("2.16.840.1.101.3.4.2.7", "SHA3-224"),
+		sha3_256("2.16.840.1.101.3.4.2.8", "SHA3-256"),
+		sha3_384("2.16.840.1.101.3.4.2.9", "SHA3-384"),
+		sha3_512("2.16.840.1.101.3.4.2.10", "SHA3-512"),
+		shake128("1.0.10118.3.0.62", "SHAKE128"),
+		shake256("1.0.10118.3.0.63", "SHAKE256");
 
 		private final String identifier;
 		private final String algorithmName;
@@ -807,12 +846,65 @@ public class CAdESSigner implements PKCS7Signer {
 	public byte[] doAttachedSign(byte[] content) {
 		this.setAttached(true);
 		return this.doSign(content);
-
 	}
 
 	@Override
 	public byte[] doDetachedSign(byte[] content) {
 		return this.doSign(content);
+	}
+
+	@Override
+	public byte[] doAttachedSign(byte[] content, byte[] previewSigned) {
+		this.setAttached(true);
+		return this.doSign(content, previewSigned);
+	}
+
+	@Override
+	public byte[] doDetachedSign(byte[] content, byte[] previewSigned) {
+		return this.doSign(content, previewSigned);
+	}
+	
+	
+	private CMSSignedData updateWithCounterSignature(final CMSSignedData counterSignature, final CMSSignedData originalSignature, SignerId selector) {
+
+		//Retrieve the SignerInformation from the countersigned signature
+		final SignerInformationStore originalSignerInfos = originalSignature.getSignerInfos();
+		//Retrieve the SignerInformation from the countersignature
+		final SignerInformationStore signerInfos = counterSignature.getSignerInfos();
+
+		//Add the countersignature
+		SignerInformation updatedSI = originalSignature.getSignerInfos().get(selector).addCounterSigners(originalSignerInfos.get(selector), signerInfos);
+
+		//Create updated SignerInformationStore
+		Collection<SignerInformation> counterSignatureInformationCollection = new ArrayList<SignerInformation>();
+		counterSignatureInformationCollection.add(updatedSI);
+		SignerInformationStore signerInformationStore = new SignerInformationStore(counterSignatureInformationCollection);
+
+		//Return new, updated signature
+		return CMSSignedData.replaceSigners(originalSignature, signerInformationStore);
+	}
+	
+	@Override
+	public byte[] doCounterSign(byte[] previewCMSSignature) {
+		try {
+			Security.addProvider(new BouncyCastleProvider());
+
+			// Reading a P7S file that is preview signature.
+			CMSSignedData cmsPreviewSignedData = new CMSSignedData(previewCMSSignature);
+			
+			// Build BouncyCastle object that is a set of signatures
+			Collection<SignerInformation> previewSigners = cmsPreviewSignedData.getSignerInfos().getSigners();
+			
+			for (SignerInformation previewSigner : previewSigners) {
+				// build a counter-signature per previewSignature
+				byte[] previewSignatureFromSigner = previewSigner.getSignature();
+				CMSSignedData cmsCounterSignedData = new CMSSignedData(this.doSign(previewSignatureFromSigner));
+				cmsPreviewSignedData = this.updateWithCounterSignature(cmsCounterSignedData, cmsPreviewSignedData, previewSigner.getSID());
+			}
+			return cmsPreviewSignedData.getEncoded();
+		} catch (Throwable error) {
+			throw new SignerException(error);
+		}
 	}
 
 }
