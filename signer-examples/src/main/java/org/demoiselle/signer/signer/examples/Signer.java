@@ -15,7 +15,6 @@ import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.demoiselle.signer.agent.desktop.ui.PinHandler;
 import org.demoiselle.signer.chain.icp.brasil.provider.impl.ICPBrasilUserHomeProviderCA;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
@@ -53,7 +52,7 @@ public class Signer {
 	public static String alias;
 	public static X509Certificate certificate;
 	public static PrivateKey privateKey;
-	public static PinHandler pinHandler;
+	// public static PinHandler pinHandler;
 	public static String password;
 	public static Certificate[] certificateChain;
 
@@ -66,13 +65,13 @@ public class Signer {
 
 		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 
-		if (pinHandler == null) {
-			pinHandler = new PinHandler("Ações");
-		}
+		// if (pinHandler == null) {
+		// pinHandler = new PinHandler("Ações");
+		// }
 
 		if (keyStoreLoader == null) {
 			keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-			keyStoreLoader.setCallbackHandler(pinHandler);
+			// keyStoreLoader.setCallbackHandler(pinHandler);
 			keyStore = keyStoreLoader.getKeyStore();
 			alias = keyStore.aliases().nextElement();
 			certificate = (X509Certificate) keyStore.getCertificate(alias);

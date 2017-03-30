@@ -7,11 +7,12 @@ import java.security.PrivateKey;
 
 public class GenerateCerts {
 
+	@SuppressWarnings("resource")
 	public static void main(String[] args) {
 
 		Authority authority = new Authority();
 
-		try {			
+		try {
 
 			KeyStore keyStore = CertificateHelper.createRootCertificate(authority, "PKCS12");
 
@@ -19,7 +20,7 @@ public class GenerateCerts {
 					.write(keyStore.getCertificate(authority.alias()).getEncoded());
 
 			keyStore.store(new FileOutputStream("/tmp/new_ca.p12"), "changeit".toCharArray());
-			
+
 			KeyStore keyStore2 = CertificateHelper.createServerCertificate("localhost",
 					new SubjectAlternativeNameHolder(), authority, keyStore.getCertificate(authority.alias()),
 					(PrivateKey) keyStore.getKey(authority.alias(), "changeit".toCharArray()));
