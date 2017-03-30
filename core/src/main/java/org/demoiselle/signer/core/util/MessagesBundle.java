@@ -12,7 +12,7 @@ import java.util.ResourceBundle;
 public class MessagesBundle {
 
 	
-	private String bundleName = "messages";
+	private String bundleName = "signer_core_messages";
 	private static ResourceBundle resouceBundle; 
 	
 	/**
