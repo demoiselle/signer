@@ -54,23 +54,26 @@ import java.security.cert.Certificate;
 public class TimestampGeneratorImpl implements TimeStampGenerator {
 
 
-    private byte[] content;
+    private byte[] content = null;
     private PrivateKey privateKey;
     private Certificate[] certificates;
+    private byte[] hash = null;
     
     /**
      * Initializes the attributes needed to get the time stamp
      *
-     * @param content
+     * @param content if it is assigned, the parameter hash must to be null
      * @param privateKey
      * @param certificates
+     * @param hash if it is assigned, the parameter content must to be null
      * @throws CertificateCoreException
      */
     @Override
-    public void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates) throws CertificateCoreException {
+    public void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates, byte[] hash) throws CertificateCoreException {
         this.content = content;
         this.privateKey = privateKey;
-        this.certificates = certificates;        
+        this.certificates = certificates;
+        this.hash = hash;
     }
 
     /**
@@ -81,7 +84,7 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
     @Override
     public byte[] generateTimeStamp() throws CertificateCoreException {
         TimeStampOperator timeStampOperator = new TimeStampOperator();
-        byte[] request = timeStampOperator.createRequest(privateKey, certificates, content);
+        byte[] request = timeStampOperator.createRequest(privateKey, certificates, content, hash);
         return timeStampOperator.invoke(request);
     }
 
@@ -93,10 +96,10 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
      *
      */
     @Override
-    public void validateTimeStamp(byte[] content, byte[] timestamp) throws CertificateCoreException {
+    public void validateTimeStamp(byte[] content, byte[] timestamp, byte[] hash) throws CertificateCoreException {
 
         //Valida a assinatura digital do carimbo de tempo
         TimeStampOperator timeStampOperator = new TimeStampOperator();
-        timeStampOperator.validate(content, timestamp);
+        timeStampOperator.validate(content, timestamp, hash);
     }
 }

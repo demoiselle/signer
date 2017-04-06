@@ -83,7 +83,9 @@ import org.slf4j.LoggerFactory;
  * Performs all time stamp operations: from the connection with the time stamp authority to the stamp validation.
  * 
  * @author 07721825741
+ * 
  */
+// TODO verificar os valores de algoritmos que estão sendo setados manualmente, provavelmente deve busca do que foi setado ou no que estiver na política.
 public class TimeStampOperator {
 
     private static final Logger logger = LoggerFactory.getLogger(TimeStampOperator.class);
@@ -99,19 +101,24 @@ public class TimeStampOperator {
      *
      * @param privateKey
      * @param certificates
-     * @param content
+     * @param content  set null if signing only hash
+     * @param hash  set null if signing content
      * @return A time stamp request
      * @throws CertificateCoreException
      */
-    public byte[] createRequest(PrivateKey privateKey, Certificate[] certificates, byte[] content) throws CertificateCoreException {
+    public byte[] createRequest(PrivateKey privateKey, Certificate[] certificates, byte[] content, byte[] hash) throws CertificateCoreException {
         try {
             logger.info(timeStampMessagesBundle.getString("info.timestamp.digest"));
             Digest digest = DigestFactory.getInstance().factoryDefault();
             digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
-            byte[] hashedMessage = digest.digest(content);
+            byte[] hashedMessage = null;
+            if (content != null){
+            	hashedMessage = digest.digest(content);                
+                logger.info(Base64.toBase64String(hashedMessage));	
+            }else{
+            	hashedMessage = hash;
+            }
             
-            logger.info(Base64.toBase64String(hashedMessage));
-
             logger.info(timeStampMessagesBundle.getString("info.timestamp.prepare.request"));
             TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();
                         
@@ -141,13 +148,13 @@ public class TimeStampOperator {
      * @return
      * @throws CertificateCoreException
      */
-    public byte[] createRequest(String keystoreLocation, String pin, String alias, byte[] content) throws CertificateCoreException {
+    public byte[] createRequest(String keystoreLocation, String pin, String alias, byte[] content, byte[] hash) throws CertificateCoreException {
         try {
             KeyStore ks = KeyStore.getInstance("PKCS12");
             ks.load(new FileInputStream(keystoreLocation), pin.toCharArray());
             PrivateKey pk = (PrivateKey) ks.getKey(alias, pin.toCharArray());
             Certificate[] certs = ks.getCertificateChain(alias);
-            return this.createRequest(pk, certs, content);
+            return this.createRequest(pk, certs, content, hash);
         } catch (NoSuchAlgorithmException | CertificateException | KeyStoreException | UnrecoverableKeyException | IOException ex) {
             throw new CertificateCoreException(ex.getMessage());
         }
@@ -308,12 +315,13 @@ public class TimeStampOperator {
     /**
      * Validate a time stamp
      *
-     * @param content
+     * @param content if it is assigned, the parameter hash must to be null
      * @param timeStamp
+     * @param hash if it is assigned, the parameter content must to be null
      *
      */
     @SuppressWarnings("unchecked")
-	public void validate(byte[] content, byte[] timeStamp) throws CertificateCoreException {
+	public void validate(byte[] content, byte[] timeStamp, byte[] hash) throws CertificateCoreException {
         try {
             TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(timeStamp));
             CMSSignedData s = timeStampToken.toCMSSignedData();
@@ -339,11 +347,17 @@ public class TimeStampOperator {
             logger.info(timeStampMessagesBundle.getString("info.signature.verified", verified));
 
             //Valida o hash  incluso no carimbo de tempo com hash do arquivo carimbado
-            Digest digest = DigestFactory.getInstance().factoryDefault();
-            digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
-            digest.digest(content);
+            byte[] calculatedHash = null;
+            if (content != null){
+            	Digest digest = DigestFactory.getInstance().factoryDefault();
+                digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+                calculatedHash = digest.digest(content);
+            }else{
+            	calculatedHash = hash;
+            }
+            
 
-            if (Arrays.equals(digest.digest(content), timeStampToken.getTimeStampInfo().getMessageImprintDigest())) {
+            if (Arrays.equals(calculatedHash, timeStampToken.getTimeStampInfo().getMessageImprintDigest())) {
                 logger.info(timeStampMessagesBundle.getString("info.timestamp.hash.ok"));
             } else {
                 throw new CertificateCoreException(timeStampMessagesBundle.getString("info.timestamp.hash.nok"));

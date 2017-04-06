@@ -55,12 +55,13 @@ public interface SignedOrUnsignedAttribute {
     /**
      * Performs the initial parameterization for attribute retrieval
      *
-     * @param privateKey
+     * @param privateKey  
      * @param certificates
-     * @param content
+     * @param content set null if signing only hash
      * @param signaturePolicy
+     * @param hash set null if signing content
      */
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy);
+    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash);
 
     /**
      * OID value of the attribute. Ex: "1.12.2.54.94"

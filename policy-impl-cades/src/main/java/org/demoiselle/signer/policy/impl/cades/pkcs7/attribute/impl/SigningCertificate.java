@@ -84,7 +84,7 @@ public class SigningCertificate implements SignedAttribute {
     private Certificate[] certificates = null;
 
     @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
+    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
         this.certificates = certificates;
     }
 

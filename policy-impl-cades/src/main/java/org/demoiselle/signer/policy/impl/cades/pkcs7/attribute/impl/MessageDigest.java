@@ -54,15 +54,16 @@ import org.slf4j.LoggerFactory;
 /**
  * 
  * Generates a digest of a content, according to the algorithm defined in the policy.
+ * If the attribute hash was setted on initialized method, it will be used instead of calculating from the content.
  *
  */
 public class MessageDigest implements SignedAttribute {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageDigest.class);
-
     private final String identifier = "1.2.840.113549.1.9.4";
     private byte[] content = null;
     private SignaturePolicy signaturePolicy = null;
+    private byte[] hash = null;
 
     @Override
     public String getOID() {
@@ -72,20 +73,23 @@ public class MessageDigest implements SignedAttribute {
     @Override
     public Attribute getValue() {
         try {
-            java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
-            byte[] hash = md.digest(content);
-            logger.info(Base64.toBase64String(hash));
-            return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DEROctetString(hash)));            
+        	if (this.hash == null){
+        		java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
+        		this.hash = md.digest(content);
+                logger.info(Base64.toBase64String(this.hash));
+        	}
+             return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DEROctetString(this.hash)));            
         } catch (NoSuchAlgorithmException ex) {
             logger.info(ex.getMessage());
+            return null;
         }
-        return null;
+        
     }
 
     @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
+    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
         this.content = content;
         this.signaturePolicy = signaturePolicy;
+        this.hash = hash;
     }
-
 }

@@ -215,4 +215,10 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 		return this.doSign(content);
 	}
 
+	//TODO não implementado
+	@Override
+	public byte[] doHashSign(byte[] hash) {
+		return null;
+	}
+
 }

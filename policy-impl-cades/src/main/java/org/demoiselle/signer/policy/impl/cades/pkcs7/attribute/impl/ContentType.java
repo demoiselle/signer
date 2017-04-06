@@ -92,7 +92,7 @@ public class ContentType implements SignedAttribute {
 
 	@Override
 	public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content,
-			SignaturePolicy signaturePolicy) {
+			SignaturePolicy signaturePolicy, byte[] hash) {
 
 	}
 

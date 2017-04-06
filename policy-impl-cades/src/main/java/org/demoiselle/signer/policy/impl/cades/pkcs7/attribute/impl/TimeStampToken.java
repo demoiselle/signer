@@ -76,6 +76,7 @@ public class TimeStampToken implements UnsignedAttribute {
     private PrivateKey privateKey = null;
     private Certificate[] certificates = null;
     byte[] content = null;
+    byte[] hash = null;
 
     @Override
     public String getOID() {
@@ -83,10 +84,11 @@ public class TimeStampToken implements UnsignedAttribute {
     }
 
     @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
+    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
         this.privateKey = privateKey;
         this.certificates = certificates;
         this.content = content;
+        this.hash = hash;
     }
 
     @Override
@@ -96,13 +98,13 @@ public class TimeStampToken implements UnsignedAttribute {
 
             if (timeStampGenerator != null) {
                   //Inicializa os valores para o timestmap
-            	timeStampGenerator.initialize(content, privateKey, certificates);
+            	timeStampGenerator.initialize(content, privateKey, certificates, hash);
 
                 //Obtem o carimbo de tempo atraves do servidor TSA
                 byte[] response = timeStampGenerator.generateTimeStamp();
 
                 //Valida o carimbo de tempo gerado
-                timeStampGenerator.validateTimeStamp(content, response);
+                timeStampGenerator.validateTimeStamp(content, response, hash);
 
                 return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(ASN1Primitive.fromByteArray(response)));
             } else {

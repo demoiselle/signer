@@ -86,6 +86,7 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.ca.manager.CAManager;
+import org.demoiselle.signer.core.ca.manager.CAManagerException;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
@@ -120,6 +121,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private SignaturePolicy signaturePolicy = null;
 	private boolean defaultCertificateValidators = true;
 	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+	private byte[] hash = null;
 
 	// private Collection<IValidator> certificateValidators = null;
 
@@ -391,14 +393,14 @@ public class CAdESSigner implements PKCS7Signer {
 	
 	private Collection<X509Certificate> getSignersCertificates(CMSSignedData previewSignerData) {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
-		Store certStore = previewSignerData.getCertificates();
+		Store<?> certStore = previewSignerData.getCertificates();
 		SignerInformationStore signers = previewSignerData.getSignerInfos();
 		Iterator<?> it = signers.getSigners().iterator();
 		while (it.hasNext()) {
 			SignerInformation signer = (SignerInformation) it.next();
 			@SuppressWarnings("unchecked")
-			Collection certCollection = certStore.getMatches(signer.getSID());
-			Iterator certIt = certCollection.iterator();
+			Collection<?> certCollection = certStore.getMatches(signer.getSID());
+			Iterator<?> certIt = certCollection.iterator();
 			X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
 			try {
 				result.add(new JcaX509CertificateConverter().getCertificate(certificateHolder));
@@ -498,7 +500,7 @@ public class CAdESSigner implements PKCS7Signer {
 					SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 							.factory(objectIdentifier.getValue());
 					signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, content,
-							signaturePolicy);
+							signaturePolicy, this.hash);
 					signedAttributes.add(signedOrUnsignedAttribute.getValue());
 				}
 			}
@@ -516,7 +518,7 @@ public class CAdESSigner implements PKCS7Signer {
 					SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 							.factory(objectIdentifier.getValue());
 					signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, content,
-							signaturePolicy);
+							signaturePolicy, this.hash);
 					unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 				}
 			}
@@ -542,9 +544,17 @@ public class CAdESSigner implements PKCS7Signer {
 						certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
 				trustedCAs.add(certificateTrustPoint.getTrustpoint());
 			}
+			
 			// Efetua a validacao das cadeias do certificado baseado na politica
-			CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
-
+			try {
+				CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
+			}catch (CAManagerException ex){
+				// Não encontrou na política, verificará nas cadeias do componente chain-icp-brasil provavelmente certificado de homologação.
+				logger.info(cadesMessagesBundle.getString("info.trust.poin.homolog"));
+				trustedCAs = CAManager.getInstance().getCertificateChain(certificate);
+				CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
+			}
+			
 			// Recupera a data de validade da politica para validacao
 			logger.info(cadesMessagesBundle.getString("info.policy.valid.period"));
 			Date dateNotBefore = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()
@@ -574,8 +584,8 @@ public class CAdESSigner implements PKCS7Signer {
 			gen.addSignerInfoGenerator(signerInfoGenerator);
 
 			CMSTypedData cmsTypedData;
+			// para assinatura do hash, content nulo
 			if (content == null) {
-				// TODO Verificar a necessidade da classe CMSAbsentContent local
 				cmsTypedData = new CMSAbsentContent();
 			} else {
 				cmsTypedData = new CMSProcessableByteArray(content);
@@ -612,7 +622,7 @@ public class CAdESSigner implements PKCS7Signer {
 						SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 								.factory(objectIdentifier.getValue());
 						signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain,
-								oSi.getSignature(), signaturePolicy);
+								oSi.getSignature(), signaturePolicy, this.hash);
 						newUnsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 					}
 				}
@@ -905,6 +915,12 @@ public class CAdESSigner implements PKCS7Signer {
 		} catch (Throwable error) {
 			throw new SignerException(error);
 		}
+	}
+
+	@Override
+	public byte[] doHashSign(byte[] hash) {
+		this.hash = hash;
+		return this.doSign(null);
 	}
 
 }

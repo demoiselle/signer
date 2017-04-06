@@ -72,7 +72,7 @@ public class RevocationRefs implements UnsignedAttribute {
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy) {
+    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
 
     }
 

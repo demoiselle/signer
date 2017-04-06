@@ -95,4 +95,14 @@ public interface PKCS7Signer extends Signer {
     abstract public byte[] doCounterSign(byte[] previewCMSSignature);
     
     
+    /**
+     * 
+     * Generates a digital signature from a previous calculated hash for a content, 
+     * the result file does not contains the original content that was signed
+     * @param hash
+     * @return detached PCKS7 signature
+     */
+    abstract public byte[] doHashSign (byte[] hash);
+
+    
  }

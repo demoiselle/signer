@@ -145,10 +145,13 @@ public class CAManager {
 	}
 
 	public boolean isCAofCertificate(X509Certificate ca, X509Certificate certificate) {
+		
+		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
+		
 		try {
 			certificate.verify(ca.getPublicKey());
 			return true;
-		} catch (SignatureException error) {
+		} catch (SignatureException error) {			
 			return false;
 		} catch (InvalidKeyException error) {
 			return false;
