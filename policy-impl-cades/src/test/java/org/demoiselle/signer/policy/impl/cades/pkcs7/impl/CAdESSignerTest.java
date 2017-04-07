@@ -46,148 +46,142 @@ import java.security.KeyStore;
 import java.security.KeyStore.Builder;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
 import javax.net.ssl.KeyManagerFactory;
 
-import org.demoiselle.signer.core.keystore.loader.implementation.FileSystemKeyStoreLoader;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
-import org.junit.Test;
 
 /**
  *
  */
 public class CAdESSignerTest {
 
-	// A anotação @Test está comentada, para passar o buld, pois as configurações dependem de parâmetros 
+	// A anotação @Test está comentada, para passar o buld, pois as
+	// configurações dependem de parâmetros
 	// locais.
-	
-	
-	/**
-	 *  
-	 * Faz a leitura do token, precisa setar a lib (.SO)  e a senha do token.
-	 */
-	private  KeyStore getKeyStoreToken(){
-		
-		try {
-			// 	ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
 
-			// 	Para TOKEN Branco a linha abaixo
+	/**
+	 * 
+	 * Faz a leitura do token, precisa setar a lib (.SO) e a senha do token.
+	 */
+	private KeyStore getKeyStoreToken() {
+
+		try {
+			// ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
+
+			// Para TOKEN Branco a linha abaixo
 			// String pkcs11LibraryPath =
 			// "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
-			
+
 			// Para TOKEN Azul a linha abaixo
 			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
-			
+
 			StringBuilder buf = new StringBuilder();
 			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
 			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
 			Security.addProvider(p);
-			// 	ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
+			// ATENÇÃO ALTERAR "SENHA" ABAIXO
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
+					new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
-	
+
 			return ks;
 
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
 		}
-				
+
 	}
-	
+
 	/**
-	 *  
+	 * 
 	 * Faz a leitura do certificado armazenado em arquivo (A1)
 	 */
-	
-	private  KeyStore getKeyStoreFile(){
-		
+
+	private KeyStore getKeyStoreFile() {
+
 		try {
 			KeyStore ks = KeyStore.getInstance("pkcs12");
-			
+
 			// Alterar a senha
-			char [] senha = "senha".toCharArray(); 
-			
+			char[] senha = "senha".toCharArray();
+
 			// informar onde esta o arquivo
 			InputStream ksIs = new FileInputStream("/home/{usuario}/xx.p12");
 			ks.load(ksIs, senha);
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
 			kmf.init(ks, senha);
-	
+
 			return ks;
 
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
 		}
-				
-	}
 
+	}
 
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	//@Test
+	// @Test
 	public void testSignWithContent() {
 		try {
 
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
-			
+
 			// INFORMAR o arquivo
 			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
 
 			byte[] fileToSign = readContent(fileDirName);
-			
+
 			// quando certificado em arquivo, precisa informar a senha
-			char [] senha = "senha".toCharArray();
-			
+			char[] senha = "senha".toCharArray();
+
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
-			
-			//Para certificado em arquivo A1
-			//KeyStore ks = getKeyStoreFile();
-			
+
+			// Para certificado em arquivo A1
+			// KeyStore ks = getKeyStoreFile();
+
 			String alias = getAlias(ks);
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
-			
-			// para token 
+
+			// para token
 			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
-			
+
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
-			
+			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+
 			// para mudar o algoritimo
-			//signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-			
+			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Com conteudo atachado
-			//byte[] signature = signer.doAttachedSign(fileToSign);
-			
+			// byte[] signature = signer.doAttachedSign(fileToSign);
+
 			// Assinatura desatachada
-			 byte[] signature = signer.doDetachedSign(fileToSign);
+			byte[] signature = signer.doDetachedSign(fileToSign);
 
 			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
@@ -224,12 +218,11 @@ public class CAdESSignerTest {
 			ex.printStackTrace();
 		}
 	}
-	
-	
+
 	/**
 	 * teste passando apenas o hash do arquivo
 	 */
-	@Test
+	// @Test
 	public void testSignWithHash() {
 		try {
 
@@ -237,47 +230,46 @@ public class CAdESSignerTest {
 
 			// INFORMAR o arquivo para gerar o hash
 			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
-			
+
 			byte[] fileToSign = readContent(fileDirName);
-			
+
 			// Para certificado em arquivo A1 é preciso senha para PrivateKey
-			char [] senha = "senha".toCharArray();
+			char[] senha = "senha".toCharArray();
 
 			// gera o hash do arquivo
-			java.security.MessageDigest md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			java.security.MessageDigest md = java.security.MessageDigest
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			byte[] hash = md.digest(fileToSign);
 
 			// Para certificado em arquivo A1
-			//KeyStore ks = getKeyStoreFile();
-			
+			// KeyStore ks = getKeyStoreFile();
+
 			// Para certificado em token
 			KeyStore ks = getKeyStoreToken();
-			
-			
+
 			String alias = getAlias(ks);
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
-			
+
 			// Para certificado em arquivo A1
-			//signer.setPrivateKey((PrivateKey) ks.getKey(alias,senha));
-			
+			// signer.setPrivateKey((PrivateKey) ks.getKey(alias,senha));
+
 			// Para certificado em token
-			 signer.setPrivateKey((PrivateKey) ks.getKey(alias,null ));
-			
+			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
 			// Sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
-			
+
 			// com carimbo de tempo
 			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
-			
+
 			// muda algoritmo
-			//signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			// signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do hash");
 			byte[] signature = signer.doHashSign(hash);
-
 
 			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
@@ -304,7 +296,6 @@ public class CAdESSignerTest {
 			ex.printStackTrace();
 		}
 	}
-	
 
 	// @Test
 	public void testVerifySignature() {
@@ -337,8 +328,8 @@ public class CAdESSignerTest {
 		}
 		return result;
 	}
-			
-	private String getAlias (KeyStore ks){
+
+	private String getAlias(KeyStore ks) {
 		Certificate[] certificates = null;
 		String alias = "";
 		Enumeration<String> e;
@@ -356,5 +347,5 @@ public class CAdESSignerTest {
 		X509Certificate c = (X509Certificate) certificates[0];
 		System.out.println("Número de série....: {}" + c.getSerialNumber().toString());
 		return alias;
-	}	
+	}
 }
