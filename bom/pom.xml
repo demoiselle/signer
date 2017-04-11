@@ -60,42 +60,42 @@
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>chain-icp-brasil</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>core</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>cryptography</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-engine</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-impl-cades</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-impl-xades</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-impl-pades</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>timestamp</artifactId>
-				<version>${parent.version}</version>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
