@@ -24,7 +24,7 @@
 				<artifactId>bom</artifactId>
 				<scope>import</scope>
 				<type>pom</type>
-				<version>${signer.version}</version>
+				<version>${parent.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
