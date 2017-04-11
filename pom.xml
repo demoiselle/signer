@@ -6,7 +6,7 @@
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>build</artifactId>
 	<packaging>pom</packaging>
-	<version>3.0.0-SNAPSHOT</version>
+	<version>3.0.0-BETA1-SNAPSHOT</version>
 
 	<name>Demoiselle Signer Build</name>
 	<description>Demoiselle Framework's component for specifications of ICP-BRASIL Public Key Infrastructure (PKI) </description>
@@ -95,7 +95,7 @@
 	<properties>
 		<license.header>./licence-lgpl</license.header>
 		<project.alias>signer</project.alias>
-		<signer.version>3.0.0-SNAPSHOT</signer.version>
+		<signer.version>3.0.0-BETA1-SNAPSHOT</signer.version>
 		<java.version>1.7</java.version>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
@@ -294,9 +294,9 @@
 
 	<scm>
 		<connection>scm:git:git@github.com:demoiselle/${project.alias}.git</connection>
-		<developerConnection>scm:git:git@github.com:demoiselle/${project.alias}.git</developerConnection>
-		<url>http://github.com/demoiselle/${project.alias}</url>
-		<tag>3.0.0-SNAPSHOT</tag>
+		<developerConnection>scm:git:https://github.com:demoiselle/${project.alias}.git</developerConnection>
+		<url>https://github.com/demoiselle/${project.alias}</url>
+		<tag>3.0.0-BETA1-SNAPSHOT</tag>
 	</scm>
 
 	<distributionManagement>
