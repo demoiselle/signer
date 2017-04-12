@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<artifactId>parent</artifactId>
 	<packaging>pom</packaging>
@@ -11,28 +10,29 @@
 	<url>http://signer.demoiselle.io</url>
 
 	<parent>
-        	<groupId>org.demoiselle.signer</groupId>
-	        <artifactId>build</artifactId>
-        	<version>3.0.0-SNAPSHOT</version>
+		<groupId>org.demoiselle.signer</groupId>
+		<artifactId>build</artifactId>
+		<version>3.0.0-BETA1-SNAPSHOT</version>
+		<relativePath>../</relativePath>
 	</parent>
 
-    	<dependencyManagement>
-        	<dependencies>
-        	    <dependency>
-        	        <groupId>org.demoiselle.signer</groupId>
-        	        <artifactId>bom</artifactId>
-        	        <version>3.0.0-SNAPSHOT</version>
-        	        <scope>import</scope>
-        	        <type>pom</type>
-	            </dependency>
-        	</dependencies>
-	    </dependencyManagement>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>bom</artifactId>
+				<scope>import</scope>
+				<type>pom</type>
+				<version>3.0.0-BETA1-SNAPSHOT</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 
-	    <properties>
-        	<license.header>../licence-lgpl</license.header>
-	    </properties>
+	<properties>
+		<license.header>../licence-lgpl</license.header>
+	</properties>
 
-	
+
 	<!-- Dependencias -->
 	<dependencies>
 		<dependency>
@@ -51,20 +51,26 @@
 		</dependency>
 	</dependencies>
 
-	<build>		
+	<build>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
+				<version>3.0.2</version>
 				<configuration>
 					<archive>
+						<index>true</index>
+						<manifest>
+							<addClasspath>true</addClasspath>
+						</manifest>
 						<manifestEntries>
 							<Permissions>all-permissions</Permissions>
 							<Caller-Allowable-Codebase>*</Caller-Allowable-Codebase>
 							<Codebase>*</Codebase>
 							<Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
 							<Trusted-Library>true</Trusted-Library>
-							<Bundle-RequiredExecutionEnvironment> J2SE-1.5, JavaSE-1.6, JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+							<Bundle-RequiredExecutionEnvironment> J2SE-1.5, JavaSE-1.6,
+								JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
 							<Implementation-Vendor-Id>org.demoiselle</Implementation-Vendor-Id>
 							<Implementation-Version>${project.version}</Implementation-Version>
 							<Specification-Vendor>Demoiselle.org</Specification-Vendor>
@@ -79,7 +85,8 @@
 
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -103,7 +110,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore></ignore>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
