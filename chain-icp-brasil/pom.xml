@@ -50,7 +50,7 @@
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
         <relativePath>../parent</relativePath>
-        <version>3.0.0-BETA3-SNAPSHOT</version>
+        <version>3.0.0-BETA2-SNAPSHOT</version>
 	</parent>
 
     <dependencies>
