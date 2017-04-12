@@ -100,7 +100,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	/**
 	 * Load file from file system and read Certificate Authorities Chain 
 	 * @param fileZip
-	 * @return
+	 * @return  Collection<X509Certificate>
 	 */
 	public Collection<X509Certificate> getFromLocalZip(Path fileZip) {
 
@@ -137,7 +137,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 	/**
 	 *  Verify if folder exists, otherwise will create it
-	 * @return
+	 * @return Path
 	 * @throws IOException
 	 */
 	public Path verifyZIPPath() throws IOException {
@@ -155,7 +155,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	/**
 	 * get all Certificate Authorities stored on file 
 	 * @param zip
-	 * @return
+	 * @return Collection<X509Certificate>
 	 * @throws RuntimeException
 	 */
 	public Collection<X509Certificate> getFromZip(InputStream zip) throws RuntimeException {

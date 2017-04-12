@@ -180,7 +180,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	/**
 	 * calculte SHA-512 hash from downloaded file.  
 	 * @param input
-	 * @return
+	 * @return byte array with calculated hash
 	 * @throws IOException
 	 */
 	public byte[] checksum(File input) throws IOException {
@@ -208,7 +208,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	/**
 	 * Get from SERPRO mirror repository
 	 * @param zip
-	 * @return
+	 * @return Collection<X509Certificate>
 	 */
 	public Collection<X509Certificate> getOnline(InputStream zip) {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
@@ -231,7 +231,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	/**
 	 *  get Chain from file stored on local user diretory 
 	 * @param zip
-	 * @return
+	 * @return Collection<X509Certificate>
 	 * @throws RuntimeException
 	 */
 	public Collection<X509Certificate> getFromZip(InputStream zip) throws RuntimeException {
@@ -266,7 +266,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	/**
 	 * execute file download from defined URL 
 	 * @param stringURL
-	 * @return
+	 * @return InputStream
 	 * @throws RuntimeException
 	 */
 	public InputStream getInputStreamFromURL(String stringURL) throws RuntimeException {

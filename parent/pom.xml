@@ -23,7 +23,7 @@
 				<artifactId>bom</artifactId>
 				<scope>import</scope>
 				<type>pom</type>
-				<version>3.0.0-BETA1-SNAPSHOT</version>
+				<version>${project.parent.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
