@@ -297,10 +297,10 @@
 	</profiles>
 
 	<scm>
-		<connection>scm:git:git@github.com:demoiselle/${project.alias}.git</connection>
-		<developerConnection>scm:git:git@github.com:demoiselle/${project.alias}.git</developerConnection>
-		<url>https://github.com/demoiselle/${project.alias}</url>
-		<tag>3.0.0-BETA1-SNAPSHOT</tag>
+		<connection>scm:git:https://github.com:demoiselle/${project.alias}.git</connection>
+  		<developerConnection>scm:git:https://github.com:demoiselle/${project.alias}.git</developerConnection>
+  		<url>https://github.com/demoiselle/${project.alias}</url>
+  		<tag>master</tag>		
 	</scm>
 
 	<distributionManagement>
