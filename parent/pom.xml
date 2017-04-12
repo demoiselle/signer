@@ -69,13 +69,12 @@
 							<Codebase>*</Codebase>
 							<Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
 							<Trusted-Library>true</Trusted-Library>
-							<Bundle-RequiredExecutionEnvironment> J2SE-1.5, JavaSE-1.6,
-								JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
+							<Bundle-RequiredExecutionEnvironment>JavaSE-1.6, JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
 							<Implementation-Vendor-Id>org.demoiselle</Implementation-Vendor-Id>
-							<Implementation-Version>${project.version}</Implementation-Version>
+							<Implementation-Version>${project.parent.version}</Implementation-Version>
 							<Specification-Vendor>Demoiselle.org</Specification-Vendor>
 							<Implementation-Vendor>Demoiselle.org</Implementation-Vendor>
-							<Bundle-Version>${project.version}</Bundle-Version>
+							<Bundle-Version>${project.parent.version}</Bundle-Version>
 						</manifestEntries>
 					</archive>
 				</configuration>
