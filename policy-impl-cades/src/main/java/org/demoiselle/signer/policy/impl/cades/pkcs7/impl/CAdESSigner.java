@@ -669,36 +669,28 @@ public class CAdESSigner implements PKCS7Signer {
 
 	private enum AlgorithmNames {
 
-		md2("1.2.840.113549.2.1", "MD2"), md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), md5(
-				"1.2.840.113549.2.5",
-				"MD5"), md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"), sha1("1.3.14.3.2.26",
-						"SHA1"), sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"), sha1WithECDSAEncryption(
-								"1.2.840.10045.4.1",
-								"SHA1withECDSA"), sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"), sha224(
-										"2.16.840.1.101.3.4.2.4",
-										"SHA224"), sha224WithRSAEncryption("1.2.840.113549.1.1.14",
-												"SHA224withRSA"), sha256("2.16.840.1.101.3.4.2.1",
-														"SHA256"), sha256WithRSAEncryption("1.2.840.113549.1.1.11",
-																"SHA256withRSA"), sha384("2.16.840.1.101.3.4.2.2",
-																		"SHA384"), sha384WithRSAEncryption(
-																				"1.2.840.113549.1.1.12",
-																				"SHA384withRSA"), sha512(
-																						"2.16.840.1.101.3.4.2.3",
-																						"SHA512"), sha512WithRSAEncryption(
-																								"1.2.840.113549.1.1.13",
-																								"SHA512withRSA"), sha3_224(
-																										"2.16.840.1.101.3.4.2.7",
-																										"SHA3-224"), sha3_256(
-																												"2.16.840.1.101.3.4.2.8",
-																												"SHA3-256"), sha3_384(
-																														"2.16.840.1.101.3.4.2.9",
-																														"SHA3-384"), sha3_512(
-																																"2.16.840.1.101.3.4.2.10",
-																																"SHA3-512"), shake128(
-																																		"1.0.10118.3.0.62",
-																																		"SHAKE128"), shake256(
-																																				"1.0.10118.3.0.63",
-																																				"SHAKE256");
+		md2("1.2.840.113549.2.1", "MD2"),
+		md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), 
+		md5("1.2.840.113549.2.5","MD5"),
+		md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"),
+		sha1("1.3.14.3.2.26", "SHA1"),
+		sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"),
+		sha1WithECDSAEncryption("1.2.840.10045.4.1", "SHA1withECDSA"),
+		sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"),
+		sha224("2.16.840.1.101.3.4.2.4", "SHA224"),
+		sha224WithRSAEncryption("1.2.840.113549.1.1.14", "SHA224withRSA"),
+		sha256("2.16.840.1.101.3.4.2.1", "SHA256"),
+		sha256WithRSAEncryption("1.2.840.113549.1.1.11", "SHA256withRSA"),
+		sha384("2.16.840.1.101.3.4.2.2", "SHA384"),
+		sha384WithRSAEncryption("1.2.840.113549.1.1.12", "SHA384withRSA"),
+		sha512("2.16.840.1.101.3.4.2.3", "SHA512"),
+		sha512WithRSAEncryption("1.2.840.113549.1.1.13", "SHA512withRSA"),
+		sha3_224("2.16.840.1.101.3.4.2.7", "SHA3-224"),
+		sha3_256("2.16.840.1.101.3.4.2.8", "SHA3-256"),
+		sha3_384("2.16.840.1.101.3.4.2.9", "SHA3-384"),
+		sha3_512("2.16.840.1.101.3.4.2.10", "SHA3-512"),
+		shake128("1.0.10118.3.0.62", "SHAKE128"),
+		shake256("1.0.10118.3.0.63", "SHAKE256");
 
 		private final String identifier;
 		private final String algorithmName;
@@ -889,6 +881,7 @@ public class CAdESSigner implements PKCS7Signer {
 		return this.doSign(content, previewSigned);
 	}
 
+	@SuppressWarnings("static-access")
 	private CMSSignedData updateWithCounterSignature(final CMSSignedData counterSignature,
 			final CMSSignedData originalSignature, SignerId selector) {
 
