@@ -73,6 +73,7 @@ import org.bouncycastle.cms.CMSProcessable;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
+import org.bouncycastle.cms.CMSSignerDigestMismatchException;
 import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.DefaultSignedAttributeTableGenerator;
 import org.bouncycastle.cms.SignerId;
@@ -176,10 +177,10 @@ public class CAdESSigner implements PKCS7Signer {
 		while (it.hasNext()) {
 			try {
 				SignerInformation signer = (SignerInformation) it.next();
-				
+
 				SignerInformationStore s = signer.getCounterSignatures();
 				logger.info("Foi(ram) encontrada(s) " + s.size() + " contra-assinatura(s).");
-				
+
 				Collection<?> certCollection = certStore.getMatches(signer.getSID());
 
 				Iterator<?> certIt = certCollection.iterator();
@@ -232,8 +233,12 @@ public class CAdESSigner implements PKCS7Signer {
 				}
 			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
 				throw new SignerException(ex);
-			} catch (CMSException ex) {
-				throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid"), ex);
+			} catch (CMSException ex) {				
+				// When file is mismatch with sign
+				if (ex instanceof CMSSignerDigestMismatchException)
+					throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
+				else
+					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid"), ex);
 			}
 		}
 
@@ -390,7 +395,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private byte[] doSign(byte[] content) {
 		return this.doSign(content, null);
 	}
-	
+
 	private Collection<X509Certificate> getSignersCertificates(CMSSignedData previewSignerData) {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
 		Store<?> certStore = previewSignerData.getCertificates();
@@ -408,13 +413,13 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 		}
 		return result;
-		
+
 	}
 
 	private byte[] doSign(byte[] content, byte[] previewSignature) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-			
+
 			// Completa os certificados ausentes da cadeia, se houver
 			if (this.certificate == null && this.certificateChain != null && this.certificateChain.length > 0) {
 				this.certificate = (X509Certificate) this.certificateChain[0];
@@ -431,9 +436,9 @@ public class CAdESSigner implements PKCS7Signer {
 				cmsPreviewSignedData = new CMSSignedData(new CMSAbsentContent(), previewSignature);
 				Collection<X509Certificate> previewCerts = this.getSignersCertificates(cmsPreviewSignedData);
 				for (Certificate cert : this.certificateChain) {
-					previewCerts.add((X509Certificate)cert);
+					previewCerts.add((X509Certificate) cert);
 				}
-				this.certificateChain = previewCerts.toArray(new Certificate[]{});
+				this.certificateChain = previewCerts.toArray(new Certificate[] {});
 			}
 
 			// Recupera a lista de algoritmos da politica e o tamanho minimo da
@@ -544,17 +549,19 @@ public class CAdESSigner implements PKCS7Signer {
 						certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
 				trustedCAs.add(certificateTrustPoint.getTrustpoint());
 			}
-			
+
 			// Efetua a validacao das cadeias do certificado baseado na politica
 			try {
 				CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
-			}catch (CAManagerException ex){
-				// Não encontrou na política, verificará nas cadeias do componente chain-icp-brasil provavelmente certificado de homologação.
+			} catch (CAManagerException ex) {
+				// Não encontrou na política, verificará nas cadeias do
+				// componente chain-icp-brasil provavelmente certificado de
+				// homologação.
 				logger.info(cadesMessagesBundle.getString("info.trust.poin.homolog"));
 				trustedCAs = CAManager.getInstance().getCertificateChain(certificate);
 				CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
 			}
-			
+
 			// Recupera a data de validade da politica para validacao
 			logger.info(cadesMessagesBundle.getString("info.policy.valid.period"));
 			Date dateNotBefore = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()
@@ -662,28 +669,36 @@ public class CAdESSigner implements PKCS7Signer {
 
 	private enum AlgorithmNames {
 
-		md2("1.2.840.113549.2.1", "MD2"),
-		md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), 
-		md5("1.2.840.113549.2.5","MD5"),
-		md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"),
-		sha1("1.3.14.3.2.26", "SHA1"),
-		sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"),
-		sha1WithECDSAEncryption("1.2.840.10045.4.1", "SHA1withECDSA"),
-		sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"),
-		sha224("2.16.840.1.101.3.4.2.4", "SHA224"),
-		sha224WithRSAEncryption("1.2.840.113549.1.1.14", "SHA224withRSA"),
-		sha256("2.16.840.1.101.3.4.2.1", "SHA256"),
-		sha256WithRSAEncryption("1.2.840.113549.1.1.11", "SHA256withRSA"),
-		sha384("2.16.840.1.101.3.4.2.2", "SHA384"),
-		sha384WithRSAEncryption("1.2.840.113549.1.1.12", "SHA384withRSA"),
-		sha512("2.16.840.1.101.3.4.2.3", "SHA512"),
-		sha512WithRSAEncryption("1.2.840.113549.1.1.13", "SHA512withRSA"),
-		sha3_224("2.16.840.1.101.3.4.2.7", "SHA3-224"),
-		sha3_256("2.16.840.1.101.3.4.2.8", "SHA3-256"),
-		sha3_384("2.16.840.1.101.3.4.2.9", "SHA3-384"),
-		sha3_512("2.16.840.1.101.3.4.2.10", "SHA3-512"),
-		shake128("1.0.10118.3.0.62", "SHAKE128"),
-		shake256("1.0.10118.3.0.63", "SHAKE256");
+		md2("1.2.840.113549.2.1", "MD2"), md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), md5(
+				"1.2.840.113549.2.5",
+				"MD5"), md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"), sha1("1.3.14.3.2.26",
+						"SHA1"), sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"), sha1WithECDSAEncryption(
+								"1.2.840.10045.4.1",
+								"SHA1withECDSA"), sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"), sha224(
+										"2.16.840.1.101.3.4.2.4",
+										"SHA224"), sha224WithRSAEncryption("1.2.840.113549.1.1.14",
+												"SHA224withRSA"), sha256("2.16.840.1.101.3.4.2.1",
+														"SHA256"), sha256WithRSAEncryption("1.2.840.113549.1.1.11",
+																"SHA256withRSA"), sha384("2.16.840.1.101.3.4.2.2",
+																		"SHA384"), sha384WithRSAEncryption(
+																				"1.2.840.113549.1.1.12",
+																				"SHA384withRSA"), sha512(
+																						"2.16.840.1.101.3.4.2.3",
+																						"SHA512"), sha512WithRSAEncryption(
+																								"1.2.840.113549.1.1.13",
+																								"SHA512withRSA"), sha3_224(
+																										"2.16.840.1.101.3.4.2.7",
+																										"SHA3-224"), sha3_256(
+																												"2.16.840.1.101.3.4.2.8",
+																												"SHA3-256"), sha3_384(
+																														"2.16.840.1.101.3.4.2.9",
+																														"SHA3-384"), sha3_512(
+																																"2.16.840.1.101.3.4.2.10",
+																																"SHA3-512"), shake128(
+																																		"1.0.10118.3.0.62",
+																																		"SHAKE128"), shake256(
+																																				"1.0.10118.3.0.63",
+																																				"SHAKE256");
 
 		private final String identifier;
 		private final String algorithmName;
@@ -873,27 +888,29 @@ public class CAdESSigner implements PKCS7Signer {
 	public byte[] doDetachedSign(byte[] content, byte[] previewSigned) {
 		return this.doSign(content, previewSigned);
 	}
-	
-	
-	private CMSSignedData updateWithCounterSignature(final CMSSignedData counterSignature, final CMSSignedData originalSignature, SignerId selector) {
 
-		//Retrieve the SignerInformation from the countersigned signature
+	private CMSSignedData updateWithCounterSignature(final CMSSignedData counterSignature,
+			final CMSSignedData originalSignature, SignerId selector) {
+
+		// Retrieve the SignerInformation from the countersigned signature
 		final SignerInformationStore originalSignerInfos = originalSignature.getSignerInfos();
-		//Retrieve the SignerInformation from the countersignature
+		// Retrieve the SignerInformation from the countersignature
 		final SignerInformationStore signerInfos = counterSignature.getSignerInfos();
 
-		//Add the countersignature
-		SignerInformation updatedSI = originalSignature.getSignerInfos().get(selector).addCounterSigners(originalSignerInfos.get(selector), signerInfos);
+		// Add the countersignature
+		SignerInformation updatedSI = originalSignature.getSignerInfos().get(selector)
+				.addCounterSigners(originalSignerInfos.get(selector), signerInfos);
 
-		//Create updated SignerInformationStore
+		// Create updated SignerInformationStore
 		Collection<SignerInformation> counterSignatureInformationCollection = new ArrayList<SignerInformation>();
 		counterSignatureInformationCollection.add(updatedSI);
-		SignerInformationStore signerInformationStore = new SignerInformationStore(counterSignatureInformationCollection);
+		SignerInformationStore signerInformationStore = new SignerInformationStore(
+				counterSignatureInformationCollection);
 
-		//Return new, updated signature
+		// Return new, updated signature
 		return CMSSignedData.replaceSigners(originalSignature, signerInformationStore);
 	}
-	
+
 	@Override
 	public byte[] doCounterSign(byte[] previewCMSSignature) {
 		try {
@@ -901,15 +918,16 @@ public class CAdESSigner implements PKCS7Signer {
 
 			// Reading a P7S file that is preview signature.
 			CMSSignedData cmsPreviewSignedData = new CMSSignedData(previewCMSSignature);
-			
+
 			// Build BouncyCastle object that is a set of signatures
 			Collection<SignerInformation> previewSigners = cmsPreviewSignedData.getSignerInfos().getSigners();
-			
+
 			for (SignerInformation previewSigner : previewSigners) {
 				// build a counter-signature per previewSignature
 				byte[] previewSignatureFromSigner = previewSigner.getSignature();
 				CMSSignedData cmsCounterSignedData = new CMSSignedData(this.doSign(previewSignatureFromSigner));
-				cmsPreviewSignedData = this.updateWithCounterSignature(cmsCounterSignedData, cmsPreviewSignedData, previewSigner.getSID());
+				cmsPreviewSignedData = this.updateWithCounterSignature(cmsCounterSignedData, cmsPreviewSignedData,
+						previewSigner.getSID());
 			}
 			return cmsPreviewSignedData.getEncoded();
 		} catch (Throwable error) {
