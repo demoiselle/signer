@@ -43,8 +43,10 @@ import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.List;
 
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
@@ -218,6 +220,24 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 	//TODO não implementado
 	@Override
 	public byte[] doHashSign(byte[] hash) {
+		return null;
+	}
+
+	@Override
+	public boolean checkAttached(byte[] signedData) {
+		//TODO não implementado
+		return false;
+	}
+
+	@Override
+	public boolean checkDetattached(byte[] content, byte[] signedData) {
+		//TODO não implementado
+		return false;
+	}
+
+	@Override
+	public List<SignatureInfo> checkSignatureByHash(String digestAlgorithm, byte[] calculatedHashContent, byte[] signedData){
+		//TODO não implementado
 		return null;
 	}
 

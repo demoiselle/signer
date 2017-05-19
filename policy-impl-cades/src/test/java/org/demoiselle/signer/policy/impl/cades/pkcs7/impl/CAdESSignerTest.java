@@ -53,13 +53,16 @@ import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-
+import java.util.List;
 import javax.net.ssl.KeyManagerFactory;
-
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
+import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
+import org.junit.Test;
+
 
 /**
  *
@@ -91,8 +94,7 @@ public class CAdESSignerTest {
 			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
 			Security.addProvider(p);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
-					new KeyStore.PasswordProtection("senha".toCharArray()));
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 
@@ -138,7 +140,7 @@ public class CAdESSignerTest {
 	 * Teste com envio do conteúdo
 	 */
 	// @Test
-	public void testSignWithContent() {
+	public void testSignDetached() {
 		try {
 
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
@@ -177,16 +179,13 @@ public class CAdESSignerTest {
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
-			// Com conteudo atachado
-			// byte[] signature = signer.doAttachedSign(fileToSign);
-
 			// Assinatura desatachada
 			byte[] signature = signer.doDetachedSign(fileToSign);
 
 			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
 			System.out.println("Efetuando a validacao da assinatura.");
-			checked = signer.check(fileToSign, signature);
+			checked = signer.checkDetattached(fileToSign, signature);
 
 			if (checked) {
 				System.out.println("A assinatura foi validada.");
@@ -207,7 +206,7 @@ public class CAdESSignerTest {
 			/* Valida o conteudo depois de gravado */
 			System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
 			byte[] singnatureFile = readContent(fileDirName + ".p7s");
-			checked = signer.check(fileToSign, singnatureFile);
+			checked = signer.checkDetattached(fileToSign, singnatureFile);
 			if (checked) {
 				System.out.println("A assinatura foi validada.");
 			} else {
@@ -222,7 +221,7 @@ public class CAdESSignerTest {
 	/**
 	 * teste passando apenas o hash do arquivo
 	 */
-	// @Test
+	//@Test
 	public void testSignWithHash() {
 		try {
 
@@ -230,10 +229,12 @@ public class CAdESSignerTest {
 
 			// INFORMAR o arquivo para gerar o hash
 			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
-
+					
+			
 			byte[] fileToSign = readContent(fileDirName);
 
-			// Para certificado em arquivo A1 é preciso senha para PrivateKey
+			// Para certificado em arquivo A1 é preciso essa senha para PrivateKey
+			// para token troque a senha em: getKeyStoreToken()
 			char[] senha = "senha".toCharArray();
 
 			// gera o hash do arquivo
@@ -274,7 +275,7 @@ public class CAdESSignerTest {
 			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
 			System.out.println("Efetuando a validacao da assinatura.");
-			checked = signer.check(fileToSign, signature);
+			checked = signer.checkDetattached(fileToSign, signature);
 
 			if (checked) {
 				System.out.println("A assinatura foi validada.");
@@ -297,21 +298,155 @@ public class CAdESSignerTest {
 		}
 	}
 
-	// @Test
-	public void testVerifySignature() {
+	/**
+	 * Teste com envio do conteúdo
+	 */
+	//@Test
+	public void testSignAttached() {
+		try {
+			
+			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
+
+			// INFORMAR o arquivo
+			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
+			
+			
+			byte[] fileToSign = readContent(fileDirName);
+
+			// quando certificado em arquivo, precisa informar a senha
+			//char[] senha = "senha".toCharArray();
+
+			// Para certificado em Token
+			KeyStore ks = getKeyStoreToken();
+
+			// Para certificado em arquivo A1
+			// KeyStore ks = getKeyStoreFile();
+
+			String alias = getAlias(ks);
+			/* Parametrizando o objeto doSign */
+			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+			signer.setCertificates(ks.getCertificateChain(alias));
+
+			// para token
+			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			// politica sem carimbo de tempo
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			// com carimbo de tempo
+			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+
+			// para mudar o algoritimo
+			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+
+			/* Realiza a assinatura do conteudo */
+			System.out.println("Efetuando a  assinatura do conteudo");
+			// Com conteudo atachado
+			byte[] signature = signer.doAttachedSign(fileToSign);
+
+			boolean checked = false;
+			/* Valida o conteudo antes de gravar em arquivo */
+			System.out.println("Efetuando a validacao da assinatura.");
+			checked = signer.checkAttached(signature);
+
+			if (checked) {
+				System.out.println("A assinatura foi validada.");
+			} else {
+				System.out.println("A assinatura foi invalidada!");
+			}
+			try {
+				File file = new File(fileDirName + ".p7s");
+				FileOutputStream os = new FileOutputStream(file);
+				os.write(signature);
+				os.flush();
+				os.close();
+			} catch (IOException ex) {
+				ex.printStackTrace();
+			}
+
+
+		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
+			ex.printStackTrace();
+		}
+	}
+
+	
+	//@Test
+	public void testVerifyDetachedSignature() {
 		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
+		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+		
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
+		byte[] signatureFile = readContent(fileSignatureDirName);
+		
+		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+
+		System.out.println("Efetuando a validacao da assinatura");
+		boolean checked = signer.checkDetattached(fileToVerify, signatureFile);
+		if (checked) {
+			System.out.println("A assinatura foi validada.");
+		} else {
+			System.out.println("A assinatura foi invalidada!");
+		}
+	}
+
+	
+	//@Test
+	public void testVerifyAtttachedSignature() {
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
 		byte[] signatureFile = readContent(fileSignatureDirName);
 
 		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 
 		System.out.println("Efetuando a validacao da assinatura");
-		boolean checked = signer.check(fileToVerify, signatureFile);
+		boolean checked = signer.checkAttached(signatureFile);
 		if (checked) {
 			System.out.println("A assinatura foi validada.");
 		} else {
 			System.out.println("A assinatura foi invalidada!");
+		}
+	}
+	
+	
+	//@Test
+	public void testVerifySignatureByHash() {
+		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
+						
+		byte[] fileToVerify = readContent(fileToVerifyDirName);
+				
+		byte[] signatureFile = readContent(fileSignatureDirName);
+
+		java.security.MessageDigest md;
+		try {
+			md = java.security.MessageDigest
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+		
+			// gera o hash do arquivo que foi assinado
+			byte[] hash = md.digest(fileToVerify);
+		
+			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+		
+			System.out.println("Efetuando a validacao da assinatura");
+					
+			List<SignatureInfo> signaturesInfo = signer.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signatureFile);
+			if (signaturesInfo != null) {
+				System.out.println("A assinatura foi validada.");
+				for (SignatureInfo si : signaturesInfo){
+					System.out.println(si.signDate);
+					if (si.getTimeStampSigner() != null){
+						System.out.println("Serial"+si.getTimeStampSigner().toString());
+					}
+					for(X509Certificate cert : si.getChain()){
+						System.out.println(cert.getSubjectDN());						
+					}					
+				}
+			} else {
+				System.out.println("A assinatura foi invalidada!");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 

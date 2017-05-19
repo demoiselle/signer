@@ -119,10 +119,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * 
- * Basic Implementation for digital signatures in PKCS7 Format.
+ * RECEBE P27S e retorna com carimbo
+ * recebe conteúdo e devolve carimbo
  * 
  */
-public class CAdESSigner implements PKCS7Signer {
+public class CAdESTimeStampSigner implements PKCS7Signer {
 
 	private static final Logger logger = LoggerFactory.getLogger(CAdESSigner.class);
 
@@ -140,13 +141,13 @@ public class CAdESSigner implements PKCS7Signer {
 
 	// private Collection<IValidator> certificateValidators = null;
 
-	public CAdESSigner() {
+	public CAdESTimeStampSigner() {
 		this.pkcs1.setAlgorithm((String) null);
 		this.setSignaturePolicy(Policies.AD_RB_CADES_2_2);
 
 	}
 
-	public CAdESSigner(String algorithm, Policies police) {
+	public CAdESTimeStampSigner(String algorithm, Policies police) {
 		this.pkcs1.setAlgorithm(algorithm);
 		this.setSignaturePolicy(police);
 
@@ -261,7 +262,6 @@ public class CAdESSigner implements PKCS7Signer {
 						TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
 						Timestamp timeStampSigner = new Timestamp(timeStampToken);
 						timeStampOperator.validate(signer.getSignature(),varTimeStamp , null);
-						si.setTimeStampSigner(timeStampSigner);
 					} catch (CertificateCoreException | IOException | TSPException e) {
 						throw new SignerException(e);
 					}

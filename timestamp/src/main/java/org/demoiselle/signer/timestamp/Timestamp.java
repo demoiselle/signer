@@ -165,6 +165,7 @@ public class Timestamp {
         builder.append(timeStampMessagesBundle.getString("text.timestamp.hash")).append(this.getHashAlgorithm()).append("\n");
         builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.hex")).append(this.getMessageImprintDigestHex()).append("\n");
         builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.base64")).append(this.getMessageImprintDigestBase64()).append("\n");
+        builder.append(timeStampMessagesBundle.getString("text.timestamp.mid")).append(this.getMessageImprintDigest()).append("\n");
         return builder.toString();        
        }
     }

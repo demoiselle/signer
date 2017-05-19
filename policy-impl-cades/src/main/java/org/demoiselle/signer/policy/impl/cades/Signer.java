@@ -39,6 +39,7 @@ package org.demoiselle.signer.policy.impl.cades;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
+import java.util.List;
 
 /**
  * Basic specification for implementation of digital signatures in CADES format.
@@ -102,9 +103,42 @@ public interface Signer {
      * @param content
      * @param signedData
      * @return
+     * @deprecated use {@link checkAttached} or {@link checkDetached} or {@link checkOnlySignature}  
      */
     abstract public boolean check(byte[] content, byte[] signedData);
 
+    
+    /**
+     * Check a digital signature with attached content, informed by parameter signedData
+     *
+     * @param signedData
+     * @return
+     */
+    abstract public boolean checkAttached(byte[] signedData);
+    
+    
+    /**
+     * Check an digital detached signature, informed by parameter signedData and it's content
+     *
+     * @param content
+     * @param signedData
+     * @return
+     */
+    abstract public boolean checkDetattached(byte[] content, byte[] signedData);
+    
+    
+    
+    /**
+     * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
+     * 
+     * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
+     * @param calculatedHashContent
+     * @param signedData
+     * @return List<SignatureInfo>
+    */
+   abstract public List<SignatureInfo> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
+
+    
     /**
      * Returns the provider.
      *

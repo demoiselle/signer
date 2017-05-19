@@ -37,8 +37,10 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7;
 
 import java.security.cert.Certificate;
+import java.util.List;
 
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
+import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
 import org.demoiselle.signer.policy.impl.cades.Signer;
 
 /**
@@ -103,6 +105,37 @@ public interface PKCS7Signer extends Signer {
      * @return detached PCKS7 signature
      */
     abstract public byte[] doHashSign (byte[] hash);
+    
+    
+    /**
+     * Check a digital signature with attached content, informed by parameter signedData
+     *
+     * @param signedData
+     * @return
+     */
+    abstract public boolean checkAttached(byte[] signedData);
+    
+    
+    /**
+     * Check an digital detached signature, informed by parameter signedData and it's content
+     *
+     * @param content
+     * @param signedData
+     * @return
+     */
+    abstract public boolean checkDetattached(byte[] content, byte[] signedData);
+    
+    
+    /**
+     * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
+     * 
+     * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
+     * @param calculatedHashContent
+     * @param signedData
+     * @return List<SignatureInfo>
+     */
+    abstract public  List<SignatureInfo> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
+   
 
     
  }
