@@ -41,10 +41,6 @@ public class SignatureInfo {
 		return signDate;
 	}
 
-	public void setSignDate(Date signDate) {
-		this.signDate = signDate;
-	}
-	
 	/**
 	 * 
 	 * @return String DateGMT when signature was generated (it is NOT a timestamp date) 
@@ -55,7 +51,11 @@ public class SignatureInfo {
         dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormatGmt.format(this.getSignDate());
     }
-
+	
+	
+	public void setSignDate(Date signDate) {
+		this.signDate = signDate;
+	}
 
 	/**
 	 * 

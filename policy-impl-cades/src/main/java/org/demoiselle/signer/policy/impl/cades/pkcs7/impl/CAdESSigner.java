@@ -134,7 +134,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private boolean defaultCertificateValidators = true;
 	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 	private byte[] hash = null;
-	private Map<String, byte[]> hashes = new HashMap<String, byte[]>();
+	private Map hashes = new HashMap();
 	private boolean checkHash = false;
 	private List<SignatureInfo> signatureInfo = new ArrayList<SignatureInfo>();
 
@@ -256,6 +256,7 @@ public class CAdESSigner implements PKCS7Signer {
 				if (attributeTimeStamp != null){
 					try {
 						TimeStampOperator timeStampOperator = new TimeStampOperator();
+						//byte [] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded("BER");
 						byte [] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
 						TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
 						Timestamp timeStampSigner = new Timestamp(timeStampToken);
@@ -263,8 +264,10 @@ public class CAdESSigner implements PKCS7Signer {
 						si.setTimeStampSigner(timeStampSigner);
 					} catch (CertificateCoreException | IOException | TSPException e) {
 						throw new SignerException(e);
-					}					
+					}
+					
 				}
+
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				si.setSignDate(dataHora);
@@ -964,6 +967,7 @@ public class CAdESSigner implements PKCS7Signer {
 		return this.check(content, signedData);
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<SignatureInfo> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{
 		this.checkHash = true;

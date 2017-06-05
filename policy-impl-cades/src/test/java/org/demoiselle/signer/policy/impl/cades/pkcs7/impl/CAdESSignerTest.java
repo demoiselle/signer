@@ -36,6 +36,8 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -61,7 +63,7 @@ import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
-import org.junit.Test;
+//import org.junit.Test;
 
 
 /**
@@ -193,15 +195,11 @@ public class CAdESSignerTest {
 				System.out.println("A assinatura foi invalidada!");
 			}
 
-			try {
-				File file = new File(fileDirName + ".p7s");
-				FileOutputStream os = new FileOutputStream(file);
-				os.write(signature);
-				os.flush();
-				os.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
+			File file = new File(fileDirName + ".p7s");
+			FileOutputStream os = new FileOutputStream(file);
+			os.write(signature);
+			os.flush();
+			os.close();
 
 			/* Valida o conteudo depois de gravado */
 			System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
@@ -209,12 +207,14 @@ public class CAdESSignerTest {
 			checked = signer.checkDetattached(fileToSign, singnatureFile);
 			if (checked) {
 				System.out.println("A assinatura foi validada.");
+				assertTrue(true);
 			} else {
 				System.out.println("A assinatura foi invalidada!");
-			}
-
-		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
+				assertTrue(false);
+			}			
+		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
+			assertTrue(false);
 		}
 	}
 
@@ -279,22 +279,20 @@ public class CAdESSignerTest {
 
 			if (checked) {
 				System.out.println("A assinatura foi validada.");
+				assertTrue(true);
 			} else {
 				System.out.println("A assinatura foi invalidada!");
+				assertTrue(false);
 			}
 
-			try {
-				File file = new File(fileDirName + ".p7s");
-				FileOutputStream os = new FileOutputStream(file);
-				os.write(signature);
-				os.flush();
-				os.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-
-		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
+			File file = new File(fileDirName + ".p7s");
+			FileOutputStream os = new FileOutputStream(file);
+			os.write(signature);
+			os.flush();
+			os.close();
+		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
+			assertTrue(false);
 		}
 	}
 
@@ -309,7 +307,6 @@ public class CAdESSignerTest {
 
 			// INFORMAR o arquivo
 			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
-			
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -352,22 +349,19 @@ public class CAdESSignerTest {
 
 			if (checked) {
 				System.out.println("A assinatura foi validada.");
+				assertTrue(true);
 			} else {
 				System.out.println("A assinatura foi invalidada!");
+				assertTrue(false);
 			}
-			try {
-				File file = new File(fileDirName + ".p7s");
-				FileOutputStream os = new FileOutputStream(file);
-				os.write(signature);
-				os.flush();
-				os.close();
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-
-
-		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException ex) {
+			File file = new File(fileDirName + ".p7s");
+			FileOutputStream os = new FileOutputStream(file);
+			os.write(signature);
+			os.flush();
+			os.close();
+		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
+			assertTrue(false);			
 		}
 	}
 
@@ -386,8 +380,10 @@ public class CAdESSignerTest {
 		boolean checked = signer.checkDetattached(fileToVerify, signatureFile);
 		if (checked) {
 			System.out.println("A assinatura foi validada.");
+			assertTrue(true);
 		} else {
 			System.out.println("A assinatura foi invalidada!");
+			assertTrue(false);
 		}
 	}
 
@@ -403,8 +399,10 @@ public class CAdESSignerTest {
 		boolean checked = signer.checkAttached(signatureFile);
 		if (checked) {
 			System.out.println("A assinatura foi validada.");
+			assertTrue(true);
 		} else {
 			System.out.println("A assinatura foi invalidada!");
+			assertTrue(false);
 		}
 	}
 	
@@ -442,11 +440,14 @@ public class CAdESSignerTest {
 						System.out.println(cert.getSubjectDN());						
 					}					
 				}
+				assertTrue(true);
 			} else {
 				System.out.println("A assinatura foi invalidada!");
+				assertTrue(false);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			assertTrue(false);
 		}
 	}
 

@@ -4,4 +4,4 @@
 /.settings
 /.externalToolBuilders
 /target/
-/target/
+/pom.xml.releaseBackup

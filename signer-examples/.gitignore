@@ -4,5 +4,4 @@
 /.settings
 /.externalToolBuilders
 /target/
-/signer__policy_engine.log
-/signer_core.log
+/pom.xml.releaseBackup

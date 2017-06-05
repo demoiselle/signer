@@ -4,3 +4,5 @@
 /.settings
 /.externalToolBuilders
 /target/
+/pom.xml.releaseBackup
+/signer_policy_impl_cades.log

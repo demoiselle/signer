@@ -114,7 +114,7 @@ public class TimeStampOperator {
             byte[] hashedMessage = null;
             if (content != null){
             	hashedMessage = digest.digest(content);                
-                logger.info(Base64.toBase64String(hashedMessage));	
+                //logger.info(Base64.toBase64String(hashedMessage));	
             }else{
             	hashedMessage = hash;
             }
