@@ -5,3 +5,4 @@
 /.externalToolBuilders
 /target/
 /pom.xml.releaseBackup
+/signer_core.log
