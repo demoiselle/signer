@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.demoiselle.signer</groupId>
@@ -14,7 +15,7 @@
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
-		<version>9</version>
+		<version>8</version>
 	</parent>
 
 	<licenses>
@@ -87,11 +88,8 @@
 		<module>policy-engine</module>
 		<module>policy-impl-cades</module>
 		<module>timestamp</module>
-		<!--
-		<module>policy-impl-xades</module>
-		<module>policy-impl-pades</module>
-		 -->
-		
+		<!-- <module>policy-impl-xades</module> <module>policy-impl-pades</module> -->
+
 	</modules>
 
 	<properties>
@@ -102,7 +100,7 @@
 		<maven.compiler.target>1.7</maven.compiler.target>
 		<project.scm.id>github</project.scm.id>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	   <github.global.server>github</github.global.server>
+		<github.global.server>github</github.global.server>
 	</properties>
 
 	<build>
@@ -152,7 +150,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.4.2</version><!--$NO-MVN-MAN-VER$-->
+				<version>2.4.2</version><!--$NO-MVN-MAN-VER$ -->
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean install</preparationGoals>
@@ -167,6 +165,35 @@
 				</dependencies>
 			</plugin>
 		</plugins>
+
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.apache.maven.plugins</groupId>
+										<artifactId>maven-enforcer-plugin</artifactId>
+										<versionRange>(,2.1.0),(2.1.0,2.2.0),(2.2.0,)</versionRange>
+										<goals>
+											<goal>enforce</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore />
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
 	</build>
 
 	<reporting>
@@ -198,9 +225,9 @@
 
 	<scm>
 		<connection>scm:git:https://github.com/demoiselle/${project.alias}.git</connection>
-  		<developerConnection>scm:git:https://github.com/demoiselle/${project.alias}.git</developerConnection>
-  		<url>https://github.com/demoiselle/${project.alias}</url>
-  		<tag>master</tag>		
+		<developerConnection>scm:git:https://github.com/demoiselle/${project.alias}.git</developerConnection>
+		<url>https://github.com/demoiselle/${project.alias}</url>
+		<tag>master</tag>
 	</scm>
 
 	<distributionManagement>

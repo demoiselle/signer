@@ -50,6 +50,7 @@ import java.security.cert.CertificateException;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cms.CMSException;
@@ -65,7 +66,6 @@ import org.bouncycastle.tsp.TimeStampRequestGenerator;
 import org.bouncycastle.tsp.TimeStampResponse;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
-import org.bouncycastle.util.encoders.Base64;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.cryptography.Digest;

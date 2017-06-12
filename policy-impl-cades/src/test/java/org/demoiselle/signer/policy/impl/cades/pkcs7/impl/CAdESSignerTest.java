@@ -79,6 +79,7 @@ public class CAdESSignerTest {
 	 * 
 	 * Faz a leitura do token, precisa setar a lib (.SO) e a senha do token.
 	 */
+	@SuppressWarnings("restriction")
 	private KeyStore getKeyStoreToken() {
 
 		try {
@@ -114,6 +115,7 @@ public class CAdESSignerTest {
 	 * Faz a leitura do certificado armazenado em arquivo (A1)
 	 */
 
+	@SuppressWarnings("unused")
 	private KeyStore getKeyStoreFile() {
 
 		try {
@@ -153,7 +155,7 @@ public class CAdESSignerTest {
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			char[] senha = "senha".toCharArray();
+			// char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
@@ -235,7 +237,7 @@ public class CAdESSignerTest {
 
 			// Para certificado em arquivo A1 é preciso essa senha para PrivateKey
 			// para token troque a senha em: getKeyStoreToken()
-			char[] senha = "senha".toCharArray();
+			// char[] senha = "senha".toCharArray();
 
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest

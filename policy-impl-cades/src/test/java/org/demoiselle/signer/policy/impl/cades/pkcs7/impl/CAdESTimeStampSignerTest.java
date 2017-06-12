@@ -1,6 +1,6 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -23,7 +23,6 @@ import javax.net.ssl.KeyManagerFactory;
 
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.timestamp.Timestamp;
-import org.junit.Test;
 
 public class CAdESTimeStampSignerTest {
 
@@ -261,6 +260,7 @@ public class CAdESTimeStampSignerTest {
 		return result;
 	}
 	
+	@SuppressWarnings("restriction")
 	private KeyStore getKeyStoreToken() {
 
 		try {
@@ -296,6 +296,7 @@ public class CAdESTimeStampSignerTest {
 	 * Faz a leitura do certificado armazenado em arquivo (A1)
 	 */
 
+	@SuppressWarnings("unused")
 	private KeyStore getKeyStoreFile() {
 
 		try {

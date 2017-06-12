@@ -36,8 +36,6 @@
  */
 package org.demoiselle.signer.timestamp.utils;
 
-import org.demoiselle.signer.core.exception.CertificateCoreException;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -45,6 +43,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+
+import org.demoiselle.signer.core.exception.CertificateCoreException;
 
 
 /**

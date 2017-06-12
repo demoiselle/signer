@@ -36,13 +36,13 @@
  */
 package org.demoiselle.signer.timestamp;
 
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+
 import org.demoiselle.signer.core.Priority;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
-
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
 
 /**
  * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service

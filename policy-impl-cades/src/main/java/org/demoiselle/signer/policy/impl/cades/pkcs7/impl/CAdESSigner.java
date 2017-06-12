@@ -134,6 +134,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private boolean defaultCertificateValidators = true;
 	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 	private byte[] hash = null;
+	@SuppressWarnings("rawtypes")
 	private Map hashes = new HashMap();
 	private boolean checkHash = false;
 	private List<SignatureInfo> signatureInfo = new ArrayList<SignatureInfo>();
