@@ -37,41 +37,31 @@ public class CertificateLoad {
 
 			keyStoreLoader.setCallbackHandler(new CallbackHandler() {
 				public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-					for (Callback callback : callbacks) {
-						if (callback instanceof PasswordCallback) {
+					for (Callback callback : callbacks)
+						if (callback instanceof PasswordCallback)
 							((PasswordCallback) callback).setPassword(password);
-						}
-					}
 				}
 			});
 
 			keyStore = keyStoreLoader.getKeyStore();
-
 			Enumeration<String> aliases = keyStore.aliases();
 
 			while (aliases.hasMoreElements()) {
 
 				String alias = aliases.nextElement();
 
-				System.out.println("Alias: " + alias);
+				logger.info("============= Alias: " + alias + " =============");
 
 				certificate = (X509Certificate) keyStore.getCertificate(alias);
 				privateKey = (PrivateKey) keyStore.getKey(alias, null);
 				certificateChain = keyStore.getCertificateChain(alias);
 
 				try {
+					CertificateManager certificateManager = new CertificateManager(certificate);
+					CertICPBrasil cert = certificateManager.load(CertICPBrasil.class);
 
-					CertificateManager cm = new CertificateManager(certificate);
-					CertICPBrasil cert = cm.load(CertICPBrasil.class);
-					logger.info("CPF: {0}", cert.getCpf());
-
-					// BasicCertificate bc = new BasicCertificate(certificate);
-					// logger.info("Nome....................[{0}]",
-					// bc.getNome());
-					// logger.info("E-mail..................[{0}]",
-					// bc.getEmail());
-					// logger.info("Numero de serie.........[{0}]",
-					// bc.getSerialNumber());
+					logger.info("Nome: " + cert.getNome());
+					logger.info("CPF: " + cert.getCpf());
 				} catch (Exception e) {
 					logger.error("Erro ao carregar o certificado (ICP Brasil) com alias [" + alias + "]", e);
 				}
