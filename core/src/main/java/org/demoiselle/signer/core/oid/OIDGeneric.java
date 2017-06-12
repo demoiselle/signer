@@ -65,6 +65,7 @@ public class OIDGeneric {
 
 	private String oid = null;
 	private String data = null;
+	private static String packageName = "org.demoiselle.signer.core.oid.OID_";
 	protected Map<String, String> properties = new HashMap<String, String>();
 	private static ASN1InputStream is;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
@@ -107,7 +108,7 @@ public class OIDGeneric {
 			}
 		}
 
-		String className = "org.demoiselle.signer.oid.OID_" + oid.getId().replaceAll("[.]", "_");
+		String className =  getPackageName()+ oid.getId().replaceAll("[.]", "_");
 		OIDGeneric oidGenerico;
 		try {
 			oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
@@ -150,7 +151,7 @@ public class OIDGeneric {
 	 */
 	public static OIDGeneric getInstance(DerValue der) throws IOException, Exception {
 		OtherName on = new OtherName(der);
-		String className = "org.demoiselle.signer.oid.OID_" + on.getOID().toString().replaceAll("[.]", "_");
+		String className = getPackageName() + on.getOID().toString().replaceAll("[.]", "_");
 
 		OIDGeneric oidGenerico;
 		try {
@@ -180,7 +181,6 @@ public class OIDGeneric {
 	 *            Fields of a certificate
 	 */
 	protected void initialize(Object[] fields) {
-		// TODO fazer alteracao para contemplar o novo tamanho de campo do RG
 
 		int tmp = 0;
 
@@ -207,4 +207,9 @@ public class OIDGeneric {
 	public String getData() {
 		return data;
 	}
+
+	public static String getPackageName() {
+		return packageName;
+	}
+	
 }

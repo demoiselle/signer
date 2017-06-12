@@ -152,8 +152,8 @@ public class CertificateExtra {
      * <B> * </ b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
      * @return OID_2_16_76_1_3_1
      */
-    public OID_2_16_76_1_3_1 getOID_2_16_76_1_3_1() {
-        return (OID_2_16_76_1_3_1) extras.get("2.16.76.1.3.1");
+    public OID_2_16_76_1_3_1 getOID_2_16_76_1_3_1() {  	
+    	return (OID_2_16_76_1_3_1) extras.get("2.16.76.1.3.1");
     }
 
     /**

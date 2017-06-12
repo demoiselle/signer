@@ -612,11 +612,10 @@ public class BasicCertificate {
             sb.append(coreMessagesBundle.getString("text.certicate.name")).append(this.getNome()).append("\n");
             sb.append(coreMessagesBundle.getString("text.certicate.valid.from")).append(dtValidade.format(this.getBeforeDate())).append("ate").append(dtValidade.format(this.getAfterDate())).append("\n");
             sb.append("*********************************\n");
-            sb.append(coreMessagesBundle.getString("text.certicate.email")).append(this.getEmail()).append("\n");
-            sb.append("*********************************\n");
-            sb.append(coreMessagesBundle.getString("text.certicate.is.pf")).append(this.hasCertificatePF()).append("\n");
+     //       sb.append("*********************************\n");            
             if (this.hasCertificatePF()) {
                 ICPBRCertificatePF tdPF = this.getICPBRCertificatePF();
+                sb.append(coreMessagesBundle.getString("text.certicate.email")).append(this.getEmail()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.cpf")).append(tdPF.getCPF()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.birth.date")).append(tdPF.getBirthDate()).append("\n");
                 sb.append(coreMessagesBundle.getString("text.certicate.pis")).append(tdPF.getNis()).append("\n");

@@ -134,8 +134,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private boolean defaultCertificateValidators = true;
 	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 	private byte[] hash = null;
-	@SuppressWarnings("rawtypes")
-	private Map hashes = new HashMap();
+	private Map<String, byte[]> hashes = new HashMap<String, byte[]>();
 	private boolean checkHash = false;
 	private List<SignatureInfo> signatureInfo = new ArrayList<SignatureInfo>();
 
@@ -252,23 +251,17 @@ public class CAdESSigner implements PKCS7Signer {
 							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 				}
 				
+				//politica 
+				
+				Attribute attributePolicyUri = unsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_spq_ets_uri.getId()));
 				// Validando o atributo Timestampo (carimbo de tempo) 
 				Attribute attributeTimeStamp = unsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
 				if (attributeTimeStamp != null){
-					try {
-						TimeStampOperator timeStampOperator = new TimeStampOperator();
-						//byte [] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded("BER");
-						byte [] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
-						TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
-						Timestamp timeStampSigner = new Timestamp(timeStampToken);
-						timeStampOperator.validate(signer.getSignature(),varTimeStamp , null);
-						si.setTimeStampSigner(timeStampSigner);
-					} catch (CertificateCoreException | IOException | TSPException e) {
-						throw new SignerException(e);
-					}
-					
+					byte[] varSignature = signer.getSignature();
+					Timestamp varTimeStampSigner = validateTimestamp(attributeTimeStamp, varSignature); 
+					si.setTimeStampSigner(varTimeStampSigner);
 				}
-
+				
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				si.setSignDate(dataHora);
@@ -291,6 +284,25 @@ public class CAdESSigner implements PKCS7Signer {
 		logger.info(cadesMessagesBundle.getString("info.signature.verified", verified));
 		// TODO Efetuar o parsing da estrutura CMS
 		return true;
+	}
+	
+	/**
+	 *  validade a timestampo on signature
+	 * @param attributeTimeStamp
+	 * @param varSignature
+	 * @return
+	 */
+	private Timestamp validateTimestamp(Attribute attributeTimeStamp, byte[] varSignature){
+		try {
+			TimeStampOperator timeStampOperator = new TimeStampOperator();
+			byte [] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
+			TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
+			Timestamp timeStampSigner = new Timestamp(timeStampToken);
+			timeStampOperator.validate(varSignature,varTimeStamp , null);
+			return timeStampSigner;
+		} catch (CertificateCoreException | IOException | TSPException | CMSException e) {
+			throw new SignerException(e);
+		}		
 	}
 
 	/**

@@ -56,19 +56,23 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.List;
+
 import javax.net.ssl.KeyManagerFactory;
+
+import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
-//import org.junit.Test;
+import org.junit.Test;
 
 
 /**
  *
  */
+@SuppressWarnings("unused")
 public class CAdESSignerTest {
 
 	// A anotação @Test está comentada, para passar o buld, pois as
@@ -115,7 +119,6 @@ public class CAdESSignerTest {
 	 * Faz a leitura do certificado armazenado em arquivo (A1)
 	 */
 
-	@SuppressWarnings("unused")
 	private KeyStore getKeyStoreFile() {
 
 		try {
@@ -143,7 +146,7 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	// @Test
+//	@Test
 	public void testSignDetached() {
 		try {
 
@@ -155,7 +158,7 @@ public class CAdESSignerTest {
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			// char[] senha = "senha".toCharArray();
+			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
@@ -174,9 +177,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			 signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// para mudar o algoritimo
 			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -237,7 +240,7 @@ public class CAdESSignerTest {
 
 			// Para certificado em arquivo A1 é preciso essa senha para PrivateKey
 			// para token troque a senha em: getKeyStoreToken()
-			// char[] senha = "senha".toCharArray();
+			char[] senha = "senha".toCharArray();
 
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
@@ -409,11 +412,13 @@ public class CAdESSignerTest {
 	}
 	
 	
-	//@Test
+	// @Test
 	public void testVerifySignatureByHash() {
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
 		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
-						
+		
+		
+							
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 				
 		byte[] signatureFile = readContent(fileSignatureDirName);
@@ -439,7 +444,10 @@ public class CAdESSignerTest {
 						System.out.println("Serial"+si.getTimeStampSigner().toString());
 					}
 					for(X509Certificate cert : si.getChain()){
-						System.out.println(cert.getSubjectDN());						
+						BasicCertificate certificate = new BasicCertificate(cert);
+						if (!certificate.isCACertificate()){
+							System.out.println(certificate.toString());
+						}												
 					}					
 				}
 				assertTrue(true);

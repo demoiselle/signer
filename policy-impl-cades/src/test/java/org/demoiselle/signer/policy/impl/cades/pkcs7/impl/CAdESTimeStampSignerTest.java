@@ -1,6 +1,6 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -23,7 +23,9 @@ import javax.net.ssl.KeyManagerFactory;
 
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.timestamp.Timestamp;
+import org.junit.Test;
 
+@SuppressWarnings("unused")
 public class CAdESTimeStampSignerTest {
 
 	// TESTES COMENTADOS PARA BUILD
@@ -196,11 +198,8 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testCheckTimeStampWithContent() {
-		//String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
-		//String fileContentDirName = "local_e_nome_do_arquivo_da_assinatura";
-		String fileTimeStampDirName = "/home/80621732915/AAssinar/conteudo_carimbar.txt.timestamp";
-		String fileContentDirName = "/home/80621732915/AAssinar/conteudo_carimbar.txt";
-		
+		String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileContentDirName = "local_e_nome_do_arquivo_da_assinatura";
 		
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
@@ -221,10 +220,8 @@ public class CAdESTimeStampSignerTest {
 	
 	//@Test
 	public void testCheckTimeStampWithHash() {
-		//String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
-		//String fileContentDirName = "local_e_nome_do_arquivo_da_assinatura";
-		String fileTimeStampDirName = "/home/80621732915/AAssinar/conteudo_carimbar.txt_fromHash.timestamp";
-		String fileContentDirName = "/home/80621732915/AAssinar/conteudo_carimbar.txt";
+		String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileContentDirName = "local_e_nome_do_arquivo_da_assinatura";
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
 			byte[] content = readContent(fileContentDirName);
@@ -296,7 +293,6 @@ public class CAdESTimeStampSignerTest {
 	 * Faz a leitura do certificado armazenado em arquivo (A1)
 	 */
 
-	@SuppressWarnings("unused")
 	private KeyStore getKeyStoreFile() {
 
 		try {
