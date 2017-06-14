@@ -139,11 +139,15 @@ public class Configuration {
 		map.put("TokenOuSmartCard_35", "/usr/lib/libwdpkcs.dylib");
 		map.put("TokenOuSmartCard_36", "/usr/local/lib/libwdpkcs.dylib");
 		map.put("TokenOuSmartCard_37", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
-
+		
 		// ------------ Mac ------------
 		// Token Branco do Serpro
 		map.put("TokenOuSmartCard_38",
 				"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
+		
+		// Certificado em Nuvem - Windows
+		map.put("TokenOuSmartCard_39", winRoot.concat("/system32/SerproPkcs11.dll"));
+		
 
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {
