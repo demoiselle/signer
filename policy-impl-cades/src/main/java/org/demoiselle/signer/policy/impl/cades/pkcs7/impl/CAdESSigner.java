@@ -47,12 +47,10 @@ import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.security.interfaces.RSAKey;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -93,6 +91,7 @@ import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
+import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.core.ca.manager.CAManagerException;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
@@ -102,6 +101,7 @@ import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.policy.engine.asn1.icpb.v2.PolicyValidator;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
@@ -112,6 +112,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedOrUnsignedAttribute;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.factory.AttributeFactory;
+import org.demoiselle.signer.policy.impl.cades.util.AlgorithmNames;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 import org.slf4j.Logger;
@@ -129,6 +130,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private final PKCS1Signer pkcs1 = PKCS1Factory.getInstance().factoryDefault();
 	private X509Certificate certificate;
 	private Certificate certificateChain[];
+	private Certificate certificateChainTimeStamp[];
 	private boolean attached = false;
 	private SignaturePolicy signaturePolicy = null;
 	private boolean defaultCertificateValidators = true;
@@ -137,8 +139,9 @@ public class CAdESSigner implements PKCS7Signer {
 	private Map<String, byte[]> hashes = new HashMap<String, byte[]>();
 	private boolean checkHash = false;
 	private List<SignatureInfo> signatureInfo = new ArrayList<SignatureInfo>();
+	private String policyName;
+	private CertificateManager certificateManager;
 
-	// private Collection<IValidator> certificateValidators = null;
 
 	public CAdESSigner() {
 		this.pkcs1.setAlgorithm((String) null);
@@ -253,8 +256,6 @@ public class CAdESSigner implements PKCS7Signer {
 				
 				//politica 
 				
-				Attribute attributePolicyUri = unsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_spq_ets_uri.getId()));
-				// Validando o atributo Timestampo (carimbo de tempo) 
 				Attribute attributeTimeStamp = unsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
 				if (attributeTimeStamp != null){
 					byte[] varSignature = signer.getSignature();
@@ -266,6 +267,7 @@ public class CAdESSigner implements PKCS7Signer {
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				si.setSignDate(dataHora);
 				si.setChain(varChain);
+				si.setSignaturePolicy(signaturePolicy);
 				this.getSignatureInfo().add(si);
 				
 			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
@@ -416,6 +418,8 @@ public class CAdESSigner implements PKCS7Signer {
 	@Override
 	public void setCertificates(Certificate[] certificates) {
 		this.certificateChain = certificates;
+		this.certificateChainTimeStamp = certificates;
+		
 	}
 
 	public void setDefaultCertificateValidators(boolean defaultCertificateValidators) {
@@ -486,7 +490,7 @@ public class CAdESSigner implements PKCS7Signer {
 			if (this.certificateChain == null || this.certificateChain.length <= 1) {
 				this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 			}
-
+			
 			CMSSignedData cmsPreviewSignedData = null;
 			// Caso seja co-assinatura ou contra-assinatura
 			// Importar todos os certificados da assinatura anterior
@@ -499,6 +503,9 @@ public class CAdESSigner implements PKCS7Signer {
 				this.certificateChain = previewCerts.toArray(new Certificate[] {});
 			}
 
+			
+			setCertificateManager(new CertificateManager(this.certificate));
+			
 			// Recupera a lista de algoritmos da politica e o tamanho minimo da
 			// chave
 			List<AlgAndLength> listOfAlgAndLength = new ArrayList<AlgAndLength>();
@@ -605,20 +612,11 @@ public class CAdESSigner implements PKCS7Signer {
 				CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
 			}
 
-			// Recupera a data de validade da politica para validacao
+			//  validade da politica
 			logger.info(cadesMessagesBundle.getString("info.policy.valid.period"));
-			Date dateNotBefore = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()
-					.getNotBefore().getDate();
-			Date dateNotAfter = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()
-					.getNotAfter().getDate();
-
-			Date actualDate = new GregorianCalendar().getTime();
-
-			if (actualDate.before(dateNotBefore) || actualDate.after(dateNotAfter)) {
-				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss");
-				throw new SignerException(cadesMessagesBundle.getString("error.policy.valid.period",
-						sdf.format(dateNotBefore), sdf.format(dateNotBefore)));
-			}
+			PolicyValidator pv = new PolicyValidator(this.signaturePolicy, this.policyName);
+			pv.validate();
+			
 
 			// Realiza a assinatura do conteudo
 			CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
@@ -641,10 +639,7 @@ public class CAdESSigner implements PKCS7Signer {
 				cmsTypedData = new CMSProcessableByteArray(content);
 			}
 
-			// TODO Estudar este método de contra-assinatura posteriormente
-			if (previewSignature != null && previewSignature.length > 0) {
-				gen.addSigners(cmsPreviewSignedData.getSignerInfos());
-			}
+			
 
 			// Efetua a assinatura digital do conteúdo
 			CMSSignedData cmsSignedData = gen.generate(cmsTypedData, this.attached);
@@ -653,33 +648,52 @@ public class CAdESSigner implements PKCS7Signer {
 
 			// Consulta e adiciona os atributos não assinados//			
 			logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
-			List<SignerInformation> vNewSigners = new ArrayList<SignerInformation>();
-			SignerInformation oSi = cmsSignedData.getSignerInfos().getSigners().iterator().next();
+			Collection<SignerInformation> vNewSigners = cmsSignedData.getSignerInfos().getSigners();
+ 
+			
+			Iterator<SignerInformation> it = vNewSigners.iterator();
+			SignerInformation oSi = it.next();
+		
 
 			if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-					.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-					.getObjectIdentifiers() != null) {
+				.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
+				.getObjectIdentifiers() != null) {
 				for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-						.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-						.getMandatedUnsignedAttr().getObjectIdentifiers()) {
-
-					SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
-							.factory(objectIdentifier.getValue());
-					signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
-							signaturePolicy, this.hash);
-					unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
+					.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+					.getMandatedUnsignedAttr().getObjectIdentifiers()) {
+						SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
+						.factory(objectIdentifier.getValue());
+						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())){
+							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, oSi.getSignature(),
+									signaturePolicy, this.hash);							
+						}else{
+							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChain, oSi.getSignature(),
+									signaturePolicy, this.hash);
+						}					
+						unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 				}
 			}
-
 			unsignedAttributesTable = new AttributeTable(unsignedAttributes);
-			vNewSigners.add(SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable));
+			vNewSigners.remove(oSi);
+			oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
+			vNewSigners.add(oSi);
+			while (it.hasNext()) {
+				SignerInformation oSi2 = it.next();
+				vNewSigners.add(oSi2);
+			}
+			
+			
+			// TODO Estudar este método de contra-assinatura posteriormente
+			if (previewSignature != null && previewSignature.length > 0) {
+				 vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
+			}
+			
 			SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(vNewSigners);
 			CMSSignedData oSignedData = cmsSignedData;
-			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
-
+			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);			
 			
 			byte[] result = cmsSignedData.getEncoded();
-
+			
 			return result;			
 
 		} catch (CMSException | IOException | OperatorCreationException | CertificateEncodingException ex) {
@@ -687,214 +701,14 @@ public class CAdESSigner implements PKCS7Signer {
 		}
 	}
 	
-
 	@Override
 	public void setSignaturePolicy(PolicyFactory.Policies signaturePolicy) {
+		this.setPolicyName(signaturePolicy.name());
 		PolicyFactory policyFactory = PolicyFactory.getInstance();
 		org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy sp = policyFactory.loadPolicy(signaturePolicy);
 		this.signaturePolicy = sp;
 	}
-
-	/**
-	 * 
-	 * List of algorithms with their respective OID.
-	 * 
-	 * http://oid-info.com/basic-search.htm
-	 *
-	 */
-
-	private enum AlgorithmNames {
-
-		md2("1.2.840.113549.2.1", "MD2"),
-		md2WithRSAEncryption("1.2.840.113549.1.1.2", "MD2withRSA"), 
-		md5("1.2.840.113549.2.5","MD5"),
-		md5WithRSAEncryption("1.2.840.113549.1.1.4", "MD5withRSA"),
-		sha1("1.3.14.3.2.26", "SHA1"),
-		sha1WithDSAEncryption("1.2.840.10040.4.3", "SHA1withDSA"),
-		sha1WithECDSAEncryption("1.2.840.10045.4.1", "SHA1withECDSA"),
-		sha1WithRSAEncryption("1.2.840.113549.1.1.5", "SHA1withRSA"),
-		sha224("2.16.840.1.101.3.4.2.4", "SHA224"),
-		sha224WithRSAEncryption("1.2.840.113549.1.1.14", "SHA224withRSA"),
-		sha256("2.16.840.1.101.3.4.2.1", "SHA256"),
-		sha256WithRSAEncryption("1.2.840.113549.1.1.11", "SHA256withRSA"),
-		sha384("2.16.840.1.101.3.4.2.2", "SHA384"),
-		sha384WithRSAEncryption("1.2.840.113549.1.1.12", "SHA384withRSA"),
-		sha512("2.16.840.1.101.3.4.2.3", "SHA512"),
-		sha512WithRSAEncryption("1.2.840.113549.1.1.13", "SHA512withRSA"),
-		sha3_224("2.16.840.1.101.3.4.2.7", "SHA3-224"),
-		sha3_256("2.16.840.1.101.3.4.2.8", "SHA3-256"),
-		sha3_384("2.16.840.1.101.3.4.2.9", "SHA3-384"),
-		sha3_512("2.16.840.1.101.3.4.2.10", "SHA3-512"),
-		shake128("1.0.10118.3.0.62", "SHAKE128"),
-		shake256("1.0.10118.3.0.63", "SHAKE256");
-
-		private final String identifier;
-		private final String algorithmName;
-
-		private AlgorithmNames(String identifier, String name) {
-			this.identifier = identifier;
-			this.algorithmName = name;
-		}
-
-		private String getAlgorithmName() {
-			return algorithmName;
-		}
-
-		private String getIdentifier() {
-			return identifier;
-		}
-
-		public static String getAlgorithmNameByOID(String oid) {
-
-			switch (oid) {
-
-			case "1.2.840.113549.2.1": {
-				return md2.getAlgorithmName();
-			}
-			case "1.2.840.113549.2.5": {
-				return md5.getAlgorithmName();
-			}
-			case "1.2.840.113549.1.1.4": {
-				return md5WithRSAEncryption.getAlgorithmName();
-			}
-			case "1.3.14.3.2.26": {
-				return sha1.getAlgorithmName();
-			}
-			case "1.2.840.10040.4.3": {
-				return sha1WithDSAEncryption.getAlgorithmName();
-			}
-			case "1.2.840.10045.4.1": {
-				return sha1WithECDSAEncryption.getAlgorithmName();
-			}
-			case "1.2.840.113549.1.1.5": {
-				return sha1WithRSAEncryption.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.4": {
-				return sha224.getAlgorithmName();
-			}
-			case "1.2.840.113549.1.1.14": {
-				return sha224WithRSAEncryption.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.1": {
-				return sha256.getAlgorithmName();
-			}
-			case "1.2.840.113549.1.1.11": {
-				return sha256WithRSAEncryption.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.2": {
-				return sha384.getAlgorithmName();
-			}
-			case "1.2.840.113549.1.1.12": {
-				return sha384WithRSAEncryption.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.3": {
-				return sha512.getAlgorithmName();
-			}
-			case "1.2.840.113549.1.1.13": {
-				return sha512WithRSAEncryption.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.7": {
-				return sha3_224.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.8": {
-				return sha3_256.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.9": {
-				return sha3_384.getAlgorithmName();
-			}
-			case "2.16.840.1.101.3.4.2.10": {
-				return sha3_512.getAlgorithmName();
-			}
-			case "1.0.10118.3.0.62": {
-				return shake128.getAlgorithmName();
-			}
-			case "1.0.10118.3.0.63": {
-				return shake256.getAlgorithmName();
-			}
-			default: {
-				return sha256WithRSAEncryption.getAlgorithmName();
-			}
-			}
-		}
-
-		public static String getOIDByAlgorithmName(String algorithmName) {
-
-			switch (algorithmName) {
-
-			case "MD2": {
-				return md2.getIdentifier();
-			}
-			case "MD2withRSA": {
-				return md2WithRSAEncryption.getIdentifier();
-			}
-			case "MD5": {
-				return md5.getIdentifier();
-			}
-			case "MD5withRSA": {
-				return md5WithRSAEncryption.getIdentifier();
-			}
-			case "SHA1": {
-				return sha1.getIdentifier();
-			}
-			case "SHA1withDSA": {
-				return sha1WithDSAEncryption.getIdentifier();
-			}
-			case "SHA1withECDSA": {
-				return sha1WithECDSAEncryption.getIdentifier();
-			}
-			case "SHA1withRSA": {
-				return sha1WithRSAEncryption.getIdentifier();
-			}
-			case "SAH224": {
-				return sha224.getIdentifier();
-			}
-			case "SHA224withRSA": {
-				return sha224WithRSAEncryption.getIdentifier();
-			}
-			case "SHA256": {
-				return sha256.getIdentifier();
-			}
-			case "SHA256withRSA": {
-				return sha256WithRSAEncryption.getIdentifier();
-			}
-			case "SHA384": {
-				return sha384.getIdentifier();
-			}
-			case "SHA384withRSA": {
-				return sha384WithRSAEncryption.getIdentifier();
-			}
-			case "SHA512": {
-				return sha512.getIdentifier();
-			}
-			case "SHA512withRSA": {
-				return sha512WithRSAEncryption.getIdentifier();
-			}
-			case "SHA3-224": {
-				return sha3_224.getIdentifier();
-			}
-			case "SHA3-256": {
-				return sha3_256.getIdentifier();
-			}
-			case "SHA3-384": {
-				return sha3_384.getIdentifier();
-			}
-			case "SHA3-512": {
-				return sha3_512.getIdentifier();
-			}
-			case "SHAKE128": {
-				return shake128.getIdentifier();
-			}
-			case "SHAKE256": {
-				return shake256.getIdentifier();
-			}
-			default: {
-				return sha256WithRSAEncryption.getIdentifier();
-
-			}
-			}
-		}
-	}
-
+	
 	@Override
 	public byte[] doAttachedSign(byte[] content) {
 		this.setAttached(true);
@@ -980,7 +794,6 @@ public class CAdESSigner implements PKCS7Signer {
 		return this.check(content, signedData);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<SignatureInfo> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{
 		this.checkHash = true;
@@ -1001,4 +814,20 @@ public class CAdESSigner implements PKCS7Signer {
 		this.signatureInfo = signatureInfo;
 	}
 
+	public String getPolicyName() {
+		return policyName;
+	}
+
+	public void setPolicyName(String policyName) {
+		this.policyName = policyName;
+	}
+
+	public CertificateManager getCertificateManager() {
+		return certificateManager;
+	}
+
+	public void setCertificateManager(CertificateManager certificateManager) {
+		this.certificateManager = certificateManager;
+	}
+	
 }
