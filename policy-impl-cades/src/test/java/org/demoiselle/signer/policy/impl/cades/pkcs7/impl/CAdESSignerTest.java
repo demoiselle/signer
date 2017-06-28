@@ -128,7 +128,7 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// informar onde esta o arquivo
-			InputStream ksIs = new FileInputStream("/home/{usuario}/xx.p12");
+			InputStream ksIs = new FileInputStream("/home/usuario/arquivo_certificado.p12");
 			ks.load(ksIs, senha);
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -146,14 +146,15 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-//	@Test
+	//@Test
 	public void testSignDetached() {
 		try {
 
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
+			String fileDirName = "/home/{usuario}/arquivo_assinar";
+			
 
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -164,7 +165,7 @@ public class CAdESSignerTest {
 			KeyStore ks = getKeyStoreToken();
 
 			// Para certificado em arquivo A1
-			// KeyStore ks = getKeyStoreFile();
+			//KeyStore ks = getKeyStoreFile();
 
 			String alias = getAlias(ks);
 			/* Parametrizando o objeto doSign */
@@ -177,9 +178,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			 signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// para mudar o algoritimo
 			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -196,27 +197,18 @@ public class CAdESSignerTest {
 
 			if (checked) {
 				System.out.println("A assinatura foi validada.");
+				assertTrue(true);
 			} else {
 				System.out.println("A assinatura foi invalidada!");
+				assertTrue(false);
 			}
-
 			File file = new File(fileDirName + ".p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
 			os.close();
+			
 
-			/* Valida o conteudo depois de gravado */
-			System.out.println("Efetuando a validacao da assinatura do arquivo gravado.");
-			byte[] singnatureFile = readContent(fileDirName + ".p7s");
-			checked = signer.checkDetattached(fileToSign, singnatureFile);
-			if (checked) {
-				System.out.println("A assinatura foi validada.");
-				assertTrue(true);
-			} else {
-				System.out.println("A assinatura foi invalidada!");
-				assertTrue(false);
-			}			
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
 			assertTrue(false);
@@ -234,7 +226,7 @@ public class CAdESSignerTest {
 
 			// INFORMAR o arquivo para gerar o hash
 			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
-					
+			
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -313,6 +305,9 @@ public class CAdESSignerTest {
 			// INFORMAR o arquivo
 			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
 			
+			
+			
+			
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
@@ -335,9 +330,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			 signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// para mudar o algoritimo
 			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -370,6 +365,81 @@ public class CAdESSignerTest {
 		}
 	}
 
+	/**
+	 * Teste com envio do conteúdo
+	 */
+	//@Test
+	public void testSignCoDetached() {
+		try {
+
+			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
+
+			// INFORMAR o arquivo
+			String fileDirName = "/home/80621732915/AAssinar/testes_co/teste_co_assinador.txt";
+			String fileSignatureDirName = "/home/80621732915/AAssinar/testes_co/teste_co_assinador.txt.p7s";
+			
+
+			byte[] fileToSign = readContent(fileDirName);
+			byte[] signatureFile = readContent(fileSignatureDirName);
+
+			// quando certificado em arquivo, precisa informar a senha
+			char[] senha = "senha".toCharArray();
+
+			// Para certificado em Token
+			KeyStore ks = getKeyStoreToken();
+
+			// Para certificado em arquivo A1
+			// KeyStore ks = getKeyStoreFile();
+
+			String alias = getAlias(ks);
+			/* Parametrizando o objeto doSign */
+			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+			signer.setCertificates(ks.getCertificateChain(alias));
+
+			// para token
+			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			// politica sem carimbo de tempo
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			// com carimbo de tempo
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+
+			// para mudar o algoritimo
+			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+
+			/* Realiza a assinatura do conteudo */
+			System.out.println("Efetuando a  assinatura do conteudo");
+			// Assinatura desatachada
+			byte[] signature = signer.doDetachedSign(fileToSign, signatureFile);
+
+			boolean checked = false;
+			/* Valida o conteudo antes de gravar em arquivo */
+			System.out.println("Efetuando a validacao da assinatura.");
+			checked = signer.checkDetattached(fileToSign, signature);
+
+			if (checked) {
+				System.out.println("A assinatura foi validada.");
+				assertTrue(true);
+			} else {
+				System.out.println("A assinatura foi invalidada!");
+				assertTrue(false);
+			}
+			File file = new File(fileDirName + ".p7s");
+			FileOutputStream os = new FileOutputStream(file);
+			os.write(signature);
+			os.flush();
+			os.close();
+			
+
+		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
+			ex.printStackTrace();
+			assertTrue(false);
+		}
+	}
+
+	
 	
 	//@Test
 	public void testVerifyDetachedSignature() {
@@ -439,7 +509,7 @@ public class CAdESSignerTest {
 			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				for (SignatureInfo si : signaturesInfo){
-					System.out.println(si.signDate);
+					System.out.println(si.getSignDate());
 					if (si.getTimeStampSigner() != null){
 						System.out.println("Serial"+si.getTimeStampSigner().toString());
 					}

@@ -64,6 +64,15 @@ public class CertificateManager {
     /**
      * 
      * @param x509 java.security.cert.X509Certificate
+     * @throws CertificateValidatorException
+     */
+    public CertificateManager(X509Certificate x509) throws CertificateValidatorException {
+        this(x509, true);
+    }
+    
+    /**
+     * 
+     * @param x509 java.security.cert.X509Certificate
      * @param validators Array of {@link IValidator}
      * @throws CertificateValidatorException
      */

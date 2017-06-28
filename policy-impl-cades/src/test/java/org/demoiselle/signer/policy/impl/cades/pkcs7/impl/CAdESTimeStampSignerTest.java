@@ -33,7 +33,7 @@ public class CAdESTimeStampSignerTest {
 	//@Test
 	public void testDoTimeStampForSignature() {
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
-				
+						
 		try {
 			
 			// Para certificado em Token
@@ -77,7 +77,7 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testDoTimeStampForContent() {
-		String fileDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileDirName = "local_e_nome_do_arquivo_para_carimbar";
 				
 		try {
 			
@@ -122,7 +122,7 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testDoTimeStampForHashContent() {
-		String fileDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileDirName = "local_e_nome_do_arquivo";
 		
 		try {
 			
@@ -199,7 +199,7 @@ public class CAdESTimeStampSignerTest {
 	//@Test
 	public void testCheckTimeStampWithContent() {
 		String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
-		String fileContentDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileContentDirName = "local_e_nome_do_arquivo_assinado";
 		
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
@@ -221,7 +221,7 @@ public class CAdESTimeStampSignerTest {
 	//@Test
 	public void testCheckTimeStampWithHash() {
 		String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
-		String fileContentDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileContentDirName = "local_e_nome_do_arquivo_assinado";
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
 			byte[] content = readContent(fileContentDirName);

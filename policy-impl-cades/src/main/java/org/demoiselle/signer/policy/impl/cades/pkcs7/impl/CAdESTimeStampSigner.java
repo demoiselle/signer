@@ -159,9 +159,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			}else{
 				signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(),
 						this.getCertificateChain(), null, signaturePolicy, hash);
-			}
-			
-			signedOrUnsignedAttribute.getValue();
+			}			
 			byte[] result = signedOrUnsignedAttribute.getValue().getEncoded();
 			return result;
 		} catch (IOException ex) {

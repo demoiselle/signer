@@ -6,6 +6,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.TimeZone;
 
+import org.demoiselle.signer.core.extension.BasicCertificate;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.timestamp.Timestamp;
 
 /**
@@ -15,9 +17,10 @@ import org.demoiselle.signer.timestamp.Timestamp;
  */
 public class SignatureInfo {
 	
-	public LinkedList<X509Certificate> chain;
-	public Date signDate;
-    public Timestamp timeStampSigner = null;
+	private LinkedList<X509Certificate> chain;
+	private Date signDate;
+    private Timestamp timeStampSigner = null;
+    private SignaturePolicy signaturePolicy;
 
 
     /**
@@ -69,6 +72,28 @@ public class SignatureInfo {
 		this.timeStampSigner = timeStampSigner;
 	}
 	
-	
-	
+	/** 
+	 * 
+	 * @return list of Signers BasicCertificates
+	 */
+	public LinkedList<BasicCertificate> getSignersBasicCertificates(){
+		
+		LinkedList<BasicCertificate> listOfBasicCertificates = new LinkedList<BasicCertificate>();
+		
+		for(X509Certificate cert : getChain()){
+			BasicCertificate certificate = new BasicCertificate(cert);
+			if (!certificate.isCACertificate()){
+				listOfBasicCertificates.add(certificate);
+			}												
+		}
+		return listOfBasicCertificates;		
+	}
+
+	public SignaturePolicy getSignaturePolicy() {
+		return signaturePolicy;
+	}
+
+	public void setSignaturePolicy(SignaturePolicy signaturePolicy) {
+		this.signaturePolicy = signaturePolicy;
+	}	
 }

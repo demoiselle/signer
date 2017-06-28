@@ -36,9 +36,13 @@
  */
 package org.demoiselle.signer.timestamp.connector;
 
+import java.io.IOException;
 import java.io.InputStream;
-
+import java.io.OutputStream;
+import javax.net.ssl.HttpsURLConnection;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Time-Stamp Protocol via HTTP
@@ -53,7 +57,7 @@ import org.demoiselle.signer.core.util.MessagesBundle;
  * 
  *    <<the ASN.1 DER-encoded Time-Stamp Request message>>
  *    
- *       Content-Type: application/timestamp-reply
+ * Content-Type: application/timestamp-reply
  *       
  *    <<the ASN.1 DER-encoded Time-Stamp Response message>>
  *    
@@ -68,6 +72,13 @@ import org.demoiselle.signer.core.util.MessagesBundle;
  */
 public class HttpConnector implements Connector {
 
+	
+//	private static final Logger logger = LoggerFactory.getLogger(HttpConnector.class);
+    private String hostname;
+    private int port;
+    private OutputStream out = null;
+    private HttpsURLConnection HttpsConnector;
+	
 	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 	
     @Override
@@ -77,16 +88,21 @@ public class HttpConnector implements Connector {
 
     @Override
     public void setHostname(String hostname) {
-        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
+    	this.hostname = hostname;
     }
 
     @Override
     public void setPort(int port) {
-        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
+    	this.port = port;
     }
 
     @Override
-    public void close() {
-        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
+    public void close() {    	
+    	try {
+    		this.HttpsConnector.disconnect();
+			this.out.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
     }
 }

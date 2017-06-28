@@ -56,7 +56,6 @@ public class Signer {
 	public static String password;
 	public static Certificate[] certificateChain;
 
-	@SuppressWarnings("deprecation")
 	public static void sign(String text, Path pathP7s, Policies police, SignerAlgorithmEnum algorithm)
 			throws KeyStoreException, IOException, UnrecoverableKeyException, NoSuchAlgorithmException {
 

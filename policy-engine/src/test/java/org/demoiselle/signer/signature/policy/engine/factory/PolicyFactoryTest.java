@@ -46,7 +46,7 @@ public class PolicyFactoryTest {
 
 	private static final Logger logger = LoggerFactory.getLogger(PolicyFactoryTest.class);
 
-	@Test
+	//@Test
 	public void testLoadPolicy() {
 		PolicyFactory factory = PolicyFactory.getInstance();
 		Policies[] policies = PolicyFactory.Policies.values();
@@ -63,7 +63,7 @@ public class PolicyFactoryTest {
 	 * Test of loadLPA method, of class PolicyFactory.
 	 */
 	@SuppressWarnings("deprecation")
-	@Test
+	//@Test
 	public void testLoadLPA() {
 		PolicyFactory factory = PolicyFactory.getInstance();
 		logger.info(factory.loadLPA().toString());
@@ -73,7 +73,7 @@ public class PolicyFactoryTest {
 	 * Test of loadLPAv2 method, of class PolicyFactory.
 	 */
 	@SuppressWarnings("deprecation")
-	@Test
+	//@Test
 	public void testLoadLPAv2() {
 		PolicyFactory factory = PolicyFactory.getInstance();
 		logger.info(factory.loadLPAv2().toString());
