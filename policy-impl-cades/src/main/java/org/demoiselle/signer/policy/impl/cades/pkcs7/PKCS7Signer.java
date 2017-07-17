@@ -40,7 +40,7 @@ import java.security.cert.Certificate;
 import java.util.List;
 
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
-import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
+import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.Signer;
 
 /**
@@ -132,10 +132,15 @@ public interface PKCS7Signer extends Signer {
      * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
      * @param calculatedHashContent
      * @param signedData
-     * @return List<SignatureInfo>
+     * @return List<SignatureInformations>
      */
-    abstract public  List<SignatureInfo> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
-   
+    abstract public  List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
+
+    /**
+     * get Signature Information for a checked signature
+     * @return List<SignatureInformations>
+     */
+    abstract public List<SignatureInformations> getSignatureInfo();
 
     
  }

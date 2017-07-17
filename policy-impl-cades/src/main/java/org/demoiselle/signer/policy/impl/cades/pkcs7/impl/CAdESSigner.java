@@ -104,7 +104,7 @@ import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.asn1.icpb.v2.PolicyValidator;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
-import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
+import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS1Factory;
@@ -138,7 +138,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private byte[] hash = null;
 	private Map<String, byte[]> hashes = new HashMap<String, byte[]>();
 	private boolean checkHash = false;
-	private List<SignatureInfo> signatureInfo = new ArrayList<SignatureInfo>();
+	private List<SignatureInformations> signatureInfo = new ArrayList<SignatureInformations>();
 	private String policyName;
 	private CertificateManager certificateManager;
 
@@ -201,7 +201,7 @@ public class CAdESSigner implements PKCS7Signer {
 			try {
 				SignerInformation signer = (SignerInformation) it.next();
 				SignerInformationStore s = signer.getCounterSignatures();
-				SignatureInfo si = new SignatureInfo();
+				SignatureInformations si = new SignatureInformations();
 				logger.info("Foi(ram) encontrada(s) " + s.size() + " contra-assinatura(s).");
 
 				Collection<?> certCollection = certStore.getMatches(signer.getSID());
@@ -795,7 +795,7 @@ public class CAdESSigner implements PKCS7Signer {
 	}
 
 	@Override
-	public List<SignatureInfo> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{
+	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{
 		this.checkHash = true;
 		this.hashes.put(digestAlgorithmOID, calculatedHashContent);
 		this.hash = calculatedHashContent;
@@ -806,11 +806,12 @@ public class CAdESSigner implements PKCS7Signer {
 		}		
 	}
 
-	public List<SignatureInfo> getSignatureInfo() {
+	@Override
+	public List<SignatureInformations> getSignatureInfo() {
 		return signatureInfo;
 	}
 
-	public void setSignatureInfo(List<SignatureInfo> signatureInfo) {
+	public void setSignatureInfo(List<SignatureInformations> signatureInfo) {
 		this.signatureInfo = signatureInfo;
 	}
 

@@ -134,9 +134,9 @@ public interface Signer {
      * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
      * @param calculatedHashContent
      * @param signedData
-     * @return List<SignatureInfo>
+     * @return List<SignatureInformations>
     */
-   abstract public List<SignatureInfo> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
+   abstract public List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
 
     
     /**

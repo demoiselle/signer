@@ -15,7 +15,7 @@ import org.demoiselle.signer.timestamp.Timestamp;
  * 
  *
  */
-public class SignatureInfo {
+public class SignatureInformations {
 	
 	private LinkedList<X509Certificate> chain;
 	private Date signDate;

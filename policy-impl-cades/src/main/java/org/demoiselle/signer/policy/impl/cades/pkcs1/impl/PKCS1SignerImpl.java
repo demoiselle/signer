@@ -46,7 +46,7 @@ import java.security.SignatureException;
 import java.util.List;
 
 import org.demoiselle.signer.core.util.MessagesBundle;
-import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
+import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
@@ -236,7 +236,7 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 	}
 
 	@Override
-	public List<SignatureInfo> checkSignatureByHash(String digestAlgorithm, byte[] calculatedHashContent, byte[] signedData){
+	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithm, byte[] calculatedHashContent, byte[] signedData){
 		//TODO não implementado
 		return null;
 	}

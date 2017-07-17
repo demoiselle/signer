@@ -56,13 +56,11 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.List;
-
 import javax.net.ssl.KeyManagerFactory;
-
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.impl.cades.SignatureInfo;
+import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
@@ -330,9 +328,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			 signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// para mudar o algoritimo
 			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -392,6 +390,7 @@ public class CAdESSignerTest {
 			// KeyStore ks = getKeyStoreFile();
 
 			String alias = getAlias(ks);
+			
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
@@ -402,9 +401,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// para mudar o algoritimo
 			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -505,10 +504,10 @@ public class CAdESSignerTest {
 		
 			System.out.println("Efetuando a validacao da assinatura");
 					
-			List<SignatureInfo> signaturesInfo = signer.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signatureFile);
+			List<SignatureInformations> signaturesInfo = signer.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signatureFile);
 			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
-				for (SignatureInfo si : signaturesInfo){
+				for (SignatureInformations si : signaturesInfo){
 					System.out.println(si.getSignDate());
 					if (si.getTimeStampSigner() != null){
 						System.out.println("Serial"+si.getTimeStampSigner().toString());
