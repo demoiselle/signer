@@ -254,15 +254,19 @@ public class CAdESSigner implements PKCS7Signer {
 							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 				}
 				
-				//politica 
-				
-				Attribute attributeTimeStamp = unsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
-				if (attributeTimeStamp != null){
-					byte[] varSignature = signer.getSignature();
-					Timestamp varTimeStampSigner = validateTimestamp(attributeTimeStamp, varSignature); 
-					si.setTimeStampSigner(varTimeStampSigner);
+				//Verificando timeStamp
+				try{
+					Attribute attributeTimeStamp = null;
+					attributeTimeStamp = unsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
+					if (attributeTimeStamp != null){
+						byte[] varSignature = signer.getSignature();
+						Timestamp varTimeStampSigner = validateTimestamp(attributeTimeStamp, varSignature); 
+						si.setTimeStampSigner(varTimeStampSigner);
+					}
+				}catch (Exception ex) {
+					// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.						
 				}
-				
+												
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				si.setSignDate(dataHora);
