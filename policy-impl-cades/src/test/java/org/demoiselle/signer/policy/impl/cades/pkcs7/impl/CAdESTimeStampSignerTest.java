@@ -21,6 +21,7 @@ import java.util.List;
 
 import javax.net.ssl.KeyManagerFactory;
 
+import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.junit.Test;
@@ -39,6 +40,9 @@ public class CAdESTimeStampSignerTest {
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
 
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
+			
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
 
@@ -84,6 +88,10 @@ public class CAdESTimeStampSignerTest {
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
 
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
+			
+			
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();			
 
@@ -129,6 +137,9 @@ public class CAdESTimeStampSignerTest {
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
 
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
+			
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();			
 
@@ -317,6 +328,27 @@ public class CAdESTimeStampSignerTest {
 
 	}
 
+	/**
+	 * 
+	 * Keytore a partir de MSCAPI
+	 */
+
+	private KeyStore getKeyStoreOnWindows() {
+
+		try {
+			
+			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
+			
+			KeyStore ks = msKeyStoreLoader.getKeyStore();
+
+			return ks;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		}
+
+	}
 	
 	private String getAlias(KeyStore ks) {
 		Certificate[] certificates = null;

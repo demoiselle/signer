@@ -58,6 +58,7 @@ import java.util.Enumeration;
 import java.util.List;
 import javax.net.ssl.KeyManagerFactory;
 import org.demoiselle.signer.core.extension.BasicCertificate;
+import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -140,18 +141,43 @@ public class CAdESSignerTest {
 		}
 
 	}
+	
+	
+	/**
+	 * 
+	 * Keytore a partir de MSCAPI
+	 */
 
+	private KeyStore getKeyStoreOnWindows() {
+
+		try {
+			
+			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
+			
+			KeyStore ks = msKeyStoreLoader.getKeyStore();
+
+			return ks;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		}
+
+	}
+	
+	
+	
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	//@Test
+	@Test
 	public void testSignDetached() {
 		try {
 
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "/home/{usuario}/arquivo_assinar";
+			String fileDirName = "C:\\Users\\80621732915\\assinar.txt";
 			
 
 			byte[] fileToSign = readContent(fileDirName);
@@ -165,6 +191,9 @@ public class CAdESSignerTest {
 			// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFile();
 
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
+			
 			String alias = getAlias(ks);
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
@@ -240,6 +269,10 @@ public class CAdESSignerTest {
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
 
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
+
+			
 			// Para certificado em token
 			KeyStore ks = getKeyStoreToken();
 
@@ -317,6 +350,9 @@ public class CAdESSignerTest {
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
 
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
+			
 			String alias = getAlias(ks);
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
@@ -388,6 +424,10 @@ public class CAdESSignerTest {
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
+			
+			
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
 
 			String alias = getAlias(ks);
 			
