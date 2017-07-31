@@ -109,6 +109,7 @@ public class CAdESSignerTest {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
+		} finally {
 		}
 
 	}
@@ -170,14 +171,18 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	@Test
+	//@Test
 	public void testSignDetached() {
 		try {
 
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "C:\\Users\\80621732915\\assinar.txt";
+			
+			//
+			// String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar.txt";
+			
+			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
 			
 
 			byte[] fileToSign = readContent(fileDirName);
