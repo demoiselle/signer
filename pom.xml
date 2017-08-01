@@ -101,6 +101,7 @@
 		<project.scm.id>github</project.scm.id>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
+		<release.goals>deploy</release.goals>
 	</properties>
 
 	<build>
@@ -150,12 +151,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<version>2.5.3</version><!--$NO-MVN-MAN-VER$ -->
-				<goals>deploy</goals>
+				<version>2.5.3</version>
+				<goals>${release.goals}</goals>
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean install</preparationGoals>
-					<goals> <goal>deploy</goal> </goals>
+					<goals>${release.goals}</goals>
 				</configuration>
 				<dependencies>
 					<dependency>
