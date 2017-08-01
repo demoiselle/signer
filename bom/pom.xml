@@ -52,6 +52,7 @@
 		<maven.install.plugin.version>2.3.1</maven.install.plugin.version>
 		<maven.release.plugin.version>2.5</maven.release.plugin.version>
 		<wagon.plugin.version>1.0-beta-3</wagon.plugin.version>
+		<demoiselle.signer.version>3.1.0</demoiselle.signer.version>
 	</properties>
 
 	<dependencyManagement>
@@ -60,42 +61,42 @@
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>chain-icp-brasil</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>core</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>cryptography</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-engine</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-impl-cades</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-impl-xades</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>policy-impl-pades</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>timestamp</artifactId>
-				<version>3.0.3-SNAPSHOT</version>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
