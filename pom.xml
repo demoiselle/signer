@@ -166,13 +166,14 @@
 						<artifactId>maven-scm-provider-gitexe</artifactId>
 						<version>1.8.1</version>
 					</dependency>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-scm-plugin</artifactId>
-						<version>1.4</version>
-					</plugin>
 				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-scm-plugin</artifactId>
+				<version>1.4</version>
+			</plugin>
+
 		</plugins>
 	</build>
 
