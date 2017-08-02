@@ -151,12 +151,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
-				<goals>${release.goals}</goals>				
+				<goals>
+					${release.goals}
+				</goals>
 				<configuration>
 					<autoVersionSubmodules>true</autoVersionSubmodules>
 					<preparationGoals>clean install</preparationGoals>
 					<goals>${release.goals}</goals>
-					<goal>${release.goals}</goal>					
+					<goal>${release.goals}</goal>
 				</configuration>
 				<dependencies>
 					<dependency>
@@ -164,6 +166,11 @@
 						<artifactId>maven-scm-provider-gitexe</artifactId>
 						<version>1.8.1</version>
 					</dependency>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-scm-plugin</artifactId>
+						<version>1.4</version>
+					</plugin>
 				</dependencies>
 			</plugin>
 		</plugins>
