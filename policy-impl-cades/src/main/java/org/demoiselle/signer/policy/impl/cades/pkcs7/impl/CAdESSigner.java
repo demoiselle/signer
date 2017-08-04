@@ -58,6 +58,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
@@ -208,7 +209,11 @@ public class CAdESSigner implements PKCS7Signer {
 
 				Iterator<?> certIt = certCollection.iterator();
 				X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
-						
+				
+				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+				
+				setCertificateManager(new CertificateManager(varCert));
+				
 				if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
 					verified++;
 					logger.info(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
@@ -235,6 +240,8 @@ public class CAdESSigner implements PKCS7Signer {
 				Date dataHora = (((ASN1UTCTime) signedAttributes.get(CMSAttributes.signingTime).getAttrValues().getObjectAt(0)).getDate());
 				logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));
 				
+				
+				
 				logger.info(cadesMessagesBundle.getString("info.attribute.validation"));
 				// Valida o atributo ContentType
 				Attribute attributeContentType = signedAttributes.get(CMSAttributes.contentType);
@@ -254,6 +261,15 @@ public class CAdESSigner implements PKCS7Signer {
 							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 				}
 				
+				
+				// Validando o atributo MessageDigest
+				Attribute idSigningPolicy = null;
+				idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId()));
+				if (idSigningPolicy == null) {
+					throw new SignerException(
+							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "idSigningPolicy"));
+				}
+				
 				//Verificando timeStamp
 				try{
 					Attribute attributeTimeStamp = null;
@@ -267,7 +283,7 @@ public class CAdESSigner implements PKCS7Signer {
 					// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.						
 				}
 												
-				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+				
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				si.setSignDate(dataHora);
 				si.setChain(varChain);
@@ -797,6 +813,26 @@ public class CAdESSigner implements PKCS7Signer {
 	public boolean checkDetattached(byte[] content, byte[] signedData) {
 		return this.check(content, signedData);
 	}
+	
+	@Override
+	public  List<SignatureInformations> checkAttachedSignature(byte[] signedData){
+		if (this.check(null, signedData)){
+			return this.getSignatureInfo();
+		}else{
+			return null;
+		}
+	}
+    
+	@Override
+	public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData){
+		if (this.check(content, signedData)){
+			return this.getSignatureInfo();
+		}else{
+			return null;
+		}
+	}
+	
+	
 
 	@Override
 	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{

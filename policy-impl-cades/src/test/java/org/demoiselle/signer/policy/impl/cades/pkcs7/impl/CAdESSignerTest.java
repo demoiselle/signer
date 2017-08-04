@@ -405,7 +405,7 @@ public class CAdESSignerTest {
 	}
 
 	/**
-	 * Teste com envio do conteúdo
+	 * Teste de coassinatura com envio do conteúdo
 	 */
 	//@Test
 	public void testSignCoDetached() {
@@ -414,9 +414,10 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "/home/80621732915/AAssinar/testes_co/teste_co_assinador.txt";
-			String fileSignatureDirName = "/home/80621732915/AAssinar/testes_co/teste_co_assinador.txt.p7s";
+			String fileDirName = "local_e_nome_do_arquivo_para_assinar";
+			String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
 			
+
 
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
@@ -489,6 +490,8 @@ public class CAdESSignerTest {
 	public void testVerifyDetachedSignature() {
 		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+	
+		
 		
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		byte[] signatureFile = readContent(fileSignatureDirName);
@@ -496,10 +499,25 @@ public class CAdESSignerTest {
 		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 
 		System.out.println("Efetuando a validacao da assinatura");
-		boolean checked = signer.checkDetattached(fileToVerify, signatureFile);
-		if (checked) {
+		List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToVerify, signatureFile);
+		
+		if (signaturesInfo != null) {
 			System.out.println("A assinatura foi validada.");
-			assertTrue(true);
+			for (SignatureInformations si : signaturesInfo){
+				System.out.println(si.getSignDate());
+				if (si.getTimeStampSigner() != null){
+					System.out.println("Serial"+si.getTimeStampSigner().toString());
+				}
+				for(X509Certificate cert : si.getChain()){
+					BasicCertificate certificate = new BasicCertificate(cert);
+					if (!certificate.isCACertificate()){
+						System.out.println(certificate.toString());
+					}												
+				}
+				System.out.println(si.getSignaturePolicy().toString());
+			}
+			assertTrue(true);		
+		
 		} else {
 			System.out.println("A assinatura foi invalidada!");
 			assertTrue(false);
@@ -515,10 +533,24 @@ public class CAdESSignerTest {
 		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 
 		System.out.println("Efetuando a validacao da assinatura");
-		boolean checked = signer.checkAttached(signatureFile);
-		if (checked) {
+		List<SignatureInformations> signaturesInfo =  signer.checkAttachedSignature(signatureFile);
+		if (signaturesInfo != null) {
 			System.out.println("A assinatura foi validada.");
-			assertTrue(true);
+			for (SignatureInformations si : signaturesInfo){
+				System.out.println(si.getSignDate());
+				if (si.getTimeStampSigner() != null){
+					System.out.println("Serial"+si.getTimeStampSigner().toString());
+				}
+				for(X509Certificate cert : si.getChain()){
+					BasicCertificate certificate = new BasicCertificate(cert);
+					if (!certificate.isCACertificate()){
+						System.out.println(certificate.toString());
+					}												
+				}
+				System.out.println(si.getSignaturePolicy().toString());
+			}
+			assertTrue(true);		
+		
 		} else {
 			System.out.println("A assinatura foi invalidada!");
 			assertTrue(false);
@@ -562,7 +594,8 @@ public class CAdESSignerTest {
 						if (!certificate.isCACertificate()){
 							System.out.println(certificate.toString());
 						}												
-					}					
+					}
+					System.out.println(si.getSignaturePolicy().toString());
 				}
 				assertTrue(true);
 			} else {

@@ -241,4 +241,17 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 		return null;
 	}
 
+	@Override
+	public List<SignatureInformations> checkAttachedSignature(byte[] signedData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public List<SignatureInformations> checkDetattachedSignature(
+			byte[] content, byte[] signedData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

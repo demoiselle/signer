@@ -111,6 +111,7 @@ public class SignaturePolicy {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        builder.append(policyMessagesBundle.getString("text.uri")).append(this.getSignPolicyURI()).append("\n");
         builder.append(policyMessagesBundle.getString("text.algo.hash")).append(this.getSignPolicyHashAlg().getAlgorithm().getValue()).append("\n");
         builder.append(policyMessagesBundle.getString("text.hash")).append(this.getSignPolicyHash().getValue()).append("\n");
         builder.append(policyMessagesBundle.getString("text.oid")).append(this.getSignPolicyInfo().getSignPolicyIdentifier().getValue()).append("\n");

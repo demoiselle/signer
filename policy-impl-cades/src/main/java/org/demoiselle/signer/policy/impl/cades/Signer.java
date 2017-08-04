@@ -103,7 +103,7 @@ public interface Signer {
      * @param content
      * @param signedData
      * @return
-     * @deprecated use {@link checkAttached} or {@link checkDetached} or {@link checkOnlySignature}  
+     * @deprecated use {@link checkAttached} or {@link checkDetached} or {@link checkSignatureByHash}  
      */
     abstract public boolean check(byte[] content, byte[] signedData);
 
@@ -112,7 +112,8 @@ public interface Signer {
      * Check a digital signature with attached content, informed by parameter signedData
      *
      * @param signedData
-     * @return
+     * @return boolean
+     * @deprecated use {@link checkAttachedSignature}
      */
     abstract public boolean checkAttached(byte[] signedData);
     
@@ -122,9 +123,27 @@ public interface Signer {
      *
      * @param content
      * @param signedData
-     * @return
+     * @return boolean
+     * @deprecated use {@link checkDetattachedSignature}
      */
     abstract public boolean checkDetattached(byte[] content, byte[] signedData);
+    
+    /**
+     * Check a digital signature with attached content, informed by parameter signedData
+     * @param signedData
+     * @return List<SignatureInformations>
+     */
+    abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
+    
+    /**
+     * Check an digital detached signature, informed by parameter signedData and it's content
+     * 
+     * @param content
+     * @param signedData
+     * @return List<SignatureInformations>
+     */
+    
+    abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
     
     
     

@@ -38,7 +38,6 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7;
 
 import java.security.cert.Certificate;
 import java.util.List;
-
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.Signer;
@@ -111,7 +110,8 @@ public interface PKCS7Signer extends Signer {
      * Check a digital signature with attached content, informed by parameter signedData
      *
      * @param signedData
-     * @return
+     * @return boolean
+     * @deprecated use {@link checkAttachedSignature}
      */
     abstract public boolean checkAttached(byte[] signedData);
     
@@ -121,10 +121,29 @@ public interface PKCS7Signer extends Signer {
      *
      * @param content
      * @param signedData
-     * @return
+     * @return boolean
+     * @deprecated use {@link checkDetattachedSignature}
      */
     abstract public boolean checkDetattached(byte[] content, byte[] signedData);
     
+    
+    /**
+     * Check a digital signature with attached content, informed by parameter signedData
+     * @param signedData
+     * @return List<SignatureInformations>
+     */
+    abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
+    
+    /**
+     * Check an digital detached signature, informed by parameter signedData and it's content
+     * 
+     * @param content
+     * @param signedData
+     * @return List<SignatureInformations>
+     */
+    
+    abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
+        
     
     /**
      * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
