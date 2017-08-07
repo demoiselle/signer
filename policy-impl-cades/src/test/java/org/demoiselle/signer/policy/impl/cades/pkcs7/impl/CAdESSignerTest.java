@@ -222,12 +222,11 @@ public class CAdESSignerTest {
 			// Assinatura desatachada
 			byte[] signature = signer.doDetachedSign(fileToSign);
 
-			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
 			System.out.println("Efetuando a validacao da assinatura.");
-			checked = signer.checkDetattached(fileToSign, signature);
+			List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToSign, signature);
 
-			if (checked) {
+			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				assertTrue(true);
 			} else {
@@ -305,12 +304,12 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do hash");
 			byte[] signature = signer.doHashSign(hash);
 
-			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
 			System.out.println("Efetuando a validacao da assinatura.");
-			checked = signer.checkDetattached(fileToSign, signature);
+			
+			List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToSign, signature);
 
-			if (checked) {
+			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				assertTrue(true);
 			} else {
@@ -384,9 +383,9 @@ public class CAdESSignerTest {
 			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
 			System.out.println("Efetuando a validacao da assinatura.");
-			checked = signer.checkAttached(signature);
+			List<SignatureInformations> signaturesInfo = signer.checkAttachedSignature(signature);
 
-			if (checked) {
+			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				assertTrue(true);
 			} else {
@@ -459,12 +458,11 @@ public class CAdESSignerTest {
 			// Assinatura desatachada
 			byte[] signature = signer.doDetachedSign(fileToSign, signatureFile);
 
-			boolean checked = false;
 			/* Valida o conteudo antes de gravar em arquivo */
 			System.out.println("Efetuando a validacao da assinatura.");
-			checked = signer.checkDetattached(fileToSign, signature);
+			List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToSign, signature);
 
-			if (checked) {
+			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				assertTrue(true);
 			} else {
