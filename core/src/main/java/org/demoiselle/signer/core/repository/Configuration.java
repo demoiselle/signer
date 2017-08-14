@@ -42,20 +42,20 @@ public class Configuration {
     /**
      * System key to set online or offline mode
      */
-    public static final String MODE_ONLINE = "security.certificate.repository.online";
+    public static final String MODE_ONLINE = "signer.repository.online";
 
     /**
      * System key to set storage location of index file of revoked certificate lists.
      */
-    public static final String CRL_INDEX = "security.certificate.repository.crl.index";
+    public static final String CRL_INDEX = "signer.repository.crl.index";
 
     /**
      * System key to set storage location of path file of revoked certificate lists.
      */
-    public static final String CRL_PATH = "security.certificate.repository.crl.path";
+    public static final String CRL_PATH = "signer.repository.crl.path";
     public static Configuration instance = new Configuration();
-    // private static final Logger logger = Logger.getLogger(Configuration.class.getName());
 
+    
     /**
      * to static single instance
      *
