@@ -144,9 +144,15 @@ public class Configuration {
 		// Token Branco do Serpro
 		map.put("TokenOuSmartCard_38",
 				"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
+		map.put("TokenOuSmartCard_39",
+				"//usr//local//lib//libetpkcs11.dylib");
+		map.put("TokenOuSmartCard_40",
+				"//usr//local//lib//libaetpkss.dylib");
 		
 		// Certificado em Nuvem - Windows
-		map.put("TokenOuSmartCard_39", winRoot.concat("/system32/SerproPkcs11.dll"));
+		map.put("TokenOuSmartCard_41", winRoot.concat("/system32/SerproPkcs11.dll"));
+		map.put("TokenOuSmartCard_42", winRoot.concat("/usr/lib/libneoidp11.so"));
+		
 		
 
 		boolean successLoad = false;
