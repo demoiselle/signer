@@ -150,7 +150,9 @@ public class Configuration {
 				"//usr//local//lib//libaetpkss.dylib");
 		
 		// Certificado em Nuvem - Windows
+		
 		map.put("TokenOuSmartCard_41", winRoot.concat("/system32/SerproPkcs11.dll"));
+		// Certificado em Nuvem - Linux		
 		map.put("TokenOuSmartCard_42", winRoot.concat("/usr/lib/libneoidp11.so"));
 		
 		
