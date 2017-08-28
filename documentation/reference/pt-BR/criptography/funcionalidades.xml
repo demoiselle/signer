@@ -1,0 +1,355 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="criptography-funcionalidades">
+
+    <title id="funcionalidades">Funcionalidades</title>
+
+    <section>
+        <title>A Criptografia Simétrica</title>
+
+        <para>
+            A cifragem e decifragem de dados são providas pela interface <code>Criptography</code>
+            e o componente se utiliza de uma fábrica dessa interface. Segue abaixo um exemplo ilustrativo:
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+public class App {
+
+        public static void main(String[] args) {
+                String frase = "conteudo original";
+
+                Criptography criptography = CriptographyFactory.getInstance().factoryDefault();
+
+                /* Geracao da chave unica */
+                Key key = criptography.generateKey();
+                criptography.setKey(key);
+
+                /* Cifragem */
+                byte[] conteudo_criptografado = criptography.cipher(frase.getBytes());
+                System.out.println(conteudo_criptografado);
+
+                /* Decifragem */
+                byte[] conteudo_descriptografado = criptography.decipher(conteudo_criptografado);
+                System.out.println(new String(conteudo_descriptografado));
+        }
+}]]></programlisting>
+
+        <para>
+            Os métodos
+            <code>cipher</code>
+            e
+            <code>decipher</code>
+            recebem como entrada um array de bytes e retornam o array de bytes processado.
+        </para>
+
+        <para>
+            Para que a criptografia simétrica seja realizada é necessário o uso de uma única chave, para criptografar e descriptografar.
+            Neste caso, é necessário gerar a chave através do método <code>generateKey</code>.
+        </para>
+
+        <para>
+            Caso não seja informado o algoritmo de criptografia o componente utilizará como padrão o algoritmo
+            <emphasis>AES (Advanced Encryption Standard)</emphasis>. Caso necessite utilizar outro algoritmo invoque o método
+            <code>setAlgorithm</code>
+            informando um
+            <code>SymmetricAlgorithmEnum</code>
+            ou um
+            <code>AsymmetricAlgorithmEnum.</code>
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+public class App {
+
+        public static void main(String[] args) {
+                String frase = "conteudo original";
+
+                Criptography criptography = CriptographyFactory.getInstance().factoryDefault();
+
+                /* Alterando algoritmo */
+                criptography.setAlgorithm(SymmetricAlgorithmEnum.TRI_DES);
+
+                /* Geracao da chave unica */
+                Key key = criptography.generateKey();
+                criptography.setKey(key);
+
+                byte[] conteudo_criptografado = criptography.cipher(frase.getBytes());
+                System.out.println(conteudo_criptografado);
+
+                byte[] conteudo_descriptografado = criptography.decipher(conteudo_criptografado);
+                System.out.println(new String(conteudo_descriptografado));
+        }
+}]]></programlisting>
+
+        <para>
+            Caso as opções de criptografia definidas pelo <code>SymmetricAlgorithmEnum</code>
+            não atendam é possível customizar os parâmetros de criptografia através dos
+            métodos
+            <code>setAlgorithm,</code>
+            <code>setKeyAlgorithm</code>
+            e
+            <code>setSize.</code>
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+public static void main(String[] args) {
+                String frase = "conteudo original";
+
+                Criptography criptography = CriptographyFactory.getInstance().factoryDefault();
+
+                /* Customizacao de parametros */
+                criptography.setAlgorithm("AES/ECB/PKCS5Padding");
+                criptography.setKeyAlgorithm("AES");
+                criptography.setSize(128);
+
+                /* Cifragem */
+                byte[] conteudo_criptografado = criptography.cipher(frase.getBytes());
+                System.out.println(conteudo_criptografado);
+
+                /* Decifragem */
+                byte[] conteudo_descriptografado = criptography.decipher(conteudo_criptografado);
+                System.out.println(new String(conteudo_descriptografado));
+        }]]></programlisting>
+    </section>
+
+    <section>
+        <title>A Criptografica Assimétrica</title>
+
+        <para>
+            Na criptografia assimétrica é necessário um par de chaves para realizar a cifragem e decifram das mensagens. A primeira chave é denominada chave privada e é de posse
+            exclusiva de seu detentor. A segunda chave do par é denominada de chave pública e pode ser enviada a qualquer indivíduo.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+		/* Cifragem */
+        Criptography cripto = CriptographyFactory.getInstance().factoryDefault();
+        cripto.setKey(privateKey);
+        byte[] conteudoCriptografado = cripto.cipher("SERPRO".getBytes());
+        System.out.println(conteudoCriptografado);
+
+        /* Decifragem */
+        Criptography cripto2 = CriptographyFactory.getInstance().factoryDefault();
+        cripto2.setKey(publicKey);
+
+        byte[] conteudoDescriptografado = cripto2.decipher(conteudoCriptografado);
+        System.out.println(new String(conteudoDescriptografado));]]></programlisting>
+
+        <para>
+            Perceba a utilização do método
+            <code>setKey</code>
+            para informar qual chave será utilizada no processo de cifragem e decifragem. Vale lembrar que na criptografia assimétrica a cifragem realizada com a chave privada
+            só poderá ser decifrada com a chave pública e vice-versa.
+        </para>
+
+        <para>
+            Na sequência, demonstramos a utilização do componente com certificados digitais do tipo A1 e A3.
+        </para>
+
+        <section>
+            <title>Certificados A1</title>
+
+            <para>
+                O certificado A1 é aquele que encontra-se armazenado no sistema de arquivo do sistema operacional. Para exemplificar sua manipulação, segue o código abaixo:
+            </para>
+
+            <programlisting role="JAVA"><![CDATA[
+		public static void main(String[] args) {
+
+                try {
+                        /* Obtendo a chave publica */
+                        File file = new File("/home/03397040477/public.der");
+                        byte[] encodedPublicKey = new byte[(int) file.length()];
+                        InputStream inputStreamPublicKey = new FileInputStream(file);
+                        inputStreamPublicKey.read(encodedPublicKey);
+                        inputStreamPublicKey.close();
+                        X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encodedPublicKey);
+                        KeyFactory kf = KeyFactory.getInstance("RSA");
+                        PublicKey publicKey = kf.generatePublic(publicKeySpec);
+
+                        /* Obtendo a chave privada */
+                        file = new File("/home/03397040477/private.pk8");
+                        byte[] encodedPrivateKey = new byte[(int) file.length()];
+                        InputStream inputStreamPrivateKey = new FileInputStream(file);
+                        inputStreamPrivateKey.read(encodedPrivateKey);
+                        inputStreamPrivateKey.close();
+                        PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encodedPrivateKey);
+                        kf = KeyFactory.getInstance("RSA");
+                        PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
+
+                        /* Cifragem */
+                        Criptography cripto = CriptographyFactory.getInstance().factoryDefault();
+                        cripto.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
+                        cripto.setKey(privateKey);
+                        byte[] conteudoCriptografado = cripto.cipher("SERPRO".getBytes());
+                        System.out.println(conteudoCriptografado);
+
+                        /* Decifragem */
+                        Criptography cripto2 = CriptographyFactory.getInstance().factoryDefault();
+                        cripto2.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
+                        cripto2.setKey(publicKey);
+
+                        byte[] conteudoDescriptografado = cripto2.decipher(conteudoCriptografado);
+                        System.out.println(new String(conteudoDescriptografado));
+
+                } catch (Exception e) {
+                        e.printStackTrace();
+                        Assert.assertTrue("Configuracao nao carregada: " + e.getMessage(), false);
+                }
+        }]]></programlisting>
+
+            <para>
+                Neste exemplo é demonstrada a obtenção das chaves pública e privada do certificado A1. Note que, apesar do código para manipulação dos certificados, a forma de
+                uso do componente
+                <emphasis>Demoiselle Criptography</emphasis>
+                para cifragem e decifragem de mensagens é a mesma.
+            </para>
+        </section>
+
+        <section>
+            <title>Certificados A3</title>
+
+            <para>
+                O certificado A3 é armazenado em dispositivos eletrônicos como smart card ou tokens usb que criptografam o certificado provendo maior segurança. No exemplo abaixo utilizamos o
+                componente <emphasis>Demoiselle Core</emphasis> para obtenção do keyStore a partir de um token usb. Você pode ver mais sobre esse componente em <xref linkend="core-configuracao" />
+            </para>
+
+            <programlisting role="JAVA"><![CDATA[
+		public static void main(String[] args) {
+
+                /* Senha do dispositivo */
+                String PIN = "senha_do_token";
+                try {
+
+                        /* Obtendo a chave privada */
+                        KeyStore keyStore = KeyStoreLoaderFactory.factoryKeyStoreLoader().getKeyStore(PIN);
+                        String alias = (String) keyStore.aliases().nextElement();
+                        PrivateKey privateKey = (PrivateKey) keyStore.getKey(alias, PIN.toCharArray());
+
+                        /* Obtendo a chave publica */
+                        CertificateLoader cl = new CertificateLoaderImpl();
+                        X509Certificate x509 = cl.loadFromToken(PIN);
+                        PublicKey publicKey = x509.getPublicKey();
+
+                        /*Configurando o Criptography */
+                        Criptography cripto = CriptographyFactory.getInstance().factoryDefault();
+                        cripto.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
+                        cripto.setProvider(keyStore.getProvider());
+
+                        /* criptografando com a chave privada */
+                        cripto.setKey(privateKey);
+                        byte[] conteudoCriptografado = cripto.cipher("SERPRO".getBytes());
+                        System.out.println(conteudoCriptografado);
+
+                        /* descriptografando com a chave publica */
+                        cripto.setKey(publicKey);
+                        byte[] conteudoAberto = cripto.decipher(conteudoCriptografado);
+                        System.out.println(new String(conteudoAberto));
+
+                } catch (UnrecoverableKeyException e) {
+                        e.printStackTrace();
+                } catch (KeyStoreException e) {
+                        e.printStackTrace();
+                } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                }
+        }]]></programlisting>
+
+            <para>
+                O componente utiliza como padrão o provider SUN JCE, mas caso necessite de outro provider utilize o método
+                <code>setProvider</code>
+                da classe
+                <code>Criptography.</code>
+            </para>
+
+            <para>
+                No exemplo acima foi utilizado o método
+                <code>setProvider</code>
+                para informar o provedor, ou seja, quem executará os algoritmos de criptografia. Até então, nos
+                exemplos anteriores, o provedor era a biblioteca SUN JCE contida na própria JVM. Como o token é o único a ter acesso a chave privada do certificado
+                ele também será o único capaz de executar os processos
+                de cifragem e decifragem.
+            </para>
+
+            <para>
+                Desta forma foi utilizado o objeto KeyStore do próprio token usb para informar o novo provider ao Criptography.
+            </para>
+        </section>
+    </section>
+
+    <section>
+        <title>Geração de Hash</title>
+
+        <section>
+            <title>Hash simples</title>
+
+            <para>
+                A criptografia de hash tem a finalidade de criar um valor único que identifique um dado original. Este recurso pode ser utilizado por exemplo para finalidades
+                de autenticação nas quais deseja-se armazenar as senhas cifradas por meio de um valor hash.
+            </para>
+
+            <para>
+                A fábrica
+                <code>DigestFactory</code>
+                do componente constrói um objeto padrão do tipo Digest que calcula o valor hash de um array de bytes retornando outro array
+                de bytes.
+            </para>
+
+            <programlisting role="JAVA"><![CDATA[
+		public static void main(String[] args) {
+                Digest digest = DigestFactory.getInstance().factoryDefault();
+                byte[] resumo = digest.digest("SERPRO".getBytes());
+                System.out.println(resumo);
+        }]]></programlisting>
+
+            <para>
+                Caso queira obter o valor hash no formato caractere hexadecimal utilize o método
+                <code>digestHex</code>
+                . Este formato é bastante utilizado para representar o hash de arquivos.
+            </para>
+
+            <programlisting role="JAVA"><![CDATA[
+		public static void main(String[] args) {
+                Digest digest = DigestFactory.getInstance().factoryDefault();
+                String resumo = digest.digestHex("SERPRO".getBytes());
+                System.out.println(resumo);
+        }]]></programlisting>
+        </section>
+
+        <section>
+            <title>Hash de arquivo</title>
+
+            <para>
+                O hash de arquivo pode ser utilizado quando se deseja verificar a integridade física de um arquivo. No caso de ferramentas de download é possível ao final do
+                processo de transferência de dados, verificar se o arquivo obtido apresenta o mesmo hash do arquivo original.
+            </para>
+
+            <para>
+                A interface
+                <code>Digest</code>
+                possui os métodos
+                <code>digestFile</code>
+                e
+                <code>digestFileHex</code>
+                para retornar respectivamente o valor hash em array de bytes ou caracter
+                hexadecimal:
+            </para>
+
+            <programlisting role="JAVA"><![CDATA[
+		public static void main(String[] args) {
+                Digest digest = DigestFactory.getInstance().factoryDefault();
+                digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+                String resumo = digest.digestFileHex(new File("/home/03397040477/relatorio.pdf"));
+                System.out.println(resumo);
+        } ]]></programlisting>
+
+            <para>
+                Os algoritmos de hash recomendados pelo componente são definidos pelo enum
+                <code>
+                    DigestAlgorithmEnum
+                </code>
+                . Caso não seja informado o componente utilizará o "SHA-1" por ser considerado mais seguro quanto a quebras em relação ao MD5.
+            </para>
+        </section>
+    </section>
+
+</chapter>

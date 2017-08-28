@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE revhistory PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
+<revhistory>
+<revision>
+        <revnumber>3.1.0</revnumber>
+        <date>04/08/2017</date>
+        <authorinitials>ess</authorinitials>
+        <revremark>
+            <itemizedlist>
+            	<listitem><listitem><ulink url="https://github.com/demoiselle/signer/milestone/5?closed=1">Milestone 3.1.0</ulink></listitem></listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+	 <revision>
+        <revnumber>3.0.0</revnumber>
+        <date>19/05/2017</date>
+        <authorinitials>ess</authorinitials>
+        <revremark>        	
+            <itemizedlist>
+            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/1?closed=1">Milestone 3.0.0-Beta1</ulink></listitem>
+            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/3?closed=1">Milestone 3.0.0-Beta2</ulink></listitem>
+            </itemizedlist>
+        </revremark>
+        <revdescription>Este componente substitui DEMOISELLE-CERTIFICATE.</revdescription>
+    </revision>
+    
+</revhistory>

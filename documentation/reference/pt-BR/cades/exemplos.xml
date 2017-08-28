@@ -1,0 +1,113 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="signer-exemplos">
+
+	<title>Exemplos de Uso</title>
+	<para>
+		A seguir temos alguns exemplos de tarefas normalmente necessárias na utilização do componente.
+	</para>
+
+	<section>
+		<title>Carregar um array de bytes de um arquivo</title>
+
+		<programlisting role="JAVA"><![CDATA[
+byte[] result = null;
+File file = new File("documento.odp");
+FileInputStream is = new FileInputStream(file);
+result = new byte[(int) file.length()];
+is.read(result);
+is.close();
+return result;]]></programlisting>
+
+	</section>
+
+	<section>
+		<title>Gravar um array de bytes em um arquivo</title>
+
+		<programlisting role="JAVA"><![CDATA[
+byte[] conteudo = "este eh um conteudo de arquivo texto".getBytes();
+FileOutputStream out = new FileOutputStream(new File("arquivo.txt");
+out.write(sign);
+out.close();]]></programlisting>
+
+
+	</section>
+
+	<section>
+		<title>Carregar uma chave privada em arquivo</title>
+
+		<programlisting role="JAVA"><![CDATA[
+File file = new File("private_rsa_1024.pkcs8");
+fileContent = new byte[(int) file.length()];
+is = new FileInputStream(file);
+is.read(fileContent);
+is.close();
+PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(fileContent);
+KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+PrivateKey chavePrivada = keyFactory.generatePrivate(privateKeySpec);]]></programlisting>
+
+	</section>
+
+	<section>
+		<title>Carregar uma chave privada de um token</title>
+
+		<programlisting role="JAVA"><![CDATA[
+KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+KeyStore keyStore = keyStoreLoader.getKeyStore("pinnumber");
+String certificateAlias = keyStore.aliases().nextElement();
+PrivateKey chavePrivada = (PrivateKey)keyStore.getKey(certificateAlias, "pinnumber");]]></programlisting>
+	</section>
+
+
+	<section>
+		<title>Carregar uma chave pública em arquivo</title>
+
+		<programlisting role="JAVA"><![CDATA[
+File file = new File("public_rsa_1024.pkcs8");
+byte[] fileContent = new byte[(int) file.length()];
+is = new FileInputStream(file);
+is.read(fileContent);
+is.close();
+X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(fileContent);
+KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+PublicKey chavePublica = keyFactory.generatePublic(publicKeySpec);]]></programlisting>
+	</section>
+
+
+	<section>
+		<title>Carregar uma chave pública de um token</title>
+
+		<programlisting role="JAVA"><![CDATA[
+/* Usando os componentes demoiselle-keystore e demoiselle-certificate */
+KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+KeyStore keyStore = keyStoreLoader.getKeyStore("pinnumber");
+CertificateLoader certificateLoader = new CertificateLoaderImpl();
+certificateLoader.setKeyStore(keyStore);
+X509Certificate certificate = certificateLoader.loadFromToken();
+PublicKey chavePublica = certificate.getPublicKey();]]></programlisting>
+	</section>
+
+
+	<section>
+		<title>Carregar um certificado digital de um arquivo</title>
+
+		<programlisting role="JAVA"><![CDATA[
+/* Usando o componente demoiselle-certificate */
+CertificateLoader certificateLoader = new CertificateLoaderImpl();
+X509Certificate certificate = certificateLoader.load(new File("certificado.cer");]]></programlisting>
+	</section>
+
+
+	<section>
+		<title>Carregar um certificado digital de um token</title>
+
+		<programlisting role="JAVA"><![CDATA[
+/* Usando os componentes demoiselle-keystore e demoiselle-certificate */
+KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+KeyStore keyStore = keyStoreLoader.getKeyStore("pinnumber");
+CertificateLoader certificateLoader = new CertificateLoaderImpl();
+certificateLoader.setKeyStore(keyStore);
+X509Certificate certificate = certificateLoader.loadFromToken();]]></programlisting>
+	</section>
+</chapter>

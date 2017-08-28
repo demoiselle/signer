@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="desktop-exemplo">
+
+	<title id="exemplo">Projeto Exemplo</title>
+	<para>
+    	Seguindo o modelo apresentado na capítulo anterior disponibilizamos uma aplicação de exemplo no 
+    	<ulink url="https://github.com/demoiselle/certificate/tree/master/example">GitHub</ulink>.
+    	Essa aplicação de exemplo tem um projeto JAR que é nossa aplicação desktop para assinatura e um projeto WAR que é a nossa
+    	aplicação de uso da assinatura digital.
+    </para>
+    
+    <section>
+        <title>Criando a Aplicação Desktop</title>
+	</section>        
+        <para>
+            Criamos projeto com o nome de "assinadorweb-desktop" com uma classe que chamamos de
+            <literal>App.java</literal> no pacote <literal>br.gov.frameworkdemoiselle.certificate.example</literal>
+            , estendendo a classe <literal>AbstractFrameExecute</literal>.
+        </para>
+	
+        <programlisting role="JAVA"><![CDATA[package br.gov.frameworkdemoiselle.example;
+
+public class App extends AbstractFrameExecute {
+
+	public App(){
+	}
+
+    @Override
+	public void execute(KeyStore keystore, String alias, MainFrame frame) {
+	}
+	
+	@Override
+    public void cancel(KeyStore keystore, String alias, MainFrame frame);
+    }
+    
+    @Override
+    public void close(MainFrame frame) {
+    }
+}]]></programlisting>	
+
+        <para>
+			No construtor da classe iniciamos a aplicação verificando se as propriedades que definem o token
+			<literal>jnlpIdentifier</literal> e o serviço <literal>jnlpService</literal> forma configuradas no JNLP.
+        </para>
+        	
+        <programlisting role="JAVA"><![CDATA[String jnlpIdentifier = System.getProperty("jnlp.identifier");
+String jnlpService = System.getProperty("jnlp.service");
+
+if (jnlpIdentifier == null || jnlpIdentifier.isEmpty()) {
+	JOptionPane.showMessageDialog(null, "A variavel \"jnlp.identifier\" nao esta configurada.", "Erro", JOptionPane.ERROR_MESSAGE);
+    System.exit(0);
+}
+
+if (jnlpService == null || jnlpService.isEmpty()) {
+	JOptionPane.showMessageDialog(null, "A variavel \"jnlp.service\" nao este configurada.", "Erro", JOptionPane.ERROR_MESSAGE);
+    System.exit(0);
+}]]></programlisting>		
+
+	<para>
+		Recomendamos também que o download seja feito no início da aplicação, assim como preencher a lista
+		com o nome dos arquivos, usando os método <command>MainFrame.setListFileName(nomeDosArquivos);</command>.
+	</para>
+	
+	<para>
+		No método <command>execute</command> fazemos a assinatura dos arquivos e devolvemos para o serviço as assinaturas. 
+	</para>
+	
+ <programlisting role="JAVA"><![CDATA[//Parametrizando o objeto PKCS7Signer para assinatura desanexada.
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificates(ks.getCertificateChain(alias));
+signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+signer.setSignaturePolicy(new ADRBCMS_2_1());
+signer.setAttached(false); 
+    
+//Busca todos os arquivos baixados e gera uma assinatura para cada arquivo
+for (Map.Entry<String, byte[]> entry : files.entrySet()) {
+	byte[] signed = signer.signer(entry.getValue());
+    signatures.put(entry.getKey(), signed);
+}    
+    
+//gera um arquivo zip com assinaturas
+byte[] uploadZip = ZipBytes.compressing(signatures);
+            
+//Upload das assinaturas
+Utils.uploadToURL(uploadZip, jnlpService.concat("/upload/"), jnlpIdentifier);]]></programlisting>
+
+	<para>
+		No método <command>cancel</command> e <command>close</command> avisamos ao serviço que a aplicação foi interrompida.
+	</para>	
+	
+ <programlisting role="JAVA"><![CDATA[Utils.cancel("Processo de Assinatura foi cancelado", jnlpService.concat("/cancelar/"), jnlpIdentifier);]]></programlisting>
+ 
+ 	<para>O projeto deve ser empacotado em um JAR e assinado com um certificado de assinatura de código, no <litetal>pom.xml</litetal>
+ 	usamos um plugin do mavem para fazer assinatura com suas dependencias, no caso estamos usando um certificado fake.
+ 	</para>	
+ 	
+<programlisting role="xml"><![CDATA[<sign>
+	<keystore>${project.basedir}/src/main/jnlp/newcert.p12</keystore>
+	<keypass>secret</keypass>
+	<storepass>secret</storepass>
+	<alias>Spock</alias>
+	<storetype>pkcs12</storetype>
+	<verify>false</verify> <!-- verifica a assinatura depois de assinado -->
+</sign>
+<unsign>true</unsign> <!-- remove a assinatura de pacotes e assinados e reassina com a minha chave -->
+<verbose>true</verbose>]]></programlisting>
+	
+	<para>assinadorweb-desktop.jar</para>
+	
+	<programlisting role="JAVA"><![CDATA[assinadorweb-desktop-1.1.1.jar
+|---br
+|	|---gov
+|	|----frameworkdemoiselle
+|   |	|----certificate
+|	|	|	|	|----example
+|	|   |   |    	|---App.class
+|---desktop-config.properties]]></programlisting>
+
+        <note>
+            <para>
+                A criação do arquivo desktop-config.properties é opcional. Sua função é sobrescrever todas as propriedades do componente.
+            </para>
+        </note>
+
+    <section>
+        <title>Criando a aplicação Web e serviços</title>
+	</section>        
+	
+	<para>
+		Conforme definido no modelo, definimos 3 serviços REST para nosso exemplo de assinatura digital:
+	</para>
+	<para>
+    <itemizedlist>
+    	<listitem>
+    		<para><emphasis role="bold">TokenREST:</emphasis>
+    			Esse serviço gera o Token que deve ser associado aos arquivos que serão assinados, no exemplo gerenciamos em memória para simplificar o 
+    			exemplo, mas ele deve ser persistido.
+    		</para>
+	    </listitem>
+    	<listitem>
+    		<para><emphasis role="bold">JnlpREST:</emphasis>
+    			Esse serviço produz um <literal>application/x-java-jnlp-file</literal>, o arquivo JNLP criado dinamicamente com as propriedades de 
+    			<literal>jnlp.identifier</literal> como token gerado para a requisição e o <literal>jnlp.service</literal> com a 
+    			URL onde a aplicação irá fazer donwload/uplodad/cancelamento de assinaturas de arquivos. 
+    		</para>
+	    </listitem>	 
+    	<listitem>
+    		<para><emphasis role="bold">FileManagerREST:</emphasis>
+    			Serviço de download de arquivos, upload de assinatura e cancelamento do processo de assinatura. Lembrando que sempre deve ser 
+    			verificado se o Token é válido e no fim do processo de upload/cancelamento o Token deve ser descartado.
+    		</para>
+	    </listitem>	 	       
+	</itemizedlist>
+    </para>
+    
+    <para>
+    	Assim como fazíamos com os arquivos da applet, precisamos colocar todos os arquivos <litaral>.jar</litaral>
+    	usados pela aplicação desktop na pasta <literal>webapp</literal> da nosso aplicação web.
+    </para>
+    <important>
+	    <para>
+			Quando a aplicação web recebe as assinaturas no servidor, deve fazer a verificação com os
+			arquivos originais, só então o usuário é sinalizada que a assinatura foi realizada com sucesso. 		    	
+	    </para>
+    </important>
+    
+</chapter>

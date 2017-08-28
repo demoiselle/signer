@@ -1,0 +1,18 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="ca-icpbrasil-master">
+
+	<title>
+		Cadeias de Autoridades da IPC-BRASIL
+	</title>
+
+	<partintro>
+		<para>
+			O Chain-ICP-Brasil fornece uma implementação para validação do conjunto de Autoridades Certificadoras da cadeia ICP-Brasil.
+		</para>
+	</partintro>
+
+	<!-- capítulos -->
+	<xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+</part>

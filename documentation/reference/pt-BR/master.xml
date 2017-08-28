@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<book lang="pt">
+
+    <xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- prefácio -->
+    <preface>
+        <title>Sobre o Demoiselle Signer</title>
+        <para>
+            O Demoiselle Signer é um componente para facilitar a geração de assinatura digital. 
+            O componente implementa o padrão de assinatura conforme as política da ICP-Brasil, de acordo com as 
+            <ulink url="http://www.iti.gov.br/legislacao/documentos-principais">resoluções da ICP-BrasiL</ulink>.
+        </para>
+        <para>
+        	O componente é sub-dividido em módulos de acordo com suas funcionalidades:
+        	<itemizedlist>
+        		
+    			<listitem>
+    				<para><emphasis role="bold">core: </emphasis>fornece  as interfaces basicas de todas as funcionalidades, como acesso ao certificado (token, arquivo), operações de carregamento e validações de certificado e API para extraçao de dados de um certificado ICPBrasil</para>
+	    		</listitem>
+	    		<listitem>
+    				<para><emphasis role="bold">policy-impl-cades: </emphasis>permite geração e validação de assinaturas digitais (conforme uma política) no formato CADES</para>
+	    		</listitem>
+    			<listitem>
+    				<para><emphasis role="bold">chain-icp-brasil: </emphasis>possui funcionalidade para montagem das cadeias de autoridades certificadores ICPBrasil válidas</para>
+	    		</listitem>
+    			<listitem>
+    				<para><emphasis role="bold">policy-engine: </emphasis>mecanismo para carregamento das políticas de assinaturas definidas pela ICP-BRASIL</para>
+	    		</listitem>
+    			
+    			<listitem>
+    				<para><emphasis role="bold">timestamp: </emphasis>disponibiliza as funcionalidades para obtenção de carimbos de tempo (fornecidos por uma autoridade de carimbo de tempo)</para>
+	    		</listitem>
+	    		<listitem>
+    				<para><emphasis role="bold">cryptography: </emphasis>provê funcionalidades de criptografia</para>
+	    		</listitem>
+    		</itemizedlist>
+        </para>
+        <para>
+        	Funcionalidades ainda não implementadas no componente:
+        	<itemizedlist>
+    			<listitem>
+    				<para>Assinatura no padrão XADES (assinatura em XML)</para>
+	    		</listitem>
+    			<listitem>
+    				<para>Assinatura no padrão PADES (assinatura em PDF)</para>
+	    		</listitem>
+    		</itemizedlist>
+        </para>
+
+        
+    </preface>
+
+    <!-- índice -->
+    <toc />
+
+    <!-- partes -->
+    <!-- Core -->
+    <xi:include href="core/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- CADES -->
+    <xi:include href="cades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- Chain ICP-Brasil -->
+    <xi:include href="chain-icp-brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+
+    <!-- Timestamp -->
+    <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    <!-- Criptography -->
+    <xi:include href="criptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+    
+
+	<!-- Apendice sobre assinatura de código-->
+	<xi:include href="regras-seguranca-jdk.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    
+    <!-- Apendice sobre assinatura de código-->
+	<xi:include href="assinatura-jar.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</book>

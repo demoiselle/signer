@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="desktop-configuracao">
+
+    <title>Configuração do Demoiselle Desktop</title>
+
+    <section>
+        <title>Instalação do componente</title>
+        <para>
+            Para instalar o componente
+            <emphasis>Demoiselle Desktop</emphasis>
+            na aplicação,
+            basta adicionar a sua dependência no arquivo
+            <filename>pom.xml</filename>
+            do projeto
+            gerenciado pelo Maven:
+        </para>
+        <programlisting role="XML"><![CDATA[
+<dependency>
+	<groupId>br.gov.frameworkdemoiselle.component</groupId>
+	<artifactId>demoiselle-certificate-desktop</artifactId>
+	<version>1.1.1</version>
+</dependency>]]></programlisting>
+    </section>
+
+    <section>
+        <title>Arquivos de configuração</title>
+        <para>
+            O arquivo
+            <filename>desktop-config.properties</filename>
+            define as propriedades do componente. Ele deve ser incluído no pasta de resource do projeto, caso contrário
+            será utilizado o arquivo padrão
+            <filename>desktop-config-default.properties</filename>
+            encontrado internamente no jar do demoiselle-desktop.
+        </para>
+        <para>
+            Abaixo temos o conteúdo completo do arquivo de configuração.
+        </para>
+
+        <programlisting role="HTML"><![CDATA[
+#Labels
+label.dialog.option_pane.title=Mensagem de erro
+label.dialog.button.run=Assinar
+label.dialog.button.cancel=Cancelar
+label.dialog.label.table=Certificados dispon\u00edveis
+label.dialog.frame.title=Assinador de Documentos
+label.dialog.lable.files=Arquivos assinados
+
+#Mensagens
+message.error.invalid.pin=O PIN n\u00e3o foi informado ou \u00e9 inv\u00e1lido
+message.error.driver.not.available=Nenhum driver instalado para acesso ao seu dispositivo
+message.error.pkcs11.not.found=Nenhum Token/Smartcard presente. Por favor, conecte um dispositivo
+message.error.load.driver=Ocorreu um erro no carregamento do driver do dispositivo
+message.error.unexpected=Erro inesperado
+
+#Configurations
+config.dialog.title.label.font=Arial
+config.dialog.title.label.font.style=0
+config.dialog.title.label.font.size=12
+
+config.dialog.table.certificates.width=800
+config.dialog.table.certificates.height=100
+config.dialog.table.certificates.row.heigth=25
+
+config.dialog.list.files.width=800
+config.dialog.list.files.height=100
+config.dialog.list.files.row.heigth=25
+
+config.dialog.button-run.width=120
+config.dialog.button-run.height=35
+
+config.dialog.button-cancel.width=120
+config.dialog.button-cancel.height=35
+
+#Protocolo HTTPS
+config.https.protocol=TLSv1.2]]></programlisting>
+    </section>
+</chapter>

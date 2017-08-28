@@ -1,0 +1,36 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="criptography-master">
+
+	<title>Demoiselle Criptography</title>
+
+	<partintro>
+		<para>
+			O <emphasis>demoiselle-criptography</emphasis> é um componente corporativo que provê um mecanismo simplificado de criptografia de dados. Neste contexto o componente 
+			atua nos dois principais tipos de algoritmos, os algoritmos de chave simétrica e algoritmos de chave assimétrica.
+		</para>
+
+		<para>
+			O componente provê as funções de cifragem e decifragem utilizando algoritmos simétricos ou também chamados de algoritmos de chave-simétrica, ou seja, os que utilizam 
+			uma mesma chave para cifrar e decifrar as mensagens.
+		</para>
+
+		<para>
+			Além disso o componente utiliza algoritmos de hash para criptografia de dados com a finalidade de criar um valor único que identifique um dado original. Este recurso 
+			é recomendado para finalidades de autenticação, nas quais deseja-se armazenar as senhas criptografas por meio de um valor hash. Também é possível construir hash de 
+			arquivos no intuito de avaliar sua integridade física.
+		</para>
+
+		<para>
+			O componente também realiza as funções de cifragem e decifragem por meio de algoritmos de chave-assimétrica. Neste processo é necessário um par de chaves para 
+			realizar a cifragem e decifram das mensagens. A primeira chave é denominada chave privada, ela é de posse exclusiva de seu detentor e ninguém mais a conhece. 
+			A segunda chave do par e denominada de chave pública e pode ser enviada a qualquer indivíduo.
+		</para>
+	</partintro>
+
+	<!-- capítulos -->
+	<xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="funcionalidades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+</part>
