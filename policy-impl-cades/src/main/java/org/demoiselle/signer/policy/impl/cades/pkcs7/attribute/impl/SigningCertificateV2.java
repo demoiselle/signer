@@ -112,7 +112,7 @@ public class SigningCertificateV2 implements SignedAttribute {
 			X500Name dirName = new X500Name(issuerCert.getSubjectX500Principal().getName());
 			GeneralName name = new GeneralName(dirName);
 			GeneralNames issuer = new GeneralNames(name);
-			ASN1Integer serialNumber = new ASN1Integer(issuerCert.getSerialNumber());
+			ASN1Integer serialNumber = new ASN1Integer(cert.getSerialNumber());
 			IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
 			AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);// SHA-256
 			ESSCertIDv2 essCertIDv2 = new ESSCertIDv2(algId, certHash, issuerSerial);
