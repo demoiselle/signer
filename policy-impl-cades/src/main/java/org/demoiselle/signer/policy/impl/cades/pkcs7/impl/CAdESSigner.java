@@ -329,11 +329,24 @@ public class CAdESSigner implements PKCS7Signer {
 	 * 
 	 * @return org.bouncycastle.cert.jcajce.JcaCertStore
 	 */
-	private Store<?> generatedCertStore() {
+	private Store<?> generatedCertStore(Certificate[] previewCerts) {
 		Store<?> result = null;
 		try {
 			List<Certificate> certificates = new ArrayList<>();
-			certificates.addAll(Arrays.asList(certificateChain[0]));
+			certificates.addAll(Arrays.asList(previewCerts));
+			boolean add = true;
+			
+			for (Certificate cert : previewCerts)
+				if (cert.equals(certificateChain[0]))
+					add = false;
+			
+			if (add) {
+				logger.info("Adicionando Certificado no CertStore");
+				certificates.addAll(Arrays.asList(certificateChain[0]));
+			} else {
+				logger.info("Certificado já assinou este arquivo. Não adicionar no CertStore");
+			}
+			
 			// CollectionCertStoreParameters cert = new
 			// CollectionCertStoreParameters(certificates);
 			result = new JcaCertStore(certificates);
@@ -499,7 +512,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private byte[] doSign(byte[] content, byte[] previewSignature) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-
+			
 			// Completa os certificados ausentes da cadeia, se houver
 			if (this.certificate == null && this.certificateChain != null && this.certificateChain.length > 0) {
 				this.certificate = (X509Certificate) this.certificateChain[0];
@@ -508,6 +521,8 @@ public class CAdESSigner implements PKCS7Signer {
 			if (this.certificateChain == null || this.certificateChain.length <= 1) {
 				this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 			}
+
+			Certificate[] certStore = new Certificate[] {};
 			
 			CMSSignedData cmsPreviewSignedData = null;
 			// Caso seja co-assinatura ou contra-assinatura
@@ -515,10 +530,8 @@ public class CAdESSigner implements PKCS7Signer {
 			if (previewSignature != null && previewSignature.length > 0) {
 				cmsPreviewSignedData = new CMSSignedData(new CMSAbsentContent(), previewSignature);
 				Collection<X509Certificate> previewCerts = this.getSignersCertificates(cmsPreviewSignedData);
-				for (Certificate cert : this.certificateChain) {
-					previewCerts.add((X509Certificate) cert);
-				}
-				this.certificateChain = previewCerts.toArray(new Certificate[] {});
+//				previewCerts.add(this.certificate);
+				certStore = previewCerts.toArray(new Certificate[] {});
 			}
 
 			
@@ -638,7 +651,7 @@ public class CAdESSigner implements PKCS7Signer {
 
 			// Realiza a assinatura do conteudo
 			CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
-			gen.addCertificates(this.generatedCertStore());
+			gen.addCertificates(this.generatedCertStore(certStore));
 			String algorithmOID = algAndLength.getAlgID().getValue();
 
 			logger.info(cadesMessagesBundle.getString("info.algorithm.id", algorithmOID));
