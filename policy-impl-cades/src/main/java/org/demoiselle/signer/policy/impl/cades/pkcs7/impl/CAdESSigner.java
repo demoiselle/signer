@@ -333,7 +333,7 @@ public class CAdESSigner implements PKCS7Signer {
 		Store<?> result = null;
 		try {
 			List<Certificate> certificates = new ArrayList<>();
-			certificates.addAll(Arrays.asList(certificateChain));
+			certificates.addAll(Arrays.asList(certificateChain[0]));
 			// CollectionCertStoreParameters cert = new
 			// CollectionCertStoreParameters(certificates);
 			result = new JcaCertStore(certificates);
@@ -685,7 +685,7 @@ public class CAdESSigner implements PKCS7Signer {
 							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, oSi.getSignature(),
 									signaturePolicy, this.hash);							
 						}else{
-							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChain, oSi.getSignature(),
+							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
 									signaturePolicy, this.hash);
 						}					
 						unsignedAttributes.add(signedOrUnsignedAttribute.getValue());

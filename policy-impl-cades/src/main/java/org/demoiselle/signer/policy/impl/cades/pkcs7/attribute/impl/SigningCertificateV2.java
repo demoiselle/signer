@@ -49,6 +49,7 @@ import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.ess.ESSCertIDv2;
+import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.GeneralName;
@@ -104,18 +105,20 @@ public class SigningCertificateV2 implements SignedAttribute {
 	public Attribute getValue() throws SignerException {
 		try {
 			X509Certificate cert = (X509Certificate) certificates[0];
+			X509Certificate issuerCert = (X509Certificate) certificates[1];
 			Digest digest = DigestFactory.getInstance().factoryDefault();
 			digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
 			byte[] certHash = digest.digest(cert.getEncoded());
-			X500Name dirName = new X500Name(cert.getSubjectDN().getName());
+			X500Name dirName = new X500Name(issuerCert.getSubjectX500Principal().getName());
 			GeneralName name = new GeneralName(dirName);
 			GeneralNames issuer = new GeneralNames(name);
-			ASN1Integer serialNumber = new ASN1Integer(cert.getSerialNumber());
+			ASN1Integer serialNumber = new ASN1Integer(issuerCert.getSerialNumber());
 			IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
-			AlgorithmIdentifier algId = new AlgorithmIdentifier(new ASN1ObjectIdentifier("2.16.840.1.101.3.4.2.1"));// SHA-256
+			AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);// SHA-256
 			ESSCertIDv2 essCertIDv2 = new ESSCertIDv2(algId, certHash, issuerSerial);
+//			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(essCertIDv2)));
 			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(
-					new ASN1Encodable[] { new DERSequence(essCertIDv2), new DERSequence(DERNull.INSTANCE) })));
+					new ASN1Encodable[] { new DERSequence(essCertIDv2) })));
 		} catch (CertificateEncodingException ex) {
 			throw new SignerException(ex.getMessage());
 		}
