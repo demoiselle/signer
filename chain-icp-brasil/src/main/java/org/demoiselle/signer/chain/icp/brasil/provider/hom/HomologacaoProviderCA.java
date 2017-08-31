@@ -70,6 +70,14 @@ public class HomologacaoProviderCA implements ProviderCA {
             InputStream ACSERPROACFv4Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/serproACFv4Homolog.cer");
             InputStream AutoridadeCertificadoraIntermediariaHOMv2 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraIntermediariaHOMv2.crt"); 
             InputStream AutoridadeCertificadoraRaizdeHomologacaoSERPRO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdeHomologacaoSERPRO.crt");
+            InputStream AutoridadeCertificadoraACSERPROACFv3Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraACSERPROACFv3Homologacao.crt");
+            InputStream AutoridadeCertificadoraACSERPRORFBv3Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraACSERPRORFBv3Homologacao.crt");
+            InputStream	AutoridadeCertificadoradoSERPRORFBHomologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPRORFBHomologacao.crt");
+            InputStream AutoridadeCertificadoraRaizdeHomologacaoSERPROv2 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdeHomologacaoSERPROv2.crt");
+            InputStream Autoridade_Certificadora_Raiz_Hom_do_SERPRO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/Autoridade_Certificadora_Raiz_Hom_do_SERPRO.crt");
+            InputStream	AutoridadeCertificadoraSERPROACFv4Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPROACFv4Homologacao.crt");
+            InputStream	AutoridadeCertificadoraSERPRORFBSSLHom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBSSL-Hom.crt");
+            InputStream	Autoridade_Certificadora_SERPRO_v6_HOM  = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/Autoridade_Certificadora_SERPRO_v6_HOM.crt");
             
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(raizDeHomologacaoSERPRO));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPROACFv3Homologacao));
@@ -79,6 +87,14 @@ public class HomologacaoProviderCA implements ProviderCA {
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdeHomologacaoSERPRO));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraIntermediariaHOMv2));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPRODesenv));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraACSERPROACFv3Homologacao));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraACSERPRORFBv3Homologacao));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPRORFBHomologacao));
+           	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdeHomologacaoSERPROv2));         		
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(Autoridade_Certificadora_Raiz_Hom_do_SERPRO));
+      		result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPROACFv4Homologacao));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPRORFBSSLHom));
+           	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(Autoridade_Certificadora_SERPRO_v6_HOM));
         } catch (Throwable error) {
             error.printStackTrace();
             return null;
