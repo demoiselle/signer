@@ -61,24 +61,6 @@
     <xi:include href="core/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
     <!-- CADES -->
-    <xi:include href="cades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-	<!-- Chain ICP-Brasil -->
-    <xi:include href="chain-icp-brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-
-    <!-- Timestamp -->
-    <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-    <!-- Criptography -->
-    <xi:include href="criptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
-    
-
-	<!-- Apendice sobre assinatura de código-->
-	<xi:include href="regras-seguranca-jdk.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    
-    <!-- Apendice sobre assinatura de código-->
-	<xi:include href="assinatura-jar.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
+    <xi:include href="policy-impl-cades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	
 </book>

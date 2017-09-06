@@ -1,0 +1,335 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="policy-impl-cades-funcionalidades">
+
+    <title>Funcionalidades</title>
+    <para>
+        Este componente provê mecanismos de assinatura digital baseado nas normas ICP-Brasil e implementa mecanismos de assinatura digital em dois formatos: PKCS1 e
+        PKCS7. A maior diferença entre esses dois mecanismos está na forma de envelopamento da assinatura digital, onde o PKCS1 não possui um formato de
+        envelope, sendo o resultado da
+        operação de assinatura a própria assinatura, já o PKCS7 possui um formato de retorno que pode ser binário (especificado na RFC5126) ou XML. A interface
+        <literal>org.demoiselle.signer.policy.impl.cades.Signer</literal>
+        especifica o comportamento padrão dos mecanismos de assinatura digital. O componente especializa essa
+        interface em mais duas, são elas:
+        <literal>org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer</literal>
+        para implementações de mecanismos PKCS1
+        e
+        <literal>org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer</literal>
+        para implementações de mecanismos de envelopamento PKCS7.
+    </para>
+
+    <para>
+        Este componente, até a presente versão, permite assinar dados representados por um array de bytes. 
+        Então se for necessário a assinatura de um arquivo, por exemplo,
+        a aplicação deverá montar um array de bytes com o conteúdo do arquivo para poder assiná-lo.
+    </para>
+
+    <para>
+        Para assinar um dado através do componente demoiselle-signer é preciso executar alguns passos.
+        <itemizedlist>
+            <listitem>
+                Ter um conteúdo a ser assinado
+            </listitem>
+            <listitem>
+                Escolher qual formato de assinatura a ser utilizado PKCS1 ou PKCS7
+            </listitem>
+            <listitem>
+                Fabricar o objeto responsável pela implementação do formato escolhido
+            </listitem>
+            <listitem>
+                Passar algumas informações para o objeto fabricado como chave criptográfica, algoritmo, etc. 
+                O formato PKCS7 necessita de mais informações do que o formato PKCS1.
+            </listitem>
+            <listitem>
+                Assinar o conteúdo
+            </listitem>
+        </itemizedlist>
+    </para>
+
+    <section>
+        <title>Assinatura Digital no Formato PKCS1</title>
+        <para>
+            A seguir temos um fragmento de código que demonstra uma assinatura no formato PKCS1.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+/* conteudo a ser assinado */
+byte[] content = "conteudo a ser assinado".getBytes();
+
+/* chave privada */
+PrivateKey chavePrivada = getPrivateKey(); /* implementar metodo para pegar chave privada */
+
+/* construindo um objeto PKCS1Signer atraves da fabrica */
+PKCS1Signer signer = PKCS1Factory.getInstance().factory();
+
+/* Configurando o algoritmo */
+signer.setAlgorithm(SignerAlgorithmEnum.SHA1withRSA);
+
+/* Configurando a chave privada */
+signer.setPrivateKey(chavePrivada);
+
+/* Assinando um conjunto de bytes */
+byte[] sign = signer.doSign(content);]]></programlisting>
+
+    </section>
+
+    <section>
+        <title>Assinatura Digital no Formato PKCS#7/CAdES sem o contedo anexado (detached)</title>
+        <para>
+            O formato PKCS#7 define o tipo de arquivo para assinatura.   
+            Já a ICP-Brasil define um conjunto mínimo de informações básicas para as assinaturas digitais para o padrão CAdES. 
+            São elas: Tipo de conteúdo, data da assinatura, algoritmo de resumo aplicado e a política de assinatura.
+            O componente policy-impl-cades já monta o pacote final com três atributos obrigatórios: tipo de conteúdo, data da assinatura e o algoritmo de resumo.
+            Então, para montar um PKCS7 padrão CAdEs ICP-Brasil é necessário informar ao objeto PKCS7Signer qual a política de assinatura a ser aplicada.
+            Uma das formas de gerar a assinatura digital é criar um novo arquivo com a extensão .p7s (PKCS#7) que contém apenas a assinatura, assim independente 
+            do arquivo original. Porém para validação da assinatura, será necessário informar tanto o arquivo de assinatura quanto o conteúdo original.
+        </para>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a utilização do pacote PKCS7 padrão.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificates(certificateChain);
+signer.setPrivateKey(privateKey);
+byte[] signature = signer.doDetachedSign(this.content);
+]]></programlisting>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a utilização do pacote PKCS7 padrão com informação da política de assinatura.
+             Neste caso podemos escolher uma das políticas (em vigor) que já acompanham o componente e referem-se à Assinatura Digital padrão CADES.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <literal>AD_RB_CADES_2_2</literal>
+                Refere-se à Assinatura Digital de Referência Básica versão 2.2;
+            </listitem>
+            <listitem>
+                <literal>AD_RT_CADES_2_2</literal>
+                Refere-se à Assinatura Digital de Referência Temporal (com carimbo de tempo) versão 2.2;
+            </listitem>
+        </itemizedlist>
+
+        <programlisting role="JAVA"><![CDATA[
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificates(certificateChain);
+signer.setPrivateKey(privateKey);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+byte[] signature = signer.doDetachedSign(this.content);
+]]></programlisting>
+
+
+        <important>
+            <para>
+                Caso não seja especificada nenhuma política, o componente assumirá a política padrão AD_RB_CADES_2_2.
+            </para>
+        </important>
+    </section>
+    
+    <section>
+        <title>Assinatura Digital no Formato PKCS#7/CAdES com contedo anexado (attached)</title>
+        <para>
+            Identica ao formato apresentado anteriormente, outra das formas de gerar a assinatura digital 
+            é incluir todo o conteúdo assinado no novo arquivo com a extensão .p7s (PKCS#7)
+            Desta forma, tanto a assinatura quanto o conteúdo estarão dentro deste arquivo. 
+            A sua vantagem é que para  validação da assinatura, basta enviar somente este arquivo.
+            Porém, caso o arquivo original seja descartado, para ter acesso ao mesmo, será necessário o uso de um software especializado(como o próprio Demoiselle-Signer)
+          </para>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a utilização do pacote PKCS7 com o conteúdo anexado.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificates(certificateChain);
+signer.setPrivateKey(privateKey);
+byte[] signature = signer.doAttachedSign(fileToSign);
+]]></programlisting>
+
+    </section>
+
+    <section>
+        <title>
+            Criação de Assinatura Digital sem envio de todo o conteúdo  para o assinador
+        </title>
+
+        <para>
+            Este procedimento visa facilitar a geração de assinaturas digitais em aplicações onde pode haver restrição de trafegar todo o conteúdo do arquivo pela rede,
+            sendo necessário apenas o tráfego dos bytes do resumo do conteúdo original (HASH). Neste caso, é necessário gerar o HASH do conteúdo a ser assinado e passar
+            para o assinador.
+            Ao gerar o HASH, é importante dar atenção ao algoritmo a ser usado, pois na validação da assinatura será considerado o algoritmo da política escolhida.
+            Então, para que esse procedimento funcione corretamente, é necessário escolher o algoritmo do HASH igual ao algoritmo da assinatura digital. 
+            
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+/* Gerando o HASH */
+
+java.security.MessageDigest md = java.security.MessageDigest
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+byte[] hash = md.digest(content);
+
+
+/* Gerando a assinatura a partir do HASH gerado anteriormente */
+
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificate(certificate);
+signer.setPrivateKey(privateKey);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+byte[] signature = signer.doHashSign(hash);]]></programlisting>
+
+        <important>
+            <para>
+                Este procedimento gera o pacote PKCS7 idêntico ao pacote gerado pelo exemplo do tópico 2.2
+            </para>
+        </important>
+    </section>
+
+    
+    <section>
+        <title>
+            Co-Assinatura em arquivo único de assinatura . 
+        </title>
+        
+        <section>
+        	<title>
+             Com envio de conteúdo, gerando as assinatura desanexadas. 
+        </title>
+        	        <para>
+        	Por definição, para gerar uma co-assinatura, basta que vários assinantes assinem o mesmo arquivo, gerando assim vários arquivos de assinaturas 
+        	que estão relacionados ao arquivo original.
+            O componente também oferece uma funcionalidade de co-assinar um arquivo gerando um único arquivo com todas assinaturas.
+            Para isso quando é feita a chamada ao componente é necessário informar tanto o arquivo original (ou seu hash) quanto o arquivo de assinatura
+            que contém a(s) assinatura(s) anterior(es). Conforme exemplificamos abaixo.
+              
+            
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+byte[] signatureFile = readContent("fileSignature.p7s"); /* implementar metodo de leitura de arquivo */
+/* Gerando o HASH */
+
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificate(certificate);
+signer.setPrivateKey(privateKey);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+byte[] signature = signer.doDetachedSign(content, signatureFile);
+]]></programlisting>
+        
+        </section>
+
+<section>
+        	<title>
+             Enviando apenas o Hash do conteúdo 
+        </title>
+        	        <para>
+        	Assim, como nas outras forma de gerar a assinatura,
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+byte[] signatureFile = readContent("fileSignature.p7s"); /* implementar metodo de leitura de arquivo */
+/* Gerando o HASH */
+
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+signer.setCertificate(certificate);
+signer.setPrivateKey(privateKey);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+byte[] signature = signer.doDetachedSign(content, signatureFile);
+]]></programlisting>
+        
+        </section>
+		
+
+    </section>
+
+    <section>
+
+        <title>
+            Validação de assinatura PKCS7 sem o conteúdo anexado
+        </title>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 sem o conteúdo anexado.
+        </para>
+
+
+        <programlisting role="JAVA"><![CDATA[
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+boolean checked = signer.check(content, signed);]]></programlisting>
+
+    </section>
+
+<section>
+
+        <title>
+            Validação de assinatura PKCS7 sem o conteúdo anexado
+        </title>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 sem o conteúdo anexado.
+        </para>
+
+
+        <programlisting role="JAVA"><![CDATA[
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+boolean checked = signer.check(content, signed);]]></programlisting>
+
+    </section>
+
+
+    <section>
+
+        <title>
+            Validação de assinatura PKCS7 com o conteúdo anexado
+        </title>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 com o conteúdo anexado.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+/* O componente ira detectar se o conteudo original esta anexado */
+boolean checked = signer.check(null, signed);]]></programlisting>
+
+    </section>
+
+    <section>
+
+        <title>
+            Leitura do conteúdo anexado a uma assinatura PKCS7
+        </title>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a recuperação do conteúdo de um arquivo anexado a uma assinatura PKCS7.
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+
+/* Para extrair o conteudo original validando a assinatura */
+byte[] content = signer.getAttached(signed, true);
+
+/* Para extrair o conteudo original sem validar a assinatura */
+byte[] content = signer.getAttached(signed, false);]]></programlisting>
+
+    </section>
+</chapter>

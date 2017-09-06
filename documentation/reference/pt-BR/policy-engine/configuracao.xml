@@ -1,0 +1,152 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="policy-engine-configuracao">
+
+    <title>Configuração do Criptography</title>
+
+    <section>
+        <title>Instalação do componente</title>
+        <para>
+            Para instalar o componente
+            <emphasis>Demoiselle Criptography</emphasis>
+            na aplicação,
+            basta adicionar a sua dependência no arquivo
+            <filename>pom.xml</filename>
+            do projeto
+            gerenciado pelo Maven:
+        </para>
+        <programlisting role="XML"><![CDATA[
+<dependency>
+	<groupId>br.gov.frameworkdemoiselle.component</groupId>
+	<artifactId>demoiselle-certificate-criptography</artifactId>
+	<version>1.1.1</version>
+</dependency>]]></programlisting>
+    </section>
+
+    <section>
+        <title>Customização das implementações</title>
+
+        <para>
+            O componente Demoiselle Criptography possui implementações padrões às funcionalidades de criptografia, entretanto é possível definir outras implementações. Neste caso é
+            necessário informar ou como variável de ambiente ou com variável da JVM qual a implementação das interfaces:
+            <code>br.gov.frameworkdemoiselle.certificate.criptography.Criptography</code>
+            e
+            <code>br.gov.frameworkdemoiselle.certificate.criptography.Digest</code>.
+        </para>
+
+        <para>
+            Por padrão, as respectivas implementações são:
+            <code>br.gov.frameworkdemoiselle.certificate.criptography.implementation.CriptographyImpl</code>
+            e
+            <code>br.gov.frameworkdemoiselle.certificate.criptography.implementation.DigestImpl</code>
+            .
+        </para>
+
+        <para>
+            Veja a configuração por meio de variável de ambiente para definição da implementação da interface
+            <code>br.gov.frameworkdemoiselle.certificate.criptography.Criptography.</code>
+        </para>
+
+        <table>
+            <title>Exemplo com Variável de Ambiente</title>
+            <tgroup colsep="1" cols="2">
+                <colspec colnum="1" colname="c0" colwidth="50pt" />
+                <colspec colnum="2" colname="c1" />
+                <thead>
+                    <row>
+                        <entry>Ambiente</entry>
+                        <entry>Variável de ambiente</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>Linux</entry>
+                        <entry align="left">export criptography.implementation = br.gov.frameworkdemoiselle.certificate.criptography.implementation.CriptographyImpl</entry>
+                    </row>
+                    <row>
+                        <entry>Windows</entry>
+                        <entry align="left">set criptography.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.CriptographyImpl</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+        <table>
+            <title>Exemplo com Variável JVM</title>
+            <tgroup colsep="1" cols="2">
+                <colspec colnum="1" colname="c0" colwidth="50pt" />
+                <colspec colnum="2" colname="c1" />
+                <thead>
+                    <row>
+                        <entry>Ambiente</entry>
+                        <entry>Variável JVM</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>Linux</entry>
+                        <entry align="left">-criptography.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyCriptographyImpl</entry>
+                    </row>
+                    <row>
+                        <entry>Windows</entry>
+                        <entry align="left">-criptography.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyCriptographyImpl</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+        <para>
+            Veja a configuração por meio de variável de ambiente para definição da implementação da interface
+            <code>br.gov.frameworkdemoiselle.certificate.criptography.Digest</code>.
+        </para>
+
+        <table>
+            <title>Exemplo com Variável de Ambiente</title>
+            <tgroup colsep="1" cols="2">
+                <colspec colnum="1" colname="c0" colwidth="50pt" />
+                <colspec colnum="2" colname="c1" />
+                <thead>
+                    <row>
+                        <entry>Ambiente</entry>
+                        <entry>Variável de ambiente</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>Linux</entry>
+                        <entry align="left">export digest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                    </row>
+                    <row>
+                        <entry>Windows</entry>
+                        <entry align="left">set digest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+
+        <table>
+            <title>Exemplo com Variável JVM</title>
+            <tgroup colsep="1" cols="2">
+                <colspec colnum="1" colname="c0" colwidth="50pt" />
+                <colspec colnum="2" colname="c1" />
+                <thead>
+                    <row>
+                        <entry>Ambiente</entry>
+                        <entry>Variável JVM</entry>
+                    </row>
+                </thead>
+                <tbody>
+                    <row>
+                        <entry>Linux</entry>
+                        <entry align="left">-messageDigest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                    </row>
+                    <row>
+                        <entry>Windows</entry>
+                        <entry align="left">-messageDigest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                    </row>
+                </tbody>
+            </tgroup>
+        </table>
+    </section>
+</chapter>
