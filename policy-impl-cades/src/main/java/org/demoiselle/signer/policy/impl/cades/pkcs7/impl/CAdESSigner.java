@@ -814,6 +814,13 @@ public class CAdESSigner implements PKCS7Signer {
 		this.hash = hash;
 		return this.doSign(null);
 	}
+	
+	
+	@Override
+	public byte[] doHashCoSign(byte[] hash, byte[] previewSigned) {
+		this.hash = hash;
+		return this.doSign(null, previewSigned);
+	}	
 
 	@Override
 	public boolean checkAttached(byte[] signedData) {
@@ -881,5 +888,6 @@ public class CAdESSigner implements PKCS7Signer {
 	public void setCertificateManager(CertificateManager certificateManager) {
 		this.certificateManager = certificateManager;
 	}
+	
 	
 }

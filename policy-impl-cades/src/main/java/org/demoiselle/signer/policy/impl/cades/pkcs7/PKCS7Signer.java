@@ -107,6 +107,18 @@ public interface PKCS7Signer extends Signer {
     
     
     /**
+     * 
+     * Generates a digital co-signature from a previous calculated hash for a content,
+     * and its previews signatures 
+     * the result file does not contains the original content that was signed
+     * @param hash
+     * @param previewSigned
+     * @return detached PCKS7 signature
+     */
+    abstract public byte[] doHashCoSign (byte[] hash, byte[] previewSigned);
+    
+    
+    /**
      * Check a digital signature with attached content, informed by parameter signedData
      *
      * @param signedData
