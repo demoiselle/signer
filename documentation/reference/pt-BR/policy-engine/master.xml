@@ -7,13 +7,12 @@
 
 	<partintro>
 		<para>
-			O <emphasis>demoiselle-criptography</emphasis> é um componente corporativo que provê um mecanismo simplificado de criptografia de dados. Neste contexto o componente 
-			atua nos dois principais tipos de algoritmos, os algoritmos de chave simétrica e algoritmos de chave assimétrica.
+			O <emphasis>policy-engine</emphasis> é um componente acessório que visa  atender as politicas de assinaturas publicadas pela ICP-BRASIL, ele provẽ uma forma
+			de fabricar as políticas de forma automatizada, através da leitura do arquivo da política
 		</para>
 
 		<para>
-			O componente provê as funções de cifragem e decifragem utilizando algoritmos simétricos ou também chamados de algoritmos de chave-simétrica, ou seja, os que utilizam 
-			uma mesma chave para cifrar e decifrar as mensagens.
+			
 		</para>
 
 		<para>

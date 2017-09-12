@@ -70,12 +70,12 @@ signer.setAlgorithm(SignerAlgorithmEnum.SHA1withRSA);
 signer.setPrivateKey(chavePrivada);
 
 /* Assinando um conjunto de bytes */
-byte[] sign = signer.doSign(content);]]></programlisting>
+byte[] signature = signer.doSign(content);]]></programlisting>
 
     </section>
 
     <section>
-        <title>Assinatura Digital no Formato PKCS#7/CAdES sem o contedo anexado (detached)</title>
+        <title>Assinatura Digital no Formato PKCS#7/CAdES sem o conteúdo anexado (detached)</title>
         <para>
             O formato PKCS#7 define o tipo de arquivo para assinatura.   
             Já a ICP-Brasil define um conjunto mínimo de informações básicas para as assinaturas digitais para o padrão CAdES. 
@@ -131,7 +131,7 @@ byte[] signature = signer.doDetachedSign(this.content);
     </section>
     
     <section>
-        <title>Assinatura Digital no Formato PKCS#7/CAdES com contedo anexado (attached)</title>
+        <title>Assinatura Digital no Formato PKCS#7/CAdES com conteúdo anexado (attached)</title>
         <para>
             Identica ao formato apresentado anteriormente, outra das formas de gerar a assinatura digital 
             é incluir todo o conteúdo assinado no novo arquivo com a extensão .p7s (PKCS#7)
@@ -156,7 +156,7 @@ byte[] signature = signer.doAttachedSign(fileToSign);
 
     <section>
         <title>
-            Criação de Assinatura Digital sem envio de todo o conteúdo  para o assinador
+            Criação de Assinatura Digital enviando apenas o resumo (hash) do conteúdo
         </title>
 
         <para>
@@ -201,7 +201,7 @@ byte[] signature = signer.doHashSign(hash);]]></programlisting>
         
         <section>
         	<title>
-             Com envio de conteúdo, gerando as assinatura desanexadas. 
+             Com envio de conteúdo 
         </title>
         	        <para>
         	Por definição, para gerar uma co-assinatura, basta que vários assinantes assinem o mesmo arquivo, gerando assim vários arquivos de assinaturas 
@@ -217,8 +217,6 @@ byte[] signature = signer.doHashSign(hash);]]></programlisting>
 
 byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
 byte[] signatureFile = readContent("fileSignature.p7s"); /* implementar metodo de leitura de arquivo */
-/* Gerando o HASH */
-
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 signer.setCertificate(certificate);
 signer.setPrivateKey(privateKey);
@@ -233,7 +231,8 @@ byte[] signature = signer.doDetachedSign(content, signatureFile);
              Enviando apenas o Hash do conteúdo 
         </title>
         	        <para>
-        	Assim, como nas outras forma de gerar a assinatura,
+        	Assim, como nas outras forma de gerar a assinatura, é possível fazer o envio do Hash do conteúdo já calculado.
+        	Veja no exemplo abaixo:
         </para>
 
         <programlisting role="JAVA"><![CDATA[
@@ -242,11 +241,16 @@ byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de a
 byte[] signatureFile = readContent("fileSignature.p7s"); /* implementar metodo de leitura de arquivo */
 /* Gerando o HASH */
 
+java.security.MessageDigest md = java.security.MessageDigest
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+byte[] hash = md.digest(content);
+
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 signer.setCertificate(certificate);
 signer.setPrivateKey(privateKey);
 signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
-byte[] signature = signer.doDetachedSign(content, signatureFile);
+byte[] signature = signer.doHashCoSign(hash, signatureFile);
+
 ]]></programlisting>
         
         </section>
@@ -257,68 +261,82 @@ byte[] signature = signer.doDetachedSign(content, signatureFile);
     <section>
 
         <title>
-            Validação de assinatura PKCS7 sem o conteúdo anexado
+            Validação de assinatura PKCS7 sem o conteúdo anexado (dettached)
         </title>
 
         <para>
-            A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 sem o conteúdo anexado.
+        	Como foi visto nas seções anteriores, um do modos de gerar a assinatura é criando um arquivo separado do conteúdo original, e a forma de validação
+        	 está no fragmento de código abaixo. 
         </para>
 
-
+	<para>
         <programlisting role="JAVA"><![CDATA[
 byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
-byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
+byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-boolean checked = signer.check(content, signed);]]></programlisting>
+List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(content, signature);]]></programlisting>
+</para>
 
-    </section>
-
-<section>
-
-        <title>
-            Validação de assinatura PKCS7 sem o conteúdo anexado
-        </title>
-
-        <para>
-            A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 sem o conteúdo anexado.
-        </para>
-
-
+	<para>
+	 O retorno é um objeto do tipo org.demoiselle.signer.policy.impl.cades.SignatureInformations que possui os seguintes atributos
         <programlisting role="JAVA"><![CDATA[
-byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
-byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
-PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-boolean checked = signer.check(content, signed);]]></programlisting>
+public class SignatureInformations {
 
+	private LinkedList<X509Certificate> chain;
+	private Date signDate;
+   	private Timestamp timeStampSigner = null;
+   	private SignaturePolicy signaturePolicy;]]></programlisting>
+</para>
     </section>
-
 
     <section>
-
         <title>
-            Validação de assinatura PKCS7 com o conteúdo anexado
+            Validação de assinatura PKCS7 com o conteúdo anexado (attached)
         </title>
-
         <para>
             A seguir temos um fragmento de código que demonstra a validação uma assinatura PKCS7 com o conteúdo anexado.
         </para>
-
         <programlisting role="JAVA"><![CDATA[
-byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
+byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-/* O componente ira detectar se o conteudo original esta anexado */
-boolean checked = signer.check(null, signed);]]></programlisting>
+List<SignatureInformations> signaturesInfo =  signer.checkAttachedSignature(signature);]]></programlisting>
+</section>
+
+    <section>
+        <title>
+            Validação de assinatura PKCS7 enviando apenas o resumo (Hash) do conteúdo
+        </title>
+        <para>
+        	Da mesma forma que possibilitamos a criação da assinatura enviando o resumo (hash) calculado do conteúdo, podemos também fazer a validação da mesma forma.
+        	Assim como na geração, é preciso saber qual foi o algoritimo de resumo (hash) que foi usado para gerar a assinatura, pois o mesmo deve ser informado para 
+        	o método de validação.
+            A seguir temos um fragmento de código que demonstra esta validação.
+        </para>
+        <programlisting role="JAVA"><![CDATA[
+byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
+byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquiv
+PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+List<SignatureInformations> signaturesInfo =  signer.checkAttachedSignature(signature);
+// gera o hash do arquivo que foi assinado
+md = java.security.MessageDigest
+			.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+byte[] hash = md.digest(content);
+List<SignatureInformations> signaturesInfo = signer.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signature);
+]]></programlisting>
 
     </section>
+
 
     <section>
 
         <title>
-            Leitura do conteúdo anexado a uma assinatura PKCS7
+            Leitura do conteúdo anexado (Attached) a uma assinatura PKCS7
         </title>
 
         <para>
-            A seguir temos um fragmento de código que demonstra a recuperação do conteúdo de um arquivo anexado a uma assinatura PKCS7.
+            A seguir temos um fragmento de código que demonstra a extração (recuperação) do conteúdo de um arquivo anexado a uma assinatura PKCS7.
+            Essa funcionalidade pode ser útil quando é necessário mostrar o conteúdo assinado, pois no formato anexado (attached) o conteúdo está empacotado 
+            na assinatura. Esta funcionalidade também permite que seja feita a validação da assinatura no momento da extração. 
         </para>
 
         <programlisting role="JAVA"><![CDATA[

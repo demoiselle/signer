@@ -24,12 +24,11 @@
     				<para><emphasis role="bold">policy-impl-cades: </emphasis>permite geração e validação de assinaturas digitais (conforme uma política) no formato CADES</para>
 	    		</listitem>
     			<listitem>
-    				<para><emphasis role="bold">chain-icp-brasil: </emphasis>possui funcionalidade para montagem das cadeias de autoridades certificadores ICPBrasil válidas</para>
-	    		</listitem>
-    			<listitem>
     				<para><emphasis role="bold">policy-engine: </emphasis>mecanismo para carregamento das políticas de assinaturas definidas pela ICP-BRASIL</para>
 	    		</listitem>
-    			
+				<listitem>
+    				<para><emphasis role="bold">chain-icp-brasil: </emphasis>possui funcionalidade para montagem das cadeias de autoridades certificadores ICPBrasil válidas</para>
+	    		</listitem>    			
     			<listitem>
     				<para><emphasis role="bold">timestamp: </emphasis>disponibiliza as funcionalidades para obtenção de carimbos de tempo (fornecidos por uma autoridade de carimbo de tempo)</para>
 	    		</listitem>
@@ -57,10 +56,11 @@
     <toc />
 
     <!-- partes -->
+    
     <!-- Core -->
     <xi:include href="core/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
     <!-- CADES -->
     <xi:include href="policy-impl-cades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	
+	<!-- Policy Engine -->
+    <xi:include href="policy-engine/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 </book>

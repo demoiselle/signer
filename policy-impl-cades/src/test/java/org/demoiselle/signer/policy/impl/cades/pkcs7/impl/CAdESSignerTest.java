@@ -58,6 +58,8 @@ import java.util.Enumeration;
 import java.util.List;
 import javax.net.ssl.KeyManagerFactory;
 import org.demoiselle.signer.core.extension.BasicCertificate;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
@@ -113,6 +115,27 @@ public class CAdESSignerTest {
 		}
 
 	}
+	
+	
+	private KeyStore getKeyStoreTokenBySigner() {
+
+		try {
+			
+			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+			KeyStore keyStore = keyStoreLoader.getKeyStore();
+
+			return keyStore;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		} finally {
+		}
+
+	}
+	
+	
+	
 
 	/**
 	 * 
@@ -183,6 +206,7 @@ public class CAdESSignerTest {
 			// String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar.txt";
 			
 			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
+		
 			
 
 			byte[] fileToSign = readContent(fileDirName);
@@ -191,7 +215,7 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			KeyStore ks = getKeyStoreTokenBySigner();
 
 			// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFile();
@@ -608,7 +632,7 @@ public class CAdESSignerTest {
 
 	
 	//@Test
-	public void testVerifyAtttachedSignature() {
+	public void testVerifyAttachedSignature() {
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
 		byte[] signatureFile = readContent(fileSignatureDirName);
 

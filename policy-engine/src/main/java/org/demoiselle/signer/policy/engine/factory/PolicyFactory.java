@@ -50,7 +50,7 @@ import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
  * 
  *  Factory for the digital signature policies defined by ICP-BRASIL
  *  
- *  http://www.iti.gov.br/icp-brasil/repositorio/144-icp-brasil/repositorio/3974-artefatos-de-assinatura-digital
+ *  http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
  *
  */
 public class PolicyFactory {
@@ -161,7 +161,7 @@ public class PolicyFactory {
     /**
      * 
      * Policies available on the ITI website. 
-     * http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
+     * http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
      *
      */
     public enum Policies {

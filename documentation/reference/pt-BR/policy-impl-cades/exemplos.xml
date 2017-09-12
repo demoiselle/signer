@@ -79,10 +79,9 @@ PublicKey chavePublica = keyFactory.generatePublic(publicKeySpec);]]></programli
 		<title>Carregar uma chave pública de um token</title>
 
 		<programlisting role="JAVA"><![CDATA[
-/* Usando os componentes demoiselle-keystore e demoiselle-certificate */
 KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-KeyStore keyStore = keyStoreLoader.getKeyStore("pinnumber");
-CertificateLoader certificateLoader = new CertificateLoaderImpl();
+KeyStore keyStore = keyStoreLoader.getKeyStore();
+CertificateLoader certificateLoader = new CertificateLoader();
 certificateLoader.setKeyStore(keyStore);
 X509Certificate certificate = certificateLoader.loadFromToken();
 PublicKey chavePublica = certificate.getPublicKey();]]></programlisting>
@@ -93,7 +92,6 @@ PublicKey chavePublica = certificate.getPublicKey();]]></programlisting>
 		<title>Carregar um certificado digital de um arquivo</title>
 
 		<programlisting role="JAVA"><![CDATA[
-/* Usando o componente demoiselle-certificate */
 CertificateLoader certificateLoader = new CertificateLoaderImpl();
 X509Certificate certificate = certificateLoader.load(new File("certificado.cer");]]></programlisting>
 	</section>
@@ -103,9 +101,8 @@ X509Certificate certificate = certificateLoader.load(new File("certificado.cer")
 		<title>Carregar um certificado digital de um token</title>
 
 		<programlisting role="JAVA"><![CDATA[
-/* Usando os componentes demoiselle-keystore e demoiselle-certificate */
 KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-KeyStore keyStore = keyStoreLoader.getKeyStore("pinnumber");
+KeyStore keyStore = keyStoreLoader.getKeyStore();
 CertificateLoader certificateLoader = new CertificateLoaderImpl();
 certificateLoader.setKeyStore(keyStore);
 X509Certificate certificate = certificateLoader.loadFromToken();]]></programlisting>
