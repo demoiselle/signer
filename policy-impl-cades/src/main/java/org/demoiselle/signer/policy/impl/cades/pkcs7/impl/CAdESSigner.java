@@ -57,6 +57,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
@@ -94,7 +95,11 @@ import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.core.ca.manager.CAManagerException;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
+import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.core.validator.CRLValidator;
+import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
@@ -209,15 +214,25 @@ public class CAdESSigner implements PKCS7Signer {
 				X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
 				
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+				PeriodValidator pV = new PeriodValidator();				
+				try{
+					pV.validate(varCert);
+			
+				}catch (CertificateValidatorException cve) {
+					si.getValidatorErrors().add(cve.getMessage());
+				}
 				
-				setCertificateManager(new CertificateManager(varCert));
+				CRLValidator cV = new CRLValidator();				
+				try {
+					cV.validate(varCert);	
+				}catch (CertificateValidatorCRLException cvce) {
+					si.getValidatorErrors().add(cvce.getMessage());
+				}
 				
 				if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
 					verified++;
 					logger.info(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
-
-				}
-				
+				}				
 
 				// Realiza a verificação dos atributos assinados
 				logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
@@ -233,12 +248,9 @@ public class CAdESSigner implements PKCS7Signer {
 					logger.info(cadesMessagesBundle.getString("error.unsigned.attribute.not.found"));
 				}
 
-				
 				// Mostra data e  hora da assinatura, não é carimbo de tempo
 				Date dataHora = (((ASN1UTCTime) signedAttributes.get(CMSAttributes.signingTime).getAttrValues().getObjectAt(0)).getDate());
 				logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));
-				
-				
 				
 				logger.info(cadesMessagesBundle.getString("info.attribute.validation"));
 				// Valida o atributo ContentType
@@ -279,8 +291,7 @@ public class CAdESSigner implements PKCS7Signer {
 					}
 				}catch (Exception ex) {
 					// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.						
-				}
-												
+				}												
 				
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				si.setSignDate(dataHora);

@@ -36,15 +36,14 @@
  */
 package org.demoiselle.signer.core.validator;
 
+import java.security.cert.X509Certificate;
+import java.util.Collection;
 import org.demoiselle.signer.core.IValidator;
-import org.demoiselle.signer.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
 import org.demoiselle.signer.core.repository.CRLRepository;
 import org.demoiselle.signer.core.repository.CRLRepositoryFactory;
 import org.demoiselle.signer.core.util.MessagesBundle;
-
-import java.security.cert.X509Certificate;
-import java.util.Collection;
 
 /**
  * 
@@ -61,14 +60,14 @@ public class CRLValidator implements IValidator {
     }
 
     @Override
-    public void validate(X509Certificate x509) throws CertificateValidatorException {
+    public void validate(X509Certificate x509) throws CertificateValidatorCRLException {
         Collection<ICPBR_CRL> crls = crlRepository.getX509CRL(x509);
         if (crls == null || crls.isEmpty()) {
-            throw new CertificateValidatorException(coreMessagesBundle.getString("error.validate.on.crl"));
+            throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl"));
         }
         for (ICPBR_CRL icpbr_crl : crls) {
             if (icpbr_crl.getCRL().isRevoked(x509)) {
-                throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.repelead"));
+                throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.certificate.repelead"));
             }
         }
     }

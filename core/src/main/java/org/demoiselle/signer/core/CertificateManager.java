@@ -37,6 +37,7 @@
 package org.demoiselle.signer.core;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.CRLValidator;
@@ -144,7 +145,7 @@ public class CertificateManager {
      * @param validators Array of {@link IValidator}
      * @throws CertificateValidatorException
      */
-    private void init(X509Certificate x509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
+    private void init(X509Certificate x509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException, CertificateValidatorCRLException {
         this.x509 = x509;
         this.validators = new ArrayList<>();
 

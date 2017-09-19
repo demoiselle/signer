@@ -21,6 +21,7 @@ public class SignatureInformations {
 	private Date signDate;
     private Timestamp timeStampSigner = null;
     private SignaturePolicy signaturePolicy;
+    private LinkedList<String> validatorErrors = new LinkedList<String>();
 
 
     /**
@@ -95,5 +96,13 @@ public class SignatureInformations {
 
 	public void setSignaturePolicy(SignaturePolicy signaturePolicy) {
 		this.signaturePolicy = signaturePolicy;
+	}
+
+	public LinkedList<String> getValidatorErrors() {
+		return validatorErrors;
+	}
+
+	public void setValidatorErrors(LinkedList<String> validatorErrors) {
+		this.validatorErrors = validatorErrors;
 	}	
 }

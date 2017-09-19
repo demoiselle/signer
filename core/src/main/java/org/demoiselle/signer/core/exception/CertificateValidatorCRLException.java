@@ -34,26 +34,40 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.core;
-
-import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
-import org.demoiselle.signer.core.exception.CertificateValidatorException;
-
-import java.security.cert.X509Certificate;
+package org.demoiselle.signer.core.exception;
 
 /**
- * 
- * define a method to validate a java.security.cert.X509Certificate 
- *
+ * Custom RuntimeException to do unchecked
+ *  *
  */
-public interface IValidator {
+public class CertificateValidatorCRLException extends RuntimeException {
 
-	/**
-	 * 
-	 * @param x509 java.security.cert.X509Certificate
-	 * @throws CertificateValidatorException
-	 */
-    public void validate(X509Certificate x509) throws CertificateValidatorException, CertificateValidatorCRLException;
-    
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * Default constructor
+     */
+    public CertificateValidatorCRLException() {
+        super();
+    }
+
+    /**
+     * Constructor with message
+     *
+     * @param message message of exception
+     */
+    public CertificateValidatorCRLException(String message) {
+        super(message);
+    }
+
+    /**
+     * Constructor with message and cause
+     *
+     * @param message message of exception
+     * @param cause cause of exception
+     */
+    public CertificateValidatorCRLException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
 }

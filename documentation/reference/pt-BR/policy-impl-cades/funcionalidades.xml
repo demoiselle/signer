@@ -350,4 +350,10 @@ byte[] content = signer.getAttached(signed, true);
 byte[] content = signer.getAttached(signed, false);]]></programlisting>
 
     </section>
+    <section>
+    <note>
+    <para>No repositório do componente no GitHub há um código de testes unitários para os exemplos acima, <ulink url="https://github.com/demoiselle/signer/blob/master/policy-impl-cades/src/test/java/org/demoiselle/signer/policy/impl/cades/pkcs7/impl/CAdESSignerTest.java">neste link</ulink>  </para>
+     
+    </note>
+    </section>
 </chapter>

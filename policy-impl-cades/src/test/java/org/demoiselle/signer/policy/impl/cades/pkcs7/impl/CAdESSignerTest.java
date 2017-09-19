@@ -440,8 +440,6 @@ public class CAdESSignerTest {
 			String fileDirName = "local_e_nome_do_arquivo_para_assinar";
 			String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
 			
-
-
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
 
@@ -449,7 +447,8 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			KeyStore ks = getKeyStoreTokenBySigner();
+			
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
@@ -592,11 +591,12 @@ public class CAdESSignerTest {
 	}
 	
 	
-	//@Test
+//	@Test
 	public void testVerifyDetachedSignature() {
 		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
-	
+		
+		
 		
 		
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
@@ -620,9 +620,11 @@ public class CAdESSignerTest {
 						System.out.println(certificate.toString());
 					}												
 				}
-				System.out.println(si.getSignaturePolicy().toString());
+				for (String valErr : si.getValidatorErrors()){
+					System.out.println(valErr);
+				}				
 			}
-			assertTrue(true);		
+			assertTrue(true);	
 		
 		} else {
 			System.out.println("A assinatura foi invalidada!");
@@ -736,15 +738,16 @@ public class CAdESSignerTest {
 			e = ks.aliases();
 			while (e.hasMoreElements()) {
 				alias = e.nextElement();
-				System.out.println("alias..............: {}" + alias);
+				System.out.println("alias..............: " + alias);
+				System.out.println("iskeyEntry"+ ks.isKeyEntry(alias));
+				System.out.println("containsAlias"+ks.containsAlias(alias));
+				System.out.println(""+ks.getKey(alias, null));
 				certificates = ks.getCertificateChain(alias);
 			}
 
-		} catch (KeyStoreException e1) {
+		} catch (KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e1) {
 			e1.printStackTrace();
 		}
-		X509Certificate c = (X509Certificate) certificates[0];
-		System.out.println("Número de série....: {}" + c.getSerialNumber().toString());
 		return alias;
 	}
 }
