@@ -1,51 +1,103 @@
 <?xml version='1.0' encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="criptography-configuracao">
+<chapter id="cryptography-configuracao">
 
-    <title>Configuração do Criptography</title>
+    <title>Configuração do Cryptography</title>
 
     <section>
-        <title>Instalação do componente</title>
-        <para>
-            Para instalar o componente
-            <emphasis>Demoiselle Criptography</emphasis>
-            na aplicação,
-            basta adicionar a sua dependência no arquivo
-            <filename>pom.xml</filename>
-            do projeto
-            gerenciado pelo Maven:
+        	<title>Instalação do componente</title>
+	<para>
+		Para instalar o componente <emphasis>Demoiselle Signer Cryptography</emphasis> na aplicação, basta adicionar a sua dependência de acordo com o gerenciador de projetos:
+	</para>
+	
+	<para> <itemizedlist>
+        		<listitem>
+        		 <para><ulink url="https://maven.apache.org/">Apache-Maven</ulink></para>
+        		 <para>
+        		 	<programlisting role="XML"><![CDATA[
+        		<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>cryptography</artifactId>
+				<version>3.1.3</version>
+			</dependency>]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        			<listitem>
+        		 <para><ulink url="https://buildr.apache.org/">Apache Buildr</ulink></para>
+        		 <para>
+        		 	<programlisting role="XML"><![CDATA['org.demoiselle.signer:cryptography:jar:3.1.3']]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        		<listitem>
+        		 <para><ulink url="http://ant.apache.org/ivy/">Apache Ivy</ulink></para>
+        		 <para>
+        		 	<programlisting role="XML"><![CDATA[<dependency org="org.demoiselle.signer" name="cryptography" rev="3.1.3" />]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="http://docs.groovy-lang.org/latest/html/documentation/grape.html">Groovy Grape</ulink></para>
+        		 <para>
+        		 	<programlisting role="XML"><![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='cryptography', version='3.1.3'))]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="https://github.com/grails/grails-gradle-plugin">Gradle/Grails</ulink></para>
+        		 <para>
+        		 	<programlisting role="XML"><![CDATA[<dependency org="org.demoiselle.signer" name="cryptography" rev="3.1.3" />]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="http://www.scala-sbt.org/">Scala SBT</ulink></para>
+        		 <para>
+        		 	<programlisting role="XML"><![CDATA[libraryDependencies += "org.demoiselle.signer" % "cryptography" % "3.1.3"]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="https://leiningen.org/">Leiningen</ulink></para>
+        		 <para>
+        		 	<programlisting role="XML"><![CDATA[<[org.demoiselle.signer/cryptography "3.1.3"]]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	</itemizedlist>
         </para>
-        <programlisting role="XML"><![CDATA[
-<dependency>
-	<groupId>br.gov.frameworkdemoiselle.component</groupId>
-	<artifactId>demoiselle-certificate-criptography</artifactId>
-	<version>1.1.1</version>
-</dependency>]]></programlisting>
+        
+		<para> Caso não esteja utilizando nenhum outro tipo de gerenciador (estava morando numa caverna nos últimos dez anos), pode baixar o .jar do repositório:
+		<para><ulink url="http://repo1.maven.org/maven2/org/demoiselle/signer/cryptography/">http://repo1.maven.org/maven2/org/demoiselle/signer/cryptography/</ulink></para>
+		 
+		</para>
+        
     </section>
 
     <section>
         <title>Customização das implementações</title>
 
         <para>
-            O componente Demoiselle Criptography possui implementações padrões às funcionalidades de criptografia, entretanto é possível definir outras implementações. Neste caso é
-            necessário informar ou como variável de ambiente ou com variável da JVM qual a implementação das interfaces:
-            <code>br.gov.frameworkdemoiselle.certificate.criptography.Criptography</code>
+            O componente Demoiselle Signer Cryptography  possui implementações padrões às funcionalidades de criptografia, entretanto é possível definir outras implementações. 
+            Neste caso é  necessário informar, ou como variável de ambiente, ou com variável da JVM, qual a implementação das interfaces:
+            <code>org.demoiselle.signer.cryptography.Cryptography</code>
             e
-            <code>br.gov.frameworkdemoiselle.certificate.criptography.Digest</code>.
+            <code>org.demoiselle.signer.cryptography.Digest</code>.
         </para>
 
         <para>
             Por padrão, as respectivas implementações são:
-            <code>br.gov.frameworkdemoiselle.certificate.criptography.implementation.CriptographyImpl</code>
+            <code>org.demoiselle.signer.cryptography.implementation.CriyptographyImpl</code>
             e
-            <code>br.gov.frameworkdemoiselle.certificate.criptography.implementation.DigestImpl</code>
+            <code>org.demoiselle.signer.cryptography.implementation.DigestImpl</code>
             .
         </para>
 
         <para>
             Veja a configuração por meio de variável de ambiente para definição da implementação da interface
-            <code>br.gov.frameworkdemoiselle.certificate.criptography.Criptography.</code>
+            <code>org.demoiselle.signer.cryptography.Cryptography</code>
         </para>
 
         <table>
@@ -62,11 +114,11 @@
                 <tbody>
                     <row>
                         <entry>Linux</entry>
-                        <entry align="left">export criptography.implementation = br.gov.frameworkdemoiselle.certificate.criptography.implementation.CriptographyImpl</entry>
+                        <entry align="left">export cryptography.implementation = org.demoiselle.signer.cryptography.implementation.CriyptographyImpl</entry>
                     </row>
                     <row>
                         <entry>Windows</entry>
-                        <entry align="left">set criptography.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.CriptographyImpl</entry>
+                        <entry align="left">set cryptography.implementation = org.demoiselle.signer.cryptography.implementation.CriyptographyImpl</entry>
                     </row>
                 </tbody>
             </tgroup>
@@ -86,11 +138,11 @@
                 <tbody>
                     <row>
                         <entry>Linux</entry>
-                        <entry align="left">-criptography.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyCriptographyImpl</entry>
+                        <entry align="left">-cryptography.implementation= org.demoiselle.signer.cryptography.implementation.MyCriptographyImpl</entry>
                     </row>
                     <row>
                         <entry>Windows</entry>
-                        <entry align="left">-criptography.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyCriptographyImpl</entry>
+                        <entry align="left">-cryptography.implementation= org.demoiselle.signer.cryptography.implementation.MyCriptographyImpl</entry>
                     </row>
                 </tbody>
             </tgroup>
@@ -98,7 +150,7 @@
 
         <para>
             Veja a configuração por meio de variável de ambiente para definição da implementação da interface
-            <code>br.gov.frameworkdemoiselle.certificate.criptography.Digest</code>.
+            <code>org.demoiselle.signer.cryptography.Digest</code>.
         </para>
 
         <table>
@@ -115,11 +167,11 @@
                 <tbody>
                     <row>
                         <entry>Linux</entry>
-                        <entry align="left">export digest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                        <entry align="left">export digest.implementation= org.demoiselle.signer.cryptography.implementation.MyDigestImpl</entry>
                     </row>
                     <row>
                         <entry>Windows</entry>
-                        <entry align="left">set digest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                        <entry align="left">set digest.implementation= org.demoiselle.signer.cryptography.implementation.MyDigestImpl</entry>
                     </row>
                 </tbody>
             </tgroup>
@@ -139,11 +191,11 @@
                 <tbody>
                     <row>
                         <entry>Linux</entry>
-                        <entry align="left">-messageDigest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                        <entry align="left">-messageDigest.implementation= org.demoiselle.signer.cryptography.implementation.MyDigestImpl</entry>
                     </row>
                     <row>
                         <entry>Windows</entry>
-                        <entry align="left">-messageDigest.implementation= br.gov.frameworkdemoiselle.certificate.criptography.implementation.MyDigestImpl</entry>
+                        <entry align="left">-messageDigest.implementation= org.demoiselle.signer.cryptography.implementation.MyDigestImpl</entry>
                     </row>
                 </tbody>
             </tgroup>

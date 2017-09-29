@@ -48,7 +48,8 @@
 	    		</listitem>
     		</itemizedlist>
         </para>
-
+	<note>
+	Caso queira baixar uma versão desta documentação em formato PDF clique <para><ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.1.3.pdf">aqui:</ulink></para> </note>
         
     </preface>
 
@@ -63,4 +64,11 @@
     <xi:include href="policy-impl-cades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- Policy Engine -->
     <xi:include href="policy-engine/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <!-- Chain ICP Brasil -->
+    <xi:include href="chain-icp-brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <!-- TimeStamp -->
+    <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <!-- Crytography -->
+    <xi:include href="cryptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    
 </book>

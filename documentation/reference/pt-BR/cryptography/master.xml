@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding="utf-8"?>
 <!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<part id="criptography-master">
+<part id="cryptography-master">
 
-	<title>Demoiselle Criptography</title>
+	<title>Demoiselle Signer Cryptography</title>
 
 	<partintro>
 		<para>
-			O <emphasis>demoiselle-criptography</emphasis> é um componente corporativo que provê um mecanismo simplificado de criptografia de dados. Neste contexto o componente 
+			O <emphasis>cryptography</emphasis> é um componente corporativo que provê um mecanismo simplificado de criptografia de dados. Neste contexto o componente 
 			atua nos dois principais tipos de algoritmos, os algoritmos de chave simétrica e algoritmos de chave assimétrica.
 		</para>
 

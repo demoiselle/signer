@@ -3,7 +3,7 @@
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="policy-impl-cades-funcionalidades">
 
-    <title>Funcionalidades</title>
+    <title id="title-policy-impl-cades-funcionalidades">Funcionalidades</title>
     <para>
         Este componente provê mecanismos de assinatura digital baseado nas normas ICP-Brasil e implementa mecanismos de assinatura digital em dois formatos: PKCS1 e
         PKCS7. A maior diferença entre esses dois mecanismos está na forma de envelopamento da assinatura digital, onde o PKCS1 não possui um formato de
@@ -47,7 +47,7 @@
         </itemizedlist>
     </para>
 
-    <section>
+    <section id="policy-impl-cades-funcionalidades-assinar-pḱcs1">
         <title>Assinatura Digital no Formato PKCS1</title>
         <para>
             A seguir temos um fragmento de código que demonstra uma assinatura no formato PKCS1.
@@ -74,7 +74,7 @@ byte[] signature = signer.doSign(content);]]></programlisting>
 
     </section>
 
-    <section>
+    <section id="policy-impl-cades-funcionalidades-assinar-detached">
         <title>Assinatura Digital no Formato PKCS#7/CAdES sem o conteúdo anexado (detached)</title>
         <para>
             O formato PKCS#7 define o tipo de arquivo para assinatura.   
@@ -130,7 +130,7 @@ byte[] signature = signer.doDetachedSign(this.content);
         </important>
     </section>
     
-    <section>
+    <section id="policy-impl-cades-funcionalidades-assinar-attached">
         <title>Assinatura Digital no Formato PKCS#7/CAdES com conteúdo anexado (attached)</title>
         <para>
             Identica ao formato apresentado anteriormente, outra das formas de gerar a assinatura digital 
@@ -154,7 +154,7 @@ byte[] signature = signer.doAttachedSign(fileToSign);
 
     </section>
 
-    <section>
+    <section id="policy-impl-cades-funcionalidades-assinar-hash">
         <title>
             Criação de Assinatura Digital enviando apenas o resumo (hash) do conteúdo
         </title>
@@ -194,7 +194,7 @@ byte[] signature = signer.doHashSign(hash);]]></programlisting>
     </section>
 
     
-    <section>
+    <section id="policy-impl-cades-funcionalidades-co-assinar">
         <title>
             Co-Assinatura em arquivo único de assinatura . 
         </title>
@@ -226,7 +226,7 @@ byte[] signature = signer.doDetachedSign(content, signatureFile);
         
         </section>
 
-<section>
+<section id="policy-impl-cades-funcionalidades-co-assinar-hash" >
         	<title>
              Enviando apenas o Hash do conteúdo 
         </title>
@@ -258,7 +258,7 @@ byte[] signature = signer.doHashCoSign(hash, signatureFile);
 
     </section>
 
-    <section>
+    <section id="policy-impl-cades-funcionalidades-validar">
 
         <title>
             Validação de assinatura PKCS7 sem o conteúdo anexado (dettached)

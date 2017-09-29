@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
-<chapter id="criptography-funcionalidades">
+<chapter id="cryptography-funcionalidades">
 
     <title id="funcionalidades">Funcionalidades</title>
 
@@ -9,7 +9,7 @@
         <title>A Criptografia Simétrica</title>
 
         <para>
-            A cifragem e decifragem de dados são providas pela interface <code>Criptography</code>
+            A cifragem e decifragem de dados são providas pela interface <code>Cryptography</code>
             e o componente se utiliza de uma fábrica dessa interface. Segue abaixo um exemplo ilustrativo:
         </para>
 
@@ -19,18 +19,18 @@ public class App {
         public static void main(String[] args) {
                 String frase = "conteudo original";
 
-                Criptography criptography = CriptographyFactory.getInstance().factoryDefault();
+                Cryptography cryptography = CryptographyFactory.getInstance().factoryDefault();
 
                 /* Geracao da chave unica */
-                Key key = criptography.generateKey();
-                criptography.setKey(key);
+                Key key = cryptography.generateKey();
+                cryptography.setKey(key);
 
                 /* Cifragem */
-                byte[] conteudo_criptografado = criptography.cipher(frase.getBytes());
+                byte[] conteudo_criptografado = cryptography.cipher(frase.getBytes());
                 System.out.println(conteudo_criptografado);
 
                 /* Decifragem */
-                byte[] conteudo_descriptografado = criptography.decipher(conteudo_criptografado);
+                byte[] conteudo_descriptografado = cryptography.decipher(conteudo_criptografado);
                 System.out.println(new String(conteudo_descriptografado));
         }
 }]]></programlisting>
@@ -64,19 +64,19 @@ public class App {
         public static void main(String[] args) {
                 String frase = "conteudo original";
 
-                Criptography criptography = CriptographyFactory.getInstance().factoryDefault();
+                Cryptography cryptography = CryptographyFactory.getInstance().factoryDefault();
 
                 /* Alterando algoritmo */
-                criptography.setAlgorithm(SymmetricAlgorithmEnum.TRI_DES);
+                cryptography.setAlgorithm(SymmetricAlgorithmEnum.TRI_DES);
 
                 /* Geracao da chave unica */
-                Key key = criptography.generateKey();
-                criptography.setKey(key);
+                Key key = cryptography.generateKey();
+                cryptography.setKey(key);
 
-                byte[] conteudo_criptografado = criptography.cipher(frase.getBytes());
+                byte[] conteudo_criptografado = cryptography.cipher(frase.getBytes());
                 System.out.println(conteudo_criptografado);
 
-                byte[] conteudo_descriptografado = criptography.decipher(conteudo_criptografado);
+                byte[] conteudo_descriptografado = cryptography.decipher(conteudo_criptografado);
                 System.out.println(new String(conteudo_descriptografado));
         }
 }]]></programlisting>
@@ -95,19 +95,19 @@ public class App {
 public static void main(String[] args) {
                 String frase = "conteudo original";
 
-                Criptography criptography = CriptographyFactory.getInstance().factoryDefault();
+                Cryptography cryptography = CryptographyFactory.getInstance().factoryDefault();
 
                 /* Customizacao de parametros */
-                criptography.setAlgorithm("AES/ECB/PKCS5Padding");
-                criptography.setKeyAlgorithm("AES");
-                criptography.setSize(128);
+                cryptography.setAlgorithm("AES/ECB/PKCS5Padding");
+                cryptography.setKeyAlgorithm("AES");
+                cryptography.setSize(128);
 
                 /* Cifragem */
-                byte[] conteudo_criptografado = criptography.cipher(frase.getBytes());
+                byte[] conteudo_criptografado = cryptography.cipher(frase.getBytes());
                 System.out.println(conteudo_criptografado);
 
                 /* Decifragem */
-                byte[] conteudo_descriptografado = criptography.decipher(conteudo_criptografado);
+                byte[] conteudo_descriptografado = cryptography.decipher(conteudo_criptografado);
                 System.out.println(new String(conteudo_descriptografado));
         }]]></programlisting>
     </section>
@@ -122,23 +122,23 @@ public static void main(String[] args) {
 
         <programlisting role="JAVA"><![CDATA[
 		/* Cifragem */
-        Criptography cripto = CriptographyFactory.getInstance().factoryDefault();
-        cripto.setKey(privateKey);
-        byte[] conteudoCriptografado = cripto.cipher("SERPRO".getBytes());
+        Cryptography crypto = CryptographyFactory.getInstance().factoryDefault();
+        crypto.setKey(privateKey);
+        byte[] conteudoCriptografado = crypto.cipher("SERPRO".getBytes());
         System.out.println(conteudoCriptografado);
 
         /* Decifragem */
-        Criptography cripto2 = CriptographyFactory.getInstance().factoryDefault();
-        cripto2.setKey(publicKey);
+        Cryptography crypto2 = CryptographyFactory.getInstance().factoryDefault();
+        crypto2.setKey(publicKey);
 
-        byte[] conteudoDescriptografado = cripto2.decipher(conteudoCriptografado);
+        byte[] conteudoDescriptografado = crypto2.decipher(conteudoCriptografado);
         System.out.println(new String(conteudoDescriptografado));]]></programlisting>
 
         <para>
             Perceba a utilização do método
             <code>setKey</code>
-            para informar qual chave será utilizada no processo de cifragem e decifragem. Vale lembrar que na criptografia assimétrica a cifragem realizada com a chave privada
-            só poderá ser decifrada com a chave pública e vice-versa.
+            para informar qual chave será utilizada no processo de cifragem e decifragem. 
+            Vale lembrar que na criptografia assimétrica a cifragem realizada com a chave privada só poderá ser decifrada com a chave pública e vice-versa.
         </para>
 
         <para>
@@ -149,7 +149,8 @@ public static void main(String[] args) {
             <title>Certificados A1</title>
 
             <para>
-                O certificado A1 é aquele que encontra-se armazenado no sistema de arquivo do sistema operacional. Para exemplificar sua manipulação, segue o código abaixo:
+                O certificado A1 é aquele que encontra-se armazenado no sistema de arquivo do sistema operacional. 
+                Para exemplificar sua manipulação, segue o código abaixo:
             </para>
 
             <programlisting role="JAVA"><![CDATA[
@@ -157,7 +158,7 @@ public static void main(String[] args) {
 
                 try {
                         /* Obtendo a chave publica */
-                        File file = new File("/home/03397040477/public.der");
+                        File file = new File("/home/{usuario}/public.der");
                         byte[] encodedPublicKey = new byte[(int) file.length()];
                         InputStream inputStreamPublicKey = new FileInputStream(file);
                         inputStreamPublicKey.read(encodedPublicKey);
@@ -167,7 +168,7 @@ public static void main(String[] args) {
                         PublicKey publicKey = kf.generatePublic(publicKeySpec);
 
                         /* Obtendo a chave privada */
-                        file = new File("/home/03397040477/private.pk8");
+                        file = new File("/home/{usuario}/private.pk8");
                         byte[] encodedPrivateKey = new byte[(int) file.length()];
                         InputStream inputStreamPrivateKey = new FileInputStream(file);
                         inputStreamPrivateKey.read(encodedPrivateKey);
@@ -177,18 +178,18 @@ public static void main(String[] args) {
                         PrivateKey privateKey = kf.generatePrivate(privateKeySpec);
 
                         /* Cifragem */
-                        Criptography cripto = CriptographyFactory.getInstance().factoryDefault();
-                        cripto.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
-                        cripto.setKey(privateKey);
-                        byte[] conteudoCriptografado = cripto.cipher("SERPRO".getBytes());
+                        Cryptography cripto = CryptographyFactory.getInstance().factoryDefault();
+                        crypto.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
+                        crypto.setKey(privateKey);
+                        byte[] conteudoCriptografado = crypto.cipher("SERPRO".getBytes());
                         System.out.println(conteudoCriptografado);
 
                         /* Decifragem */
-                        Criptography cripto2 = CriptographyFactory.getInstance().factoryDefault();
-                        cripto2.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
-                        cripto2.setKey(publicKey);
+                        Cryptography cripto2 = CryptographyFactory.getInstance().factoryDefault();
+                        crypto2.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
+                        crypto2.setKey(publicKey);
 
-                        byte[] conteudoDescriptografado = cripto2.decipher(conteudoCriptografado);
+                        byte[] conteudoDescriptografado = crypto2.decipher(conteudoCriptografado);
                         System.out.println(new String(conteudoDescriptografado));
 
                 } catch (Exception e) {
@@ -198,9 +199,10 @@ public static void main(String[] args) {
         }]]></programlisting>
 
             <para>
-                Neste exemplo é demonstrada a obtenção das chaves pública e privada do certificado A1. Note que, apesar do código para manipulação dos certificados, a forma de
+                Neste exemplo é demonstrada a obtenção das chaves pública e privada do certificado A1. 
+                Note que, apesar do código para manipulação dos certificados, a forma de
                 uso do componente
-                <emphasis>Demoiselle Criptography</emphasis>
+                <emphasis>Demoiselle Cryptography</emphasis>
                 para cifragem e decifragem de mensagens é a mesma.
             </para>
         </section>
@@ -209,8 +211,10 @@ public static void main(String[] args) {
             <title>Certificados A3</title>
 
             <para>
-                O certificado A3 é armazenado em dispositivos eletrônicos como smart card ou tokens usb que criptografam o certificado provendo maior segurança. No exemplo abaixo utilizamos o
-                componente <emphasis>Demoiselle Core</emphasis> para obtenção do keyStore a partir de um token usb. Você pode ver mais sobre esse componente em <xref linkend="core-configuracao" />
+                O certificado A3 é armazenado em dispositivos eletrônicos como smart card ou tokens usb que criptografam o certificado 
+                provendo maior segurança. No exemplo abaixo utilizamos o
+                componente <emphasis>Demoiselle Core</emphasis>
+                para obtenção do keyStore a partir de um token usb. Você pode ver mais sobre esse componente em <xref linkend="core-configuracao" />
             </para>
 
             <programlisting role="JAVA"><![CDATA[
@@ -231,18 +235,18 @@ public static void main(String[] args) {
                         PublicKey publicKey = x509.getPublicKey();
 
                         /*Configurando o Criptography */
-                        Criptography cripto = CriptographyFactory.getInstance().factoryDefault();
-                        cripto.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
-                        cripto.setProvider(keyStore.getProvider());
+                        Cryptography crypto = CryptographyFactory.getInstance().factoryDefault();
+                        crypto.setAlgorithm(AsymmetricAlgorithmEnum.RSA);
+                        crypto.setProvider(keyStore.getProvider());
 
                         /* criptografando com a chave privada */
-                        cripto.setKey(privateKey);
-                        byte[] conteudoCriptografado = cripto.cipher("SERPRO".getBytes());
+                        crypto.setKey(privateKey);
+                        byte[] conteudoCriptografado = crypto.cipher("SERPRO".getBytes());
                         System.out.println(conteudoCriptografado);
 
                         /* descriptografando com a chave publica */
-                        cripto.setKey(publicKey);
-                        byte[] conteudoAberto = cripto.decipher(conteudoCriptografado);
+                        crypto.setKey(publicKey);
+                        byte[] conteudoAberto = crypto.decipher(conteudoCriptografado);
                         System.out.println(new String(conteudoAberto));
 
                 } catch (UnrecoverableKeyException e) {
@@ -258,7 +262,7 @@ public static void main(String[] args) {
                 O componente utiliza como padrão o provider SUN JCE, mas caso necessite de outro provider utilize o método
                 <code>setProvider</code>
                 da classe
-                <code>Criptography.</code>
+                <code>Cryptography.</code>
             </para>
 
             <para>
@@ -271,7 +275,7 @@ public static void main(String[] args) {
             </para>
 
             <para>
-                Desta forma foi utilizado o objeto KeyStore do próprio token usb para informar o novo provider ao Criptography.
+                Desta forma foi utilizado o objeto KeyStore do próprio token usb para informar o novo provider ao Cryptography.
             </para>
         </section>
     </section>
@@ -338,7 +342,7 @@ public static void main(String[] args) {
 		public static void main(String[] args) {
                 Digest digest = DigestFactory.getInstance().factoryDefault();
                 digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
-                String resumo = digest.digestFileHex(new File("/home/03397040477/relatorio.pdf"));
+                String resumo = digest.digestFileHex(new File("/home/{usuario}/relatorio.pdf"));
                 System.out.println(resumo);
         } ]]></programlisting>
 
