@@ -1,0 +1,2 @@
+./listKeys.sh|grep Válido  > cadeia3.txt
+
