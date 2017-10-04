@@ -20,7 +20,7 @@ gerenciador de projetos:
 <ulink url="https://maven.apache.org/">Apache-Maven</ulink>
 </para>
 <para>
-<programlisting role="XML">
+<programlisting >
 <![CDATA[
         		<dependency>
 				<groupId>org.demoiselle.signer</groupId>
@@ -35,7 +35,7 @@ gerenciador de projetos:
 <ulink url="https://buildr.apache.org/">Apache Buildr</ulink>
 </para>
 <para>
-<programlisting role="XML">
+<programlisting >
 <![CDATA['org.demoiselle.signer:timestamp:jar:3.1.3']]>
 </programlisting>
 </para>
@@ -45,7 +45,7 @@ gerenciador de projetos:
 <ulink url="http://ant.apache.org/ivy/">Apache Ivy</ulink>
 </para>
 <para>
-<programlisting role="XML">
+<programlisting >
 <![CDATA[<dependency org="org.demoiselle.signer" name="timestamp" rev="3.1.3" />]]>
 </programlisting>
 </para>
@@ -57,7 +57,7 @@ gerenciador de projetos:
 Grape</ulink>
 </para>
 <para>
-<programlisting role="XML">
+<programlisting >
 <![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='timestamp', version='3.1.3'))]]>
 </programlisting>
 </para>
@@ -67,7 +67,7 @@ Grape</ulink>
 <ulink url="https://github.com/grails/grails-gradle-plugin">Gradle/Grails</ulink>
 </para>
 <para>
-<programlisting role="XML">
+<programlisting >
 <![CDATA[<dependency org="org.demoiselle.signer" name="timestamp" rev="3.1.3" />]]>
 </programlisting>
 </para>
@@ -77,7 +77,7 @@ Grape</ulink>
 <ulink url="http://www.scala-sbt.org/">Scala SBT</ulink>
 </para>
 <para>
-<programlisting role="XML">
+<programlisting >
 <![CDATA[libraryDependencies += "org.demoiselle.signer" % "timestamp" % "3.1.3"]]>
 </programlisting>
 </para>
@@ -87,7 +87,7 @@ Grape</ulink>
 <ulink url="https://leiningen.org/">Leiningen</ulink>
 </para>
 <para>
-<programlisting role="XML">
+<programlisting >
 <![CDATA[<[org.demoiselle.signer/timestamp "3.1.3"]]]>
 </programlisting>
 </para>

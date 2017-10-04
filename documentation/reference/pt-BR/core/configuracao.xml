@@ -15,7 +15,7 @@
         		<listitem>
         		 <para><ulink url="https://maven.apache.org/">Apache-Maven</ulink></para>
         		 <para>
-        		 	<programlisting role="XML"><![CDATA[
+        		 	<programlisting><![CDATA[
         		<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>core</artifactId>
@@ -24,46 +24,41 @@
 			</programlisting>
         		 </para>
         		</listitem>
-        			<listitem>
+        		<listitem>
         		 <para><ulink url="https://buildr.apache.org/">Apache Buildr</ulink></para>
         		 <para>
-        		 	<programlisting role="XML"><![CDATA['org.demoiselle.signer:core:jar:3.1.3']]>
-			</programlisting>
+        		 	<programlisting>'org.demoiselle.signer:core:jar:3.1.3'</programlisting>
         		 </para>
         		</listitem>
         		<listitem>
         		 <para><ulink url="http://ant.apache.org/ivy/">Apache Ivy</ulink></para>
         		 <para>
-        		 	<programlisting role="XML"><![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="3.1.3" />]]>
-			</programlisting>
+        		 	<programlisting><![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="3.1.3" />]]> </programlisting>
         		 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="http://docs.groovy-lang.org/latest/html/documentation/grape.html">Groovy Grape</ulink></para>
         		 <para>
-        		 	<programlisting role="XML"><![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='core', version='3.1.3'))]]>
-			</programlisting>
-        		 </para>
+        		 	<programlisting>@Grapes(@Grab(group='org.demoiselle.signer', module='core', version='3.1.3')) </programlisting>
+				 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="https://github.com/grails/grails-gradle-plugin">Gradle/Grails</ulink></para>
         		 <para>
-        		 	<programlisting role="XML"><![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="3.1.3" />]]>
+        		 	<programlisting><![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="3.1.3" />]]>
 			</programlisting>
         		 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="http://www.scala-sbt.org/">Scala SBT</ulink></para>
         		 <para>
-        		 	<programlisting role="XML"><![CDATA[libraryDependencies += "org.demoiselle.signer" % "core" % "3.1.3"]]>
-			</programlisting>
+        		 	<programlisting>libraryDependencies += "org.demoiselle.signer" % "core" % "3.1.3"</programlisting>			
         		 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="https://leiningen.org/">Leiningen</ulink></para>
         		 <para>
-        		 	<programlisting role="XML"><![CDATA[<[org.demoiselle.signer/core "3.1.3"]]]>
-			</programlisting>
+        		 	<programlisting>[org.demoiselle.signer/core "3.1.3"]</programlisting>
         		 </para>
         		</listitem>
         	</itemizedlist>
