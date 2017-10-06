@@ -93,7 +93,6 @@ import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManager;
-import org.demoiselle.signer.core.ca.manager.CAManagerException;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
@@ -641,19 +640,28 @@ public class CAdESSigner implements PKCS7Signer {
 						certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
 				trustedCAs.add(certificateTrustPoint.getTrustpoint());
 			}
-
+			
 			// Efetua a validacao das cadeias do certificado baseado na politica
-			try {
-				CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
-			} catch (CAManagerException ex) {
-				// Não encontrou na política, verificará nas cadeias do
-				// componente chain-icp-brasil provavelmente certificado de
-				// homologação.
-				logger.info(cadesMessagesBundle.getString("info.trust.poin.homolog"));
-				trustedCAs = CAManager.getInstance().getCertificateChain(certificate);
-				CAManager.getInstance().validateRootCAs(trustedCAs, certificate);
+			Collection<X509Certificate> certificateChainTrusted = new HashSet<X509Certificate>();
+			for (Certificate certCA : certificateChain){
+				certificateChainTrusted.add((X509Certificate) certCA);
+			}			
+			X509Certificate rootOfCertificate = null;
+			for (X509Certificate tcac : certificateChainTrusted) {
+				if (CAManager.getInstance().isRootCA(tcac)){
+					rootOfCertificate = tcac;
+				}
 			}
-
+			if (trustedCAs.contains(rootOfCertificate)){
+					logger.info(cadesMessagesBundle.getString("info.trust.in.point", rootOfCertificate.getSubjectDN()));
+			}else{
+					// Não encontrou na política, verificará nas cadeias do
+					// componente chain-icp-brasil provavelmente certificado de
+					// homologação.
+					logger.info(cadesMessagesBundle.getString("info.trust.poin.homolog"));
+					CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
+			}
+				
 			//  validade da politica
 			logger.info(cadesMessagesBundle.getString("info.policy.valid.period"));
 			PolicyValidator pv = new PolicyValidator(this.signaturePolicy, this.policyName);
@@ -681,8 +689,6 @@ public class CAdESSigner implements PKCS7Signer {
 				cmsTypedData = new CMSProcessableByteArray(content);
 			}
 
-			
-
 			// Efetua a assinatura digital do conteúdo
 			CMSSignedData cmsSignedData = gen.generate(cmsTypedData, this.attached);
 			setAttached(false);
@@ -691,11 +697,9 @@ public class CAdESSigner implements PKCS7Signer {
 			// Consulta e adiciona os atributos não assinados//			
 			logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
 			Collection<SignerInformation> vNewSigners = cmsSignedData.getSignerInfos().getSigners();
- 
-			
+ 			
 			Iterator<SignerInformation> it = vNewSigners.iterator();
 			SignerInformation oSi = it.next();
-		
 
 			if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
 				.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
@@ -722,8 +726,7 @@ public class CAdESSigner implements PKCS7Signer {
 			while (it.hasNext()) {
 				SignerInformation oSi2 = it.next();
 				vNewSigners.add(oSi2);
-			}
-			
+			}			
 			
 			// TODO Estudar este método de contra-assinatura posteriormente
 			if (previewSignature != null && previewSignature.length > 0) {
