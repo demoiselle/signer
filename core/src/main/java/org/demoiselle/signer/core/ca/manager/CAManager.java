@@ -49,7 +49,6 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
-
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
@@ -68,6 +67,7 @@ public class CAManager {
 	private static final CAManager instance = new CAManager();
 	private static final Logger LOGGER = Logger.getLogger(CAManager.class.getName());
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	
 
 	private CAManager() {
 	}
@@ -146,22 +146,22 @@ public class CAManager {
 
 	public boolean isCAofCertificate(X509Certificate ca, X509Certificate certificate) {
 		
-		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
+ 		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
 		
-		try {
-			certificate.verify(ca.getPublicKey());
-			return true;
-		} catch (SignatureException error) {			
-			return false;
-		} catch (InvalidKeyException error) {
-			return false;
-		} catch (CertificateException error) {
-			throw new CAManagerException(coreMessagesBundle.getString("error.certificate.exception"), error);
-		} catch (NoSuchAlgorithmException error) {
-			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
-		} catch (NoSuchProviderException error) {
-			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.provider"), error);
-		}
+ 		try {
+ 			certificate.verify(ca.getPublicKey());
+ 			return true;		
+		} catch (SignatureException error) {
+ 			return false;
+ 		} catch (InvalidKeyException error) {
+ 			return false;
+ 		} catch (CertificateException error) {
+ 			throw new CAManagerException(coreMessagesBundle.getString("error.certificate.exception"), error);
+ 		} catch (NoSuchAlgorithmException error) {
+ 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
+ 		} catch (NoSuchProviderException error) {
+ 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.provider"), error);
+ 		}
 	}
 
 	public Certificate[] getCertificateChainArray(X509Certificate certificate) {
@@ -185,10 +185,25 @@ public class CAManager {
 	 */
 	public Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {
 
-		Collection<X509Certificate> result = new LinkedList<X509Certificate>();
-		result.add(certificate);
-		if (this.isRootCA(certificate)) {
-			return result;
+		CAManagerConfiguration config = CAManagerConfiguration.getInstance();
+ 		Collection<X509Certificate> result = new LinkedList<X509Certificate>();
+
+ 		
+
+		// Tentando obter cadeia de certificados do cache
+ 		if (config.isCached()){
+ 			LOGGER.info("+++ cached mode +++");
+ 			CAManagerCache managerCache = CAManagerCache.getInstance();
+ 			Collection certificates = managerCache.getCachedCertificatesFor(certificate);
+ 			// Se encontrar no cache
+ 			if (certificates != null) {
+ 				return certificates;
+ 			}
+ 		}
+		
+ 		result.add(certificate);
+ 		if (this.isRootCA(certificate)) {
+ 			return result;
 		}
 
 		Collection<ProviderCA> providers = ProviderCAFactory.getInstance().factory();
@@ -247,7 +262,13 @@ public class CAManager {
 				// TODO: Nao foi possivel resgatar as CAs de um determinado provedor
 			}
 		}
-
+		if (config.isCached()){
+			if (!result.isEmpty()) {
+				CAManagerCache managerCache = CAManagerCache.getInstance();
+				managerCache.addCertificate(certificate, result);
+			}
+		}
+		
 		return result;
 	}
 

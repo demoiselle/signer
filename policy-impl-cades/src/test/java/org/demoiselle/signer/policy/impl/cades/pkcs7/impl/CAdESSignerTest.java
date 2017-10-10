@@ -57,6 +57,7 @@ import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.List;
 import javax.net.ssl.KeyManagerFactory;
+import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
@@ -151,7 +152,7 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// informar onde esta o arquivo
-			InputStream ksIs = new FileInputStream("/home/usuario/arquivo_certificado.p12");
+			InputStream ksIs = new FileInputStream("/home/{usuario}/certificado.p12");
 			ks.load(ksIs, senha);
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -203,9 +204,9 @@ public class CAdESSignerTest {
 			// INFORMAR o arquivo
 			
 			//
-			// String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar.txt";
+			 String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar.txt";
 			
-			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
+		
 		
 			
 
@@ -232,7 +233,7 @@ public class CAdESSignerTest {
 			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
 
 			// para arquivo
-			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
@@ -244,6 +245,10 @@ public class CAdESSignerTest {
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Assinatura desatachada
+			
+			CAManagerConfiguration config = CAManagerConfiguration.getInstance();
+			config.setCached(true);
+			
 			byte[] signature = signer.doDetachedSign(fileToSign);
 
 			/* Valida o conteudo antes de gravar em arquivo */
@@ -741,12 +746,12 @@ public class CAdESSignerTest {
 				System.out.println("alias..............: " + alias);
 				System.out.println("iskeyEntry"+ ks.isKeyEntry(alias));
 				System.out.println("containsAlias"+ks.containsAlias(alias));
-				System.out.println(""+ks.getKey(alias, null));
+				//System.out.println(""+ks.getKey(alias, null));
 				certificates = ks.getCertificateChain(alias);
 			}
 
-		} catch (KeyStoreException | UnrecoverableKeyException | NoSuchAlgorithmException e1) {
-			e1.printStackTrace();
+		} catch (Exception ex) {
+			ex.printStackTrace();
 		}
 		return alias;
 	}

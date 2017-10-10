@@ -131,10 +131,12 @@ public class Configuration {
 		map.put("TokenOuSmartCard_27", "/usr/lib/libwdpkcs.so");
 		map.put("TokenOuSmartCard_28", "/usr/local/lib64/libwdpkcs.so");
 		map.put("TokenOuSmartCard_29", "/usr/local/lib/libwdpkcs.so");
+		// Token Branco do Serpro
 		map.put("TokenOuSmartCard_30", "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so");
 		map.put("TokenOuSmartCard_31", "/usr/lib/watchdata/lib/libwdpkcs.so");
 		map.put("TokenOuSmartCard_32", "/opt/watchdata/lib64/libwdpkcs.so");
-		map.put("TokenOuSmartCard_33", "/usr/lib/opensc-pkcs11.so");
+		
+				map.put("TokenOuSmartCard_33", "/usr/lib/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_34", "/usr/lib/pkcs11/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_35", "/usr/lib/libwdpkcs.dylib");
 		map.put("TokenOuSmartCard_36", "/usr/local/lib/libwdpkcs.dylib");
