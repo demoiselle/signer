@@ -269,24 +269,24 @@ byte[] signature = signer.doHashCoSign(hash, signatureFile);
         	 está no fragmento de código abaixo. 
         </para>
 
-	<para>
-        <programlisting role="JAVA"><![CDATA[
+		<programlisting role="JAVA"><![CDATA[
 byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
 byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(content, signature);]]></programlisting>
-</para>
+List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(content, signature);
+]]></programlisting>
 
 	<para>
 	 O retorno é um objeto do tipo org.demoiselle.signer.policy.impl.cades.SignatureInformations que possui os seguintes atributos
-        <programlisting role="JAVA"><![CDATA[
+	 </para>
+	 <programlisting role="JAVA"><![CDATA[
 public class SignatureInformations {
 
 	private LinkedList<X509Certificate> chain;
 	private Date signDate;
    	private Timestamp timeStampSigner = null;
-   	private SignaturePolicy signaturePolicy;]]></programlisting>
-</para>
+   	private SignaturePolicy signaturePolicy;
+   	]]></programlisting>
     </section>
 
     <section>

@@ -528,10 +528,8 @@ public class CAdESSigner implements PKCS7Signer {
 				this.certificate = (X509Certificate) this.certificateChain[0];
 			}
 
-			if (this.certificateChain == null || this.certificateChain.length <= 1) {
-				this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
-			}
-
+			this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
+			
 			Certificate[] certStore = new Certificate[] {};
 			
 			CMSSignedData cmsPreviewSignedData = null;
@@ -648,6 +646,7 @@ public class CAdESSigner implements PKCS7Signer {
 			}			
 			X509Certificate rootOfCertificate = null;
 			for (X509Certificate tcac : certificateChainTrusted) {
+			    logger.info(tcac.getIssuerDN().toString());
 				if (CAManager.getInstance().isRootCA(tcac)){
 					rootOfCertificate = tcac;
 				}

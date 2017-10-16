@@ -555,7 +555,6 @@ public class BasicCertificate {
         CRLDistPoint crlDistPoint = CRLDistPoint.getInstance(primitive);
         DistributionPoint[] distributionPoints = crlDistPoint.getDistributionPoints();
 
-        logger.info("Analizando os pontos de distribuição");
         for (DistributionPoint distributionPoint : distributionPoints) {
             DistributionPointName dpn = distributionPoint.getDistributionPoint();
             // Look for URIs in fullName

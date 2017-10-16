@@ -130,7 +130,6 @@ public class CAManager {
 		if (rootCA == null) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.found"));
 		}
-
 		if (!this.isCAofCertificate(rootCA, ca)) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.chain"));
 		}
@@ -147,7 +146,6 @@ public class CAManager {
 	public boolean isCAofCertificate(X509Certificate ca, X509Certificate certificate) {
 		
  		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
-		
  		try {
  			certificate.verify(ca.getPublicKey());
  			return true;		
@@ -192,7 +190,7 @@ public class CAManager {
 
 		// Tentando obter cadeia de certificados do cache
  		if (config.isCached()){
- 			LOGGER.info("+++ cached mode +++");
+ 			LOGGER.info(coreMessagesBundle.getString("info.cache.mode",config.isCached()));
  			CAManagerCache managerCache = CAManagerCache.getInstance();
  			Collection certificates = managerCache.getCachedCertificatesFor(certificate);
  			// Se encontrar no cache
@@ -222,41 +220,53 @@ public class CAManager {
 
 				// Iterate this provider to create a Cert Chain
 				for (X509Certificate ac : acs) {
-					if (this.isCAofCertificate(ac, certificate)) {
-						result.add(ac);
-						X509Certificate acFromAc = this.getCAFromCertificate(acs, ac);
-						while (acFromAc != null) {
-
-							// If the chain was created SET OK
-							result.add(acFromAc);
-
-							// If Certificate is ROOT end while
-							if (this.isRootCA(acFromAc)) {
-								ok = true;
-								break;
-							} else {
-								acFromAc = this.getCAFromCertificate(acs, acFromAc);
+					// If is CA issuer of certificate
+					if (certificate.getIssuerX500Principal().equals(ac.getSubjectX500Principal())){
+						if (this.isCAofCertificate(ac, certificate)) {
+							result.add(ac);
+							X509Certificate acFromAc = null;
+							for (X509Certificate ac2 : acs){
+								// If is CA Issuer of CA issuer
+								if(ac.getIssuerX500Principal().equals(ac2.getSubjectX500Principal())){
+									if (this.isCAofCertificate(ac2, ac)) {
+										acFromAc = ac2;
+									}									
+								}
 							}
+							while (acFromAc != null) {
+								// If the chain was created SET OK
+								result.add(acFromAc);
 
+								// If Certificate is ROOT end while
+								if (this.isRootCA(acFromAc)) {
+									ok = true;
+									break;
+								} 
+								else {
+									for (X509Certificate ac3 : acs){
+										// If is CA Issuer of CA issuer
+										if(acFromAc.getIssuerX500Principal().equals(ac3.getSubjectX500Principal())){
+											if (this.isCAofCertificate(ac3, acFromAc)) {
+												acFromAc = ac3;
+											}											
+										}
+									}
+								}
+							}
 						}
 					}
-
 					if (ok == true) {
 						break;
 					}
 				}
-
 				LOGGER.log(Level.INFO,coreMessagesBundle.getString("info.found.levels",result.size(),provider.getName()));
-
 				
-//				"info.found.levels", ,
 				// If chain is created BREAK! Doesn't go to next Provider
 				if (ok) {
 					break;
 				} else {
 					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider",provider.getName()));
 				}
-
 			} catch (Throwable error) {
 					LOGGER.error(coreMessagesBundle.getString("error.no.ca",provider.getName()));
 				// TODO: Nao foi possivel resgatar as CAs de um determinado provedor

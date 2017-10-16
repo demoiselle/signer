@@ -36,18 +36,15 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
-import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
-import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
-
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
-import org.bouncycastle.util.encoders.Base64;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,7 +73,6 @@ public class MessageDigest implements SignedAttribute {
         	if (this.hash == null){
         		java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
         		this.hash = md.digest(content);
-                logger.info(Base64.toBase64String(this.hash));
         	}
              return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DEROctetString(this.hash)));            
         } catch (NoSuchAlgorithmException ex) {
