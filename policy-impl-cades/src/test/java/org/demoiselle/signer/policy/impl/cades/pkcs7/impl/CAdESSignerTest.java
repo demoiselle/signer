@@ -83,7 +83,7 @@ public class CAdESSignerTest {
 
 	/**
 	 * 
-	 * Faz a leitura do token, precisa setar a lib (.SO) e a senha do token.
+	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do token.
 	 */
 	@SuppressWarnings("restriction")
 	private KeyStore getKeyStoreToken() {
@@ -118,6 +118,7 @@ public class CAdESSignerTest {
 	}
 	
 	
+	// Usa o Signer para leitura, funciona para windows e NeoID
 	private KeyStore getKeyStoreTokenBySigner() {
 
 		try {
@@ -152,7 +153,7 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// informar onde esta o arquivo
-			InputStream ksIs = new FileInputStream("/home/{usuario}/certificado.p12");
+			InputStream ksIs = new FileInputStream("/home/{usuario}/arquivo.p12");
 			ks.load(ksIs, senha);
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -204,19 +205,20 @@ public class CAdESSignerTest {
 			// INFORMAR o arquivo
 			
 			//
-			 String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar.txt";
+			 //String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			
-		
-		
+			String fileDirName = "/home/{usuario}/arquivo_assinar";
 			
-
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
 			char[] senha = "senha".toCharArray();
 
-			// Para certificado em Token
+			// Para certificado NeoID e windows token
 			KeyStore ks = getKeyStoreTokenBySigner();
+			
+			// Para certificado token Linux
+			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFile();
@@ -250,24 +252,12 @@ public class CAdESSignerTest {
 			config.setCached(true);
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
-
-			/* Valida o conteudo antes de gravar em arquivo */
-			System.out.println("Efetuando a validacao da assinatura.");
-			List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToSign, signature);
-
-			if (signaturesInfo != null) {
-				System.out.println("A assinatura foi validada.");
-				assertTrue(true);
-			} else {
-				System.out.println("A assinatura foi invalidada!");
-				assertTrue(false);
-			}
 			File file = new File(fileDirName + ".p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
 			os.close();
-			
+			assertTrue(true);
 
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();

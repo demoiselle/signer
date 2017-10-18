@@ -192,7 +192,7 @@ public class CAManager {
  		if (config.isCached()){
  			LOGGER.info(coreMessagesBundle.getString("info.cache.mode",config.isCached()));
  			CAManagerCache managerCache = CAManagerCache.getInstance();
- 			Collection certificates = managerCache.getCachedCertificatesFor(certificate);
+ 			Collection<X509Certificate> certificates = managerCache.getCachedCertificatesFor(certificate);
  			// Se encontrar no cache
  			if (certificates != null) {
  				return certificates;
@@ -221,13 +221,17 @@ public class CAManager {
 				// Iterate this provider to create a Cert Chain
 				for (X509Certificate ac : acs) {
 					// If is CA issuer of certificate
-					if (certificate.getIssuerX500Principal().equals(ac.getSubjectX500Principal())){
+					String certificateCnIssuer = this.getCN(certificate.getIssuerX500Principal().getName());
+					String acCN = this.getCN(ac.getSubjectX500Principal().getName());
+					if (certificateCnIssuer.equalsIgnoreCase(acCN)){
 						if (this.isCAofCertificate(ac, certificate)) {
 							result.add(ac);
 							X509Certificate acFromAc = null;
 							for (X509Certificate ac2 : acs){
 								// If is CA Issuer of CA issuer
-								if(ac.getIssuerX500Principal().equals(ac2.getSubjectX500Principal())){
+								String acCnIssuer = this.getCN(ac.getIssuerX500Principal().getName());
+								String ac2CN = this.getCN(ac2.getSubjectX500Principal().getName());
+								if(acCnIssuer.equalsIgnoreCase(ac2CN)){
 									if (this.isCAofCertificate(ac2, ac)) {
 										acFromAc = ac2;
 									}									
@@ -245,7 +249,9 @@ public class CAManager {
 								else {
 									for (X509Certificate ac3 : acs){
 										// If is CA Issuer of CA issuer
-										if(acFromAc.getIssuerX500Principal().equals(ac3.getSubjectX500Principal())){
+										String acFromAcIssuerCN = this.getCN(acFromAc.getIssuerX500Principal().getName());
+										String ac3CN = this.getCN(ac3.getSubjectX500Principal().getName());
+										if(acFromAcIssuerCN.equalsIgnoreCase(ac3CN)){
 											if (this.isCAofCertificate(ac3, acFromAc)) {
 												acFromAc = ac3;
 											}											
@@ -282,6 +288,7 @@ public class CAManager {
 		return result;
 	}
 
+	@SuppressWarnings("unused")
 	private X509Certificate getCAFromCertificate(Collection<X509Certificate> certificates,
 			X509Certificate certificate) {
 		if (this.isRootCA(certificate)) {
@@ -329,5 +336,11 @@ public class CAManager {
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias"));
 		}
 		return result;
+	}
+	
+	private String getCN(String x500){		
+		int indexCN = x500.indexOf("CN");
+		int indexFirstComa = x500.indexOf(",");
+		return x500.substring(indexCN, indexFirstComa);
 	}
 }
