@@ -57,7 +57,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
@@ -83,7 +82,6 @@ import org.bouncycastle.cms.SignerId;
 import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
-import org.bouncycastle.cms.SimpleAttributeTableGenerator;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -614,20 +612,16 @@ public class CAdESSigner implements PKCS7Signer {
 				}
 			}
 
-			ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
-			
-			// Monta a tabela de atributos assinados e não assinados
+			// Monta a tabela de atributos assinados
 			AttributeTable signedAttributesTable = new AttributeTable(signedAttributes);
-			AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
+			
 			
 
 			// Create the table table generator that will added to the Signer
 			// builder
 			CMSAttributeTableGenerator signedAttributeGenerator = new DefaultSignedAttributeTableGenerator(
 					signedAttributesTable);
-			CMSAttributeTableGenerator unsignedAttributeGenerator = new SimpleAttributeTableGenerator(
-					unsignedAttributesTable);
-
+			
 			// Recupera o(s) certificado(s) de confianca para validacao
 			Collection<X509Certificate> trustedCAs = new HashSet<X509Certificate>();
 
@@ -675,7 +669,7 @@ public class CAdESSigner implements PKCS7Signer {
 			logger.info(cadesMessagesBundle.getString("info.algorithm.id", algorithmOID));
 			SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder()
 					.setSignedAttributeGenerator(signedAttributeGenerator)
-					.setUnsignedAttributeGenerator(unsignedAttributeGenerator)
+					.setUnsignedAttributeGenerator(null)
 					.build(AlgorithmNames.getAlgorithmNameByOID(algorithmOID), this.pkcs1.getPrivateKey(),
 							this.certificate);
 			gen.addSignerInfoGenerator(signerInfoGenerator);
@@ -693,7 +687,11 @@ public class CAdESSigner implements PKCS7Signer {
 			setAttached(false);
 
 
-			// Consulta e adiciona os atributos não assinados//			
+			// Consulta e adiciona os atributos não assinados//
+			
+			ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
+			
+			
 			logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
 			Collection<SignerInformation> vNewSigners = cmsSignedData.getSignerInfos().getSigners();
  			
@@ -718,23 +716,23 @@ public class CAdESSigner implements PKCS7Signer {
 						unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 				}
 			}
-			unsignedAttributesTable = new AttributeTable(unsignedAttributes);
-			vNewSigners.remove(oSi);
-			oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
-			vNewSigners.add(oSi);
-			while (it.hasNext()) {
-				SignerInformation oSi2 = it.next();
-				vNewSigners.add(oSi2);
-			}			
-			
-			// TODO Estudar este método de contra-assinatura posteriormente
-			if (previewSignature != null && previewSignature.length > 0) {
-				 vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
-			}
-			
-			SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(vNewSigners);
-			CMSSignedData oSignedData = cmsSignedData;
-			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);			
+			if (unsignedAttributes.size() >0){
+				AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
+				vNewSigners.remove(oSi);
+				oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
+				vNewSigners.add(oSi);
+				while (it.hasNext()) {
+					SignerInformation oSi2 = it.next();
+					vNewSigners.add(oSi2);
+				}				
+				// TODO Estudar este método de contra-assinatura posteriormente
+				if (previewSignature != null && previewSignature.length > 0) {
+					 vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
+				}				
+				SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(vNewSigners);
+				CMSSignedData oSignedData = cmsSignedData;
+				cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
+			}						
 			
 			byte[] result = cmsSignedData.getEncoded();
 			
