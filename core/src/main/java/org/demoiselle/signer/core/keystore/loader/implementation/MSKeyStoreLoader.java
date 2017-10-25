@@ -36,10 +36,6 @@
  */
 package org.demoiselle.signer.core.keystore.loader.implementation;
 
-import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
-import org.demoiselle.signer.core.util.MessagesBundle;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.security.KeyStore;
@@ -50,10 +46,12 @@ import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Map;
-
 import javax.security.auth.callback.CallbackHandler;
-
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,6 +80,11 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 					MSKeyStoreLoader.MS_PROVIDER);
 			result.load(null, null);
 			fixAliases(result);
+			// verifica se tem acesso a chave, caso contrario pode ser CNG e acessará via driver
+			if (!this.verifyKeyEntry(result)) {
+				DriverKeyStoreLoader driverKeyStoreLoader = new DriverKeyStoreLoader();
+				result = driverKeyStoreLoader.getKeyStore();
+			}			
 			return result;
 		} catch (KeyStoreException | NoSuchProviderException | IOException
 				| NoSuchAlgorithmException | CertificateException ex) {
@@ -95,6 +98,26 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 		this.setCallback(callback);
 	}
 
+	private boolean verifyKeyEntry(KeyStore ks) {
+	
+		boolean isKeyEntry = false;
+		String alias = "";
+		Enumeration<String> e;
+		try {
+			e = ks.aliases();
+			while (e.hasMoreElements()) {
+				alias = e.nextElement();
+				if(ks.isKeyEntry(alias)) {
+					isKeyEntry = true;
+				}
+				
+			}
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return isKeyEntry;
+	}
 	/**
 	 * Implementation of the boundary method to avoid duplicate certificates, as
 	 * described in <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6672015>
