@@ -275,7 +275,7 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM HASH *****************");
 
 			// INFORMAR o arquivo para gerar o hash
-			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
+			String fileDirName = "/home/{usuario}/arquivo";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -283,11 +283,6 @@ public class CAdESSignerTest {
 			// Para certificado em arquivo A1 é preciso essa senha para PrivateKey
 			// para token troque a senha em: getKeyStoreToken()
 			char[] senha = "senha".toCharArray();
-
-			// gera o hash do arquivo
-			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
-			byte[] hash = md.digest(fileToSign);
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
@@ -297,13 +292,25 @@ public class CAdESSignerTest {
 
 			
 			// Para certificado em token
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
+			
+			// Para certificado NeoID e windows token
+			KeyStore ks = getKeyStoreTokenBySigner();
+
 
 			String alias = getAlias(ks);
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
 
+			// gera o hash do arquivo
+			java.security.MessageDigest md = java.security.MessageDigest
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			byte[] hash = md.digest(fileToSign);
+
+			// seta o algoritmo de acordo com o que foi gerado o Hash
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			
 			// Para certificado em arquivo A1
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias,senha));
 
@@ -316,8 +323,7 @@ public class CAdESSignerTest {
 			// com carimbo de tempo
 			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
-			// muda algoritmo
-			// signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do hash");

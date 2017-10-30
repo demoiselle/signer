@@ -136,29 +136,30 @@ public class Configuration {
 		map.put("TokenOuSmartCard_31", "/usr/lib/watchdata/lib/libwdpkcs.so");
 		map.put("TokenOuSmartCard_32", "/opt/watchdata/lib64/libwdpkcs.so");
 		
-				map.put("TokenOuSmartCard_33", "/usr/lib/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_34", "/usr/lib/pkcs11/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_35", "/usr/lib/libwdpkcs.dylib");
-		map.put("TokenOuSmartCard_36", "/usr/local/lib/libwdpkcs.dylib");
-		map.put("TokenOuSmartCard_37", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
+		// Token GD do Serpro
+		map.put("TokenOuSmartCard_33", "/usr/lib/libaetpkss.so.3");
+		
+		map.put("TokenOuSmartCard_34", "/usr/lib/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_35", "/usr/lib/pkcs11/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_36", "/usr/lib/libwdpkcs.dylib");
+		map.put("TokenOuSmartCard_37", "/usr/local/lib/libwdpkcs.dylib");
+		map.put("TokenOuSmartCard_38", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
 		
 		// ------------ Mac ------------
 		// Token Branco do Serpro
-		map.put("TokenOuSmartCard_38",
-				"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
 		map.put("TokenOuSmartCard_39",
-				"//usr//local//lib//libetpkcs11.dylib");
+				"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
 		map.put("TokenOuSmartCard_40",
+				"//usr//local//lib//libetpkcs11.dylib");
+		map.put("TokenOuSmartCard_41",
 				"//usr//local//lib//libaetpkss.dylib");
 		
 		// Certificado em Nuvem - Windows
 		
-		map.put("TokenOuSmartCard_41", winRoot.concat("/system32/SerproPkcs11.dll"));
+		map.put("TokenOuSmartCard_42", winRoot.concat("/system32/SerproPkcs11.dll"));
 		// Certificado em Nuvem - Linux		
-		map.put("TokenOuSmartCard_42", winRoot.concat("/usr/lib/libneoidp11.so"));
-		
-		
-
+		map.put("TokenOuSmartCard_43", "/usr/lib/libneoidp11.so");
+				
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {
 			try {
