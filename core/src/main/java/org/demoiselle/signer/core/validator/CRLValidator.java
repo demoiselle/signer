@@ -61,14 +61,18 @@ public class CRLValidator implements IValidator {
 
     @Override
     public void validate(X509Certificate x509) throws CertificateValidatorCRLException {
-        Collection<ICPBR_CRL> crls = crlRepository.getX509CRL(x509);
-        if (crls == null || crls.isEmpty()) {
-            throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl"));
-        }
-        for (ICPBR_CRL icpbr_crl : crls) {
-            if (icpbr_crl.getCRL().isRevoked(x509)) {
-                throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.certificate.repelead"));
+    	if (x509 != null){
+    		Collection<ICPBR_CRL> crls = crlRepository.getX509CRL(x509);
+            if (crls == null || crls.isEmpty()) {
+                throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl"));
             }
-        }
+            for (ICPBR_CRL icpbr_crl : crls) {
+                if (icpbr_crl.getCRL().isRevoked(x509)) {
+                    throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.certificate.repelead"));
+                }
+            }	
+    	}else{
+    		throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.invalid.certificate"));
+    	}
     }
 }

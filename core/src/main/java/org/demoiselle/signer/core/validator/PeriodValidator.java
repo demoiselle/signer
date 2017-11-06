@@ -56,9 +56,15 @@ public class PeriodValidator implements IValidator {
     @Override
     public void validate(X509Certificate x509) throws CertificateValidatorException {
         try {
-            x509.checkValidity();
+        	if (x509 != null){
+        		x509.checkValidity();
+        	}else{
+        		throw new CertificateValidatorException(coreMessagesBundle.getString("error.invalid.certificate"));
+        	}
+            
         } catch (Exception e) {
-        	Format formatter = new SimpleDateFormat("dd.MM.yyyy"); throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date", 
+        	Format formatter = new SimpleDateFormat("dd.MM.yyyy"); 
+        	throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date", 
             		formatter.format(x509.getNotBefore()), formatter.format(x509.getNotAfter())), e);
         }
     }
