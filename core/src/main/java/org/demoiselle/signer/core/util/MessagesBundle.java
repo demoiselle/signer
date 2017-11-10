@@ -38,8 +38,8 @@ public class MessagesBundle {
 	/**
 	 * example: getString("key.propertie.name")
 	 * 
-	 * @param key
-	 * @return
+	 * @param key key to be found
+	 * @return value associated with key
 	 */
 	public String getString(String key) {
 		try {
@@ -52,9 +52,9 @@ public class MessagesBundle {
 	/**
 	 * example: getString("key.propertie.name", parm1, parm2 )
 	 * 
-	 * @param key
-	 * @param params
-	 * @return
+	 * @param key key to be found
+	 * @param params substitution values
+	 * @return value associated with key, interpolated with values
 	 */
 	public String getString(String key, Object... params) {
 		try {

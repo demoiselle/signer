@@ -50,7 +50,7 @@ public interface ProviderSignaturePolicyRootCA {
 
     /**
      * Policy OID defined by http://www.iti.gov.br/legislacao/
-     * @return
+     * @return signature policy object id
      */
     public String getSignaturePolicyOID();
 }

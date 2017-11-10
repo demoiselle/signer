@@ -48,7 +48,7 @@ public class InvalidPinException extends KeyStoreLoaderException {
 
 	/**
 	 * 
-	 * @param message
+	 * @param message message
 	 * @param e error
 	 */
 	public InvalidPinException(String message, Throwable e) {
@@ -57,7 +57,7 @@ public class InvalidPinException extends KeyStoreLoaderException {
 
 	/**
 	 * 
-	 * @param message
+	 * @param message message
 	 */
 	public InvalidPinException(String message) {
 		super(message);

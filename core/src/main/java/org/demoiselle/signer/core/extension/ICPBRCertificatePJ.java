@@ -57,12 +57,12 @@ public class ICPBRCertificatePJ {
 	/**
 	 * 
 	 * @param oid1
-	 *            -> 2.16.76.1.3.2 and content = Name of the person responsible for the certificate
+	 *            -&gt; 2.16.76.1.3.2 and content = Name of the person responsible for the certificate
 	 * @param oid2
-	 *            -> 2.16.76.1.3.3 and content = the Brazilian IRS's Bussiness Company Registry Number
+	 *            -&gt; 2.16.76.1.3.3 and content = the Brazilian IRS's Bussiness Company Registry Number
 	 *               called CNPJ (Cadastro Nacional de Pessoa Juridica)
 	 * @param oid3
-	 *            -> 2.16.76.1.3.4 and content = In the first 8 (eight) positions,
+	 *            -&gt; 2.16.76.1.3.4 and content = In the first 8 (eight) positions,
 	 *            Date of birth of the person responsible for the certificate, in ddMMyyyy format,
 	 *            In the eleven (11) subsequent positions, the Brazilian IRS Individuals Registry number 
 	 *            called CPF (Cadastro de Pessoa Fisica) of the responsible for the certificate;
@@ -75,7 +75,7 @@ public class ICPBRCertificatePJ {
      * 
 	 * 
 	 * @param oid4
-	 *            -> 2.16.76.1.3.7 and content = In the 12 (twelve) positions the number of Specific Registry (called CEI), on 
+	 *            -&gt; 2.16.76.1.3.7 and content = In the 12 (twelve) positions the number of Specific Registry (called CEI), on 
 	 *            Brazilian National Institute of Social Security,  of the bussines company holding the certificate
 	 *             
 	 */

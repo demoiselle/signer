@@ -56,7 +56,7 @@ public class ICPBRCertificatePF {
 	/**
 	 * 
 	 * @param oid1
-	 *            -> 2.16.76.1.3.1 and content = In the first 8 (eight) positions, the
+	 *            -&gt; 2.16.76.1.3.1 and content = In the first 8 (eight) positions, the
      * Date of birth of the holder for the certificate, in ddmmaaaa format;
      * In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
      * holder; In the 11 (eleven) subsequent positions, the number of
@@ -66,14 +66,14 @@ public class ICPBRCertificatePF {
 	 *            
 	 * 
 	 * @param oid2
-	 *            -> 2.16.76.1.3.5 and content = In the first 12 (eleven)
+	 *            -&gt; 2.16.76.1.3.5 and content = In the first 12 (eleven)
 	 * positions, the number of the Electoral document; In 3
 	 * (Three) subsequent positions, the Electoral document Zone; In the four (4)
 	 * following positions, the Section of Electoral document; In the twenty-two (22)
 	 * Subsequent  positions, the name of City and  and its UF (Initials for a Brazilian state) of the Electoral Document. 
 	 * 
 	 * @param oid3
-	 *            -> 2.16.76.1.3.6 and content = In the 12 (twelve) positions, the number of the registry 
+	 *            -&gt; 2.16.76.1.3.6 and content = In the 12 (twelve) positions, the number of the registry 
 	 *            on Brazilian National Social Security Institute (INSS) called CEI .
 	 */
 	

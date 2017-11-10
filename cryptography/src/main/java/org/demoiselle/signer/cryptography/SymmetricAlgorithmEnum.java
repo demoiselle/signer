@@ -82,6 +82,8 @@ public enum SymmetricAlgorithmEnum {
 	 * Retrieves an item from the enumeration corresponding to the passed parameter.
 	 * The passed parameter must be equal (case insensitive) to the algorithm name
 	 * of any item in this enumeration, otherwise it will return null.
+	 * @param algorithm name
+	 * @return representation
 	 */
 	public static SymmetricAlgorithmEnum getSymmetricAlgorithm(String algorithm) {
 		for (SymmetricAlgorithmEnum value : SymmetricAlgorithmEnum.values())

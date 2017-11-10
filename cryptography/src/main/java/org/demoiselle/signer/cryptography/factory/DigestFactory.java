@@ -52,7 +52,8 @@ public class DigestFactory extends GenericFactory<Digest> {
 	/**
 	 * Defines a default object for this class. The component has a default implementation
 	 * 
-	 * @see {@link DigestImpl}
+	 * @return digest implementation
+	 * @see DigestImpl
 	 */
 	@Override
 	public Digest factoryDefault() {
@@ -62,6 +63,7 @@ public class DigestFactory extends GenericFactory<Digest> {
 	/**
 	 * Defines the environment variable used by the abstract factory
 	 *  to fetch the name of the class to be fabricated.
+	 * @return variable name
 	 */
 	@Override
 	protected String getVariableName() {

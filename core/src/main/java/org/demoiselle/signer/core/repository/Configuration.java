@@ -59,7 +59,7 @@ public class Configuration {
     /**
      * to static single instance
      *
-     * @return 
+     * @return instance of Configuration
      */
     public static Configuration getInstance() {
         return instance;
@@ -93,7 +93,7 @@ public class Configuration {
     /**
      * Gets the location where the revoked certificate lists index file is stored
      *
-     * @return 
+     * @return location of CRL index file
      */
     public String getCrlIndex() {
         return crlIndex;
@@ -124,7 +124,7 @@ public class Configuration {
     /**
      * Retrieves the location where the CRL(certificate revoked lists) repository is stored
      *
-     * @return 
+     * @return location of CRL repository 
      */
     public String getCrlPath() {
         return crlPath;
@@ -133,7 +133,7 @@ public class Configuration {
     /**
      * Configures the location where the CRL (certificate revoked lists) repository will be stored
      *
-     * @param crlPath 
+     * @param crlPath path for CRL repository
      */
     public void setCrlPath(String crlPath) {
         this.crlPath = crlPath;

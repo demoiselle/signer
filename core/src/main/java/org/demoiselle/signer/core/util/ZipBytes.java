@@ -62,8 +62,8 @@ public final class ZipBytes {
 
     /**
      * 
-     * @param files
-     * @return
+     * @param files files to compress
+     * @return compressed bundle
      */
     public static byte[] compressing(Map<String, byte[]> files) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -89,8 +89,8 @@ public final class ZipBytes {
 
     /**
      * 
-     * @param file
-     * @return
+     * @param file bundle of compressed files
+     * @return uncompressed files, as a map
      */
     public static Map<String, byte[]> decompressing(byte[] file) {
 

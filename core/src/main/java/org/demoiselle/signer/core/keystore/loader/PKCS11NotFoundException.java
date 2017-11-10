@@ -48,8 +48,8 @@ public class PKCS11NotFoundException extends KeyStoreLoaderException {
 
 	/**
 	 * 
-	 * @param message
-	 * @param e
+	 * @param message message
+	 * @param e cause
 	 */
 	public PKCS11NotFoundException(String message, Throwable e) {
 		super(message, e);
@@ -57,7 +57,7 @@ public class PKCS11NotFoundException extends KeyStoreLoaderException {
 
 	/**
 	 * 
-	 * @param message
+	 * @param message message
 	 */
 	public PKCS11NotFoundException(String message) {
 		super(message);

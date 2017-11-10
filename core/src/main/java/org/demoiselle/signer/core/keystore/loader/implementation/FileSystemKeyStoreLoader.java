@@ -97,8 +97,8 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
      * then attempt to load a KeyStore into the JKS standard. 
      * Failing in both attempts, it will throw an exception.
      *
-     * @param pinNumber
-     * @return
+     * @param pinNumber pin
+     * @return keystore
      */
     public KeyStore getKeyStore(String pinNumber) {
        
@@ -131,9 +131,9 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 
     /**
      * 
-     * @param pinNumber 
+     * @param pinNumber pin
      * @param keyStoreType PKSC12 or JKS
-     * @return
+     * @return keystore
      */
     private KeyStore getKeyStoreWithType(String pinNumber, String keyStoreType) {
         KeyStore result = null;

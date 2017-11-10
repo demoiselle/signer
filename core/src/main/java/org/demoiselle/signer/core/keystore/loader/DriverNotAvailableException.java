@@ -48,7 +48,7 @@ public class DriverNotAvailableException extends KeyStoreLoaderException {
 
 	/**
 	 * 
-	 * @param message
+	 * @param message message
 	 * @param e Throwble error
 	 */
 	public DriverNotAvailableException(String message, Throwable e) {
@@ -57,7 +57,7 @@ public class DriverNotAvailableException extends KeyStoreLoaderException {
 
 	/**
 	 * 
-	 * @param message
+	 * @param message message
 	 */
 	public DriverNotAvailableException(String message) {
 		super(message);

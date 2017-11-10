@@ -51,7 +51,7 @@ public interface IValidator {
 	/**
 	 * 
 	 * @param x509 java.security.cert.X509Certificate
-	 * @throws CertificateValidatorException
+	 * @throws CertificateValidatorException when validation fails
 	 */
     public void validate(X509Certificate x509) throws CertificateValidatorException, CertificateValidatorCRLException;
     

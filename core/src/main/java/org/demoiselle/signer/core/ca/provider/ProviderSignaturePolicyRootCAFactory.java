@@ -59,7 +59,7 @@ public class ProviderSignaturePolicyRootCAFactory {
 
     /**
      * 
-     * @param signaturePolicyOID
+     * @param signaturePolicyOID signature policy object id
      * @return Collection of {@link ProviderSignaturePolicyRootCA}
      */
     public Collection<ProviderSignaturePolicyRootCA> factory(String signaturePolicyOID) {

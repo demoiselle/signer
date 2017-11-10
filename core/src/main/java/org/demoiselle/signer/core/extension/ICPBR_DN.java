@@ -52,8 +52,8 @@ public class ICPBR_DN extends Properties {
 
     /**
      * 
-     * @param distinguished name (DN)
-     * @throws IOException
+     * @param dn distinguished name (DN)
+     * @throws IOException exception
      */
     public ICPBR_DN(String dn) throws IOException {
         super();
@@ -65,7 +65,7 @@ public class ICPBR_DN extends Properties {
 
     /**
      *
-     * @return String
+     * @return String string representation
      */
     @Override
     public String toString() {

@@ -94,8 +94,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
 	/**
 	 * read by a path on OS.
-	 * @param driverPath
-	 * @return
+	 * @param driverPath driver path
+	 * @return keystore
 	 */
     public KeyStore getKeyStoreFromDriver(String driverPath) {
 
@@ -111,9 +111,9 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
     /**
      * read by a name and path on OS.
-     * @param driverName
-     * @param driverPath
-     * @return
+     * @param driverName driver name
+     * @param driverPath driver path
+     * @return keystore
      */
     public KeyStore getKeyStoreFromDriver(String driverName, String driverPath) {
         Configuration.getInstance().addDriver(driverName, driverPath);
@@ -152,8 +152,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
     /**
      * read from a configuration file
-     * @param configFile
-     * @return
+     * @param configFile configuration file
+     * @return keystore
      */
     private KeyStore getKeyStoreFromConfigFile(String configFile) {
 
@@ -186,7 +186,7 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
     /**
      * read from list drivers on configuration class.
-     * @return
+     * @return keystore
      */
     private KeyStore getKeyStoreFromDrivers() {
         KeyStoreLoaderException error = new KeyStoreLoaderException(coreMessagesBundle.getString("error.no.driver.compatible"));

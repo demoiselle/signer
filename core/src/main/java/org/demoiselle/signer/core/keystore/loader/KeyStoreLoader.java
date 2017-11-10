@@ -48,14 +48,14 @@ import javax.security.auth.callback.CallbackHandler;
 public interface KeyStoreLoader {
 
 	/**
-	 * 	@return KeyStore
+	 * 	@return KeyStore keystore
 	 *  @see java.security.KeyStore
 	 */
 	public KeyStore getKeyStore();
 
 	/**
 	 * 
-	 * @param callback
+	 * @param callback handler of callbacks, used to provide PIN entry
 	 * @see javax.security.auth.callback.CallbackHandler
 	 */
 	public void setCallbackHandler(CallbackHandler callback);

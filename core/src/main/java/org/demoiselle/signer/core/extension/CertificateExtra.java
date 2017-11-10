@@ -144,12 +144,12 @@ public class CertificateExtra {
      * Class OID 2.16.76.1.3.1 <br>
      * <br>
      * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
-     *  </ b> Date of birth of the holder on "DDMMAAAA" format<br>
-     * <B> * </ b> The Brazilian IRS Individuals Registry called CPF <br>
-     * <B> * </ b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
-     * <B> * </ b> the Brazilian ID number called RG <br>
-     * <B> * </ b> the initials of the issuing agency of the ID (RG) <br>
-     * <B> * </ b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
+     * <b> * </b> Date of birth of the holder on "DDMMAAAA" format<br>
+     * <B> * </b> The Brazilian IRS Individuals Registry called CPF <br>
+     * <B> * </b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
+     * <B> * </b> the Brazilian ID number called RG <br>
+     * <B> * </b> the initials of the issuing agency of the ID (RG) <br>
+     * <B> * </b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
      * @return OID_2_16_76_1_3_1
      */
     public OID_2_16_76_1_3_1 getOID_2_16_76_1_3_1() {  	

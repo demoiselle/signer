@@ -38,12 +38,12 @@ package org.demoiselle.signer.core.oid;
 
 /**
  *      * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
-     *  </ b> Date of birth of the holder on "DDMMAAAA" format<br>
-     * <B> * </ b> The Brazilian IRS Individuals Registry called CPF <br>
-     * <B> * </ b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
-     * <B> * </ b> the Brazilian ID number called RG <br>
-     * <B> * </ b> the initials of the issuing agency of the ID (RG) <br>
-     * <B> * </ b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
+     * <b> * </b> Date of birth of the holder on "DDMMAAAA" format<br>
+     * <B> * </b> The Brazilian IRS Individuals Registry called CPF <br>
+     * <B> * </b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
+     * <B> * </b> the Brazilian ID number called RG <br>
+     * <B> * </b> the initials of the issuing agency of the ID (RG) <br>
+     * <B> * </b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
 
  *
  */

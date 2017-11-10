@@ -109,7 +109,7 @@ public class BasicCertificate {
     /**
      *
      * @param data The bytes of the certificate to be used
-     * @throws Exception 
+     * @throws Exception exception
      */
     public BasicCertificate(byte[] data) throws Exception {
         this.certificate = getCertificate(data);
@@ -118,8 +118,8 @@ public class BasicCertificate {
     /**
      *
      * @param is The input stream of the certificate to be used
-     * @throws IOException 
-     * @throws Exception 
+     * @throws IOException exception
+     * @throws Exception exception
      */
     public BasicCertificate(InputStream is) throws IOException, Exception {
         this.certificate = getCertificate(is);
@@ -128,10 +128,10 @@ public class BasicCertificate {
     /**
      *
      * @param is The input stream of the certificate to be used
-     * @return X509Certificate
-     * @throws CertificateException
-     * @throws IOException
-     * @throws Exception
+     * @return X509Certificate X509 certificate
+     * @throws CertificateException exception
+     * @throws IOException exception
+     * @throws Exception exception
      */
     private X509Certificate getCertificate(InputStream is) throws CertificateException, IOException, Exception {
         X509Certificate cert = null;
@@ -145,7 +145,7 @@ public class BasicCertificate {
     /**
      *
      * @param data byte array
-     * @return String
+     * @return String string representation
      */
     private String toString(byte[] data) {
         if (data == null) {
@@ -157,7 +157,7 @@ public class BasicCertificate {
     /**
      *
      * @param bi Big Integer
-     * @return String
+     * @return String string representation
      */
     private String toString(BigInteger bi) {
         if (bi == null) {
@@ -176,8 +176,8 @@ public class BasicCertificate {
     /**
      *
      * @param data -> Byte Array
-     * @return X509Certificate
-     * @throws Exception
+     * @return X509Certificate X509 certificate
+     * @throws Exception exception
      */
     private X509Certificate getCertificate(byte[] data) throws Exception {
         ByteArrayInputStream bis = new ByteArrayInputStream(data);
@@ -190,7 +190,7 @@ public class BasicCertificate {
     /**
      * Return the certificate on original format X509Certificate<br>
      *
-     * @return X509Certificate
+     * @return X509Certificate X509 certificate
      */
     public X509Certificate getX509Certificate() {
         return certificate;
@@ -201,7 +201,7 @@ public class BasicCertificate {
      *
      * @return  {@link ICPBR_DN} IssuerDN of a certificate
      *
-     * @throws IOException 
+     * @throws IOException exception
      */
     public ICPBR_DN getCertificateIssuerDN() throws IOException {
         if (certificateFrom == null) {
@@ -211,9 +211,9 @@ public class BasicCertificate {
     }
 
     /**
-     * Returns the SerialNumber of certificate on String formatr>
+     * Returns the SerialNumber of certificate on String formatr
      *
-     * @return String
+     * @return String serial number
      */
     public String getSerialNumber() {
         return toString(certificate.getSerialNumber());
@@ -223,7 +223,7 @@ public class BasicCertificate {
      * Returns the SubjectDN (Subject Distinguished Name) of a Certificate 
      *
      * @return {@link ICPBR_DN} SubjectDN of a certificate
-     * @throws IOException 
+     * @throws IOException exception
      */
     public ICPBR_DN getCertificateSubjectDN() throws IOException {
         if (certificateFor == null) {
@@ -237,7 +237,7 @@ public class BasicCertificate {
      * Its similar to CertificateSubjectDN.getProperty("CN"), but ignoring<br>
      * the information after ":".<br>
      *
-     * @return String
+     * @return String name
      */
     public String getNome() {
         try {
@@ -277,7 +277,7 @@ public class BasicCertificate {
      * Returns the ICPBRKeyUsage Object with the informations about uses of the
      * certificate<br>
      *
-     * @return ICPBRKeyUsage
+     * @return ICPBRKeyUsage Key Usage
      * @see ICPBRKeyUsage
      */
     public ICPBRKeyUsage getICPBRKeyUsage() {
@@ -292,7 +292,7 @@ public class BasicCertificate {
      * ICPBRSubjectAlternativeNames format.<br>
      * If not exists, returns <b>null</b>.<br>
      *
-     * @return ICPBRSubjectAlternativeNames
+     * @return ICPBRSubjectAlternativeNames subject alternative names
      * @see ICPBRSubjectAlternativeNames
      */
     public ICPBRSubjectAlternativeNames getICPBRSubjectAlternativeNames() {
@@ -308,7 +308,7 @@ public class BasicCertificate {
      * Similar getICPBRSubjectAlternativeNames().getEmail()<br>
      * If not exists, returns <b>null</b>.<br>
      *
-     * @return String
+     * @return String email
      */
     public String getEmail() {
         if (getICPBRSubjectAlternativeNames() == null) {
@@ -321,7 +321,7 @@ public class BasicCertificate {
      * Check if the certificate has a "ICP-BRASIL Pessoa Fisica Certificate".
      * DOC-ICP-04<br>
      *
-     * @return boolean
+     * @return boolean true if certificate has a "ICP-BRASIL Pessoa Física"
      */
     public boolean hasCertificatePF() {
         if (getICPBRSubjectAlternativeNames() == null) {
@@ -336,7 +336,7 @@ public class BasicCertificate {
      * If its not a "Pessoa Fisica" certificate <br>
      * Returns <b>null</b>
      *
-     * @return ICPBRCertificatePF
+     * @return ICPBRCertificatePF Certificate Pessoa Física
      * @see ICPBRCertificatePF
      */
     public ICPBRCertificatePF getICPBRCertificatePF() {
@@ -350,7 +350,7 @@ public class BasicCertificate {
      * * Check if the certificate has a "ICP-BRASIL Pessoa Juridica
      * Certificate". DOC-ICP-04<br>
      *
-     * @return boolean
+     * @return boolean true if certificate has a "ICP-BRASIL Pessoa Jurídica"
      */
     public boolean hasCertificatePJ() {
         if (getICPBRSubjectAlternativeNames() == null) {
@@ -366,7 +366,7 @@ public class BasicCertificate {
      * Returns null
      *
      *
-     * @return ICPBRCertificatePJ
+     * @return ICPBRCertificatePJ Certificate Pessoa Jurídica
      * @see ICPBRCertificatePJ
      */
     public ICPBRCertificatePJ getICPBRCertificatePJ() {
@@ -380,7 +380,7 @@ public class BasicCertificate {
      * Check if the certificate has a "ICP-BRASIL Equipment (Equipamento ou
      * Aplicação) Certificate". DOC-ICP-04<br>
      *
-     * @return boolean
+     * @return boolean true if certificate has equipment
      */
     public boolean hasCertificateEquipment() {
         if (getICPBRSubjectAlternativeNames() == null) {
@@ -396,7 +396,7 @@ public class BasicCertificate {
      * Returns <b>null</b>
      *
      *
-     * @return ICPBRCertificateEquipment
+     * @return ICPBRCertificateEquipment equipment
      * @see ICPBRCertificateEquipment
      */
     public ICPBRCertificateEquipment getICPBRCertificateEquipment() {
@@ -411,7 +411,7 @@ public class BasicCertificate {
      * * <b>0</b> - if CA.<br>
      * * <b>1</b> - for End User Certificate.<br>
      *
-     * @return int
+     * @return int path length
      */
     public int getPathLength() {
         return certificate.getBasicConstraints();
@@ -422,7 +422,7 @@ public class BasicCertificate {
      * * <b>true</b> - If CA.<br>
      * * <b>false</b> -for End User Certificate.<br>
      *
-     * @return boolean
+     * @return boolean true if CA certificate
      */
     public boolean isCACertificate() {
         return certificate.getBasicConstraints() >= 0;
@@ -434,7 +434,7 @@ public class BasicCertificate {
      * DOC-ICP-04 Returns the <b>null</b> value if the CertificatePolicies is
      * NOT present.
      *
-     * @return String
+     * @return String Certificate level
      */
     public String getCertificateLevel() {
         try {
@@ -486,7 +486,7 @@ public class BasicCertificate {
     /**
      * Returns the AuthorityInfoAccess extension value on list format.<br>
      * Otherwise, returns <b>list empty</b>.<br>
-     * @return List
+     * @return List Authority info access list
      */
 	public List<String> getAuthorityInfoAccess() {
 		List<String> address = new ArrayList<String>();
@@ -511,7 +511,7 @@ public class BasicCertificate {
      *
      *
      * @return the authority key identifier of a certificate
-     * @throws IOException 
+     * @throws IOException exception
      */
     public String getAuthorityKeyIdentifier() throws IOException {
         // TODO - Precisa validar este metodo com a RFC
@@ -528,7 +528,7 @@ public class BasicCertificate {
      * 
      *
      * @return The subject key identifier of a certificate 
-     * @throws IOException 
+     * @throws IOException exception
      */
     public String getSubjectKeyIdentifier() throws IOException {
         // TODO - Precisa validar este metodo com a RFC
@@ -543,7 +543,7 @@ public class BasicCertificate {
     /**
      * 
      * @return A list of ulrs that inform the location of the certificate revocation lists
-     * @throws IOException
+     * @throws IOException exception
      */
     public List<String> getCRLDistributionPoint() throws IOException {
 

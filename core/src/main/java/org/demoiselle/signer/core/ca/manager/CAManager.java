@@ -178,7 +178,7 @@ public class CAManager {
 	/**
 	 * Get ALL certificate chains previously added in
 	 * 
-	 * @param certificate
+	 * @param certificate final certificate in the desired chain
 	 * @return list of certificates
 	 */
 	public Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {

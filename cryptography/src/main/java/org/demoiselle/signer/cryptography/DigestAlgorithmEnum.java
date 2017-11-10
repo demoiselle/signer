@@ -73,6 +73,8 @@ public enum DigestAlgorithmEnum {
 	 * Retrieves an enumeration item that matches the passed parameter. 
 	 * The passed parameter must be equal (case insensitive) 
 	 * to the algorithm name of any item in this enumeration, otherwise it will return null.
+	 * @param algorithm algorithm name
+	 * @return algorithm representation
 	 */
 	public static DigestAlgorithmEnum getDigestAlgorithmEnum(String algorithm) {
 		for (DigestAlgorithmEnum value : DigestAlgorithmEnum.values())
