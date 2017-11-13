@@ -47,7 +47,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *   
  * AlgorithmConstraints ::= SEQUENCE OF AlgAndLength
  * 
- * Collection<AlgAndLength>
+ * Collection&lt; AlgAndLength &gt;
  * 
  * {@link AlgAndLength}
  *

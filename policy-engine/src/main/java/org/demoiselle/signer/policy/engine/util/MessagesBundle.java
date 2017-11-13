@@ -38,8 +38,8 @@ public class MessagesBundle {
 	/**
 	 * example: getString("key.propertie.name")
 	 * 
-	 * @param key
-	 * @return
+	 * @param key name of key to read
+	 * @return value associated with key, as String
 	 */
 	public String getString(String key) {
 		try {
@@ -52,9 +52,9 @@ public class MessagesBundle {
 	/**
 	 * example: getString("key.propertie.name", parm1, parm2 )
 	 * 
-	 * @param key
-	 * @param params
-	 * @return
+	 * @param key name of key to read from
+	 * @param params values to interpolate result
+	 * @return value associated with key, interpolated by params
 	 */
 	public String getString(String key, Object... params) {
 		try {

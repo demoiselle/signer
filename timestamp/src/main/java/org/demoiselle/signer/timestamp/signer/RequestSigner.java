@@ -73,9 +73,9 @@ public class RequestSigner {
     /**
      * Signs a time stamp request
      *
-     * @param privateKey
-     * @param certificates
-     * @param request
+     * @param privateKey private key to sign with
+     * @param certificates certificate chain
+     * @param request request to be signed
      * @return The signed request
      */
     public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request, String algorithm) {

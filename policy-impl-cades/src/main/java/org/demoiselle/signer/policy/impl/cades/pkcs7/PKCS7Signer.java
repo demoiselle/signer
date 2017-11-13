@@ -49,13 +49,13 @@ public interface PKCS7Signer extends Signer {
 
 	/**
 	 *  Assign a Certificate for validate or generate a signature
-	 * @param certificate
+	 * @param certificate certificate to be used
 	 */
     abstract public void setCertificates(Certificate certificate[]);
 
     /**
      * Assign a Policy for validate or generate a signature 
-     * @param signaturePolicy
+     * @param signaturePolicy Signature policy to be used
      */
     abstract public void setSignaturePolicy(Policies signaturePolicy);
 
@@ -66,7 +66,7 @@ public interface PKCS7Signer extends Signer {
      * 
      * @param signed signed content 
      * @param validate TRUE (to execute validation) or FALSE (not execute validation)
-     * @return
+     * @return signed content
      */
     abstract public byte[] getAttached(byte[] signed, boolean validate);
     
@@ -74,17 +74,17 @@ public interface PKCS7Signer extends Signer {
      * 
      * Generates a digital co-signature from a content, 
      * the result file does not contains the content that was signed
-     * @param content
+     * @param content content to be signed
      * @param previewSigned CMS content from preview signed
-     * @return
+     * @return detached signature
      */
     abstract public byte[] doDetachedSign (byte[] content, byte[] previewSigned);
     
     /**
      * Generates a digital co-signature from a content and attaches this content on result file
-     * @param content
+     * @param content content to be signed
      * @param previewSigned CMS content from preview signed
-     * @return
+     * @return attached signature
      */
     abstract public byte[] doAttachedSign(byte[] content, byte[] previewSigned);
     
@@ -100,7 +100,7 @@ public interface PKCS7Signer extends Signer {
      * 
      * Generates a digital signature from a previous calculated hash for a content, 
      * the result file does not contains the original content that was signed
-     * @param hash
+     * @param hash hash to be signed
      * @return detached PCKS7 signature
      */
     abstract public byte[] doHashSign (byte[] hash);
@@ -109,10 +109,10 @@ public interface PKCS7Signer extends Signer {
     /**
      * 
      * Generates a digital co-signature from a previous calculated hash for a content,
-     * and its previews signatures 
+     * and its previous signatures 
      * the result file does not contains the original content that was signed
-     * @param hash
-     * @param previewSigned
+     * @param hash hash to be signed
+     * @param previewSigned previous signature
      * @return detached PCKS7 signature
      */
     abstract public byte[] doHashCoSign (byte[] hash, byte[] previewSigned);
@@ -121,8 +121,8 @@ public interface PKCS7Signer extends Signer {
     /**
      * Check a digital signature with attached content, informed by parameter signedData
      *
-     * @param signedData
-     * @return boolean
+     * @param signedData signed data to be checked
+     * @return boolean true if valid, false otherwise
      * @deprecated use {@link checkAttachedSignature}
      */
     abstract public boolean checkAttached(byte[] signedData);
@@ -131,9 +131,9 @@ public interface PKCS7Signer extends Signer {
     /**
      * Check an digital detached signature, informed by parameter signedData and it's content
      *
-     * @param content
-     * @param signedData
-     * @return boolean
+     * @param content content to be checked
+     * @param signedData signed data
+     * @return boolean true if valid, false otherwise
      * @deprecated use {@link checkDetattachedSignature}
      */
     abstract public boolean checkDetattached(byte[] content, byte[] signedData);
@@ -141,17 +141,17 @@ public interface PKCS7Signer extends Signer {
     
     /**
      * Check a digital signature with attached content, informed by parameter signedData
-     * @param signedData
-     * @return List<SignatureInformations>
+     * @param signedData attached signature to be checked
+     * @return List&lt;SignatureInformations&gt; list of signature informations
      */
     abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
     
     /**
      * Check an digital detached signature, informed by parameter signedData and it's content
      * 
-     * @param content
-     * @param signedData
-     * @return List<SignatureInformations>
+     * @param content content to be checked
+     * @param signedData detached signature
+     * @return List&lt;SignatureInformations&gt; list of signature informations
      */
     
     abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
@@ -161,15 +161,15 @@ public interface PKCS7Signer extends Signer {
      * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
      * 
      * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
-     * @param calculatedHashContent
-     * @param signedData
-     * @return List<SignatureInformations>
+     * @param calculatedHashContent calculated hash
+     * @param signedData detached signature
+     * @return List&lt;SignatureInformations&gt; list of signature informations
      */
     abstract public  List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
 
     /**
      * get Signature Information for a checked signature
-     * @return List<SignatureInformations>
+     * @return List&lt;SignatureInformations&gt;
      */
     abstract public List<SignatureInformations> getSignatureInfo();
 

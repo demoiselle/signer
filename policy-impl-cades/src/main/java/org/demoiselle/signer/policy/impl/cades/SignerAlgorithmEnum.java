@@ -104,8 +104,8 @@ public enum SignerAlgorithmEnum {
      * The passed parameter must be equal (case insensitive) to 
      * the algorithm name of any item in this enumeration, otherwise it will return null.
      *
-     * @param algorithm
-     * @return
+     * @param algorithm algorithm name
+     * @return SignatureALgorithmEnum specific enum value for name
      */
     public static SignerAlgorithmEnum getSignerAlgorithmEnum(String algorithm) {
         for (SignerAlgorithmEnum value : SignerAlgorithmEnum.values()) {
@@ -122,8 +122,8 @@ public enum SignerAlgorithmEnum {
      * The passed parameter must be equal (case insensitive) to
      * the OID of the algorithm of some item of this enumeration, otherwise it will return null.
      *
-     * @param OIDalgorithm
-     * @return
+     * @param OIDalgorithm OID String representation
+     * @return SignerAlgorithmEnum specific enum value for oid
      */
     public static SignerAlgorithmEnum getSignerOIDAlgorithmHashEnum(String OIDalgorithm) {
         for (SignerAlgorithmEnum value : SignerAlgorithmEnum.values()) {

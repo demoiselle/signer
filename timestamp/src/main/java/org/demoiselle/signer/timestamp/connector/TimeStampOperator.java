@@ -99,12 +99,12 @@ public class TimeStampOperator {
     /**
      * Creates a time stamp request, signed with the users's certificate.
      *
-     * @param privateKey
-     * @param certificates
+     * @param privateKey private key to sign with
+     * @param certificates certificate chain
      * @param content  set null if signing only hash
      * @param hash  set null if signing content
      * @return A time stamp request
-     * @throws CertificateCoreException
+     * @throws CertificateCoreException exception
      */
     public byte[] createRequest(PrivateKey privateKey, Certificate[] certificates, byte[] content, byte[] hash) throws CertificateCoreException {
         try {
@@ -141,12 +141,12 @@ public class TimeStampOperator {
      * 
      * Creates a time stamp request using a certificate of type PKCS12
      * 
-     * @param keystoreLocation
-     * @param pin
-     * @param alias
-     * @param content
-     * @return
-     * @throws CertificateCoreException
+     * @param keystoreLocation key store location
+     * @param pin personal identification number
+     * @param alias alias
+     * @param content content of the request
+     * @return request as a byte[]
+     * @throws CertificateCoreException exception
      */
     public byte[] createRequest(String keystoreLocation, String pin, String alias, byte[] content, byte[] hash) throws CertificateCoreException {
         try {
@@ -163,7 +163,7 @@ public class TimeStampOperator {
     /**
      * Sends the time stamp request {@link createRequest} to a time stamp server
      *
-     * @param request
+     * @param request request to be sent
      * @return The time stamp returned by the server
      */
     public byte[] invoke(byte[] request) throws CertificateCoreException {
@@ -316,9 +316,9 @@ public class TimeStampOperator {
      * Validate a time stamp
      *
      * @param content if it is assigned, the parameter hash must to be null
-     * @param timeStamp
+     * @param timeStamp timestamp to be validated
      * @param hash if it is assigned, the parameter content must to be null
-     *
+     * @throws CertificateCoreException validate exception
      */
     @SuppressWarnings("unchecked")
 	public void validate(byte[] content, byte[] timeStamp, byte[] hash) throws CertificateCoreException {

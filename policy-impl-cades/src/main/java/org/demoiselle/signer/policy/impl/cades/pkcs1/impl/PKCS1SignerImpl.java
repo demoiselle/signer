@@ -115,7 +115,7 @@ public class PKCS1SignerImpl implements PKCS1Signer {
      * Performs checking for signed content using the Java API.
      *  You must enter the original content and signature for verification. 
      *  It uses the value algorithm of property: algorithm. If this property is not set, 
-     *  the {@link SignerAlgorithmEnum.DEFAULT} enumeration algorithm will be used. 
+     *  the @link SignerAlgorithmEnum.DEFAULT enumeration algorithm will be used. 
      *  For this method it is necessary to inform the original content, signed content and the public key.
      *
      * @param content Original content to be compared to signed content.

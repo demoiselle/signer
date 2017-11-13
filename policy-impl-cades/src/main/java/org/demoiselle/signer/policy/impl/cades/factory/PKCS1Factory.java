@@ -55,7 +55,8 @@ public class PKCS1Factory extends GenericFactory<PKCS1Signer> {
 	 * Defines a default object for the factory. 
 	 * The Component has a default implementation
 	 * 
-	 * @see {@link PKCS1SignerImpl}
+	 * @return new pkcs1 signer
+	 * @see PKCS1SignerImpl
 	 */
 	@Override
 	public PKCS1Signer factoryDefault() {
@@ -65,6 +66,7 @@ public class PKCS1Factory extends GenericFactory<PKCS1Signer> {
 	/**
 	 * Defines the environment variable used by the abstract factory 
 	 * to fetch the name of the class to be fabricated.
+	 * @return variable name
 	 */
 	@Override
 	protected String getVariableName() {

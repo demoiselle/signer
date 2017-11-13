@@ -49,42 +49,42 @@ public interface Signer {
     /**
      * Indicates which Provider will be used.
      *
-     * @param provider
+     * @param provider provider to be used
      */
     abstract public void setProvider(Provider provider);
 
     /**
      * Private key required for asymmetric cryptography
      *
-     * @param privateKey
+     * @param privateKey private key to be used
      */
     abstract public void setPrivateKey(PrivateKey privateKey);
 
     /**
      * Public key needed for asymmetric cryptography
      *
-     * @param publicKey
+     * @param publicKey public key to be used
      */
     abstract public void setPublicKey(PublicKey publicKey);
 
     /**
      * Set a Signature Algorithm. Ex: SHA256withRSA
      *
-     * @param algorithm
+     * @param algorithm algorithm to be used
      */
     abstract public void setAlgorithm(String algorithm);
 
     /**
      * Set an algorithm pre-defined in enumeration. Compatible with ICP-Brasil
      *
-     * @param algorithm
+     * @param algorithm algorithm representation to be used
      */
     abstract public void setAlgorithm(SignerAlgorithmEnum algorithm);
 
     /**
      * Generates a digital signature from a content and attaches this content on result file
-     * @param content
-     * @return
+     * @param content content to be signed
+     * @return attached signature
      */
     abstract public byte[] doAttachedSign(byte[] content);
 
@@ -92,18 +92,18 @@ public interface Signer {
      * 
      * Generates a digital signature from a content, 
      * the result file does not contains the content that was signed
-     * @param content
-     * @return
+     * @param content content to be signed
+     * @return detached signature
      */
     abstract public byte[] doDetachedSign (byte[] content);
     
     /**
      * Check if a digital signature, informed by parameter signedData, is valid for content
      *
-     * @param content
-     * @param signedData
-     * @return
-     * @deprecated use {@link checkAttached} or {@link checkDetached} or {@link checkSignatureByHash}  
+     * @param content content to be checked
+     * @param signedData signature to be checked
+     * @return boolean true if valid, false otherwise
+     * @deprecated use {@link checkAttached} or {@link checkDetattached} or {@link checkSignatureByHash}  
      */
     abstract public boolean check(byte[] content, byte[] signedData);
 
@@ -111,8 +111,8 @@ public interface Signer {
     /**
      * Check a digital signature with attached content, informed by parameter signedData
      *
-     * @param signedData
-     * @return boolean
+     * @param signedData attached signature to be checked
+     * @return boolean true if valid, false otherwise
      * @deprecated use {@link checkAttachedSignature}
      */
     abstract public boolean checkAttached(byte[] signedData);
@@ -121,26 +121,26 @@ public interface Signer {
     /**
      * Check an digital detached signature, informed by parameter signedData and it's content
      *
-     * @param content
-     * @param signedData
-     * @return boolean
+     * @param content content to be checked
+     * @param signedData detached signature
+     * @return boolean true if valid, false otherwise
      * @deprecated use {@link checkDetattachedSignature}
      */
     abstract public boolean checkDetattached(byte[] content, byte[] signedData);
     
     /**
      * Check a digital signature with attached content, informed by parameter signedData
-     * @param signedData
-     * @return List<SignatureInformations>
+     * @param signedData attached signature to be checked
+     * @return List&lt;SignatureInformations&gt; list of signature information
      */
     abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
     
     /**
      * Check an digital detached signature, informed by parameter signedData and it's content
      * 
-     * @param content
-     * @param signedData
-     * @return List<SignatureInformations>
+     * @param content content to be checked
+     * @param signedData detached signature
+     * @return List&lt;SignatureInformations&gt; list of signature information
      */
     
     abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
@@ -151,9 +151,9 @@ public interface Signer {
      * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
      * 
      * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
-     * @param calculatedHashContent
-     * @param signedData
-     * @return List<SignatureInformations>
+     * @param calculatedHashContent calculated hash
+     * @param signedData detached signature
+     * @return List&lt;SignatureInformation&gt; list of signature information
     */
    abstract public List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
 
@@ -161,28 +161,28 @@ public interface Signer {
     /**
      * Returns the provider.
      *
-     * @return
+     * @return current provider
      */
     abstract public Provider getProvider();
 
     /**
      * Returns the private key.
      *
-     * @return
+     * @return current private key
      */
     abstract public PrivateKey getPrivateKey();
 
     /**
      * Returns the algorithm to be used in the signature
      *
-     * @return
+     * @return current algorithm
      */
     abstract public String getAlgorithm();
 
     /**
      * Returns the public key.
      *
-     * @return
+     * @return current public key
      */
     abstract public PublicKey getPublicKey();
 
@@ -190,7 +190,7 @@ public interface Signer {
      * 
      * Generates a digital signature from a previous calculated hash for a content, 
      * the result file does not contains the original content that was signed
-     * @param hash
+     * @param hash hash to be signed
      * @return detached PCKS7 signature
      */
     abstract public byte[] doHashSign (byte[] hash);

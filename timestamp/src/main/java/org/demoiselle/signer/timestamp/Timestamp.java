@@ -77,7 +77,7 @@ public class Timestamp {
     /**
      * Returns a stream of bytes encoded in ASN.1 format, which represents the encoded object.
      *
-     * @return
+     * @return timestamp encoded as a byte[]
      */
     public byte[] getEncoded() {
         try {
@@ -133,7 +133,7 @@ public class Timestamp {
     /**
      * 
      * The attributes of the Time Stamp Authority's certificate.
-     * @return 
+     * @return Authority information
      */
     public String getTimeStampAuthorityInfo() {
         return timeStampToken.getTimeStampInfo().getTsa().toString();
@@ -142,7 +142,7 @@ public class Timestamp {
     /**
      * Returns the nonce value, or returns null if there is no
      *
-     * @return 
+     * @return nonce value, or returns null if there is no
      */
     public BigInteger getNonce() {
         return timeStampToken.getTimeStampInfo().getNonce();
