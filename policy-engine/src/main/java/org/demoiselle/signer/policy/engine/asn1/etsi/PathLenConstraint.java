@@ -54,7 +54,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *  Where pathLenConstraint is not present, 
  *  there is no limit to the allowed length of the certification path.
  *  
- *  Collection< {@link ObjectIdentifier} > PathLenConstraint ::= INTEGER (0..MAX)
+ *  Collection&lt; @link ObjectIdentifier &gt; PathLenConstraint ::= INTEGER (0..MAX)
  *
  */
 public class PathLenConstraint extends ASN1Object {

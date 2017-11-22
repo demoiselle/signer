@@ -50,7 +50,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * This ASN1 structure is used to define policy for validating the signing certificate, 
  * the TSA's certificate and attribute certificates
  * 
- *  Collection<CertificateTrustPoint> {@link CertificateTrustPoint}
+ *  Collection&lt; CertificateTrustPoint &gt; @link CertificateTrustPoint
  *
  */
 public class CertificateTrustTrees extends ASN1Object {

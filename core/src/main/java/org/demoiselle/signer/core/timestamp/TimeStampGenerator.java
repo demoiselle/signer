@@ -54,14 +54,14 @@ public interface TimeStampGenerator {
 	 * @param privateKey authorized to use a TSA service
 	 * @param certificates trusted chain
 	 * @param hash to be sign, if it is assigned the parameter content must to be null
-	 * @throws CertificateCoreException
+	 * @throws CertificateCoreException exception
 	 */
     void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates, byte[] hash) throws CertificateCoreException;
 
     /**
      * 
-     * @return
-     * @throws CertificateCoreException
+     * @return timestamp
+     * @throws CertificateCoreException exception
      */
     byte[] generateTimeStamp() throws CertificateCoreException;
 
@@ -70,7 +70,7 @@ public interface TimeStampGenerator {
      * @param content to be sign, if it is the parameter hash must to be null
      * @param response signed timestamp from TSA
      *  @param hash to be sign, if it is assigned the parameter content must to be null
-     * @throws CertificateCoreException
+     * @throws CertificateCoreException exception
      */
     void validateTimeStamp(byte[] content, byte[] response, byte[] hash) throws CertificateCoreException;
 

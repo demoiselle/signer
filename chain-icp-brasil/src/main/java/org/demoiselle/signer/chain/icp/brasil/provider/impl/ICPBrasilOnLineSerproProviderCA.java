@@ -83,7 +83,8 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
 
 	/**
-	 *  return the address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.  
+	 *  return the address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.
+	 * @return address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.
 	 */
 	public String getURLZIP() {
 		return ICPBrasilOnLineSerproProviderCA.STRING_URL_ZIP;
@@ -91,6 +92,8 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	/**
 	 *  return the address (mirrored by SERPRO) where is located a file that contains the hash code (SHA512)
+	 *  which corresponds to the file downloaded with {@link #getURLZIP()} . 
+	 * @return address (mirrored by SERPRO) where is located a file that contains the hash code (SHA512)
 	 *  which corresponds to the file downloaded with {@link #getURLZIP()} . 
 	 */
 	public String getURLHash() {
@@ -179,9 +182,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	/**
 	 * calculte SHA-512 hash from downloaded file.  
-	 * @param input
+	 * @param input file to read from
 	 * @return byte array with calculated hash
-	 * @throws IOException
+	 * @throws IOException Exception
 	 */
 	public byte[] checksum(File input) throws IOException {
 		InputStream in = null;
@@ -207,8 +210,8 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	/**
 	 * Get from SERPRO mirror repository
-	 * @param zip
-	 * @return Collection<X509Certificate>
+	 * @param zip Input stream to read from
+	 * @return Collection&lt;X509Certificate&gt;
 	 */
 	public Collection<X509Certificate> getOnline(InputStream zip) {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
@@ -230,9 +233,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	/**
 	 *  get Chain from file stored on local user diretory 
-	 * @param zip
-	 * @return Collection<X509Certificate>
-	 * @throws RuntimeException
+	 * @param zip input stream to read from
+	 * @return Collection&lt;X509Certificate&gt;
+	 * @throws RuntimeException exception
 	 */
 	public Collection<X509Certificate> getFromZip(InputStream zip) throws RuntimeException {
 		Collection<X509Certificate> result = new HashSet<X509Certificate>();
@@ -265,9 +268,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	/**
 	 * execute file download from defined URL 
-	 * @param stringURL
+	 * @param stringURL url to read
 	 * @return InputStream
-	 * @throws RuntimeException
+	 * @throws RuntimeException exception
 	 */
 	public InputStream getInputStreamFromURL(String stringURL) throws RuntimeException {
 		try {

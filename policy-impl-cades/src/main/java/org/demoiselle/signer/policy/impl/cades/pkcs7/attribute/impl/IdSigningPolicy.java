@@ -75,7 +75,7 @@ public class IdSigningPolicy implements SignedAttribute {
     /**
      * org.bouncycastle.asn1.ASN1ObjectIdentifier sigPolicyId
      * org.bouncycastle.asn1.esf.OtherHashAlgAndValue sigPolicyHash
-     * List<org.bouncycastle.asn1.esf.SigPolicyQualifierInfo> sigPolicyQualifierInfos
+     * List&lt;org.bouncycastle.asn1.esf.SigPolicyQualifierInfo&gt; sigPolicyQualifierInfos
      */
     @Override
     public Attribute getValue() {

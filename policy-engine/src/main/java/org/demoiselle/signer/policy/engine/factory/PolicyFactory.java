@@ -77,6 +77,7 @@ public class PolicyFactory {
 
     
     /**
+	 * @return LPA ICP Brasil signature policy v1
      * @deprecated  Politics DISCONTINUED
      */
 
@@ -91,6 +92,7 @@ public class PolicyFactory {
 
     
     /**
+	 * @return LPA ICP Brasil signature policy v2
      * @deprecated   Politics DISCONTINUED 28/11/2016
      */
 
@@ -105,7 +107,7 @@ public class PolicyFactory {
     
     /**
      * Load signature policy for CAdES standard (PKCS)
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA ICP Brasil signature policy v2
      */
     
     public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdES() {
@@ -118,7 +120,7 @@ public class PolicyFactory {
     
     /**
      *  Load signature policy for PAdES standard (PDF)
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA ICP Brasil signature policy v2
      */
     public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdES() {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
@@ -130,7 +132,7 @@ public class PolicyFactory {
     
     /**
      *  Load signature policy for XAdES (XML) standard
-     * @return
+     * @return ICP Brasil signature policy v2
      */
     		
     // TODO - Implementar

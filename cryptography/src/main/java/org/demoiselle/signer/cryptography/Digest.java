@@ -44,50 +44,54 @@ import org.demoiselle.signer.cryptography.implementation.DigestImpl;
 /**
  * Defines the default behavior for using digest algorithms.
  * 
- * @see {@link DigestImpl}
+ * @see DigestImpl
  */
 public interface Digest {
 
 	/**
 	 * Set the algorithm used by the digest method.
 	 * 
-	 * @see {@link DigestAlgorithmEnum}
+	 * @param algorithm algorithm representation
+	 * @see DigestAlgorithmEnum
 	 */
 	public void setAlgorithm(DigestAlgorithmEnum algorithm);
 
 	/**
 	 * Set the algorithm used by the digest method.
 	 *
-	 * */
+	 * @param algorithm Algorithm name
+	 */
 	public void setAlgorithm(String algorithm);
 
 	/**
 	 * Method responsible for generating a digest of the content passed as a parameter, 
 	 * using the algorithm set by the setAlgorithm () method.
+	 * @param content content to be processed
+	 * @return digest
 	 */
 	public byte[] digest(byte[] content);
 
 	/**
 	 * Returns the digest of an array of bytes in hexadecimal character format.
 	 * 
-	 * @param content
-	 * @return 
+	 * @param content content to be processed
+	 * @return digest
 	 */
 	public String digestHex(byte[] content);
 
 	/**
 	 * Returns the Digest of a file
 	 * 
-	 * @param file
-	 * @return 
+	 * @param file file to be processed
+	 * @return digest
 	 */
 	public byte[] digestFile(File file);
 
 	/**
 	 * Returns the summary of a file in hexadecimal character format
 	 * 
-	 * @param file
-	 * @return 
+	 * @param file file to be processed
+	 * @return digest
 	 */
 	public String digestFileHex(File file);
 

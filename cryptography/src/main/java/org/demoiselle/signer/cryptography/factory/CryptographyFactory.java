@@ -38,7 +38,7 @@ import org.demoiselle.signer.cryptography.Cryptography;
 import org.demoiselle.signer.cryptography.implementation.CriyptographyImpl;
 
 /**
- * Factory specialized in creating objects for interface {@link Cryptography}.
+ * Factory specialized in creating objects for interface @link Cryptography.
  */
 public class CryptographyFactory extends GenericFactory<Cryptography> {
 
@@ -52,7 +52,7 @@ public class CryptographyFactory extends GenericFactory<Cryptography> {
 	 * Defines a default object for the factory.
 	 *  The Component has a default implementation
 	 * 
-	 * @see {@link CryptographyImpl}
+	 * @see org.demoiselle.signer.cryptography.implementation.CriyptographyImpl
 	 */
 	@Override
 	public Cryptography factoryDefault() {
@@ -62,6 +62,7 @@ public class CryptographyFactory extends GenericFactory<Cryptography> {
 	/**
 	 * Defines the environment variable used by the abstract factory 
 	 * to fetch the name of the class to be fabricated.
+	 * @return variable name
 	 */
 	@Override
 	protected String getVariableName() {

@@ -79,8 +79,8 @@ public class OIDGeneric {
 	 * @param data
 	 *            Set of bytes with the contents of the certificate.
 	 * @return Object GenericOID
-	 * @throws IOException
-	 * @throws Exception
+	 * @throws IOException exception of input/output
+	 * @throws Exception general exception
 	 */
 	public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
 		is = new ASN1InputStream(data);
@@ -145,9 +145,9 @@ public class OIDGeneric {
 	 *
 	 * @param der
 	 *            Content of Certificate on sun.security.util.DerValue format
-	 * @return OIDGenerico
-	 * @throws IOException
-	 * @throws Exception
+	 * @return OIDGenerico current instance
+	 * @throws IOException input/output exception
+	 * @throws Exception general exception
 	 */
 	public static OIDGeneric getInstance(DerValue der) throws IOException, Exception {
 		OtherName on = new OtherName(der);

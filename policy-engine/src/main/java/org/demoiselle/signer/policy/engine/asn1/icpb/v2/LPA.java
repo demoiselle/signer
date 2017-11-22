@@ -52,7 +52,7 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
  *	http://www.iti.gov.br/icp-brasil/repositorio/144-icp-brasil/repositorio/3974-artefatos-de-assinatura-digital
  * 
  * {@link Version} version;
- * Collection<{@link PolicyInfo}> policyInfos;
+ * Collection&lt; {@link PolicyInfo} &gt; policyInfos;
  * {@link GeneralizedTime} nextUpdate;
  *
  */

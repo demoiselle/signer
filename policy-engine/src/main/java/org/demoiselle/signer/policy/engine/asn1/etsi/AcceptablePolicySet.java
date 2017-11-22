@@ -49,7 +49,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *   
  *    AcceptablePolicySet ::= SEQUENCE OF CertPolicyId 
  *  
- *    Collection<CertPolicyId> {@link CertPolicyId}
+ *    Collection&lt; CertPolicyId &gt; @link CertPolicyId
  * 
  * 
  *

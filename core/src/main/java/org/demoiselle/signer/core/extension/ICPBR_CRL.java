@@ -57,8 +57,8 @@ public class ICPBR_CRL {
     /**
      *
      * @param is InputStream
-     * @throws CRLException 
-     * @throws CertificateException 
+     * @throws CRLException exception
+     * @throws CertificateException exception
      */
     public ICPBR_CRL(InputStream is) throws CRLException, CertificateException {
         this.x509crl = getInstance(is);
@@ -67,9 +67,9 @@ public class ICPBR_CRL {
     /**
      *
      * @param data byte array
-     * @throws CRLException 
-     * @throws CertificateException 
-     * @throws IOException
+     * @throws CRLException exception
+     * @throws CertificateException exception
+     * @throws IOException exception
      */
     public ICPBR_CRL(byte[] data) throws CRLException, CertificateException, IOException {
         this.x509crl = getInstance(data);
@@ -80,9 +80,9 @@ public class ICPBR_CRL {
      * @param data byte array
      * @return Object X509CRL
      * @see java.security.cert.X509CRL
-     * @throws CRLException
-     * @throws IOException
-     * @throws CertificateException
+     * @throws CRLException exception
+     * @throws IOException exception
+     * @throws CertificateException exception
      */
     private X509CRL getInstance(byte[] data) throws CRLException, IOException, CertificateException {
         X509CRL crl = null;
@@ -115,10 +115,10 @@ public class ICPBR_CRL {
 
     /**
      *
-     * @param is
-     * @return
-     * @throws CRLException
-     * @throws CertificateException
+     * @param is source for creating instance
+     * @return X509CRL
+     * @throws CRLException exception
+     * @throws CertificateException exception
      */
     private X509CRL getInstance(InputStream is) throws CRLException, CertificateException {
         CertificateFactory cf = CertificateFactory.getInstance("X509");

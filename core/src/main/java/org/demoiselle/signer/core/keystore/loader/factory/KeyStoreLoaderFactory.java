@@ -87,7 +87,7 @@ public class KeyStoreLoaderFactory {
     /**
      * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
      *
-     * @param file
+     * @param file containing keystore
      * @return {@link KeyStoreLoader}
      */
     public static KeyStoreLoader factoryKeyStoreLoader(File file) {
@@ -98,7 +98,7 @@ public class KeyStoreLoaderFactory {
      * Method responsible for fabricating an instance of AbstractKeyStoreLoader based on a class passed as parameter. 
      * Represents an extension point of the component, which allows the application to implement its own KeyStore loading method.
      *
-     * @param clazz
+     * @param clazz class to instantiate from
      *
      * @return {@link KeyStoreLoader}
      */

@@ -44,7 +44,7 @@ import org.demoiselle.signer.policy.impl.cades.SignerException;
  * Abstract factory that concentrates the reading of the configurations for 
  * all the other specialized factories as well as the class reflection functionalities.
  *
- * @see {@link PKCS1Factory}, {@link PKCS7Factory}
+ * @see org.demoiselle.signer.policy.impl.cades.factory.PKCS1Factory org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory
  *
  */
 abstract public class GenericFactory<F> {
@@ -58,6 +58,7 @@ abstract public class GenericFactory<F> {
      * Such variables are defined by each concrete factory that implements the abstract factory through the getVariableName () method.
      *  Once the environment variable is read, the value of the variable is stored in the "className" property. 
      *  If the environment variable is not set, a default object is built through the abstract factoryDefault () method.
+	 * @return Instance of factory
      */
     public F factory() {
         F result = null;
@@ -77,6 +78,8 @@ abstract public class GenericFactory<F> {
 
     /**
      * Instantiate an object from the name of your class
+	 * @param className class name of new instance
+	 * @return new instance
      */
     @SuppressWarnings("all")
     public F factoryFromClassName(String className) {
@@ -131,7 +134,7 @@ abstract public class GenericFactory<F> {
     /**
      * It forces the concrete class to fabricate an object by default
      *
-     * @return
+     * @return new instance
      */
     public abstract F factoryDefault();
 
@@ -139,7 +142,7 @@ abstract public class GenericFactory<F> {
      * Every concrete factory needs to define which environment variable
      *  contains the name of the class to be fabricated
      *
-     * @return
+     * @return variable name
      */
     protected abstract String getVariableName();
 

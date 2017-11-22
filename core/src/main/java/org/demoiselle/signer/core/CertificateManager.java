@@ -65,7 +65,7 @@ public class CertificateManager {
     /**
      * 
      * @param x509 java.security.cert.X509Certificate
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException exception
      */
     public CertificateManager(X509Certificate x509) throws CertificateValidatorException {
         this(x509, true);
@@ -75,7 +75,7 @@ public class CertificateManager {
      * 
      * @param x509 java.security.cert.X509Certificate
      * @param validators Array of {@link IValidator}
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException exception
      */
     public CertificateManager(X509Certificate x509, IValidator... validators) throws CertificateValidatorException {
         this(x509, true, validators);
@@ -83,9 +83,9 @@ public class CertificateManager {
 
     /**
      * 
-     * @param pinNumber
+     * @param pinNumber personal id number
      * @param validators Array of {@link IValidator}
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException exception
      */
     public CertificateManager(String pinNumber, IValidator... validators) throws CertificateValidatorException {
         this(pinNumber, true, validators);
@@ -95,7 +95,7 @@ public class CertificateManager {
      * 
      * @param fileX509 a file that contains a java.security.cert.X509Certificate
      * @param validators Array of {@link IValidator}
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException exception
      */
     public CertificateManager(File fileX509, IValidator... validators) throws CertificateValidatorException {
         this(fileX509, true, validators);
@@ -106,7 +106,7 @@ public class CertificateManager {
      * @param x509 java.security.cert.X509Certificate
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException exception
      */
     public CertificateManager(X509Certificate x509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
         this.init(x509, loadDefaultValidators, validators);
@@ -114,10 +114,10 @@ public class CertificateManager {
 
     /**
      * 
-     * @param pinNumber
+     * @param pinNumber personal id number
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException exception
      */
     public CertificateManager(String pinNumber, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
         CertificateLoader loader = new CertificateLoaderImpl();
@@ -130,7 +130,7 @@ public class CertificateManager {
      * @param fileX509 a file that contains a java.security.cert.X509Certificate
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException exception
      */
     public CertificateManager(File fileX509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException {
         CertificateLoader loader = new CertificateLoaderImpl();
@@ -143,7 +143,7 @@ public class CertificateManager {
      * @param x509 java.security.cert.X509Certificate
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
-     * @throws CertificateValidatorException
+     * @throws CertificateValidatorException when not possible to validate certificate
      */
     private void init(X509Certificate x509, boolean loadDefaultValidators, IValidator... validators) throws CertificateValidatorException, CertificateValidatorCRLException {
         this.x509 = x509;
@@ -164,7 +164,7 @@ public class CertificateManager {
 
     /**
      *  Load a java.security.cert.X509Certificate
-     * @param object
+     * @param object destiny of load operation
      */
     public void load(Object object) {
         Field[] fields = object.getClass().getDeclaredFields();
@@ -187,8 +187,9 @@ public class CertificateManager {
 
     /**
      *  New Instance for a class
-     * @param clazz
-     * @return
+	 * @param <T> Type parameter for returned instance
+     * @param clazz class to be instantiated
+     * @return new instance of class
      */
     public <T> T load(Class<T> clazz) {
         T object;

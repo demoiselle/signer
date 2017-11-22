@@ -213,10 +213,10 @@ public class Configuration {
 	}
 
 	/**
-	 * Returns a set of drivers in the Map, in this pattern: <'driver name',
-	 * 'path driver'>
+	 * Returns a set of drivers in the Map, in this pattern: &lt;'driver name',
+	 * 'path driver'&gt;
 	 *
-	 * @return
+	 * @return map of drivers, with name as key and path as value.
 	 */
 	public Map<String, String> getDrivers() {
 		return this.drivers;
@@ -295,7 +295,7 @@ public class Configuration {
 	 * Java 8 -
 	 * https://docs.oracle.com/javase/8/docs/technotes/guides/security/p11guide.html
 	 *
-	 * @return
+	 * @return location of configuration file for PKCS11 driver
 	 */
 	public String getPKCS11ConfigFile() {
 		String filePath = this.getContentFromVariables(Configuration.VAR_PKCS11_CONFIG);

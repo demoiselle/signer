@@ -51,7 +51,7 @@ public interface CRLRepository {
 	/**
 	 * Returns a CRL (Certificate Revoked List)  from a given authority of IPC-Brasil.
 	 * 
-	 * @param certificate            
+	 * @param certificate AC's certificate
 	 * @return List of ICPBR_CRL
 	 */
 	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate);

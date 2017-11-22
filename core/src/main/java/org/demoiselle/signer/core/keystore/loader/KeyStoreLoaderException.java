@@ -57,7 +57,7 @@ public class KeyStoreLoaderException extends RuntimeException {
 
 	/**
 	 * 
-	 * @param message
+	 * @param message message
 	 */
 	public KeyStoreLoaderException(String message) {
 		super(message);
@@ -65,8 +65,8 @@ public class KeyStoreLoaderException extends RuntimeException {
 
 	/**
 	 * 
-	 * @param message
-	 * @param cause
+	 * @param message message
+	 * @param cause cause
 	 */
 	public KeyStoreLoaderException(String message, Throwable cause) {
 		super(message, cause);
@@ -74,7 +74,7 @@ public class KeyStoreLoaderException extends RuntimeException {
 
 	/**
 	 *  to include an error occurred on KeyStore Load process.
-	 * @param error
+	 * @param error to be included
 	 */
 	public void addError(Throwable error) {
 		if (this.errors == null)

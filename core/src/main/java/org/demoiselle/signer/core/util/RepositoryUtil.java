@@ -70,8 +70,8 @@ public class RepositoryUtil {
 
 	/**
 	 * Digest to MD5
-	 * @param url
-	 * @return
+	 * @param url source url
+	 * @return MD5 digest
 	 */
     public static String urlToMD5(String url) {
         try {
@@ -88,8 +88,8 @@ public class RepositoryUtil {
 
     /**
      * 
-     * @param sUrl
-     * @param destinationFile
+     * @param sUrl source url
+     * @param destinationFile destination file
      */
     public static void saveURL(String sUrl, File destinationFile) {
         URL url;
@@ -132,8 +132,8 @@ public class RepositoryUtil {
 
     /**
      * 
-     * @param listURL
-     * @return
+     * @param listURL url list
+     * @return valid url list
      */
     public static List<String> filterValidURLs(List<String> listURL) {
         List<String> newURLlist = new ArrayList<String>();

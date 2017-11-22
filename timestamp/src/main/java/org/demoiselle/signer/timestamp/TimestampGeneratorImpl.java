@@ -63,10 +63,10 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
      * Initializes the attributes needed to get the time stamp
      *
      * @param content if it is assigned, the parameter hash must to be null
-     * @param privateKey
-     * @param certificates
+     * @param privateKey private key for signing of timestamp
+     * @param certificates certificate chain
      * @param hash if it is assigned, the parameter content must to be null
-     * @throws CertificateCoreException
+     * @throws CertificateCoreException exception
      */
     @Override
     public void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates, byte[] hash) throws CertificateCoreException {
@@ -91,8 +91,9 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
     /**
      * Validate a time stamp and the original content
      *
-     * @param content 
-     * @param timestamp
+     * @param content content to be validated
+     * @param timestamp timestamp
+	 * @param hash hash
      *
      */
     @Override

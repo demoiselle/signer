@@ -169,7 +169,7 @@ public class Base64Utils {
      *
      * @param aCertificationChain certificate chain
      * @return ASN.1 DER encoded on Base64, for X.509 certificate
-     * @throws CertificateException 
+     * @throws CertificateException exception
      */
     public static String encodeX509CertChainToBase64(Certificate[] aCertificationChain) throws CertificateException {
         List<Certificate> certList = Arrays.asList(aCertificationChain);

@@ -116,7 +116,7 @@ public class CertificateLoaderImpl implements CertificateLoader {
      * When a PIN(Personal Identification Number) was informed, 
      * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
      *
-     * @param pinNumber
+     * @param pinNumber personal id number
      * @return the certificate information in X509Certificate format
      * 
      */
@@ -141,7 +141,7 @@ public class CertificateLoaderImpl implements CertificateLoader {
      * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
      *
      * @param pinNumber a PIN(Personal Identification Number)
-     * @param alias 
+     * @param alias desired alias
      * @return  the certificate information in X509Certificate format
      * 
      */

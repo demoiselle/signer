@@ -49,9 +49,9 @@ public interface IOIDExtensionLoader {
 
 	/**
 	 * 
-	 * @param object
-	 * @param field 
-	 * @param x509 java.security.cert.X509Certificate
+	 * @param object object to store
+	 * @param field field to store
+	 * @param x509 java.security.cert.X509Certificate certificate to get extension from
 	 */
 	public void load(Object object, Field field, X509Certificate x509);
 

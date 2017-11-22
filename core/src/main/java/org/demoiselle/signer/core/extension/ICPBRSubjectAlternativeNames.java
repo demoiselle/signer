@@ -54,7 +54,7 @@ public class ICPBRSubjectAlternativeNames {
 	/**
 	 * 
 	 * @param certificate
-	 *            -> X509Certificate
+	 *            -&gt; X509Certificate
 	 * @see java.security.cert.X509Certificate
 	 */
 	public ICPBRSubjectAlternativeNames(X509Certificate certificate) {
@@ -71,7 +71,7 @@ public class ICPBRSubjectAlternativeNames {
 
 	/**
 	 * 
-	 * @return boolean
+	 * @return boolean is PF
 	 */
 	public boolean isCertificatePF() {
 		return icpBrCertPF != null;
@@ -79,8 +79,8 @@ public class ICPBRSubjectAlternativeNames {
 
 	/**
 	 * 
-	 * @return Object ICPBRCertificatePF
-	 * @see org.demoiselle.signer.extension.serpro.security.certificate.extension.ICPBRCertificatePF
+	 * @return ICPBRCertificatePF ICPBR Certificate PF
+	 * @see org.demoiselle.signer.core.extension.ICPBRCertificatePF
 	 */
 	public ICPBRCertificatePF getICPBRCertificatePF() {
 		return icpBrCertPF;
@@ -88,7 +88,7 @@ public class ICPBRSubjectAlternativeNames {
 
 	/**
 	 * 
-	 * @return boolean
+	 * @return boolean is PJ
 	 */
 	public boolean isCertificatePJ() {
 		return icpBrCertPJ != null;
@@ -96,8 +96,8 @@ public class ICPBRSubjectAlternativeNames {
 
 	/**
 	 * 
-	 * @return Object ICPBRCertificatePJ
-	 * @see org.demoiselle.signer.extension.serpro.security.certificate.extension.ICPBRCertificatePJ
+	 * @return ICPBRCertificatePJ ICPBR Certificate PJ
+	 * @see org.demoiselle.signer.core.extension.ICPBRCertificatePJ
 	 */
 	public ICPBRCertificatePJ getICPBRCertificatePJ() {
 		return icpBrCertPJ;
@@ -105,7 +105,7 @@ public class ICPBRSubjectAlternativeNames {
 
 	/**
 	 * 
-	 * @return boolean
+	 * @return boolean is Equipment
 	 */
 	public boolean isCertificateEquipment() {
 		return icpBrCertEquipment != null;
@@ -113,8 +113,8 @@ public class ICPBRSubjectAlternativeNames {
 
 	/**
 	 * 
-	 * @return Object ICPBRCertificateEquipment
-	 * @see org.demoiselle.signer.extension.serpro.security.certificate.extension.ICPBRCertificateEquipment
+	 * @return ICPBRCertificateEquipment ICPBR Certificate Equipment
+	 * @see org.demoiselle.signer.core.extension.ICPBRCertificateEquipment
 	 */
 	public ICPBRCertificateEquipment getICPBRCertificateEquipment() {
 		return icpBrCertEquipment;
@@ -122,7 +122,7 @@ public class ICPBRSubjectAlternativeNames {
 
 	/**
 	 * 
-	 * @return String
+	 * @return String email
 	 */
 	public String getEmail() {
 		return email;

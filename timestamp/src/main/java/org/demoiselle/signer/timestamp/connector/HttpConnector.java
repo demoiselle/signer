@@ -55,11 +55,11 @@ import org.slf4j.LoggerFactory;
  * 
  * Content-Type: application/timestamp-query
  * 
- *    <<the ASN.1 DER-encoded Time-Stamp Request message>>
+ *    &lt;&lt;the ASN.1 DER-encoded Time-Stamp Request message&gt;&gt;
  *    
  * Content-Type: application/timestamp-reply
  *       
- *    <<the ASN.1 DER-encoded Time-Stamp Response message>>
+ *    &lt;&lt;the ASN.1 DER-encoded Time-Stamp Response message&gt;&gt;
  *    
  *  These MIME objects can be sent and received using common HTTP
  *  processing engines over WWW links and provides a simple browser-

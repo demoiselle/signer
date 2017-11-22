@@ -160,7 +160,7 @@ public class OffLineCRLRepository implements CRLRepository {
     /**
      * When the crl file is not in the local repository, it must be registered in the index file.
      *
-     * @param url 
+     * @param url CRL url to be registered on the index file
      */
     public void addFileIndex(String url) {
         String fileNameCRL = RepositoryUtil.urlToMD5(url);

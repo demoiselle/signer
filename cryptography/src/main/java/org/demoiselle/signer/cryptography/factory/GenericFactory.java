@@ -44,7 +44,7 @@ import org.demoiselle.signer.cryptography.util.MessagesBundle;
 /**
  * Abstract factory that concentrates the reading of the configurations for the specialized factories, as well as the class reflection functionalities.
  * 
- * @see {@link CryptographyFactory}, {@link DigestFactory}
+ * @see org.demoiselle.signer.cryptography.factory.CryptographyFactory org.demoiselle.signer.cryptography.factory.DigestFactory
  * 
  */
 public abstract class GenericFactory<F> {
@@ -61,6 +61,7 @@ public abstract class GenericFactory<F> {
 	 * the value of the variable is stored in the "className" property.
 	 * If the environment variable is not set,
 	 * a default object is built using the abstract method called factoryDefault().
+	 * @return factory instance
 	 */
 	public F factory() {
 		F result = null;
@@ -80,6 +81,8 @@ public abstract class GenericFactory<F> {
 
 	/**
 	 * Instantiate an object from the name of this class
+	 * @param className class name to create
+	 * @return instance of factory for class
 	 */
 	@SuppressWarnings("all")
 	protected F factoryFromClassName(String className) {
@@ -104,12 +107,14 @@ public abstract class GenericFactory<F> {
 
 	/**
 	 * It forces the concrete class to fabricate an default object 
+	 * @return instance of default factory
 	 */
 	public abstract F factoryDefault();
 
 	/**
 	 * Every concrete factory must define in which environment variable
 	 *  it contains the name of the class to be fabricated.
+	 * @return variable name
 	 */
 	protected abstract String getVariableName();
 

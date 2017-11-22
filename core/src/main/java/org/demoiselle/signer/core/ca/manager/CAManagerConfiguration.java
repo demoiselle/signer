@@ -50,7 +50,7 @@ public class CAManagerConfiguration {
     /**
      * to static single instance
      *
-     * @return 
+     * @return current instance
      */
     public static CAManagerConfiguration getInstance() {
         return instance;

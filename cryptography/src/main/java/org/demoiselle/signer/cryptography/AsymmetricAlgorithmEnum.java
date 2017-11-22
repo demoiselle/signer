@@ -86,6 +86,8 @@ public enum AsymmetricAlgorithmEnum {
 	 * Retrieves an item from the enumeration corresponding to the passed parameter.
 	 * The passed parameter must be equal (case insensitive) to the algorithm name of
 	 *  any item in this enumeration, otherwise it will return null.
+	 * @param algorithm algorithm name
+	 * @return algorithm representation
 	 */
 	public static AsymmetricAlgorithmEnum getAsymmetricAlgorithmEnum(String algorithm) {
 		for (AsymmetricAlgorithmEnum value : AsymmetricAlgorithmEnum.values()) {
