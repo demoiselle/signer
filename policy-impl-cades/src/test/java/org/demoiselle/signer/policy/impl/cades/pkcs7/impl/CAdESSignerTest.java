@@ -205,9 +205,9 @@ public class CAdESSignerTest {
 			// INFORMAR o arquivo
 			
 			//
-			 //String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
+			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
+			String fileDirName = "/home/.txt";
 			
-			String fileDirName = "/home/{usuario}/arquivo_assinar";
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -215,10 +215,10 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado NeoID e windows token
-			KeyStore ks = getKeyStoreTokenBySigner();
+			//KeyStore ks = getKeyStoreTokenBySigner();
 			
 			// Para certificado token Linux
-			//KeyStore ks = getKeyStoreToken();
+			KeyStore ks = getKeyStoreToken();
 
 			// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFile();

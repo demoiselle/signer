@@ -43,10 +43,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.UnknownServiceException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -61,8 +57,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
 import javax.xml.bind.DatatypeConverter;
+
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
@@ -74,8 +73,6 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	private static final String STRING_URL_ZIP = "http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip";
 	private static final String STRING_URL_HASH = "http://repositorio.serpro.gov.br/icp-brasil/hashsha512.txt";
-	private static final int TIMEOUT_CONNECTION = 3000;
-	private static final int TIMEOUT_READ = 5000;
 
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class.getName());
 	
@@ -118,7 +115,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			if (Files.exists(pathZip)) {
 
 				// Baixa o hash do endereço online
-				InputStream inputStreamHash = getInputStreamFromURL(getURLHash());
+				InputStream inputStreamHash = Downloads.getInputStreamFromURL(getURLHash());
 
 				// Convert o input stream em string
 				Scanner scannerOnlineHash = new Scanner(inputStreamHash);
@@ -151,7 +148,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			if (!useCache) {
 				// Baixa um novo arquivo
 				LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.file.downloading",getURLZIP() ));
-				InputStream inputStreamZip = getInputStreamFromURL(getURLZIP());
+				InputStream inputStreamZip = Downloads.getInputStreamFromURL(getURLZIP());
 				Files.copy(inputStreamZip, pathZip, StandardCopyOption.REPLACE_EXISTING);
 				inputStreamZip.close();
 
@@ -266,28 +263,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 		return result;
 	}
 
-	/**
-	 * execute file download from defined URL 
-	 * @param stringURL url to read
-	 * @return InputStream
-	 * @throws RuntimeException exception
-	 */
-	public InputStream getInputStreamFromURL(String stringURL) throws RuntimeException {
-		try {
-			URL url = new URL(stringURL);
-			URLConnection connection = url.openConnection();
-			connection.setConnectTimeout(TIMEOUT_CONNECTION);
-			connection.setReadTimeout(TIMEOUT_READ);
-			return connection.getInputStream();
-		} catch (MalformedURLException error) {
-			throw new RuntimeException(chainMessagesBundle.getString("error.malformedURL"), error);
-		} catch (UnknownServiceException error) {
-			throw new RuntimeException(chainMessagesBundle.getString("error.unknown.service"), error);
-		} catch (IOException error) {
-			throw new RuntimeException(chainMessagesBundle.getString("error.io"), error);
-		}
-	}
-
+	
 	/**
 	 * This provider Name
 	 */

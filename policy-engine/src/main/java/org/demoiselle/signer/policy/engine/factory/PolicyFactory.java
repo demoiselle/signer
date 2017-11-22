@@ -36,15 +36,22 @@
  */
 package org.demoiselle.signer.policy.engine.factory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
+import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
+import org.demoiselle.signer.policy.engine.repository.LPARepository;
+import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
  * 
@@ -55,10 +62,9 @@ import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
  */
 public class PolicyFactory {
 
-
     public static final PolicyFactory instance = new PolicyFactory();
-    
-    private final static Logger LOGGER = Logger.getLogger(PolicyFactory.class.getName());
+    private final static Logger LOGGER = Logger.getLogger(PolicyFactory.class.getName());    
+    private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
     public static PolicyFactory getInstance() {
         return PolicyFactory.instance;
@@ -137,6 +143,118 @@ public class PolicyFactory {
     		
     // TODO - Implementar
     public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAXAdES() {
+        return new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();    
+    }
+    
+    
+    /**
+     * Load signature policy for CAdES standard (PKCS) from local repository
+     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+     */
+    
+    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESLocal() {
+        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+        InputStream is;
+		try {
+			Path pathLPA = Paths.get(LPARepository.FULL_PATH_FOLDER_SIGNER.toString(), "LPA_CAdES.der");
+			is = new FileInputStream(pathLPA.toString());
+			ASN1Primitive primitive = this.readANS1FromStream(is);
+	        listaPoliticaAssinatura.parse(primitive);
+	        return listaPoliticaAssinatura;
+		} catch (FileNotFoundException e) {
+			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
+			return null;
+		}   
+    }
+    
+    /**
+     *  Load signature policy for PAdES standard (PDF) from local repository
+     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+     */
+    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdESLocal() {
+        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+        InputStream is;
+        try {
+        	Path pathLPA = Paths.get(LPARepository.FULL_PATH_FOLDER_SIGNER.toString(), "LPA_PAdES.der");
+        	is = new FileInputStream(pathLPA.toString());
+			ASN1Primitive primitive = this.readANS1FromStream(is);
+	        listaPoliticaAssinatura.parse(primitive);
+	        return listaPoliticaAssinatura;
+		} catch (FileNotFoundException e) {
+			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
+			return null;
+		}   
+    }
+    
+    /**
+     *  Load signature policy for XAdES (XML) standard from local repository
+     * @return
+     */
+    		
+    // TODO - Implementar
+    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAXAdESLocal() {
+        return new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();    
+    }
+    
+      
+    /**
+     * Load signature policy for CAdES standard (PKCS) from url
+     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+     */
+    
+    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESUrl() {
+        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+        try{
+        	String conURL = ListOfSubscriptionPolicies.CAdES_URL.getUrl();
+        	InputStream is = Downloads.getInputStreamFromURL(conURL);
+        	ASN1Primitive primitive = this.readANS1FromStream(is);
+            listaPoliticaAssinatura.parse(primitive);      
+            is.close();
+            if (!LPARepository.saveLocalLPA(conURL, "LPA_CAdES.der")){
+            	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
+            }            
+        }catch(RuntimeException ex){
+        	ex.printStackTrace();        	
+		} catch (IOException e) {
+			e.printStackTrace();			
+		}
+        
+        return listaPoliticaAssinatura;
+            
+    }
+    
+    /**
+     *  Load signature policy for PAdES standard (PDF) from url
+     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+     */
+    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdESUrl() {
+        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+        InputStream is;
+		try {
+			String conURL = ListOfSubscriptionPolicies.PAdES_URL.getUrl();
+			is = Downloads.getInputStreamFromURL(conURL);
+			ASN1Primitive primitive = this.readANS1FromStream(is);
+			is.close();
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_PAdES.der")){
+	        	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_PAdES.der"));
+	        }	        
+	        listaPoliticaAssinatura.parse(primitive);	       
+		} catch (RuntimeException e) {			
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 return listaPoliticaAssinatura; 
+    }
+    
+   
+    /**
+     *  Load signature policy for XAdES (XML) standard from url
+     * @return
+     */
+    		
+    // TODO - Implementar
+    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAXAdESUrl() {
         return new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();    
     }
     
@@ -272,6 +390,7 @@ public class PolicyFactory {
      * 
      * List of policies:
      *  http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
+     *  http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
      *
      */
     public enum ListOfSubscriptionPolicies {
@@ -280,22 +399,23 @@ public class PolicyFactory {
         LPAV2("/org/demoiselle/signer/policy/engine/artifacts/LPAv2.der"),
         CAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_CAdES.der"),
         XADES("/org/demoiselle/signer/policy/engine/artifacts/LPA_XAdES.xml"),
-        PAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_PAdES.der");
+        PAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_PAdES.der"),
 
-        // TODO  verificar se eh possivel utilizar FILE e URL
         
-        //http://politicas.icpbrasil.gov.br/LPA.der
-        //http://politicas.icpbrasil.gov.br/LPAv2.der
-        //http://politicas.icpbrasil.gov.br/LPA_CAdES.der
-        //http://politicas.icpbrasil.gov.br/LPA_XAdES.xml
-        //http://politicas.icpbrasil.gov.br/LPA_PAdES.der
+        LPAV1_URL("http://politicas.icpbrasil.gov.br/LPA.der"),
+        LPAV2_URL("http://politicas.icpbrasil.gov.br/LPAv2.der"),
+        CAdES_URL("http://politicas.icpbrasil.gov.br/LPA_CAdES.der"),
+        XADES_URL("http://politicas.icpbrasil.gov.br/LPA_XAdES.xml"),
+        PAdES_URL("http://politicas.icpbrasil.gov.br/LPA_PAdES.der");
         
-        //private String url;
+        
+        private String url;
         private String file;
 
         
         private ListOfSubscriptionPolicies(String file) {
             this.file = file;
+            this.url = file;
         }
         
 //        private ListOfSubscriptionPolicies(String file, String url) {
@@ -303,12 +423,14 @@ public class PolicyFactory {
 //            this.url = url;
 //        }
 
-//        public String getUrl() {
-//            return url;
-//        }
+        public String getUrl() {
+            return url;
+        }
 
         public String getFile() {
             return file;
         }        
     }
+    
+    
 }
