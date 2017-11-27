@@ -93,6 +93,14 @@ public class ICPBRCertificatePJ {
 	public String getResponsibleName() {
 		return oID_2_16_76_1_3_2.getName();
 	}
+	
+	/**
+	 * 
+	 * @return CPF (a Brazilian document ) of the person responsible for the certificate
+	 */
+	public String getResponsibleCPF() {
+		return oID_2_16_76_1_3_4.getCPF();
+	}
 
 	/**
 	 * 
