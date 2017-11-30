@@ -536,7 +536,7 @@ public class CAdESSigner implements PKCS7Signer {
 			if (previewSignature != null && previewSignature.length > 0) {
 				cmsPreviewSignedData = new CMSSignedData(new CMSAbsentContent(), previewSignature);
 				Collection<X509Certificate> previewCerts = this.getSignersCertificates(cmsPreviewSignedData);
-//				previewCerts.add(this.certificate);
+				//previewCerts.add(this.certificate);
 				certStore = previewCerts.toArray(new Certificate[] {});
 			}
 
@@ -719,18 +719,20 @@ public class CAdESSigner implements PKCS7Signer {
 				vNewSigners.remove(oSi);
 				oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
 				vNewSigners.add(oSi);
-				while (it.hasNext()) {
-					SignerInformation oSi2 = it.next();
-					vNewSigners.add(oSi2);
-				}				
-				// TODO Estudar este método de contra-assinatura posteriormente
-				if (previewSignature != null && previewSignature.length > 0) {
-					 vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
-				}				
-				SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(vNewSigners);
-				CMSSignedData oSignedData = cmsSignedData;
-				cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
-			}						
+				//while (it.hasNext()) {
+				//	SignerInformation oSi2 = it.next();
+				//	vNewSigners.add(oSi2);
+				//}				
+				
+			}	
+			 
+			//TODO Estudar este método de contra-assinatura posteriormente
+			if (previewSignature != null && previewSignature.length > 0) {
+				 vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
+			}				
+			SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(vNewSigners);
+			CMSSignedData oSignedData = cmsSignedData;
+			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
 			
 			byte[] result = cmsSignedData.getEncoded();
 			
