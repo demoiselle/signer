@@ -146,6 +146,13 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
                             keyValue = "";
                         }
                         break;
+                    case CPF_RESPONSIBLE_PESSOA_JURIDICA:
+                        if (cert.hasCertificatePJ()) {
+                            keyValue = cert.getICPBRCertificatePJ().getResponsibleCPF();
+                        } else {
+                            keyValue = "";
+                        }
+                        break;
                     case EMAIL:
                         keyValue = cert.getEmail();
                         break;
