@@ -132,6 +132,7 @@ public interface Signer {
      * Check a digital signature with attached content, informed by parameter signedData
      * @param signedData attached signature to be checked
      * @return List&lt;SignatureInformations&gt; list of signature information
+     * @deprecated this method will be removed to Checker class.
      */
     abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
     
@@ -141,6 +142,7 @@ public interface Signer {
      * @param content content to be checked
      * @param signedData detached signature
      * @return List&lt;SignatureInformations&gt; list of signature information
+     * @deprecated this method will be removed to Checker class.
      */
     
     abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
@@ -154,6 +156,7 @@ public interface Signer {
      * @param calculatedHashContent calculated hash
      * @param signedData detached signature
      * @return List&lt;SignatureInformation&gt; list of signature information
+     * @deprecated this method will be removed to Checker class.
     */
    abstract public List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
 

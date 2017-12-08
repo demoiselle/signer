@@ -56,7 +56,10 @@ import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.List;
+
 import javax.net.ssl.KeyManagerFactory;
+
+import org.apache.commons.codec.binary.Base64;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
@@ -206,7 +209,7 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/home/.txt";
+			String fileDirName = "/home/arquivo.txt";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -237,6 +240,7 @@ public class CAdESSignerTest {
 			// para arquivo
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_2);
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
 			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
@@ -252,7 +256,7 @@ public class CAdESSignerTest {
 			config.setCached(true);
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
-			File file = new File(fileDirName + ".p7s");
+			File file = new File(fileDirName + "rv_detached.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -275,7 +279,7 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM HASH *****************");
 
 			// INFORMAR o arquivo para gerar o hash
-			String fileDirName = "/home/{usuario}/arquivo";
+			String fileDirName = "/home/teste.txt";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -292,10 +296,10 @@ public class CAdESSignerTest {
 
 			
 			// Para certificado em token
-			//KeyStore ks = getKeyStoreToken();
+			KeyStore ks = getKeyStoreToken();
 			
 			// Para certificado NeoID e windows token
-			KeyStore ks = getKeyStoreTokenBySigner();
+			//KeyStore ks = getKeyStoreTokenBySigner();
 
 
 			String alias = getAlias(ks);
@@ -307,6 +311,13 @@ public class CAdESSignerTest {
 			java.security.MessageDigest md = java.security.MessageDigest
 					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			byte[] hash = md.digest(fileToSign);
+			
+			
+			String contentEncoded = Base64.encodeBase64String(fileToSign);	                	
+        	System.out.println("contentEncoded : "+contentEncoded);	                	
+            String hashEncoded = new String(Base64.encodeBase64(hash));	                    
+            System.out.println("hashEncoded: "+hashEncoded);
+			
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
@@ -328,25 +339,14 @@ public class CAdESSignerTest {
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do hash");
 			byte[] signature = signer.doHashSign(hash);
-
-			/* Valida o conteudo antes de gravar em arquivo */
-			System.out.println("Efetuando a validacao da assinatura.");
-			
-			List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToSign, signature);
-
-			if (signaturesInfo != null) {
-				System.out.println("A assinatura foi validada.");
-				assertTrue(true);
-			} else {
-				System.out.println("A assinatura foi invalidada!");
-				assertTrue(false);
-			}
-
+			String signatureEncoded = new String(Base64.encodeBase64(signature));
+			System.out.println("signatureEncoded :"+signatureEncoded);
 			File file = new File(fileDirName + ".p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
 			os.close();
+			assertTrue(true);
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
 			assertTrue(false);
@@ -363,7 +363,7 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "/home/{usuario}/arquivo_assinar.txt";
+			String fileDirName = "/home/arquivo.txt";
 			
 			
 			
@@ -404,24 +404,12 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Com conteudo atachado
 			byte[] signature = signer.doAttachedSign(fileToSign);
-
-			boolean checked = false;
-			/* Valida o conteudo antes de gravar em arquivo */
-			System.out.println("Efetuando a validacao da assinatura.");
-			List<SignatureInformations> signaturesInfo = signer.checkAttachedSignature(signature);
-
-			if (signaturesInfo != null) {
-				System.out.println("A assinatura foi validada.");
-				assertTrue(true);
-			} else {
-				System.out.println("A assinatura foi invalidada!");
-				assertTrue(false);
-			}
-			File file = new File(fileDirName + ".p7s");
+			File file = new File(fileDirName + "_rt_atached.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
 			os.close();
+			assertTrue(true);
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
 			assertTrue(false);			
@@ -438,8 +426,8 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "local_e_nome_do_arquivo_para_assinar";
-			String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+			String fileDirName = "";
+			String fileSignatureDirName = "";
 			
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
@@ -447,8 +435,12 @@ public class CAdESSignerTest {
 			// quando certificado em arquivo, precisa informar a senha
 			char[] senha = "senha".toCharArray();
 
+			// Para certificado em Neo Id e windows
+			 //KeyStore ks = getKeyStoreTokenBySigner();
+
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreTokenBySigner();
+			KeyStore ks = getKeyStoreToken();
+
 			
 
 			// Para certificado em arquivo A1
@@ -481,31 +473,89 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Assinatura desatachada
 			byte[] signature = signer.doDetachedSign(fileToSign, signatureFile);
-
-			/* Valida o conteudo antes de gravar em arquivo */
-			System.out.println("Efetuando a validacao da assinatura.");
-			List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToSign, signature);
-
-			if (signaturesInfo != null) {
-				System.out.println("A assinatura foi validada.");
-				assertTrue(true);
-			} else {
-				System.out.println("A assinatura foi invalidada!");
-				assertTrue(false);
-			}
-			File file = new File(fileDirName + "-co.p7s");
+			File file = new File(fileDirName + "-co_4.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
 			os.close();
-			
-
+			System.out.println("------------------ ok --------------------------");
+			assertTrue(true);
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
 			assertTrue(false);
 		}
 	}
 
+	/**
+	 * Teste de coassinatura anexada
+	 */
+	//@Test
+	public void testSignCoAtached() {
+		try {
+
+			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
+
+			// INFORMAR o arquivo
+			String fileDirName = "";
+			String fileSignatureDirName = "";
+			
+			byte[] fileToSign = readContent(fileDirName);
+			byte[] signatureFile = readContent(fileSignatureDirName);
+
+			// quando certificado em arquivo, precisa informar a senha
+			char[] senha = "senha".toCharArray();
+
+			// Para certificado em Neo Id e windows
+			 //KeyStore ks = getKeyStoreTokenBySigner();
+
+			// Para certificado em Token
+			KeyStore ks = getKeyStoreToken();
+
+			
+
+			// Para certificado em arquivo A1
+			// KeyStore ks = getKeyStoreFile();
+			
+			
+			// Para certificados no so windows (mascapi)
+			// KeyStore ks = getKeyStoreOnWindows();
+
+			String alias = getAlias(ks);
+			
+			/* Parametrizando o objeto doSign */
+			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+			signer.setCertificates(ks.getCertificateChain(alias));
+
+			// para token
+			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			// politica sem carimbo de tempo
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			// com carimbo de tempo
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+
+			// para mudar o algoritimo
+			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+
+			/* Realiza a assinatura do conteudo */
+			System.out.println("Efetuando a  assinatura do conteudo");
+			// Assinatura desatachada
+			byte[] signature = signer.doAttachedSign(fileToSign, signatureFile);
+			File file = new File(fileDirName + "-co_atached.p7s");
+			FileOutputStream os = new FileOutputStream(file);
+			os.write(signature);
+			os.flush();
+			os.close();
+			System.out.println("------------------ ok --------------------------");
+			assertTrue(true);
+		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
+			ex.printStackTrace();
+			assertTrue(false);
+		}
+	}
+	
 	
 	/**
 	 * Teste de coassinatura com envio do hash calculado
@@ -566,156 +616,17 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Assinatura desatachada
 			byte[] signature = signer.doHashCoSign(hash, signatureFile);
-
-			/* Valida o conteudo antes de gravar em arquivo */
-			System.out.println("Efetuando a validacao da assinatura.");
-			List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToSign, signature);
-
-			if (signaturesInfo != null) {
-				System.out.println("A assinatura foi validada.");
-				assertTrue(true);
-			} else {
-				System.out.println("A assinatura foi invalidada!");
-				assertTrue(false);
-			}
 			File file = new File(fileDirName + "-co.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
 			os.close();
-			
-
+			assertTrue(true);
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
 			assertTrue(false);
 		}
-	}
-	
-	
-//	@Test
-	public void testVerifyDetachedSignature() {
-		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
-		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
-		
-		
-		
-		
-		byte[] fileToVerify = readContent(fileToVerifyDirName);
-		byte[] signatureFile = readContent(fileSignatureDirName);
-		
-		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-
-		System.out.println("Efetuando a validacao da assinatura");
-		List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(fileToVerify, signatureFile);
-		
-		if (signaturesInfo != null) {
-			System.out.println("A assinatura foi validada.");
-			for (SignatureInformations si : signaturesInfo){
-				System.out.println(si.getSignDate());
-				if (si.getTimeStampSigner() != null){
-					System.out.println("Serial"+si.getTimeStampSigner().toString());
-				}
-				for(X509Certificate cert : si.getChain()){
-					BasicCertificate certificate = new BasicCertificate(cert);
-					if (!certificate.isCACertificate()){
-						System.out.println(certificate.toString());
-					}												
-				}
-				for (String valErr : si.getValidatorErrors()){
-					System.out.println(valErr);
-				}				
-			}
-			assertTrue(true);	
-		
-		} else {
-			System.out.println("A assinatura foi invalidada!");
-			assertTrue(false);
-		}
-	}
-
-	
-	//@Test
-	public void testVerifyAttachedSignature() {
-		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
-		byte[] signatureFile = readContent(fileSignatureDirName);
-
-		PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-
-		System.out.println("Efetuando a validacao da assinatura");
-		List<SignatureInformations> signaturesInfo =  signer.checkAttachedSignature(signatureFile);
-		if (signaturesInfo != null) {
-			System.out.println("A assinatura foi validada.");
-			for (SignatureInformations si : signaturesInfo){
-				System.out.println(si.getSignDate());
-				if (si.getTimeStampSigner() != null){
-					System.out.println("Serial"+si.getTimeStampSigner().toString());
-				}
-				for(X509Certificate cert : si.getChain()){
-					BasicCertificate certificate = new BasicCertificate(cert);
-					if (!certificate.isCACertificate()){
-						System.out.println(certificate.toString());
-					}												
-				}
-				System.out.println(si.getSignaturePolicy().toString());
-			}
-			assertTrue(true);		
-		
-		} else {
-			System.out.println("A assinatura foi invalidada!");
-			assertTrue(false);
-		}
-	}
-	
-	
-	// @Test
-	public void testVerifySignatureByHash() {
-		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
-		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
-		
-		
-							
-		byte[] fileToVerify = readContent(fileToVerifyDirName);
-				
-		byte[] signatureFile = readContent(fileSignatureDirName);
-
-		java.security.MessageDigest md;
-		try {
-			md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
-		
-			// gera o hash do arquivo que foi assinado
-			byte[] hash = md.digest(fileToVerify);
-		
-			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-		
-			System.out.println("Efetuando a validacao da assinatura");
-					
-			List<SignatureInformations> signaturesInfo = signer.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signatureFile);
-			if (signaturesInfo != null) {
-				System.out.println("A assinatura foi validada.");
-				for (SignatureInformations si : signaturesInfo){
-					System.out.println(si.getSignDate());
-					if (si.getTimeStampSigner() != null){
-						System.out.println("Serial"+si.getTimeStampSigner().toString());
-					}
-					for(X509Certificate cert : si.getChain()){
-						BasicCertificate certificate = new BasicCertificate(cert);
-						if (!certificate.isCACertificate()){
-							System.out.println(certificate.toString());
-						}												
-					}
-					System.out.println(si.getSignaturePolicy().toString());
-				}
-				assertTrue(true);
-			} else {
-				System.out.println("A assinatura foi invalidada!");
-				assertTrue(false);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			assertTrue(false);
-		}
-	}
+	}	
 
 	private byte[] readContent(String parmFile) {
 		byte[] result = null;
@@ -742,10 +653,8 @@ public class CAdESSignerTest {
 				System.out.println("alias..............: " + alias);
 				System.out.println("iskeyEntry"+ ks.isKeyEntry(alias));
 				System.out.println("containsAlias"+ks.containsAlias(alias));
-				//System.out.println(""+ks.getKey(alias, null));
 				certificates = ks.getCertificateChain(alias);
 			}
-
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
