@@ -36,14 +36,20 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
+import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
+import org.demoiselle.signer.core.timestamp.TimeStampGeneratorSelector;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
 
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,6 +82,8 @@ import org.slf4j.LoggerFactory;
  *   CompleteCertificateRefs attribute;
  *   CompleteRevocationRefs attribute.
  *   
+ *   OCTETSTRING do campo signature do objeto SignerInfo e o valor dos atributos SignatureTimeStamp, CompleteCertificateReferences e CompleteRevocationReferences.
+ *   
  *   
  */
 public class EscTimeStamp implements UnsignedAttribute {
@@ -83,10 +91,20 @@ public class EscTimeStamp implements UnsignedAttribute {
     private static final Logger logger = LoggerFactory.getLogger(RevocationRefs.class);
     private final String identifier = "1.2.840.113549.1.9.16.2.25";
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+    private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
+    private PrivateKey privateKey = null;
+    private Certificate[] certificates = null;
+    byte[] content = null;
+    byte[] hash = null;
+    
+    
 
     @Override
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
-        logger.info(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
+    	this.privateKey = privateKey;
+        this.certificates = certificates;
+        this.content = content;
+        this.hash = hash;
     }
 
     @Override
@@ -96,6 +114,25 @@ public class EscTimeStamp implements UnsignedAttribute {
 
     @Override
     public Attribute getValue() throws SignerException {
+    	try {
+            logger.info(cadesMessagesBundle.getString("info.tsa.connecting"));
+
+            if (timeStampGenerator != null) {
+                  //Inicializa os valores para o timestmap
+            	timeStampGenerator.initialize(content, privateKey, certificates, hash);
+
+                //Obtem o carimbo de tempo atraves do servidor TSA
+                byte[] response = timeStampGenerator.generateTimeStamp();
+
+                //Valida o carimbo de tempo gerado
+                timeStampGenerator.validateTimeStamp(content, response, hash);
+
+                return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(ASN1Primitive.fromByteArray(response)));
+            } else {
+                throw new SignerException(cadesMessagesBundle.getString("error.tsa.not.found"));
+            }
+        } catch (SecurityException | IOException ex) {
+        }
         throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
     }
 

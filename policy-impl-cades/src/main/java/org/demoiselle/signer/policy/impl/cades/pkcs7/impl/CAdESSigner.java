@@ -704,10 +704,18 @@ public class CAdESSigner implements PKCS7Signer {
 					.getMandatedUnsignedAttr().getObjectIdentifiers()) {
 						SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 						.factory(objectIdentifier.getValue());
-						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())){
+						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())) 
+						{
 							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, oSi.getSignature(),
 									signaturePolicy, this.hash);							
-						}else{
+						}
+						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")) //EscTimeStamp
+						{
+							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, content,
+									signaturePolicy, this.hash);
+						}
+						
+						else{
 							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
 									signaturePolicy, this.hash);
 						}					
