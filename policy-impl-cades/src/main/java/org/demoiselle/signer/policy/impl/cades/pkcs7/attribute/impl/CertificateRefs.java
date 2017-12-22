@@ -112,11 +112,12 @@ public class CertificateRefs implements UnsignedAttribute {
     public Attribute getValue() throws SignerException {
     	
     	try {
-    		OtherCertID[] arrayOtherCertID = new OtherCertID[certificates.length];	
-    		  for (int i = 0; i < certificates.length; i++ ){
+    		int chainSize = certificates.length -1;
+    		OtherCertID[] arrayOtherCertID = new OtherCertID[chainSize];	
+    		  for (int i = 1; i <= chainSize; i++ ){
     			  	X509Certificate issuerCert = null;
     		  	    X509Certificate cert = (X509Certificate) certificates[i];
-    		  	    if (i+1 < certificates.length){  
+    		  	    if (i < chainSize){  
     		  	    	issuerCert = (X509Certificate) certificates[i+1];
     		  	    }else{ // raiz
     		  	    	issuerCert = (X509Certificate) certificates[i];
@@ -131,7 +132,7 @@ public class CertificateRefs implements UnsignedAttribute {
     				IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
     				AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);
     				OtherCertID otherCertID = new OtherCertID(algId, certHash, issuerSerial);
-    				arrayOtherCertID[i] = otherCertID; 
+    				arrayOtherCertID[i -1] = otherCertID; 
     		 }	 
     		
 			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new ASN1Encodable[] { new DERSequence(arrayOtherCertID) }));
