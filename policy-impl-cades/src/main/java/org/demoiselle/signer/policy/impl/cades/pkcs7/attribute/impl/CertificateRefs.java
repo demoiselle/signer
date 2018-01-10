@@ -40,7 +40,6 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
-
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -49,7 +48,6 @@ import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.ess.OtherCertID;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.GeneralName;
@@ -93,7 +91,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute
  */
 public class CertificateRefs implements UnsignedAttribute {
 
-    private final String identifier = PKCSObjectIdentifiers.id_aa_ets_certificateRefs.getId();
+    private final String identifier = "1.2.840.113549.1.9.16.2.21";
         
     private Certificate[] certificates = null;
 
@@ -140,48 +138,4 @@ public class CertificateRefs implements UnsignedAttribute {
     		throw new SignerException(e.getMessage());
 		}        
     }
-    
-    /*
-     List<CertificateRef> certificateRefs = new ArrayList<CertificateRef>();
-
-  	public List<CertificateRef> getCertificateRefs() {
-
-    		final List<CertificateRef> list = new ArrayList<CertificateRef>();
-
-    		final Attribute attribute = getUnsignedAttribute(PKCSObjectIdentifiers.id_aa_ets_certificateRefs);
-    		if (attribute == null) {
-    			return list;
-    		}
-
-    		final ASN1Set attrValues = attribute.getAttrValues();
-    		if (attrValues.size() <= 0) {
-    			return list;
-    		}
-
-    		final ASN1Encodable attrValue = attrValues.getObjectAt(0);
-    		final ASN1Sequence completeCertificateRefs = (ASN1Sequence) attrValue;
-
-    		for (int i = 0; i < completeCertificateRefs.size(); i++) {
-
-    			final OtherCertID otherCertId = OtherCertID.getInstance(completeCertificateRefs.getObjectAt(i));
-    			final CertificateRef certId = new CertificateRef();
-    			certId.setDigestAlgorithm(DigestAlgorithm.forOID(otherCertId.getAlgorithmHash().getAlgorithm().getId()));
-    			certId.setDigestValue(otherCertId.getCertHash());
-
-    			final IssuerSerial issuer = otherCertId.getIssuerSerial();
-    			if (issuer != null) {
-    				final GeneralNames issuerName = issuer.getIssuer();
-    				if (issuerName != null) {
-    					certId.setIssuerName(issuerName.toString());
-    				}
-    				final ASN1Integer issuerSerial = issuer.getSerial();
-    				if (issuerSerial != null) {
-    					certId.setIssuerSerial(issuerSerial.toString());
-    				}
-    			}
-    			list.add(certId);
-    		}
-    		return list;
-    	}
-*/
 }

@@ -36,6 +36,7 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.Provider;
@@ -57,6 +58,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
@@ -142,6 +144,10 @@ public class CAdESSigner implements PKCS7Signer {
 	private List<SignatureInformations> signatureInfo = new ArrayList<SignatureInformations>();
 	private String policyName;
 	private CertificateManager certificateManager;
+	private SignedOrUnsignedAttribute signatureTimeStampTokenAttr;
+	private SignedOrUnsignedAttribute certificateRefsAttr;
+	private SignedOrUnsignedAttribute revocationRefsAttr;
+	private byte[] escTimeStampContent;
 
 
 	public CAdESSigner() {
@@ -707,21 +713,41 @@ public class CAdESSigner implements PKCS7Signer {
 						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())) 
 						{
 							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, oSi.getSignature(),
-									signaturePolicy, this.hash);							
+									signaturePolicy, this.hash);
 						}
 						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")) //EscTimeStamp
 						{
-							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, content,
+							
+							ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+							outputStream.write(oSi.getSignature());
+							AttributeTable varUnsignedAttributes = oSi.getUnsignedAttributes();
+							Attribute varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
+							outputStream.write(varAttribute.getAttrType().getEncoded());
+							outputStream.write(varAttribute.getAttrValues().getEncoded());
+							varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_certificateRefs.getId()));
+							outputStream.write(varAttribute.getAttrType().getEncoded());
+							outputStream.write(varAttribute.getAttrValues().getEncoded());
+							varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_revocationRefs.getId()));
+							outputStream.write(varAttribute.getAttrType().getEncoded());
+							outputStream.write(varAttribute.getAttrValues().getEncoded());
+							escTimeStampContent = outputStream.toByteArray( );						
+							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, escTimeStampContent,
 									signaturePolicy, this.hash);
 						}
 						
 						else{
 							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
 									signaturePolicy, this.hash);
-						}					
+						}						
 						unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
+						AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
+						vNewSigners.remove(oSi);
+						oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
+						vNewSigners.add(oSi);
 				}
 			}
+			
+			/*
 			if (unsignedAttributes.size() >0){
 				AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
 				vNewSigners.remove(oSi);
@@ -732,8 +758,8 @@ public class CAdESSigner implements PKCS7Signer {
 				//	vNewSigners.add(oSi2);
 				//}				
 				
-			}	
-			 
+			}*/	
+			
 			//TODO Estudar este método de contra-assinatura posteriormente
 			if (previewSignature != null && previewSignature.length > 0) {
 				 vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
