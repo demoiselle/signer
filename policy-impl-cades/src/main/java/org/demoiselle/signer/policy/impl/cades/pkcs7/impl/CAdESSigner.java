@@ -144,9 +144,6 @@ public class CAdESSigner implements PKCS7Signer {
 	private List<SignatureInformations> signatureInfo = new ArrayList<SignatureInformations>();
 	private String policyName;
 	private CertificateManager certificateManager;
-	private SignedOrUnsignedAttribute signatureTimeStampTokenAttr;
-	private SignedOrUnsignedAttribute certificateRefsAttr;
-	private SignedOrUnsignedAttribute revocationRefsAttr;
 	private byte[] escTimeStampContent;
 
 
@@ -241,14 +238,14 @@ public class CAdESSigner implements PKCS7Signer {
 				logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
 				AttributeTable signedAttributes = signer.getSignedAttributes();
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
-					throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.not.found"));
+					throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}
 
 				// Realiza a verificação dos atributos não assinados
 				logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
 				AttributeTable unsignedAttributes = signer.getUnsignedAttributes();
 				if ((unsignedAttributes == null) || (unsignedAttributes != null && unsignedAttributes.size() == 0)) {
-					logger.info(cadesMessagesBundle.getString("error.unsigned.attribute.not.found"));
+					logger.info(cadesMessagesBundle.getString("error.unsigned.attribute.table.not.found"));
 				}
 
 				// Mostra data e  hora da assinatura, não é carimbo de tempo

@@ -156,7 +156,7 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// informar onde esta o arquivo
-			InputStream ksIs = new FileInputStream("/home/{usuario}/arquivo.p12");
+			InputStream ksIs = new FileInputStream("caminho arquivo p12");
 			ks.load(ksIs, senha);
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -209,7 +209,7 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/home/arquivo.txt";
+			String fileDirName = "caminho arquivo assinar";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -218,10 +218,10 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado NeoID e windows token
-			//KeyStore ks = getKeyStoreTokenBySigner();
+			KeyStore ks = getKeyStoreTokenBySigner();
 			
 			// Para certificado token Linux
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFile();
@@ -239,12 +239,13 @@ public class CAdESSignerTest {
 
 			// para arquivo
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
-			// politica sem carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_2);
+			// politica referencia básica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			 //signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
+			// referencia de validação
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_2);
 			// para mudar o algoritimo
 			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
 
@@ -256,7 +257,7 @@ public class CAdESSignerTest {
 			config.setCached(true);
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
-			File file = new File(fileDirName + "rv_detached.p7s");
+			File file = new File(fileDirName + "_detached.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -360,24 +361,26 @@ public class CAdESSignerTest {
 	public void testSignAttached() {
 		try {
 			
-			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
+			System.out.println("******** TESTANDO COM CONTEÚDO ATACHADO*****************");
 
 			// INFORMAR o arquivo
 			String fileDirName = "/home/arquivo.txt";
 			
 			
-			
-			
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			//char[] senha = "senha".toCharArray();
+			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
+			
+			// Para certificado NeoID e windows token
+			//KeyStore ks = getKeyStoreTokenBySigner();
+
 
 			// Para certificado em arquivo A1
-			// KeyStore ks = getKeyStoreFile();
+			//KeyStore ks = getKeyStoreFile();
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
@@ -395,7 +398,10 @@ public class CAdESSignerTest {
 			// politica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			
+			// Referencia de validação
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RA_CADES_2_3);
 
 			// para mudar o algoritimo
 			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -404,7 +410,7 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Com conteudo atachado
 			byte[] signature = signer.doAttachedSign(fileToSign);
-			File file = new File(fileDirName + "_rt_atached.p7s");
+			File file = new File(fileDirName + "_ra_atached.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -426,9 +432,9 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "";
-			String fileSignatureDirName = "";
-			
+			String fileDirName = "caminha do arquivo do conteudo";
+			String fileSignatureDirName = "caminho do arquivo com a(s) assinatura(s) .p7s";
+					
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
 
@@ -436,10 +442,10 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Neo Id e windows
-			 //KeyStore ks = getKeyStoreTokenBySigner();
+			 KeyStore ks = getKeyStoreTokenBySigner();
 
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			// KeyStore ks = getKeyStoreToken();
 
 			
 

@@ -90,7 +90,7 @@ public interface PKCS7Checker extends Checker {
      * get Signature Information for a checked signature
      * @return List&lt;SignatureInformations&gt;
      */
-    abstract public List<SignatureInformations> getSignatureInfo();
+    abstract public List<SignatureInformations> getSignaturesInfo();
 
     
  }

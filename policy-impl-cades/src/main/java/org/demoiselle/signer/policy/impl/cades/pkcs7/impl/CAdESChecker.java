@@ -49,13 +49,11 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.cms.CMSAttributes;
-import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -106,7 +104,7 @@ public class CAdESChecker implements PKCS7Checker {
 	private byte[] hash = null;
 	private Map<String, byte[]> hashes = new HashMap<String, byte[]>();
 	private boolean checkHash = false;
-	private List<SignatureInformations> signatureInfo = new ArrayList<SignatureInformations>();
+	private List<SignatureInformations> signaturesInfo = new ArrayList<SignatureInformations>();
 	private String policyName;
 	private CertificateManager certificateManager;
 
@@ -157,10 +155,11 @@ public class CAdESChecker implements PKCS7Checker {
 
 		// Realização da verificação básica de todas as assinaturas
 		while (it.hasNext()) {
+			SignatureInformations signatureInfo = new SignatureInformations();
 			try {
 				SignerInformation signerInfo = (SignerInformation) it.next();
 				SignerInformationStore signerInfoStore = signerInfo.getCounterSignatures();
-				SignatureInformations signatureInfo = new SignatureInformations();
+				
 				logger.info("Foi(ram) encontrada(s) " + signerInfoStore.size() + " contra-assinatura(s).");
 
 				@SuppressWarnings("unchecked")
@@ -194,7 +193,7 @@ public class CAdESChecker implements PKCS7Checker {
 				logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
 				AttributeTable signedAttributes = signerInfo.getSignedAttributes();
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
-					throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}
 				
 				// Validando atributos assinados de acordo com a politica
@@ -202,8 +201,6 @@ public class CAdESChecker implements PKCS7Checker {
 				idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId()));
 				if (idSigningPolicy == null) {
 						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "idSigningPolicy"));
-					throw new SignerException(
-							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "idSigningPolicy"));
 				}else{
 					for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
 						String policyOnSignature = p.nextElement().toString();
@@ -217,9 +214,7 @@ public class CAdESChecker implements PKCS7Checker {
 				}
 				if (signaturePolicy == null){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", "idSigningPolicy"));
-					throw new SignerException(
-							cadesMessagesBundle.getString("error.policy.on.component.not.found", "idSigningPolicy"));					
-				}
+					}
 				if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
 						.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
 						.getObjectIdentifiers() != null) {
@@ -230,7 +225,7 @@ public class CAdESChecker implements PKCS7Checker {
 							Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
 							logger.info(oi);
 							if (signedAtt == null){
-								throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
+								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
 							}										
 					}
 				}
@@ -259,7 +254,7 @@ public class CAdESChecker implements PKCS7Checker {
 							Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
 							logger.info(oi);
 							if (unSignedAtt == null){
-								throw new SignerException(cadesMessagesBundle.getString("error.unsigned.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
+								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.unsigned.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
 							}
 							if (oi.equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())){
 								//Verificando timeStamp
@@ -276,25 +271,23 @@ public class CAdESChecker implements PKCS7Checker {
 							}
 						}
 				}							
-
-
 				
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				signatureInfo.setSignDate(dataHora);
 				signatureInfo.setChain(varChain);
 				signatureInfo.setSignaturePolicy(signaturePolicy);
-				this.getSignatureInfo().add(signatureInfo);
+				this.getSignaturesInfo().add(signatureInfo);
 				
 			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
-				throw new SignerException(ex);
+				signatureInfo.getValidatorErrors().add(ex.getMessage());
 			} catch (CMSException ex) {				
 				// When file is mismatch with sign
 				if (ex instanceof CMSSignerDigestMismatchException)
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
 				else
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid"), ex);
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid"));
 			} catch (ParseException e) {
-				throw new SignerException(e);
+				signatureInfo.getValidatorErrors().add(e.getMessage());
 			}
 		}
 
@@ -376,7 +369,7 @@ public class CAdESChecker implements PKCS7Checker {
 	@Override
 	public  List<SignatureInformations> checkAttachedSignature(byte[] signedData){
 		if (this.check(null, signedData)){
-			return this.getSignatureInfo();
+			return this.getSignaturesInfo();
 		}else{
 			return null;
 		}
@@ -385,7 +378,7 @@ public class CAdESChecker implements PKCS7Checker {
 	@Override
 	public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData){
 		if (this.check(content, signedData)){
-			return this.getSignatureInfo();
+			return this.getSignaturesInfo();
 		}else{
 			return null;
 		}
@@ -399,7 +392,7 @@ public class CAdESChecker implements PKCS7Checker {
 		this.hashes.put(digestAlgorithmOID, calculatedHashContent);
 		this.setHash(calculatedHashContent);
 		if (this.check(null, signedData)){
-			return this.getSignatureInfo();
+			return this.getSignaturesInfo();
 		}else{
 			return null;
 		}		
@@ -415,12 +408,12 @@ public class CAdESChecker implements PKCS7Checker {
 	
 	
 	@Override
-	public List<SignatureInformations> getSignatureInfo() {
-		return signatureInfo;
+	public List<SignatureInformations> getSignaturesInfo() {
+		return signaturesInfo;
 	}
 
-	public void setSignatureInfo(List<SignatureInformations> signatureInfo) {
-		this.signatureInfo = signatureInfo;
+	public void setSignaturesInfo(List<SignatureInformations> signatureInfo) {
+		this.signaturesInfo = signatureInfo;
 	}
 
 	public String getPolicyName() {

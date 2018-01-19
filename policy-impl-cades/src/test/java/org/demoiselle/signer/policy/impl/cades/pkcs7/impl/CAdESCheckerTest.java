@@ -57,11 +57,14 @@ import org.junit.Test;
 public class CAdESCheckerTest {
 
 	
+	/**
+	 * Verifica assinatura desanexada do arquivo
+	 */
 	//@Test
 	public void testVerifyDetachedSignature() {
 		String fileToVerifyDirName = "/home/arquivo.txt";
 		String fileSignatureDirName = "/home/arquivo.txt.p7s";
-			
+		
 				
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		byte[] signatureFile = readContent(fileSignatureDirName);
@@ -102,9 +105,12 @@ public class CAdESCheckerTest {
 	}
 
 	
+	/**
+	 * Verifica assinatura com conteúdo anexado
+	 */
 	//@Test
 	public void testVerifyAttachedSignature() {
-		String fileSignatureDirName = "/home/arquivo.txt.p7s";
+		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura_com_conteudo_anexado";
 		byte[] signatureFile = readContent(fileSignatureDirName);
 
 		CAdESChecker checker = new CAdESChecker();
@@ -138,11 +144,16 @@ public class CAdESCheckerTest {
 	}
 	
 	
-	// @Test
+	/**
+	 * Verifica assinatura desanexada do arquivo, com envio apenas do Hash do arquivo anexado.
+	 * Neste exemplo, informa-se o arquivo que foi assinado para facilitar o teste.
+	 */
+	//@Test
 	public void testVerifySignatureByHash() {
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
-		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
 		
+		// Apenas para gerar o HASH
+		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
 		
 							
 		byte[] fileToVerify = readContent(fileToVerifyDirName);

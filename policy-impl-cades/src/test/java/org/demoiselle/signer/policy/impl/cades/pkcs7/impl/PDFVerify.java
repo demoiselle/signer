@@ -44,7 +44,7 @@ public class PDFVerify {
 					if (result == null || result.isEmpty()) {
 						//Erro
 					}
-					results.addAll(checker.getSignatureInfo());
+					results.addAll(checker.getSignaturesInfo());
 				}
 			for (SignatureInformations sis : results){
 				for (BasicCertificate bc : sis.getSignersBasicCertificates()){
