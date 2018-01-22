@@ -8,41 +8,54 @@
         Este componente provê mecanismos de assinatura digital baseado nas normas ICP-Brasil e implementa mecanismos de assinatura digital em dois formatos: PKCS1 e
         PKCS7. A maior diferença entre esses dois mecanismos está na forma de envelopamento da assinatura digital, onde o PKCS1 não possui um formato de
         envelope, sendo o resultado da
-        operação de assinatura a própria assinatura, já o PKCS7 possui um formato de retorno que pode ser binário (especificado na RFC5126) ou XML. A interface
-        <literal>org.demoiselle.signer.policy.impl.cades.Signer</literal>
-        especifica o comportamento padrão dos mecanismos de assinatura digital. O componente especializa essa
-        interface em mais duas, são elas:
+        operação de assinatura a própria assinatura, já o PKCS7 possui um formato de retorno que pode ser binário (especificado na RFC5126) ou XML.
+    </para>
+    <para>     
+        A interface <literal>org.demoiselle.signer.policy.impl.cades.Signer</literal>
+        especifica o comportamento padrão dos mecanismos de GERAÇÃO de assinatura digital. 
+        O componente especializa essa    interface em mais duas, são elas:
         <literal>org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer</literal>
-        para implementações de mecanismos PKCS1
-        e
+        para implementações de mecanismos PKCS1  e
         <literal>org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer</literal>
+        para implementações de mecanismos de envelopamento PKCS7.
+    </para>
+    
+    <para>     
+        Para as funções de VALIDAÇÃO A interface <literal>org.demoiselle.signer.policy.impl.cades.Checker</literal>
+        especifica as funções de validação de assinatura digital. 
+        O componente especializa essa  interface em mais duas, são elas:
+        <literal>org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Checker</literal>
+        para implementações de mecanismos PKCS1  e
+        <literal>org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Checker</literal>
         para implementações de mecanismos de envelopamento PKCS7.
     </para>
 
     <para>
         Este componente, até a presente versão, permite assinar dados representados por um array de bytes. 
         Então se for necessário a assinatura de um arquivo, por exemplo,
-        a aplicação deverá montar um array de bytes com o conteúdo do arquivo para poder assiná-lo.
+        a aplicação deverá montar um array de bytes com o conteúdo do arquivo e enviar este para o componente poder assiná-lo.
+        Também é possível enviar apenas o Hash já calculado deste arquivo.
+        Veja nas sessões abaixo como fazê-los.
     </para>
 
     <para>
         Para assinar um dado através do componente demoiselle-signer é preciso executar alguns passos.
         <itemizedlist>
             <listitem>
-                Ter um conteúdo a ser assinado
+                Ter um conteúdo (ou hash calculado) a ser assinado
             </listitem>
             <listitem>
-                Escolher qual formato de assinatura a ser utilizado PKCS1 ou PKCS7
+                Escolher qual formato de assinatura a ser utilizado PKCS1 ou PKCS7 e qual política ICP-BRASIL
             </listitem>
             <listitem>
                 Fabricar o objeto responsável pela implementação do formato escolhido
             </listitem>
             <listitem>
-                Passar algumas informações para o objeto fabricado como chave criptográfica, algoritmo, etc. 
+                Passar algumas informações para o objeto fabricado como chave criptográfica, algoritmo, política, etc. 
                 O formato PKCS7 necessita de mais informações do que o formato PKCS1.
             </listitem>
             <listitem>
-                Assinar o conteúdo
+                Assinar o conteúdo (ou hash)
             </listitem>
         </itemizedlist>
     </para>
@@ -252,7 +265,10 @@ signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 byte[] signature = signer.doHashCoSign(hash, signatureFile);
 
 ]]></programlisting>
-        
+
+<note> Até a presente versão, o algoritmo de resumo (Digest) para geração da assinatura é o SHA_256, 
+portanto somente os resumos com este algoritimo é que serão gerados e validados corretamente.
+</note>        
         </section>
 		
 
@@ -272,8 +288,8 @@ byte[] signature = signer.doHashCoSign(hash, signatureFile);
 		<programlisting role="JAVA"><![CDATA[
 byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
 byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
-PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(content, signature);
+CAdESChecker checker = new CAdESChecker();
+List<SignatureInformations> signaturesInfo = checker.checkDetattachedSignature(content, signature);
 ]]></programlisting>
 
 	<para>
@@ -282,11 +298,15 @@ List<SignatureInformations> signaturesInfo = signer.checkDetattachedSignature(co
 	 <programlisting role="JAVA"><![CDATA[
 public class SignatureInformations {
 
-	private LinkedList<X509Certificate> chain;
-	private Date signDate;
-   	private Timestamp timeStampSigner = null;
-   	private SignaturePolicy signaturePolicy;
+	private LinkedList<X509Certificate> chain; // cadeia do certificado que gerou a assinatura 
+	private Date signDate;  // data do equipamento no momento da geração das assinatura (não tem validade legal)
+   	private Timestamp timeStampSigner = null; // Carimbo de tempo da assinatura, quando a politica utilizada permitir
+   	private SignaturePolicy signaturePolicy; // Politica ICP-BRASIL usada para geração da assinatura
+   	private LinkedList<String> validatorErrors = new LinkedList<String>();  // Lista de erros que por ventura possam ter sido encontrados na validação da assinatura
+   	
    	]]></programlisting>
+   	
+   	
     </section>
 
     <section>
@@ -298,8 +318,8 @@ public class SignatureInformations {
         </para>
         <programlisting role="JAVA"><![CDATA[
 byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
-PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-List<SignatureInformations> signaturesInfo =  signer.checkAttachedSignature(signature);]]></programlisting>
+CAdESChecker checker = new CAdESChecker();
+List<SignatureInformations> signaturesInfo = checker.checkAttachedSignature(signature);]]></programlisting>
 </section>
 
     <section>
@@ -315,13 +335,12 @@ List<SignatureInformations> signaturesInfo =  signer.checkAttachedSignature(sign
         <programlisting role="JAVA"><![CDATA[
 byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
 byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquiv
-PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-List<SignatureInformations> signaturesInfo =  signer.checkAttachedSignature(signature);
+CAdESChecker checker = new CAdESChecker();
 // gera o hash do arquivo que foi assinado
 md = java.security.MessageDigest
 			.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 byte[] hash = md.digest(content);
-List<SignatureInformations> signaturesInfo = signer.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signature);
+List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signature);
 ]]></programlisting>
 
     </section>
