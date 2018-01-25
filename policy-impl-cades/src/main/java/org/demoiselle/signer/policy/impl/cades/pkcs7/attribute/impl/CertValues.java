@@ -38,12 +38,18 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
-
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
-import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
+
 
 /**
  *
@@ -71,11 +77,12 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute
 public class CertValues implements UnsignedAttribute {
 
     private final String identifier = "1.2.840.113549.1.9.16.2.23";
-    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+    private Certificate[] certificates = null;
+//    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
     @Override
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
-
+    	this.certificates = certificates;
     }
 
     @Override
@@ -85,7 +92,22 @@ public class CertValues implements UnsignedAttribute {
 
     @Override
     public Attribute getValue() throws SignerException {
-        throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
+
+    	List<org.bouncycastle.asn1.x509.Certificate> certificateValues = new ArrayList<org.bouncycastle.asn1.x509.Certificate>();
+    	try {
+    		
+    		int chainSize = certificates.length -1;
+	    		  for (int i = 0; i < chainSize; i++ ){
+    		  	    X509Certificate cert = (X509Certificate) certificates[i];
+    		  	  byte data[] = cert.getEncoded();
+    		  	  certificateValues.add(org.bouncycastle.asn1.x509.Certificate.getInstance(data));    		  	  
+    		 }	 
+    		  org.bouncycastle.asn1.x509.Certificate[] certValuesArray = new org.bouncycastle.asn1.x509.Certificate[certificateValues.size()];
+			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(certificateValues.toArray(certValuesArray))));
+    	} catch (CertificateEncodingException e) {
+    		throw new SignerException(e.getMessage());
+		}
     }
+    	
 
 }
