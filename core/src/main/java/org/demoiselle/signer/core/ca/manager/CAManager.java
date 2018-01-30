@@ -271,7 +271,7 @@ public class CAManager {
 				if (ok) {
 					break;
 				} else {
-					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider",provider.getName()));
+					LOGGER.error(coreMessagesBundle.getString("warn.no.chain.on.provider",provider.getName()));
 				}
 			} catch (Throwable error) {
 					LOGGER.error(coreMessagesBundle.getString("error.no.ca",provider.getName()));
