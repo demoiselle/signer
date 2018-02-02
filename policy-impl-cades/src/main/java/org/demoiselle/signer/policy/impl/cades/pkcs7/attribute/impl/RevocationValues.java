@@ -36,6 +36,9 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
+import org.demoiselle.signer.core.extension.ICPBR_CRL;
+import org.demoiselle.signer.core.repository.CRLRepository;
+import org.demoiselle.signer.core.repository.CRLRepositoryFactory;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
@@ -43,8 +46,22 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
+import java.security.cert.X509CRL;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
+import org.bouncycastle.asn1.ASN1Object;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.esf.OtherRevVals;
+import org.bouncycastle.asn1.ocsp.BasicOCSPResponse;
+import org.bouncycastle.asn1.x509.CertificateList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,11 +106,13 @@ public class RevocationValues implements UnsignedAttribute {
 
     private static final Logger logger = LoggerFactory.getLogger(RevocationValues.class);
     private final String identifier = "1.2.840.113549.1.9.16.2.24";
+    private Certificate[] certificates = null;
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+    private final CRLRepository crlRepository = CRLRepositoryFactory.factoryCRLRepository();
 
     @Override
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
-        logger.info(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
+    	this.certificates = certificates;
     }
 
     @Override
@@ -103,7 +122,38 @@ public class RevocationValues implements UnsignedAttribute {
 
     @Override
     public Attribute getValue() throws SignerException {
-        throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
+    	List<X509CRL> crlList = new ArrayList<X509CRL>();
+    	ArrayList<CertificateList> crlVals = new ArrayList<CertificateList>();
+    	List<BasicOCSPResponse> ocspVals = new ArrayList<BasicOCSPResponse>();
+    	try {
+    	
+    		int chainSize = certificates.length -1;
+    		for (int ix = 0; ix < chainSize; ix++ ){
+    			X509Certificate cert = (X509Certificate) certificates[ix];
+    			Collection<ICPBR_CRL> icpCrls = crlRepository.getX509CRL(cert);
+    			for (ICPBR_CRL icpCrl : icpCrls) {
+    				crlList.add(icpCrl.getCRL());
+    			}				
+    		}
+    		if (crlList.isEmpty()){
+    			throw new SignerException(cadesMessagesBundle.getString("error.crl.list.empty"));
+    		}else{
+    			for(X509CRL varCrl : crlList){
+    				crlVals.add(CertificateList.getInstance(varCrl.getEncoded()));
+    				
+    				
+    			}
+    		}
+    		CertificateList[] crlValuesArray = new CertificateList[crlVals.size()];
+    		BasicOCSPResponse[] ocspValuesArray = new BasicOCSPResponse[ocspVals.size()];
+    		//	OtherRevVals otherRevVals = new OtherRevVals(null);
+    		//return new Attribute(new ASN1ObjectIdentifier(identifier),	new DERSet(null));
+    		//org.bouncycastle.asn1.esf.RevocationValues revocationVals = new org.bouncycastle.asn1.esf.RevocationValues(crlVals.toArray(crlValuesArray), ocspVals.toArray(ocspValuesArray), null);
+    		//org.bouncycastle.asn1.esf.RevocationValues revocationVals = new org.bouncycastle.asn1.esf.RevocationValues(crlVals.toArray(crlValuesArray), null, null);
+    		return new Attribute(new ASN1ObjectIdentifier(identifier),new DERSet(new DERSequence(crlVals.toArray(crlValuesArray))));
+    	} catch (Exception e) {
+    		throw new SignerException(e.getMessage());
+		}
     }
 
 }

@@ -135,8 +135,7 @@ public class RevocationRefs implements UnsignedAttribute {
 
 	private final String identifier = "1.2.840.113549.1.9.16.2.22";
 	private Certificate[] certificates = null;
-	private final CRLRepository crlRepository = CRLRepositoryFactory
-			.factoryCRLRepository();;
+	private final CRLRepository crlRepository = CRLRepositoryFactory.factoryCRLRepository();
 
 	@Override
 	public void initialize(PrivateKey privateKey, Certificate[] certificates,

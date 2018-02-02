@@ -38,11 +38,16 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+
 import org.bouncycastle.asn1.cms.Attribute;
+import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
+import org.demoiselle.signer.core.timestamp.TimeStampGeneratorSelector;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -76,6 +81,11 @@ public class ArchiveTimestampV2 implements UnsignedAttribute {
 
 	private final String identifier = "1.2.840.113549.1.9.16.2.48";
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+    private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
+    private PrivateKey privateKey = null;
+    private Certificate[] certificates = null;
+    byte[] content = null;
+    byte[] hash = null;
 
     @Override
     public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
