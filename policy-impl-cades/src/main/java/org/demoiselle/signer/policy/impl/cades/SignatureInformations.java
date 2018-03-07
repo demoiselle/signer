@@ -51,9 +51,13 @@ public class SignatureInformations {
 	 *
 	 */
 	public String getSignDateGMT() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:S z");
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return dateFormatGmt.format(this.getSignDate());
+		if (this.signDate != null) {
+			SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:S z");
+			dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+			return dateFormatGmt.format(this.getSignDate());
+		} else {
+			return null;
+		}
     }
 	
 	

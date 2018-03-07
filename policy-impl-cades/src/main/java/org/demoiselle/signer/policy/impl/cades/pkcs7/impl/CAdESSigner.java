@@ -249,8 +249,14 @@ public class CAdESSigner implements PKCS7Signer {
 				}
 
 				// Mostra data e  hora da assinatura, não é carimbo de tempo
-				Date dataHora = (((ASN1UTCTime) signedAttributes.get(CMSAttributes.signingTime).getAttrValues().getObjectAt(0)).getDate());
-				logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));
+				Attribute signingTime = signedAttributes.get(CMSAttributes.signingTime);
+				Date dataHora = null;
+				if (signingTime != null) {
+					dataHora = (((ASN1UTCTime) signingTime.getAttrValues().getObjectAt(0)).getDate());
+					logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));
+				} else {
+					logger.info(cadesMessagesBundle.getString("info.date.utc","N/D"));
+				}
 				
 				logger.info(cadesMessagesBundle.getString("info.attribute.validation"));
 				// Valida o atributo ContentType
