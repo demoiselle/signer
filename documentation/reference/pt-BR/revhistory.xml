@@ -3,6 +3,15 @@
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <revhistory>
 <revision>
+	<revnumber>3.2.3</revnumber>
+        <date>07/03/2018</date>
+        <authorinitials>ess</authorinitials>
+        <revremark>
+            <itemizedlist>
+            	<listitem><listitem><ulink url="https://github.com/demoiselle/signer/milestone/12?closed=1">Milestone 3.2.3</ulink></listitem></listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
 	<revnumber>3.2.2</revnumber>
         <date>19/01/2018</date>
         <authorinitials>ess</authorinitials>
