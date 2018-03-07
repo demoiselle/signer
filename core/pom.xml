@@ -43,7 +43,7 @@
     <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
-        <version>3.2.3</version>
+        <version>3.2.4-SNAPSHOT</version>
         <relativePath>../parent</relativePath>
     </parent>
 
