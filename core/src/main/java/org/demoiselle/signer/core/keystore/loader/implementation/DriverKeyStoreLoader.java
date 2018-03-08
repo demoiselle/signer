@@ -141,7 +141,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
                 throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
             }
 
-            if (ex.getCause() instanceof javax.security.auth.login.LoginException) {
+            if (ex.getCause().toString().equals("javax.security.auth.login.LoginException")) {
+            //TODO  https://github.com/demoiselle/signer/pull/126 // if (ex.getCause() instanceof javax.security.auth.login.LoginException) {
                 throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
             } else {
                 throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
