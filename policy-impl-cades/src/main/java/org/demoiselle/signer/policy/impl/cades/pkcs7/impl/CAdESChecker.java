@@ -382,6 +382,7 @@ public class CAdESChecker implements PKCS7Checker {
 	}
     
 	@Override
+	@Deprecated
 	public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData){
 		if (this.check(content, signedData)){
 			return this.getSignaturesInfo();
@@ -390,6 +391,14 @@ public class CAdESChecker implements PKCS7Checker {
 		}
 	}
 	
+	@Override
+	public  List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData){
+		if (this.check(content, signedData)){
+			return this.getSignaturesInfo();
+		}else{
+			return null;
+		}
+	}
 	
 
 	@Override

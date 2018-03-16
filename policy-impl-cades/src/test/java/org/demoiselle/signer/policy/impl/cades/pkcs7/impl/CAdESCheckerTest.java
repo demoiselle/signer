@@ -72,7 +72,7 @@ public class CAdESCheckerTest {
 		CAdESChecker checker = new CAdESChecker();
 
 		System.out.println("Efetuando a validacao da assinatura");
-		List<SignatureInformations> signaturesInfo = checker.checkDetattachedSignature(fileToVerify, signatureFile);
+		List<SignatureInformations> signaturesInfo = checker.checkDetachedSignature(fileToVerify, signatureFile);
 		
 		if (signaturesInfo != null) {
 			System.out.println("A assinatura foi validada.");

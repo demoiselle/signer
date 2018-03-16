@@ -871,16 +871,19 @@ public class CAdESSigner implements PKCS7Signer {
 	}	
 
 	@Override
+	@Deprecated
 	public boolean checkAttached(byte[] signedData) {
 		return this.check(null, signedData);
 	}
 
 	@Override
+	@Deprecated
 	public boolean checkDetattached(byte[] content, byte[] signedData) {
 		return this.check(content, signedData);
 	}
 	
 	@Override
+	@Deprecated
 	public  List<SignatureInformations> checkAttachedSignature(byte[] signedData){
 		if (this.check(null, signedData)){
 			return this.getSignatureInfo();
@@ -890,6 +893,7 @@ public class CAdESSigner implements PKCS7Signer {
 	}
     
 	@Override
+	@Deprecated
 	public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData){
 		if (this.check(content, signedData)){
 			return this.getSignatureInfo();
@@ -901,6 +905,7 @@ public class CAdESSigner implements PKCS7Signer {
 	
 
 	@Override
+	@Deprecated
 	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{
 		this.checkHash = true;
 		this.hashes.put(digestAlgorithmOID, calculatedHashContent);

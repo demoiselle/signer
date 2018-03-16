@@ -224,30 +224,35 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 	}
 
 	@Override
+	@Deprecated
 	public boolean checkAttached(byte[] signedData) {
 		//TODO não implementado
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public boolean checkDetattached(byte[] content, byte[] signedData) {
 		//TODO não implementado
 		return false;
 	}
 
 	@Override
+	@Deprecated
 	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithm, byte[] calculatedHashContent, byte[] signedData){
 		//TODO não implementado
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<SignatureInformations> checkAttachedSignature(byte[] signedData) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
+	@Deprecated
 	public List<SignatureInformations> checkDetattachedSignature(
 			byte[] content, byte[] signedData) {
 		// TODO Auto-generated method stub

@@ -56,9 +56,21 @@ public interface Checker {
      * @param content content to be checked
      * @param signedData detached signature
      * @return List&lt;SignatureInformations&gt; list of signature information
+     * @deprecated renamed to {@link checkDetachedSignature}
+     */
+     
+    abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
+    
+    
+    /**
+     * Check an digital detached signature, informed by parameter signedData and it's content
+     * 
+     * @param content content to be checked
+     * @param signedData detached signature
+     * @return List&lt;SignatureInformations&gt; list of signature information
      */
     
-    abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
+    abstract public  List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData);
     
     
     
