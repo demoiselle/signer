@@ -2,8 +2,18 @@
 <!DOCTYPE revhistory PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd">
 <revhistory>
-<revision>
-	<revnumber>3.2.4</revnumber>
+	<revision>
+		<revnumber>3.2.5</revnumber>
+        <date>16/03/2018</date>
+        <authorinitials>ess</authorinitials>
+        <revremark>
+            <itemizedlist>
+            	<listitem><listitem><ulink url="https://github.com/demoiselle/signer/milestone/15">Milestone 3.2.5</ulink></listitem></listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+	<revision>
+		<revnumber>3.2.4</revnumber>
         <date>09/03/2018</date>
         <authorinitials>ess</authorinitials>
         <revremark>
@@ -12,7 +22,8 @@
             </itemizedlist>
         </revremark>
     </revision>
-	<revnumber>3.2.3</revnumber>
+    <revision>
+		<revnumber>3.2.3</revnumber>
         <date>07/03/2018</date>
         <authorinitials>ess</authorinitials>
         <revremark>
@@ -21,7 +32,8 @@
             </itemizedlist>
         </revremark>
     </revision>
-	<revnumber>3.2.2</revnumber>
+    <revision>
+		<revnumber>3.2.2</revnumber>
         <date>19/01/2018</date>
         <authorinitials>ess</authorinitials>
         <revremark>
