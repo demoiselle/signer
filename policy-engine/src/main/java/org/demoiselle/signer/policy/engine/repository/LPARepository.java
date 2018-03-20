@@ -1,6 +1,5 @@
 package org.demoiselle.signer.policy.engine.repository;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +18,7 @@ import org.demoiselle.signer.core.util.Downloads;
 public class LPARepository {
 
 	public static final String PATH_HOME_USER = System.getProperty("user.home");
-	public static final String FOLDER_SIGNER = ".java" + File.separator + "signer";
+	public static final String FOLDER_SIGNER = ".signer";
 	public static final Path FULL_PATH_FOLDER_SIGNER = Paths.get(PATH_HOME_USER, FOLDER_SIGNER);
 	
 	/**

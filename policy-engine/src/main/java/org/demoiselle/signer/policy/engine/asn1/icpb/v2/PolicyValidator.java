@@ -9,6 +9,7 @@ import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.exception.PolicyException;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.demoiselle.signer.policy.engine.repository.LPARepository;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 public class PolicyValidator {
@@ -43,13 +44,49 @@ public class PolicyValidator {
 				throw new PolicyException(policyMessagesBundle.getString("error.policy.valid.period",sdf.format(dateNotBefore), sdf.format(dateNotBefore)));
 			}
 			PolicyFactory factory = PolicyFactory.getInstance();
+			
+			LPA tempListOfPolicies= null;
+			
 			if (policyName.contains("CADES")){
-				listOfPolicies = factory.loadLPACAdES();
-				Date nextUpdate = listOfPolicies.getNextUpdate().getDate();
-				// TODO gerar warning nas aplicações?
+				tempListOfPolicies = factory.loadLPACAdES();
+				listOfPolicies = tempListOfPolicies;
+				Date nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 				if (actualDate.after(nextUpdate)){
 					LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
+					LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local"));
+					tempListOfPolicies = factory.loadLPACAdESLocal();
+					if (tempListOfPolicies != null){
+						nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
+						if (actualDate.after(nextUpdate)){
+							LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",LPARepository.FULL_PATH_FOLDER_SIGNER.toString()+"LPA_CAdES.der",sdf.format(nextUpdate)));
+							tempListOfPolicies = factory.loadLPACAdESUrl();
+							if (tempListOfPolicies != null)	{
+								nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
+								if (actualDate.after(nextUpdate)){
+									LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
+								}else{
+									listOfPolicies = tempListOfPolicies;
+								}
+							}
+						}else{
+							listOfPolicies = tempListOfPolicies;
+						}
+					}else{
+						tempListOfPolicies = factory.loadLPACAdESUrl();
+						if (tempListOfPolicies != null)	{
+							nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
+							if (actualDate.after(nextUpdate)){
+								LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
+							}else{
+								listOfPolicies = tempListOfPolicies;
+							}
+						}else{
+							LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found"));
+						}							
+					}
 				}
+				
+				
 				for (PolicyInfo policyInfo : listOfPolicies.getPolicyInfos()) {
 					if (policyInfo.getPolicyOID().getValue().contentEquals(sp.getSignPolicyInfo().getSignPolicyIdentifier().getValue())){
 						GeneralizedTime revocationDate = policyInfo.getRevocationDate();
@@ -59,12 +96,43 @@ public class PolicyValidator {
 					}
 				}
 			}else {
-				if(policyName.contains("PADES")){
-					listOfPolicies = factory.loadLPAPAdES();
-					Date nextUpdate = listOfPolicies.getNextUpdate().getDate();
-					// TODO gerar warning nas aplicações?
+				if (policyName.contains("PADES")){
+					tempListOfPolicies = factory.loadLPAPAdES();
+					listOfPolicies = tempListOfPolicies;
+					Date nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 					if (actualDate.after(nextUpdate)){
 						LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
+						LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local"));
+						tempListOfPolicies = factory.loadLPAPAdESLocal();
+						if (tempListOfPolicies != null){
+							nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
+							if (actualDate.after(nextUpdate)){
+								LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",LPARepository.FULL_PATH_FOLDER_SIGNER.toString()+"LPA_PAdES.der",sdf.format(nextUpdate)));
+								tempListOfPolicies = factory.loadLPAPAdESUrl();
+								if (tempListOfPolicies != null)	{
+									nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
+									if (actualDate.after(nextUpdate)){
+										LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
+									}else{
+										listOfPolicies = tempListOfPolicies;
+									}
+								}
+							}else{
+								listOfPolicies = tempListOfPolicies;
+							}
+						}else{
+							tempListOfPolicies = factory.loadLPAPAdESUrl();
+							if (tempListOfPolicies != null)	{
+								nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
+								if (actualDate.after(nextUpdate)){
+									LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
+								}else{
+									listOfPolicies = tempListOfPolicies;
+								}
+							}else{
+								LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found"));
+							}							
+						}
 					}
 					for (PolicyInfo policyInfo : listOfPolicies.getPolicyInfos()) {
 						if (policyInfo.getPolicyOID().getValue().contentEquals(sp.getSignPolicyInfo().getSignPolicyIdentifier().getValue())){
