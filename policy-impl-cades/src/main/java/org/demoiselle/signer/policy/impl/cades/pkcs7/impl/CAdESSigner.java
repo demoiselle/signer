@@ -174,6 +174,7 @@ public class CAdESSigner implements PKCS7Signer {
 	@SuppressWarnings("unchecked")
 	// TODO: Implementar validação de co-assinaturas
 	@Override
+	@Deprecated
 	public boolean check(byte[] content, byte[] signedData) throws SignerException{
 		Security.addProvider(new BouncyCastleProvider());
 		CMSSignedData cmsSignedData = null;
@@ -329,6 +330,7 @@ public class CAdESSigner implements PKCS7Signer {
 	 * @param varSignature
 	 * @return
 	 */
+	@Deprecated
 	private Timestamp validateTimestamp(Attribute attributeTimeStamp, byte[] varSignature){
 		try {
 			TimeStampOperator timeStampOperator = new TimeStampOperator();
@@ -750,18 +752,6 @@ public class CAdESSigner implements PKCS7Signer {
 				}
 			}
 			
-			/*
-			if (unsignedAttributes.size() >0){
-				AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
-				vNewSigners.remove(oSi);
-				oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
-				vNewSigners.add(oSi);
-				//while (it.hasNext()) {
-				//	SignerInformation oSi2 = it.next();
-				//	vNewSigners.add(oSi2);
-				//}				
-				
-			}*/	
 			
 			//TODO Estudar este método de contra-assinatura posteriormente
 			if (previewSignature != null && previewSignature.length > 0) {
@@ -772,6 +762,8 @@ public class CAdESSigner implements PKCS7Signer {
 			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
 			
 			byte[] result = cmsSignedData.getEncoded();
+			
+			logger.info(cadesMessagesBundle.getString("info.signature.ok"));
 			
 			return result;			
 

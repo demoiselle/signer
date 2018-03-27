@@ -88,7 +88,7 @@ public class OnLineCRLRepository implements CRLRepository {
                 }
             }
             if (validCrl == null){
-            	throw new CRLRepositoryException(coreMessagesBundle.getString("error.validate.on.crl"));
+            	throw new CRLRepositoryException(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
             }
         } catch (IOException e) {
             throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl") + e);
