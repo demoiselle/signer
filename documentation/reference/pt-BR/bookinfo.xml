@@ -10,5 +10,7 @@
 	<titleabbrev>Guia para Demoiselle Signer</titleabbrev>
 
 	<xi:include href="authorgroup.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="revhistory.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	
 
 </bookinfo>

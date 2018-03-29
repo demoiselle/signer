@@ -230,8 +230,8 @@ Cert cert = cm.load(Cert.class);]]></programlisting>
 Referências</para>
 
 					<itemizedlist>
-						<listitem><ulink url="https://standards.ieee.org/develop/regauth/tut/oid.pdf"> [1]</ulink></listitem>
-						<listitem><ulink url="http://www.alvestrand.no/objectid"> [2]</ulink></listitem>
+						<listitem><ulink url="https://standards.ieee.org/develop/regauth/tut/oid.pdf"> [1]</ulink> </listitem>
+						<listitem><ulink url="http://www.alvestrand.no/objectid"> [2]</ulink> </listitem>
 												
 					</itemizedlist>
 					<para font-size="10pt">  Fonte:  <ulink url=" https://pt.wikipedia.org/wiki/Identificador_de_objeto"> https://pt.wikipedia.org/wiki/Identificador_de_objeto</ulink></para>					

@@ -2,9 +2,7 @@
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <book lang="pt">
-
-    <xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-
+   
     <!-- prefácio -->
     <preface>
         <title>Sobre o Demoiselle Signer</title>
@@ -49,7 +47,7 @@
     		</itemizedlist>
         </para>
 	<note>
-	Caso queira baixar uma versão desta documentação em formato PDF clique <para><ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.2.5.pdf">aqui:</ulink></para> </note>
+	Caso queira baixar uma versão desta documentação em formato PDF clique <para><ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.2.6.pdf">aqui:</ulink></para> </note>
         
     </preface>
 
@@ -69,6 +67,8 @@
     <!-- TimeStamp -->
     <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
     <!-- Crytography -->
-    <xi:include href="cryptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include href="cryptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />    
     
+	<xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
 </book>
