@@ -539,6 +539,10 @@ public class CAdESSigner implements PKCS7Signer {
 
 			this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 			
+			if (this.certificateChain.length < 3) {
+				throw new SignerException(cadesMessagesBundle.getString("error.no.ca", this.certificate.getIssuerDN()));
+			}
+			
 			Certificate[] certStore = new Certificate[] {};
 			
 			CMSSignedData cmsPreviewSignedData = null;

@@ -156,7 +156,7 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// informar onde esta o arquivo
-			InputStream ksIs = new FileInputStream("caminho arquivo p12");
+			InputStream ksIs = new FileInputStream("local arquivo p12");
 			ks.load(ksIs, senha);
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -209,7 +209,7 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "caminho arquivo assinar";
+			String fileDirName = "/home/{usuario}/arquivo";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -218,10 +218,10 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado NeoID e windows token
-			KeyStore ks = getKeyStoreTokenBySigner();
+			//KeyStore ks = getKeyStoreTokenBySigner();
 			
 			// Para certificado token Linux
-			//KeyStore ks = getKeyStoreToken();
+			KeyStore ks = getKeyStoreToken();
 
 			// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFile();
@@ -254,7 +254,7 @@ public class CAdESSignerTest {
 			// Assinatura desatachada
 			
 			CAManagerConfiguration config = CAManagerConfiguration.getInstance();
-			config.setCached(true);
+			//config.setCached(true);
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
 			File file = new File(fileDirName + "_detached.p7s");

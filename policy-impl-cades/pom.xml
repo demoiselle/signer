@@ -48,6 +48,11 @@
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>chain-icp-brasil-homolog</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>cryptography</artifactId>
 		</dependency>
 		<dependency>
@@ -57,7 +62,8 @@
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>timestamp</artifactId>
-		</dependency>
+		</dependency>		
+		
 		<dependency>
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>

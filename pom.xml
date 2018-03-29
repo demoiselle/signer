@@ -84,6 +84,7 @@
 		<module>core</module>
 		<module>cryptography</module>
 		<module>chain-icp-brasil</module>
+		<module>chain-icp-brasil-homolog</module>
 		<module>policy-engine</module>
 		<module>policy-impl-cades</module>
 		<module>timestamp</module>

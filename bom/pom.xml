@@ -62,7 +62,13 @@
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>chain-icp-brasil</artifactId>
 				<version>${demoiselle.signer.version}</version>
+			</dependency>			
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>chain-icp-brasil-homolog</artifactId>
+				<version>${demoiselle.signer.version}</version>
 			</dependency>
+			
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>core</artifactId>

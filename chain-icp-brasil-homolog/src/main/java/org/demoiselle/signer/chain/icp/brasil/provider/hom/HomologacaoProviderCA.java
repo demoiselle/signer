@@ -50,7 +50,7 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 * 
 *  WARNING: USE ONLY ON HOMOLOGATION ENVIROMENT
 *  
-*  Provides homologation Certificate Authority chain of the ICP-BRAZIL's
+*  Provides homologation (with purpose of tests) FAKE Certificate Authority chain of the ICP-BRAZIL's
 *
 */
 
@@ -73,15 +73,13 @@ public class HomologacaoProviderCA implements ProviderCA {
             InputStream AutoridadeCertificadoraACSERPRORFBv3Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraACSERPRORFBv3Homologacao.crt");
             InputStream	AutoridadeCertificadoradoSERPRORFBHomologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPRORFBHomologacao.crt");
             InputStream AutoridadeCertificadoraRaizdeHomologacaoSERPROv2 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdeHomologacaoSERPROv2.crt");
-            InputStream Autoridade_Certificadora_Raiz_Hom_do_SERPRO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/Autoridade_Certificadora_Raiz_Hom_do_SERPRO.crt");
             InputStream	AutoridadeCertificadoraSERPROACFv4Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPROACFv4Homologacao.crt");
-            InputStream	AutoridadeCertificadoraSERPRORFBSSLHom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBSSL-Hom.crt");
-            InputStream	Autoridade_Certificadora_SERPRO_v6_HOM  = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/Autoridade_Certificadora_SERPRO_v6_HOM.crt");
-            InputStream	AutoridadeCertificadoraSERPRORFBSSL_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBSSL_Hom.crt");
+            InputStream	AutoridadeCertificadoraSERPRORFBSSLHom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBSSLHom.crt");
+            InputStream	AutoridadeCertificadoraSERPROv6HOM  = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPROv6HOM.crt");
             InputStream	ACSERPROHOMOLOGACAO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACSERPROHOMOLOGACAO.crt");
             InputStream	AutoridadeCertificadoraRaizBrasileirav2 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizBrasileirav2.crt");
             InputStream	AutoridadeCertificadoradoSERPROFinalSSLv2_HOM = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPROFinalSSLv2_HOM.crt");
-            InputStream	AutoridadeCertificadoraSERPRORFBv5HOM = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBv5HOM.crt");
+            InputStream	AutoridadeCertificadoraSERPRORFBv5HOM = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBv5Hom.crt");
             InputStream	ACSERPROJUSv5 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACSERPROJUSv5.crt");
             InputStream	AutoridadeCertificadoradoSERPROFinalv5HOM = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPROFinalv5HOM.crt");
             InputStream	AutoridadeCertificadoradoSERPROFinalTimeStampingHom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPROFinalTimeStampingHom.crt");
@@ -92,9 +90,9 @@ public class HomologacaoProviderCA implements ProviderCA {
             InputStream	AutoridadeCertificadoraRaizBrasileirav5 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizBrasileirav5.crt");
             InputStream	AutoridadeCertificadoradaCasadaMoedadoBrasilv5Teste = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradaCasadaMoedadoBrasilv5Teste.crt");
             InputStream AutoridadeCertificadoradaCasadaMoedadoBrasilv4Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradaCasadaMoedadoBrasilv4Hom.crt"); 
-            InputStream AutoridadeCertificadoraSERPRORFBv5Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBv5Hom.crt");  
             InputStream AutoridadeCertificadoradoSERPRORFBSSLHom =HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPRORFBSSLHom.crt");
-                        
+            
+            
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(raizDeHomologacaoSERPRO));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPROACFv3Homologacao));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(intermediariaHOMv2));
@@ -106,11 +104,8 @@ public class HomologacaoProviderCA implements ProviderCA {
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraACSERPRORFBv3Homologacao));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPRORFBHomologacao));
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdeHomologacaoSERPROv2));         		
-            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(Autoridade_Certificadora_Raiz_Hom_do_SERPRO));
-      		result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPROACFv4Homologacao));
+     		result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPROACFv4Homologacao));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPRORFBSSLHom));
-           	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(Autoridade_Certificadora_SERPRO_v6_HOM));
-           	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPRORFBSSL_Hom));
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACSERPROHOMOLOGACAO));
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizBrasileirav2));
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPROFinalSSLv2_HOM));
@@ -125,8 +120,8 @@ public class HomologacaoProviderCA implements ProviderCA {
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizBrasileirav5));
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradaCasadaMoedadoBrasilv5Teste));           	
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradaCasadaMoedadoBrasilv4Hom));
-           	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPRORFBv5Hom));
            	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPRORFBSSLHom));
+           	result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPROv6HOM));        	
            	
            	
            	
