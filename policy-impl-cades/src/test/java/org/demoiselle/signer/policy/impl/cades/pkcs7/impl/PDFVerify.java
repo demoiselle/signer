@@ -1,8 +1,11 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +16,17 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
+import org.junit.Test;
 
+@SuppressWarnings("unused")
 public class PDFVerify {
 
 	//@Test
 	public void test() {
 		
 	
-			String filePath = "";
+			String filePath = "/home/{usuario}/arquivo";
+			
 			PDDocument document;
 			try {
 				document = PDDocument.load(new File(filePath));
@@ -40,13 +46,25 @@ public class PDFVerify {
 					}
 
 					CAdESChecker checker = new CAdESChecker();
-					result = checker.checkDetattachedSignature(buf, contents.getBytes());
+					result = checker.checkDetachedSignature(buf, contents.getBytes());
 					if (result == null || result.isEmpty()) {
+						assertTrue(false);
 						//Erro
 					}
 					results.addAll(checker.getSignaturesInfo());
 				}
 			for (SignatureInformations sis : results){
+				for (String valErr : sis.getValidatorErrors()){
+					System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
+					System.out.println(valErr);
+				}
+				for(X509Certificate cert : sis.getChain()){
+					BasicCertificate certificate = new BasicCertificate(cert);
+					if (!certificate.isCACertificate()){
+						System.out.println(certificate.toString());
+					}												
+				}
+				/*
 				for (BasicCertificate bc : sis.getSignersBasicCertificates()){
 					if (bc.hasCertificatePF()){
 						System.out.println(bc.getICPBRCertificatePF().getCPF());
@@ -54,13 +72,14 @@ public class PDFVerify {
 					if (bc.hasCertificatePJ()){
 						System.out.println(bc.getICPBRCertificatePJ().getCNPJ());
 						System.out.println(bc.getICPBRCertificatePJ().getResponsibleCPF());
-					}
-					 
-				}
+					}					 
+				}*/
 			}			
+			assertTrue(true);
 			
 		} catch (IOException e) {	
 			e.printStackTrace();
+			assertTrue(false);
 		}
 	}
 }

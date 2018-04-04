@@ -62,8 +62,11 @@ public class CAdESCheckerTest {
 	 */
 	//@Test
 	public void testVerifyDetachedSignature() {
-		String fileToVerifyDirName = "/home/arquivo.txt";
-		String fileSignatureDirName = "/home/arquivo.txt.p7s";
+		String fileToVerifyDirName = "/home/{usuario}/arquivo";
+		String fileSignatureDirName = "/home/{usuario}/arquivo.p7s";
+		
+		
+		
 		
 				
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
@@ -88,6 +91,7 @@ public class CAdESCheckerTest {
 					}												
 				}
 				for (String valErr : si.getValidatorErrors()){
+					System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
 					System.out.println(valErr);
 				}
 				if (si.getSignaturePolicy() != null){
@@ -131,6 +135,7 @@ public class CAdESCheckerTest {
 					}												
 				}
 				for (String valErr : si.getValidatorErrors()){
+					System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
 					System.out.println(valErr);
 				}
 				System.out.println(si.getSignaturePolicy().toString());
@@ -185,6 +190,10 @@ public class CAdESCheckerTest {
 						if (!certificate.isCACertificate()){
 							System.out.println(certificate.toString());
 						}												
+					}
+					for (String valErr : si.getValidatorErrors()){
+						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
+						System.out.println(valErr);
 					}
 					System.out.println(si.getSignaturePolicy().toString());
 				}

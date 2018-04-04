@@ -65,17 +65,17 @@ public class AttributeFactory {
     }
 
     public SignedOrUnsignedAttribute factory(String attributeOID) {
-        logger.info(cadesMessagesBundle.getString("info.search.oid", attributeOID));
+        //logger.info(cadesMessagesBundle.getString("info.search.oid", attributeOID));
         ServiceLoader<SignedOrUnsignedAttribute> loader = ServiceLoader.load(SignedOrUnsignedAttribute.class);
         if (loader != null) {
             for (SignedOrUnsignedAttribute attribute : loader) {
                 if (attribute.getOID().equalsIgnoreCase(attributeOID)) {
-                    logger.info(cadesMessagesBundle.getString("info.return.oid", attribute.getClass().getName()));
+                    //logger.info(cadesMessagesBundle.getString("info.return.oid", attribute.getClass().getName()));
                     return attribute;
                 }
             }
         } else {
-            logger.info(cadesMessagesBundle.getString("info.oid.not.found", attributeOID));
+            logger.error(cadesMessagesBundle.getString("info.oid.not.found", attributeOID));
         }
         return null;
     }

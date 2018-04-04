@@ -666,7 +666,7 @@ public class CAdESSigner implements PKCS7Signer {
 					// Não encontrou na política, verificará nas cadeias do
 					// componente chain-icp-brasil provavelmente certificado de
 					// homologação.
-					logger.info(cadesMessagesBundle.getString("info.trust.poin.homolog"));
+					logger.warn(cadesMessagesBundle.getString("info.trust.poin.homolog"));
 					CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
 			}
 				

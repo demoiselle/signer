@@ -96,7 +96,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CAdESChecker implements PKCS7Checker {
 
-	private static final Logger logger = LoggerFactory.getLogger(CAdESSigner.class);
+	private static final Logger logger = LoggerFactory.getLogger(CAdESChecker.class);
 
 	
 	private SignaturePolicy signaturePolicy = null;
@@ -194,39 +194,43 @@ public class CAdESChecker implements PKCS7Checker {
 				AttributeTable signedAttributes = signerInfo.getSignedAttributes();
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
-				}
-				
-				// Validando atributos assinados de acordo com a politica
-				Attribute idSigningPolicy = null;
-				idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId()));
-				if (idSigningPolicy == null) {
-						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "idSigningPolicy"));
+					logger.info(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}else{
-					for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
-						String policyOnSignature = p.nextElement().toString();
-						for (PolicyFactory.Policies pv : PolicyFactory.Policies.values()){
-							if (policyOnSignature.contains(pv.getUrl())){
-								setSignaturePolicy(pv);
-								break;
-							}							
-						}
-					}						
-				}
+					//Validando atributos assinados de acordo com a politica
+					Attribute idSigningPolicy = null;
+					idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId()));
+					if (idSigningPolicy == null) {
+							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "idSigningPolicy"));
+					}else{
+						for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
+							String policyOnSignature = p.nextElement().toString();
+							for (PolicyFactory.Policies pv : PolicyFactory.Policies.values()){
+								if (policyOnSignature.contains(pv.getUrl())){
+									setSignaturePolicy(pv);
+									break;
+								}							
+							}
+						}						
+					}
+				}				
+				
 				if (signaturePolicy == null){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", "idSigningPolicy"));
-					}
-				if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-						.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-						.getObjectIdentifiers() != null) {
-					for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-							.getMandatedSignedAttr().getObjectIdentifiers()) {
-							String oi = objectIdentifier.getValue();
-							Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
-							logger.info(oi);
-							if (signedAtt == null){
+					logger.info(cadesMessagesBundle.getString("error.policy.on.component.not.found", "idSigningPolicy"));
+				}else{					
+					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
+							.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
+							.getObjectIdentifiers() != null) {
+						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
+								.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+								.getMandatedSignedAttr().getObjectIdentifiers()) {
+								String oi = objectIdentifier.getValue();
+								Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
+								logger.info(oi);
+								if (signedAtt == null){
 								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-							}										
+								}										
+						}
 					}
 				}
 				
@@ -237,9 +241,9 @@ public class CAdESChecker implements PKCS7Checker {
 					dataHora = (((ASN1UTCTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
 					logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));																
 				} else {
-					logger.info(cadesMessagesBundle.getString("info.date.utc","N/D"));																
+					logger.info(cadesMessagesBundle.getString("info.date.utc","N/D"));
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("info.date.utc","N/D"));
 				}
-
 				
 				// recupera os atributos NÃO assinados
 				logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
@@ -248,37 +252,43 @@ public class CAdESChecker implements PKCS7Checker {
 					// Apenas info pois a RB não tem atributos não assinados
 					logger.info(cadesMessagesBundle.getString("error.unsigned.attribute.table.not.found"));
 				}
-				
-				// Validando atributos NÃO assinados de acordo com a politica
-				if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-						.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-						.getObjectIdentifiers() != null) {
-						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-							.getMandatedUnsignedAttr().getObjectIdentifiers()) {
-							String oi = objectIdentifier.getValue();
-							Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
-							logger.info(oi);
-							if (unSignedAtt == null){
-								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.unsigned.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-							}
-							if (oi.equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())){
-								//Verificando timeStamp
-								try{
-										byte[] varSignature = signerInfo.getSignature();
-										Timestamp varTimeStampSigner = validateTimestamp(unSignedAtt, varSignature); 
-										signatureInfo.setTimeStampSigner(varTimeStampSigner);
-								}catch (Exception ex) {
-									// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.						
+				if (signaturePolicy != null){
+					// Validando atributos NÃO assinados de acordo com a politica
+					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
+							.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
+							.getObjectIdentifiers() != null) {
+							for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
+								.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+								.getMandatedUnsignedAttr().getObjectIdentifiers()) {
+								String oi = objectIdentifier.getValue();
+								Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
+								logger.info(oi);
+								if (unSignedAtt == null){
+									signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.unsigned.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
+								}
+								if (oi.equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())){
+									//Verificando timeStamp
+									try{
+											byte[] varSignature = signerInfo.getSignature();
+											Timestamp varTimeStampSigner = validateTimestamp(unSignedAtt, varSignature); 
+											signatureInfo.setTimeStampSigner(varTimeStampSigner);
+									}catch (Exception ex) {
+										signatureInfo.getValidatorErrors().add(ex.getMessage());
+										// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.						
+									}
+								}
+								if (oi.equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")){
+									logger.info("++++++++++  EscTimeStamp ++++++++++++");
 								}
 							}
-							if (oi.equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")){
-								logger.info("++++++++++  EscTimeStamp ++++++++++++");
-							}
-						}
-				}							
+						}						
+				}
 				
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
+				if (varChain.size() < 3){
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
+					logger.info(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
+				}
 				signatureInfo.setSignDate(dataHora);
 				signatureInfo.setChain(varChain);
 				signatureInfo.setSignaturePolicy(signaturePolicy);
@@ -286,17 +296,25 @@ public class CAdESChecker implements PKCS7Checker {
 				
 			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
 				signatureInfo.getValidatorErrors().add(ex.getMessage());
+				logger.info(ex.getMessage());
 			} catch (CMSException ex) {				
 				// When file is mismatch with sign
-				if (ex instanceof CMSSignerDigestMismatchException)
+				if (ex instanceof CMSSignerDigestMismatchException){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
-				else
+					logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
+				}					
+				else{
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid"));
+					logger.info(cadesMessagesBundle.getString("error.signature.invalid"));
+				}
 			} catch (ParseException e) {
 				signatureInfo.getValidatorErrors().add(e.getMessage());
+				logger.info(e.getMessage());
+			} catch (Exception e) {
+				signatureInfo.getValidatorErrors().add(e.getMessage());
+				logger.info(e.getMessage());
 			}
 		}
-
 		logger.info(cadesMessagesBundle.getString("info.signature.verified", verified));
 		// TODO Efetuar o parsing da estrutura CMS
 		return true;
