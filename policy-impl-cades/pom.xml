@@ -45,6 +45,7 @@
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>chain-icp-brasil</artifactId>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
