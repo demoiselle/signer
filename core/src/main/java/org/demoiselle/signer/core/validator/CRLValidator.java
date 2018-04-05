@@ -62,7 +62,13 @@ public class CRLValidator implements IValidator {
     @Override
     public void validate(X509Certificate x509) throws CertificateValidatorCRLException {
     	if (x509 != null){
-    		Collection<ICPBR_CRL> crls = crlRepository.getX509CRL(x509);
+    		Collection<ICPBR_CRL> crls = null;
+    		try {
+    			 crls = crlRepository.getX509CRL(x509);
+			} catch (Exception e) {
+				throw new CertificateValidatorCRLException(e.getMessage());
+			}
+    		
             if (crls == null || crls.isEmpty()) {
                 throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl"));
             }

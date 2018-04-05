@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
@@ -25,7 +26,7 @@ public class PDFVerify {
 	public void test() {
 		
 	
-			String filePath = "/home/{usuario}/arquivo";
+			String filePath = "/home/{usuario}/arquivo.pdf";
 			
 			PDDocument document;
 			try {
@@ -63,6 +64,11 @@ public class PDFVerify {
 					if (!certificate.isCACertificate()){
 						System.out.println(certificate.toString());
 					}												
+				}
+				if (sis.getSignaturePolicy() != null){
+					System.out.println("------ Politica ----------------- ");
+					System.out.println(sis.getSignaturePolicy().toString());
+					
 				}
 				/*
 				for (BasicCertificate bc : sis.getSignersBasicCertificates()){

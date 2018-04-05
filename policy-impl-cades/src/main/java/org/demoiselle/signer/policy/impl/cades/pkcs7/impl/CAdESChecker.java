@@ -169,19 +169,20 @@ public class CAdESChecker implements PKCS7Checker {
 				X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
 				
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+					
+				CRLValidator cV = new CRLValidator();				
+				try {
+					cV.validate(varCert);	
+				}catch (CertificateValidatorCRLException cvce) {
+					signatureInfo.getValidatorErrors().add(cvce.getMessage());
+				}
+				
 				PeriodValidator pV = new PeriodValidator();				
 				try{
 					pV.validate(varCert);
 			
 				}catch (CertificateValidatorException cve) {
 					signatureInfo.getValidatorErrors().add(cve.getMessage());
-				}
-				
-				CRLValidator cV = new CRLValidator();				
-				try {
-					cV.validate(varCert);	
-				}catch (CertificateValidatorCRLException cvce) {
-					signatureInfo.getValidatorErrors().add(cvce.getMessage());
 				}
 				
 				if (signerInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
@@ -191,16 +192,17 @@ public class CAdESChecker implements PKCS7Checker {
 			
 				// recupera atributos assinados
 				logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
+				String varOIDPolicy = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId();
 				AttributeTable signedAttributes = signerInfo.getSignedAttributes();
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					logger.info(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}else{
 					//Validando atributos assinados de acordo com a politica
-					Attribute idSigningPolicy = null;
-					idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId()));
-					if (idSigningPolicy == null) {
-							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "idSigningPolicy"));
+					Attribute idSigningPolicy = null;					
+					idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(varOIDPolicy));
+					if (idSigningPolicy == null) {							
+							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found",varOIDPolicy));
 					}else{
 						for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
 							String policyOnSignature = p.nextElement().toString();
@@ -215,8 +217,8 @@ public class CAdESChecker implements PKCS7Checker {
 				}				
 				
 				if (signaturePolicy == null){
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", "idSigningPolicy"));
-					logger.info(cadesMessagesBundle.getString("error.policy.on.component.not.found", "idSigningPolicy"));
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
+					logger.info(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
 				}else{					
 					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
 							.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
@@ -242,7 +244,6 @@ public class CAdESChecker implements PKCS7Checker {
 					logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));																
 				} else {
 					logger.info(cadesMessagesBundle.getString("info.date.utc","N/D"));
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("info.date.utc","N/D"));
 				}
 				
 				// recupera os atributos NÃO assinados
@@ -310,10 +311,7 @@ public class CAdESChecker implements PKCS7Checker {
 			} catch (ParseException e) {
 				signatureInfo.getValidatorErrors().add(e.getMessage());
 				logger.info(e.getMessage());
-			} catch (Exception e) {
-				signatureInfo.getValidatorErrors().add(e.getMessage());
-				logger.info(e.getMessage());
-			}
+			} 
 		}
 		logger.info(cadesMessagesBundle.getString("info.signature.verified", verified));
 		// TODO Efetuar o parsing da estrutura CMS

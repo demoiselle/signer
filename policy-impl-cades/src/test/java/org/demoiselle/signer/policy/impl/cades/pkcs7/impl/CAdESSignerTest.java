@@ -156,7 +156,7 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// informar onde esta o arquivo
-			InputStream ksIs = new FileInputStream("local arquivo p12");
+			InputStream ksIs = new FileInputStream("/home/{usuario}/arquivo.p12");
 			ks.load(ksIs, senha);
 
 			KeyManagerFactory kmf = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
@@ -242,7 +242,7 @@ public class CAdESSignerTest {
 			// politica referencia básica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			 //signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// referencia de validação
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_2);
