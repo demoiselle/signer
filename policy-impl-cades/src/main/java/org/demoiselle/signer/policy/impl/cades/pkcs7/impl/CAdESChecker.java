@@ -49,11 +49,13 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.cms.CMSAttributes;
+import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -190,6 +192,8 @@ public class CAdESChecker implements PKCS7Checker {
 					logger.info(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
 				}				
 			
+				
+				
 				// recupera atributos assinados
 				logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
 				String varOIDPolicy = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId();
@@ -197,6 +201,7 @@ public class CAdESChecker implements PKCS7Checker {
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					logger.info(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
+					throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}else{
 					//Validando atributos assinados de acordo com a politica
 					Attribute idSigningPolicy = null;					
@@ -214,7 +219,24 @@ public class CAdESChecker implements PKCS7Checker {
 							}
 						}						
 					}
-				}				
+				}
+				// Valida o atributo ContentType
+				Attribute attributeContentType = signedAttributes.get(CMSAttributes.contentType);
+				if (attributeContentType == null) {
+					throw new SignerException(
+							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
+				}
+
+				if (!attributeContentType.getAttrValues().getObjectAt(0).equals(ContentInfo.data)) {
+					throw new SignerException(cadesMessagesBundle.getString("error.content.not.data"));
+				}
+
+				// Validando o atributo MessageDigest
+				Attribute attributeMessageDigest = signedAttributes.get(CMSAttributes.messageDigest);
+				if (attributeMessageDigest == null) {
+					throw new SignerException(
+							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
+				}
 				
 				if (signaturePolicy == null){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
@@ -303,10 +325,12 @@ public class CAdESChecker implements PKCS7Checker {
 				if (ex instanceof CMSSignerDigestMismatchException){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
 					logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
+					throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
 				}					
 				else{
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid"));
 					logger.info(cadesMessagesBundle.getString("error.signature.invalid"));
+					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid"), ex);
 				}
 			} catch (ParseException e) {
 				signatureInfo.getValidatorErrors().add(e.getMessage());
