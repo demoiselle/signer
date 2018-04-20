@@ -45,7 +45,7 @@
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
         <relativePath>../parent</relativePath>
-        <version>3.2.7</version>
+        <version>3.2.8-SNAPSHOT</version>
     </parent>
 
     <name>Demoiselle Signer Timestamp</name>
