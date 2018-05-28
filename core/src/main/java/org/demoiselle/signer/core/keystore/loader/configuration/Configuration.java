@@ -114,53 +114,55 @@ public class Configuration {
 		map.put("TokenOuSmartCard_14", winRoot.concat("/System32/Watchdata/Watchdata Brazil CSP v1.0/WDPKCS.dll"));
 		map.put("TokenOuSmartCard_15", "/Arquivos de programas/Gemplus/GemSafe Libraries/BIN/gclib.dll");
 		map.put("TokenOuSmartCard_16", "/Program Files/Gemplus/GemSafe Libraries/BIN/gclib.dll");
+		map.put("TokenOuSmartCard_17", winRoot.concat("/System32/WDICP_P11_CCID_v34.dll"));
+		map.put("TokenOuSmartCard_18", winRoot.concat("/SysWOW64/WDICP_P11_CCID_v34.dll"));
 
 		// ------------ Linux ------------
-		map.put("TokenOuSmartCard_17", "/usr/lib/libaetpkss.so");
-		map.put("TokenOuSmartCard_18", "/usr/lib/libgpkcs11.so");
-		map.put("TokenOuSmartCard_19", "/usr/lib/libgpkcs11.so.2");
+		map.put("TokenOuSmartCard_19", "/usr/lib/libaetpkss.so");
+		map.put("TokenOuSmartCard_20", "/usr/lib/libgpkcs11.so");
+		map.put("TokenOuSmartCard_21", "/usr/lib/libgpkcs11.so.2");
 
 		// Token Verde do Serpro
-		map.put("TokenOuSmartCard_20", "/usr/lib/libepsng_p11.so");
-		map.put("TokenOuSmartCard_21", "/usr/lib/libepsng_p11.so.1");
-		map.put("TokenOuSmartCard_22", "/usr/local/ngsrv/libepsng_p11.so.1");
+		map.put("TokenOuSmartCard_22", "/usr/lib/libepsng_p11.so");
+		map.put("TokenOuSmartCard_23", "/usr/lib/libepsng_p11.so.1");
+		map.put("TokenOuSmartCard_24", "/usr/local/ngsrv/libepsng_p11.so.1");
 
 		// Token Azul do Serpro
-		map.put("TokenOuSmartCard_23", "/usr/lib/libeTPkcs11.so");
-		map.put("TokenOuSmartCard_24", "/usr/lib/libeToken.so");
-		map.put("TokenOuSmartCard_25", "/usr/lib/libeToken.so.4");
-		map.put("TokenOuSmartCard_26", "/usr/lib/libcmP11.so");
-		map.put("TokenOuSmartCard_27", "/usr/lib/libwdpkcs.so");
-		map.put("TokenOuSmartCard_28", "/usr/local/lib64/libwdpkcs.so");
-		map.put("TokenOuSmartCard_29", "/usr/local/lib/libwdpkcs.so");
+		map.put("TokenOuSmartCard_25", "/usr/lib/libeTPkcs11.so");
+		map.put("TokenOuSmartCard_26", "/usr/lib/libeToken.so");
+		map.put("TokenOuSmartCard_27", "/usr/lib/libeToken.so.4");
+		map.put("TokenOuSmartCard_28", "/usr/lib/libcmP11.so");
+		map.put("TokenOuSmartCard_29", "/usr/lib/libwdpkcs.so");
+		map.put("TokenOuSmartCard_30", "/usr/local/lib64/libwdpkcs.so");
+		map.put("TokenOuSmartCard_31", "/usr/local/lib/libwdpkcs.so");
 		// Token Branco do Serpro
-		map.put("TokenOuSmartCard_30", "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so");
-		map.put("TokenOuSmartCard_31", "/usr/lib/watchdata/lib/libwdpkcs.so");
-		map.put("TokenOuSmartCard_32", "/opt/watchdata/lib64/libwdpkcs.so");
+		map.put("TokenOuSmartCard_32", "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so");
+		map.put("TokenOuSmartCard_33", "/usr/lib/watchdata/lib/libwdpkcs.so");
+		map.put("TokenOuSmartCard_34", "/opt/watchdata/lib64/libwdpkcs.so");
 		
 		// Token GD do Serpro
-		map.put("TokenOuSmartCard_33", "/usr/lib/libaetpkss.so.3");
+		map.put("TokenOuSmartCard_35", "/usr/lib/libaetpkss.so.3");
 		
-		map.put("TokenOuSmartCard_34", "/usr/lib/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_35", "/usr/lib/pkcs11/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_36", "/usr/lib/libwdpkcs.dylib");
-		map.put("TokenOuSmartCard_37", "/usr/local/lib/libwdpkcs.dylib");
-		map.put("TokenOuSmartCard_38", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
+		map.put("TokenOuSmartCard_36", "/usr/lib/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_37", "/usr/lib/pkcs11/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_38", "/usr/lib/libwdpkcs.dylib");
+		map.put("TokenOuSmartCard_39", "/usr/local/lib/libwdpkcs.dylib");
+		map.put("TokenOuSmartCard_40", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
 		
 		// ------------ Mac ------------
 		// Token Branco do Serpro
-		map.put("TokenOuSmartCard_39",
-				"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
-		map.put("TokenOuSmartCard_40",
-				"//usr//local//lib//libetpkcs11.dylib");
 		map.put("TokenOuSmartCard_41",
+				"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
+		map.put("TokenOuSmartCard_42",
+				"//usr//local//lib//libetpkcs11.dylib");
+		map.put("TokenOuSmartCard_43",
 				"//usr//local//lib//libaetpkss.dylib");
 		
 		// Certificado em Nuvem - Windows
 		
-		map.put("TokenOuSmartCard_42", winRoot.concat("/system32/SerproPkcs11.dll"));
+		map.put("TokenOuSmartCard_44", winRoot.concat("/system32/SerproPkcs11.dll"));
 		// Certificado em Nuvem - Linux		
-		map.put("TokenOuSmartCard_43", "/usr/lib/libneoidp11.so");
+		map.put("TokenOuSmartCard_45", "/usr/lib/libneoidp11.so");
 				
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {
