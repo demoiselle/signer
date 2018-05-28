@@ -74,6 +74,8 @@ public class Configuration {
 	protected static final String MSCAPI_DISABLED = "mscapi.disabled";
 	protected static final String CONFIG_FILE_DIR = ".signer";
 	protected static final String CONFIG_FILE_PATH = "drivers.properties";
+	protected static boolean MSCAPI_ON = true;
+	
 	private static final Configuration instance = new Configuration();
 
 	public static Configuration getInstance() {
@@ -418,4 +420,22 @@ public class Configuration {
 		return System.getProperty(CUSTOM_CONFIG_PATH) + separator + CONFIG_FILE_DIR + separator + CONFIG_FILE_PATH;
 	}
 
+	/**
+	 * 
+	 * default is true
+	 * 
+	 * @return if MSCAPI is ON (true) or OFF (false)
+	 */
+	public static boolean isMSCAPI_ON() {
+		return MSCAPI_ON;
+	}
+
+	/**
+	 * set MSCAPI to ON (true) or OFF (false)
+	 * @param mSCAPI_ON
+	 */
+	public static void setMSCAPI_ON(boolean mSCAPI_ON) {
+		MSCAPI_ON = mSCAPI_ON;
+	}
+	
 }

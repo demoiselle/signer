@@ -71,7 +71,7 @@ public class KeyStoreLoaderFactory {
         logger.debug(coreMessagesBundle.getString("info.keystore.no.parameter"));
         if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
             logger.debug(coreMessagesBundle.getString("info.keystore.ms"));
-            if (Configuration.getInstance().isMSCapiDisabled()) {
+            if (Configuration.getInstance().isMSCapiDisabled() || !Configuration.isMSCAPI_ON()) {
                 logger.debug(coreMessagesBundle.getString("info.keystore.ms.pkcs11"));
                 return new DriverKeyStoreLoader();
             } else {
