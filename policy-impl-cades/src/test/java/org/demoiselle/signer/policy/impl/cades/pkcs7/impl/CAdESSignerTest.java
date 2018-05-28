@@ -65,6 +65,7 @@ import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
+import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -217,6 +218,10 @@ public class CAdESSignerTest {
 			// quando certificado em arquivo, precisa informar a senha
 			char[] senha = "senha".toCharArray();
 
+			// MSCAPI off
+			//org.demoiselle.signer.core.keystore.loader.configuration.Configuration.setMSCAPI_ON(false);
+
+			
 			// Para certificado NeoID e windows token
 			//KeyStore ks = getKeyStoreTokenBySigner();
 			
@@ -253,8 +258,16 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Assinatura desatachada
 			
-			CAManagerConfiguration config = CAManagerConfiguration.getInstance();
+			// Cache de cadeia
+			//CAManagerConfiguration config = CAManagerConfiguration.getInstance();
 			//config.setCached(true);
+			
+			// Cache LCR
+			//Configuration config = Configuration.getInstance();
+			//config.setCrlIndex(".crl_index");
+			//config.setCrlPath("/home/80621732915/lcr_cache/");
+			//config.setOnline(false);
+			
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
 			File file = new File(fileDirName + "_detached.p7s");
