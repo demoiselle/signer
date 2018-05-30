@@ -92,14 +92,18 @@ public class OffLineCRLRepository implements CRLRepository {
                 throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl"));
             }
 
+            ICPBR_CRL validCrl = null;
             for (String URLCRL : ListaURLCRL) {
                 // Achou uma CRL válida
-                ICPBR_CRL crl = getICPBR_CRL(URLCRL);
-                if (crl != null) {
-                    list.add(crl);
+            	validCrl = getICPBR_CRL(URLCRL);
+                if (validCrl != null) {
+                    list.add(validCrl);
                     logger.info(coreMessagesBundle.getString("info.crl.found", URLCRL));
                     break;
                 }
+            }
+            if (validCrl == null){
+            	throw new CRLRepositoryException(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
             }
 
         } catch (IOException e) {
