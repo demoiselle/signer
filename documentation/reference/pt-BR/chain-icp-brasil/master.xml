@@ -11,7 +11,7 @@
 		<para>
 			O Chain-ICP-Brasil fornece uma implementação para validação do conjunto de Autoridades Certificadoras da cadeia ICP-Brasil.
 			O acionamento das funcionalidades é feito automaticamente pelo componentes de geração e validação de assinaturas como o <emphasis>policy-impl-cades</emphasis>
-			O mais importante é mantê-lo sempre atualizado. 
+			quando a dependência é especificada no arquivo POM.XML 
 		</para>
 	</partintro>
 

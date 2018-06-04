@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="ca-icpbrasil-homolog-master">
+
+	<title>
+		Cadeias de homologação do SERPRO
+	</title>
+
+	<partintro>
+		<para>
+			O chain-icp-brasil-homolog fornece uma implementação para validação do conjunto de Autoridades de homologação emitidas pelo SERPRO.
+			O acionamento das funcionalidades é feito pelo componentes de geração e validação de assinaturas como o <emphasis>policy-impl-cades</emphasis> quando a dependência 
+			for incluída no arquivo POM.XML da aplicação. Conforme descrito abaixo:			 
+		</para>
+	</partintro>
+
+	<!-- capítulos -->
+	<xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />  
+</part>

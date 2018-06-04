@@ -47,7 +47,7 @@
     		</itemizedlist>
         </para>
 	<note>
-	Caso queira baixar uma versão desta documentação em formato PDF clique <para><ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.2.8.pdf">aqui:</ulink></para> </note>
+	Caso queira baixar uma versão desta documentação em formato PDF clique <para><ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.2.9.pdf">aqui:</ulink></para> </note>
         
     </preface>
 
@@ -68,6 +68,8 @@
     <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
     <!-- Crytography -->
     <xi:include href="cryptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />    
+	<!-- Chain Homologação SERPRO -->
+    <xi:include href="chain-icp-brasil-homolog/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
     
 	<xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
