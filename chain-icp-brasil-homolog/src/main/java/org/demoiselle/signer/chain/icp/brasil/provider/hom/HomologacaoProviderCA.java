@@ -90,7 +90,7 @@ public class HomologacaoProviderCA implements ProviderCA {
             InputStream ACSERPROJUSv5 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACSERPROJUSv5.crt");
             InputStream ACSERPROHOMOLOGACAO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACSERPROHOMOLOGACAO.crt");
             InputStream ACSERPROACFv3Homologacao = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACSERPROACFv3Homologacao.cer");
-            InputStream AutoridadeCertificadoraSERPRORFBv5Hom= HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("AutoridadeCertificadoraSERPRORFBv5Hom.crt");
+            InputStream AutoridadeCertificadoraSERPRORFBv5Hom= HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBv5Hom.crt");
             
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPROFinalv5HomN));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPROv6HOM));
