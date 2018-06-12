@@ -44,7 +44,6 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
@@ -56,6 +55,7 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
+import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +93,15 @@ public class RequestSigner {
             if (algorithm != null && !algorithm.isEmpty()){
             	varAlgorithm = algorithm;
             }else{
-            	varAlgorithm = "SHA256withRSA";
+            	
+            	// If is WINDOWS, is ONLY WORKS with SHA256
+				if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+					logger.info("Windows detected, Algorithm setted to SHA256");
+					varAlgorithm = "SHA256withRSA";
+				}else{
+					varAlgorithm = "SHA512withRSA";
+				}
+				
             }
             	
             SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder().build(varAlgorithm, privateKey, signCert);

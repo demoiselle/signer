@@ -73,7 +73,7 @@ import org.slf4j.LoggerFactory;
 public class HttpConnector implements Connector {
 
 	
-//	private static final Logger logger = LoggerFactory.getLogger(HttpConnector.class);
+	private static final Logger logger = LoggerFactory.getLogger(HttpConnector.class);
     private String hostname;
     private int port;
     private OutputStream out = null;
@@ -83,6 +83,7 @@ public class HttpConnector implements Connector {
 	
     @Override
     public InputStream connect(byte[] content) {
+    	logger.info(timeStampMessagesBundle.getString("error.not.supported", getClass().getName() ));
         throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName() ));
     }
 
@@ -96,7 +97,25 @@ public class HttpConnector implements Connector {
     	this.port = port;
     }
 
-    @Override
+    
+    
+    public HttpsURLConnection getHttpsConnector() {
+		return HttpsConnector;
+	}
+
+	public void setHttpsConnector(HttpsURLConnection httpsConnector) {
+		HttpsConnector = httpsConnector;
+	}
+
+	public String getHostname() {
+		return hostname;
+	}
+
+	public int getPort() {
+		return port;
+	}
+
+	@Override
     public void close() {    	
     	try {
     		this.HttpsConnector.disconnect();

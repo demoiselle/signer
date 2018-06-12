@@ -67,6 +67,7 @@ import org.bouncycastle.tsp.TimeStampResponse;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.cryptography.Digest;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
@@ -109,27 +110,38 @@ public class TimeStampOperator {
     public byte[] createRequest(PrivateKey privateKey, Certificate[] certificates, byte[] content, byte[] hash) throws CertificateCoreException {
         try {
             logger.info(timeStampMessagesBundle.getString("info.timestamp.digest"));
-            Digest digest = DigestFactory.getInstance().factoryDefault();
-            digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+            Digest digest = DigestFactory.getInstance().factoryDefault();            
+            String varAlgoOid = null;
+            String varAlgo = null;
+            if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				logger.info("Windows detected, Algorithm setted to SHA256");
+				varAlgoOid = TSPAlgorithms.SHA256.getId();
+				varAlgo = "SHA256withRSA";
+				digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+            }else{
+            	varAlgoOid = TSPAlgorithms.SHA512.getId();
+            	varAlgo = "SHA512withRSA";
+            	digest.setAlgorithm(DigestAlgorithmEnum.SHA_512);
+            }
+            
+            
             byte[] hashedMessage = null;
             if (content != null){
             	hashedMessage = digest.digest(content);                
                 //logger.info(Base64.toBase64String(hashedMessage));	
             }else{
             	hashedMessage = hash;
-            }
-            
+            }            
             logger.info(timeStampMessagesBundle.getString("info.timestamp.prepare.request"));
-            TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();
-                        
+            TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();                        
             timeStampRequestGenerator.setReqPolicy(new ASN1ObjectIdentifier(TimeStampConfig.getInstance().getTSPOid()));
             timeStampRequestGenerator.setCertReq(true);
             BigInteger nonce = BigInteger.valueOf(100);
-            timeStampRequest = timeStampRequestGenerator.generate(new ASN1ObjectIdentifier(TSPAlgorithms.SHA256.getId()), hashedMessage, nonce);
+            timeStampRequest = timeStampRequestGenerator.generate(new ASN1ObjectIdentifier(varAlgoOid), hashedMessage, nonce);
             byte request[] = timeStampRequest.getEncoded();
             logger.info(timeStampMessagesBundle.getString("info.timestamp.sign.request"));
             RequestSigner requestSigner = new RequestSigner();
-            byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request, "SHA256withRSA");
+            byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request, varAlgo);
             return signedRequest;
         } catch (IOException ex) { 
         
@@ -350,7 +362,11 @@ public class TimeStampOperator {
             byte[] calculatedHash = null;
             if (content != null){
             	Digest digest = DigestFactory.getInstance().factoryDefault();
-                digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+            	if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+            		digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+            	}else{
+            		digest.setAlgorithm(DigestAlgorithmEnum.SHA_512);
+            	}                
                 calculatedHash = digest.digest(content);
             }else{
             	calculatedHash = hash;
