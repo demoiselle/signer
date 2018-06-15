@@ -96,9 +96,11 @@ public class RequestSigner {
             	
             	// If is WINDOWS, is ONLY WORKS with SHA256
 				if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-					logger.info("Windows detected, Algorithm setted to SHA256");
+					logger.info(timeStampMessagesBundle.getString("info.timestamp.winhash"));
+					
 					varAlgorithm = "SHA256withRSA";
 				}else{
+					logger.info(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));					
 					varAlgorithm = "SHA512withRSA";
 				}
 				

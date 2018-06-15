@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
+import java.util.regex.Pattern;
 
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -66,6 +67,7 @@ public class Configuration {
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 	protected static final String KEY_JAVA_VERSION = "java.runtime.version";
 	protected static final String KEY_OS_NAME = "os.name";
+	protected static final String KEY_OS_VERSION = "os.version";
 	protected static final String VAR_PKCS11_CONFIG = "PKCS11_CONFIG_FILE";
 	protected static final String VAR_PKCS11_DRIVER = "PKCS11_DRIVER";
 	protected static final String CUSTOM_CONFIG_PATH = "user.home";
@@ -214,6 +216,38 @@ public class Configuration {
 	 */
 	public String getSO() {
 		return System.getProperty(Configuration.KEY_OS_NAME);
+	}
+	
+	/**
+	 * 
+	 * Method that returns the version of the operating system. Look for this
+	 * information in the system properties.
+	 * 
+	 * @return version of the operating system
+	 */
+		
+	
+	public Integer getSoVersion(){
+		
+		Pattern p = Pattern.compile("[^0-9]");
+		String varVersion = System.getProperty(Configuration.KEY_OS_VERSION);
+		int pos = varVersion.indexOf("-");
+		varVersion = varVersion.substring(0, pos);		
+		String numericVersion = p.matcher(varVersion).replaceAll("");
+		Integer integerVersion = Integer.valueOf(numericVersion);
+		
+		return integerVersion;
+		
+	}
+	public Integer getSoVersionRelease(){
+		
+		Pattern p = Pattern.compile("[^0-9]");
+		String varVersion = System.getProperty(Configuration.KEY_OS_VERSION);
+		String numericVersion = p.matcher(varVersion).replaceAll("");
+		Integer integerVersion = Integer.valueOf(numericVersion);
+		
+		return integerVersion;
+		
 	}
 
 	/**

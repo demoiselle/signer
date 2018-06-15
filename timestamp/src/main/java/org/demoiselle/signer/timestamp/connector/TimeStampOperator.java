@@ -114,11 +114,12 @@ public class TimeStampOperator {
             String varAlgoOid = null;
             String varAlgo = null;
             if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-				logger.info("Windows detected, Algorithm setted to SHA256");
+				logger.info(timeStampMessagesBundle.getString("info.timestamp.winhash"));
 				varAlgoOid = TSPAlgorithms.SHA256.getId();
 				varAlgo = "SHA256withRSA";
 				digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
             }else{
+            	logger.info(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));
             	varAlgoOid = TSPAlgorithms.SHA512.getId();
             	varAlgo = "SHA512withRSA";
             	digest.setAlgorithm(DigestAlgorithmEnum.SHA_512);
