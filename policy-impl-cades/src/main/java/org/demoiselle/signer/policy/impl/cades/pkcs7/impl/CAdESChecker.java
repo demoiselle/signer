@@ -142,7 +142,12 @@ public class CAdESChecker implements PKCS7Checker {
 				}
 				
 			} else {
-				cmsSignedData = new CMSSignedData(new CMSProcessableByteArray(content), signedData);
+				if (this.getAttached(signedData, false) != null){
+					cmsSignedData = new CMSSignedData(signedData);
+				}else{
+					cmsSignedData = new CMSSignedData(new CMSProcessableByteArray(content), signedData);
+				}
+				
 			}
 		} catch (CMSException ex) {
 			throw new SignerException(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"), ex);
@@ -201,7 +206,7 @@ public class CAdESChecker implements PKCS7Checker {
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					logger.info(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
-					throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
+					//throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}else{
 					//Validando atributos assinados de acordo com a politica
 					Attribute idSigningPolicy = null;					
@@ -220,24 +225,40 @@ public class CAdESChecker implements PKCS7Checker {
 						}						
 					}
 				}
-				// Valida o atributo ContentType
-				Attribute attributeContentType = signedAttributes.get(CMSAttributes.contentType);
-				if (attributeContentType == null) {
-					throw new SignerException(
-							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
-				}
+				Date dataHora = null;
+				if (signedAttributes != null) {
+					// Valida o atributo ContentType
+					Attribute attributeContentType = signedAttributes.get(CMSAttributes.contentType);
+					if (attributeContentType == null) {
+						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
+						//throw new SignerException(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
+						logger.info(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
+					}
 
-				if (!attributeContentType.getAttrValues().getObjectAt(0).equals(ContentInfo.data)) {
-					throw new SignerException(cadesMessagesBundle.getString("error.content.not.data"));
-				}
+					if (!attributeContentType.getAttrValues().getObjectAt(0).equals(ContentInfo.data)) {
+						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.content.not.data"));
+						//throw new SignerException(cadesMessagesBundle.getString("error.content.not.data"));
+						logger.info(cadesMessagesBundle.getString("error.content.not.data"));
+					}
 
-				// Validando o atributo MessageDigest
-				Attribute attributeMessageDigest = signedAttributes.get(CMSAttributes.messageDigest);
-				if (attributeMessageDigest == null) {
-					throw new SignerException(
-							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
+					// Validando o atributo MessageDigest
+					Attribute attributeMessageDigest = signedAttributes.get(CMSAttributes.messageDigest);
+					if (attributeMessageDigest == null) {
+						throw new SignerException(
+								cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
+					}
+					// Mostra data e  hora da assinatura, não é carimbo de tempo
+					Attribute timeAttribute = signedAttributes.get(CMSAttributes.signingTime);
+					
+					if (timeAttribute != null) {
+						dataHora = (((ASN1UTCTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
+						logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));																
+					} else {
+						logger.info(cadesMessagesBundle.getString("info.date.utc","N/D"));
+					}
+
 				}
-				
+								
 				if (signaturePolicy == null){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
 					logger.info(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
@@ -258,15 +279,7 @@ public class CAdESChecker implements PKCS7Checker {
 					}
 				}
 				
-				// Mostra data e  hora da assinatura, não é carimbo de tempo
-				Attribute timeAttribute = signedAttributes.get(CMSAttributes.signingTime);
-				Date dataHora = null;
-				if (timeAttribute != null) {
-					dataHora = (((ASN1UTCTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
-					logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));																
-				} else {
-					logger.info(cadesMessagesBundle.getString("info.date.utc","N/D"));
-				}
+			
 				
 				// recupera os atributos NÃO assinados
 				logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
