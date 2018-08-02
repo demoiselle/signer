@@ -137,7 +137,7 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
                         }
                         break;
                     case NAME:
-                        keyValue = cert.getNome();
+                        keyValue = cert.getName();
                         break;
                     case NAME_RESPONSIBLE_PESSOA_JURIDICA:
                         if (cert.hasCertificatePJ()) {

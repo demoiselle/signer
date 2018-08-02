@@ -233,12 +233,14 @@ public class BasicCertificate {
     }
 
     /**
+     *  
      * Returns the name that was defined on CN for CertificateSubjectDN.<br>
      * Its similar to CertificateSubjectDN.getProperty("CN"), but ignoring<br>
      * the information after ":".<br>
-     *
+     * @deprecated spelling mistake, use getName
      * @return String name
      */
+
     public String getNome() {
         try {
             String nome = this.getCertificateSubjectDN().getProperty("CN");
@@ -253,6 +255,31 @@ public class BasicCertificate {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    /**
+     * Returns the name that was defined on CN for CertificateSubjectDN.<br>
+     * Its similar to CertificateSubjectDN.getProperty("CN"), but ignoring<br>
+     * the information after ":".<br>
+     *
+     * @return String name
+     */
+    public String getName() {
+        try {
+            String name = this.getCertificateSubjectDN().getProperty("CN");
+            int pos;
+
+            pos = name.indexOf(':');
+            if (pos > 0) {
+                return name.substring(0, pos);
+            }
+            return name;
+        } catch (Exception e) {
+        	logger.info(e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+        
     }
 
     /**
@@ -477,9 +504,10 @@ public class BasicCertificate {
             }
             return null;
         } catch (Exception e) {
+        	logger.info(e.getMessage());
             e.printStackTrace();
+            return null;
         }
-        return null;
     }
     
     
@@ -500,7 +528,7 @@ public class BasicCertificate {
 						address.add(((DERIA5String) desc.getAccessLocation().getName()).getString());
 			}
 			return address;
-		} catch (IOException error) {
+		} catch (Exception error) {
 			logger.info(error.getMessage());
 			return address;
 		}
@@ -508,20 +536,25 @@ public class BasicCertificate {
 
 
     /**
-     *
-     *
+     *     *
      * @return the authority key identifier of a certificate
-     * @throws IOException exception
+     * 
      */
-    public String getAuthorityKeyIdentifier() throws IOException {
+    public String getAuthorityKeyIdentifier() {
         // TODO - Precisa validar este metodo com a RFC
-        DLSequence sequence = (DLSequence) getExtensionValue(Extension.authorityKeyIdentifier.getId());
-        if (sequence == null || sequence.size() == 0) {
-            return null;
-        }
-        DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(0);
-        DEROctetString oct = (DEROctetString) taggedObject.getObject();
-        return toString(oct.getOctets());
+    	try {
+    		DLSequence sequence = (DLSequence) getExtensionValue(Extension.authorityKeyIdentifier.getId());
+    		if (sequence == null || sequence.size() == 0) {
+    			return null;
+    		}
+    		DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(0);
+    		DEROctetString oct = (DEROctetString) taggedObject.getObject();
+    		return toString(oct.getOctets());
+    	} catch (Exception error) {
+    		logger.info(error.getMessage());
+    		return null;
+    	}
+    		
     }
 
     /**
@@ -532,12 +565,18 @@ public class BasicCertificate {
      */
     public String getSubjectKeyIdentifier() throws IOException {
         // TODO - Precisa validar este metodo com a RFC
-        DEROctetString oct = (DEROctetString) getExtensionValue(Extension.subjectKeyIdentifier.getId());
-        if (oct == null) {
-            return null;
-        }
+    	try {
+    		DEROctetString oct = (DEROctetString) getExtensionValue(Extension.subjectKeyIdentifier.getId());
+            if (oct == null) {
+                return null;
+            }
 
-        return toString(oct.getOctets());
+            return toString(oct.getOctets());
+    	}catch (Exception error) {
+    		logger.info(error.getMessage());
+    		return null;
+    	}
+        
     }
 
     /**
@@ -582,19 +621,19 @@ public class BasicCertificate {
      * @return org.bouncycastle.asn1.ASN1Primitive Content related to the reported OID
      */
     public ASN1Primitive getExtensionValue(String oid) {
-        byte[] extensionValue = certificate.getExtensionValue(oid);
-        if (extensionValue == null) {
-            return null;
-        }
-        try {
+    	try {
+    		byte[] extensionValue = certificate.getExtensionValue(oid);
+    		if (extensionValue == null) {
+    			return null;
+    		}        
         	varASN1InputStream = new ASN1InputStream(extensionValue);
             DEROctetString oct = (DEROctetString) varASN1InputStream.readObject();
             varASN1InputStream = new ASN1InputStream(oct.getOctets());
             return varASN1InputStream.readObject();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        } catch (Exception e) {
+        	logger.info(e.getMessage());
+            return null;
+        }        
     }
 
     @Override
@@ -608,7 +647,7 @@ public class BasicCertificate {
             
             sb.append(coreMessagesBundle.getString("text.certicate.serialNumber")).append(this.getSerialNumber()).append("\n");
             sb.append(coreMessagesBundle.getString("text.certicate.subjectDN")).append(this.getCertificateSubjectDN()).append("\n");
-            sb.append(coreMessagesBundle.getString("text.certicate.name")).append(this.getNome()).append("\n");
+            sb.append(coreMessagesBundle.getString("text.certicate.name")).append(this.getName()).append("\n");
             sb.append(coreMessagesBundle.getString("text.certicate.valid.from")).append(dtValidade.format(this.getBeforeDate())).append("ate").append(dtValidade.format(this.getAfterDate())).append("\n");
             sb.append("*********************************\n");
      //       sb.append("*********************************\n");            

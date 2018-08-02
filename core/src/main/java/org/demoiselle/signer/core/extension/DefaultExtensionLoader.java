@@ -98,7 +98,7 @@ public class DefaultExtensionLoader implements IOIDExtensionLoader {
                 case AUTHORITY_KEY_IDENTIFIER:
                     try {
                         keyValue = basicCertificate.getAuthorityKeyIdentifier();
-                    } catch (IOException e1) {
+                    } catch (Exception e1) {
                         throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
                     }
                     break;
