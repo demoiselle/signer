@@ -40,10 +40,13 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -114,6 +117,8 @@ public class CAdESCheckerTest {
 	 */
 	//@Test
 	public void testVerifyAttachedSignature() {
+		
+		
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura_com_conteudo_anexado";
 		byte[] signatureFile = readContent(fileSignatureDirName);
 
@@ -168,7 +173,7 @@ public class CAdESCheckerTest {
 		java.security.MessageDigest md;
 		try {
 			md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 		
 			// gera o hash do arquivo que foi assinado
 			byte[] hash = md.digest(fileToVerify);
@@ -177,7 +182,7 @@ public class CAdESCheckerTest {
 		
 			System.out.println("Efetuando a validacao da assinatura");
 					
-			List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signatureFile);
+			List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA512withRSA.getOIDAlgorithmHash(), hash, signatureFile);
 			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				for (SignatureInformations si : signaturesInfo){
@@ -221,5 +226,27 @@ public class CAdESCheckerTest {
 		}
 		return result;
 	}
+	
+	@Test
+	public void testGerarDoHash() {
+		String imgPDF = "eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ";
+		
+		
+		byte[] signature = Base64.decodeBase64(imgPDF);
+		File file = new File("conteudo.txt");
+		FileOutputStream os;
+		try {
+			os = new FileOutputStream(file);
+			os.write(signature);
+			os.flush();
+			os.close();
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		}
+	
 	
 }
