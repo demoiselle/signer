@@ -38,7 +38,9 @@ package org.demoiselle.signer.core.validator;
 
 import java.security.cert.X509Certificate;
 import java.util.Collection;
+
 import org.demoiselle.signer.core.IValidator;
+import org.demoiselle.signer.core.exception.CertificateRevocationException;
 import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
 import org.demoiselle.signer.core.repository.CRLRepository;
@@ -60,7 +62,7 @@ public class CRLValidator implements IValidator {
     }
 
     @Override
-    public void validate(X509Certificate x509) throws CertificateValidatorCRLException {
+    public void validate(X509Certificate x509) throws CertificateValidatorCRLException, CertificateRevocationException {
     	if (x509 != null){
     		Collection<ICPBR_CRL> crls = null;
     		try {
@@ -74,7 +76,7 @@ public class CRLValidator implements IValidator {
             }
             for (ICPBR_CRL icpbr_crl : crls) {
                 if (icpbr_crl.getCRL().isRevoked(x509)) {
-                    throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.certificate.repelead"));
+                    throw new CertificateRevocationException(coreMessagesBundle.getString("error.certificate.repelead"));
                 }
             }	
     	}else{

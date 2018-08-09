@@ -75,6 +75,7 @@ import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
+import org.demoiselle.signer.core.exception.CertificateRevocationException;
 import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -182,6 +183,10 @@ public class CAdESChecker implements PKCS7Checker {
 					cV.validate(varCert);	
 				}catch (CertificateValidatorCRLException cvce) {
 					signatureInfo.getValidatorErrors().add(cvce.getMessage());
+					logger.info(cvce.getMessage());
+				}catch (CertificateRevocationException cre) {
+					signatureInfo.getValidatorErrors().add(cre.getMessage());
+					logger.info("certificado revogado");
 				}
 				
 				PeriodValidator pV = new PeriodValidator();				
