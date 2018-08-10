@@ -81,17 +81,15 @@ public class SignatureInformations {
 	 * 
 	 * @return list of Signers BasicCertificates
 	 */
-	public LinkedList<BasicCertificate> getSignersBasicCertificates(){
-		
-		LinkedList<BasicCertificate> listOfBasicCertificates = new LinkedList<BasicCertificate>();
+	public BasicCertificate getSignerBasicCertificate(){
 		
 		for(X509Certificate cert : getChain()){
 			BasicCertificate certificate = new BasicCertificate(cert);
 			if (!certificate.isCACertificate()){
-				listOfBasicCertificates.add(certificate);
+				return certificate;
 			}												
 		}
-		return listOfBasicCertificates;		
+		return null;		
 	}
 
 	public SignaturePolicy getSignaturePolicy() {
