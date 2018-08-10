@@ -227,7 +227,7 @@ public class CAdESCheckerTest {
 		return result;
 	}
 	
-	@Test
+	//@Test
 	public void testGerarDoHash() {
 		String imgPDF = "eyJpc3MiOiJqb2UiLA0KICJleHAiOjEzMDA4MTkzODAsDQogImh0dHA6Ly9leGFtcGxlLmNvbS9pc19yb290Ijp0cnVlfQ";
 		
@@ -241,8 +241,7 @@ public class CAdESCheckerTest {
 			os.flush();
 			os.close();
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (IOException e) {		
 			e.printStackTrace();
 		}
 		
