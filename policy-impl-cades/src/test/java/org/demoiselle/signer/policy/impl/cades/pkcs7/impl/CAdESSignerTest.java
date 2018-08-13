@@ -323,7 +323,13 @@ public class CAdESSignerTest {
 
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
+
+			// devido a uma restrição do token branco, no windws só funciona com 256
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			}
+			
 			byte[] hash = md.digest(fileToSign);
 			
 			
@@ -334,7 +340,10 @@ public class CAdESSignerTest {
 			
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
-			signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
 			
 			// Para certificado em arquivo A1
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias,senha));
@@ -423,7 +432,7 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Com conteudo atachado
 			byte[] signature = signer.doAttachedSign(fileToSign);
-			File file = new File(fileDirName + "_ra_atached.p7s");
+			File file = new File(fileDirName + "_atached.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -492,7 +501,7 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Assinatura desatachada
 			byte[] signature = signer.doDetachedSign(fileToSign, signatureFile);
-			File file = new File(fileDirName + "-co_4.p7s");
+			File file = new File(fileDirName + "-co_detached.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -597,6 +606,12 @@ public class CAdESSignerTest {
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
 					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			// devido a uma restrição do token branco, no windws só funciona com 256
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			}
+
+			
 			byte[] hash = md.digest(fileToSign);
 
 			// quando certificado em arquivo, precisa informar a senha
@@ -628,14 +643,17 @@ public class CAdESSignerTest {
 			// com carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
-			// para mudar o algoritimo
-			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			// seta o algoritmo de acordo com o que foi gerado o Hash
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Assinatura desatachada
 			byte[] signature = signer.doHashCoSign(hash, signatureFile);
-			File file = new File(fileDirName + "-co.p7s");
+			File file = new File(fileDirName + "hash-co.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();

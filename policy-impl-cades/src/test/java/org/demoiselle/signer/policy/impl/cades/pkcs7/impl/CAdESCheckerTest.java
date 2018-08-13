@@ -163,8 +163,7 @@ public class CAdESCheckerTest {
 		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
 		
 		// Apenas para gerar o HASH
-		String fileToVerifyDirName = "local_e_nome_do_arquivo_assinado";
-		
+		String fileToVerifyDirName = "local_e_nome_do_arquivo";
 							
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 				
@@ -172,6 +171,7 @@ public class CAdESCheckerTest {
 
 		java.security.MessageDigest md;
 		try {
+			// é necessário ter certeza do OID do Hash que foi gerada a assinatura (no windws por restrição do token branco, é 256.
 			md = java.security.MessageDigest
 					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 		
@@ -181,6 +181,7 @@ public class CAdESCheckerTest {
 			CAdESChecker checker = new CAdESChecker();
 		
 			System.out.println("Efetuando a validacao da assinatura");
+			System.out.println("OID_hash"+SignerAlgorithmEnum.SHA512withRSA.getOIDAlgorithmHash());
 					
 			List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA512withRSA.getOIDAlgorithmHash(), hash, signatureFile);
 			if (signaturesInfo != null) {
