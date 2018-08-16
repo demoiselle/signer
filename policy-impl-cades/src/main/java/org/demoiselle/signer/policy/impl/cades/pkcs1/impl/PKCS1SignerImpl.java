@@ -57,13 +57,12 @@ import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
  * Basic implementation of digital signatures in PKCS1 format.
  *
  */
-// TODO - verificar se é necessário, 
 
 public class PKCS1SignerImpl implements PKCS1Signer {
 
     private Provider provider = null;
     private PrivateKey privateKey = null;
-    private String algorithm = SignerAlgorithmEnum.SHA256withRSA.getAlgorithm();
+    private String algorithm = SignerAlgorithmEnum.SHA512withRSA.getAlgorithm();
     private PublicKey publicKey = null;
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 

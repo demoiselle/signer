@@ -170,11 +170,11 @@ public class CAdESSigner implements PKCS7Signer {
 	 * @params signedData Value in bytes of the PKCS7 package, such as the
 	 *         contents of a ".p7s" file. It is not only signature as in the
 	 *         case of PKCS1.
+	 * @deprecated moved to CadESChecker
 	 */
 	@SuppressWarnings("unchecked")
-	// TODO: Implementar validação de co-assinaturas
 	@Override
-	@Deprecated
+	 
 	public boolean check(byte[] content, byte[] signedData) throws SignerException{
 		Security.addProvider(new BouncyCastleProvider());
 		CMSSignedData cmsSignedData = null;
@@ -329,8 +329,8 @@ public class CAdESSigner implements PKCS7Signer {
 	 * @param attributeTimeStamp
 	 * @param varSignature
 	 * @return
+	 * @deprecated moved to CadESChecker
 	 */
-	@Deprecated
 	private Timestamp validateTimestamp(Attribute attributeTimeStamp, byte[] varSignature){
 		try {
 			TimeStampOperator timeStampOperator = new TimeStampOperator();
@@ -378,7 +378,7 @@ public class CAdESSigner implements PKCS7Signer {
 
 	@Override
 	public String getAlgorithm() {
-		return this.signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue();
+		return this.pkcs1.getAlgorithm();
 	}
 
 	/**
@@ -387,6 +387,7 @@ public class CAdESSigner implements PKCS7Signer {
 	 * @param signed
 	 *            Signature and signed content.
 	 * @return content for attached signature
+	 * @deprecated moved to CadESChecker
 	 */
 	public byte[] getAttached(byte[] signed) {
 		return this.getAttached(signed, true);
@@ -402,6 +403,7 @@ public class CAdESSigner implements PKCS7Signer {
 	 *            TRUE (to execute validation) or FALSE (not execute validation)
 	 * 
 	 * @return content for attached signature
+	 * @deprecated moved to CadESChecker
 	 */
 	@Override
 	public byte[] getAttached(byte[] signed, boolean validateOnExtract) {
@@ -586,7 +588,8 @@ public class CAdESSigner implements PKCS7Signer {
 					}
 				}
 			} else {
-				algAndLength = listOfAlgAndLength.get(0);
+				algAndLength = listOfAlgAndLength.get(1);
+				this.setAlgorithm(AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
 			}
 			if (algAndLength == null) {
 				throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
@@ -594,10 +597,7 @@ public class CAdESSigner implements PKCS7Signer {
 			logger.info(cadesMessagesBundle.getString("info.algorithm.id", algAndLength.getAlgID().getValue()));
 			logger.info(cadesMessagesBundle.getString("info.algorithm.name",
 					AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue())));
-			logger.info(cadesMessagesBundle.getString("info.algorithm.policy.default",
-					AlgorithmNames.getOIDByAlgorithmName(getAlgorithm())));
 			logger.info(cadesMessagesBundle.getString("info.min.key.length", algAndLength.getMinKeyLength()));
-
 			// Recupera o tamanho minimo da chave para validacao
 			logger.info(cadesMessagesBundle.getString("info.validating.key.length"));
 			int keyLegth = ((RSAKey) certificate.getPublicKey()).getModulus().bitLength();
@@ -866,20 +866,27 @@ public class CAdESSigner implements PKCS7Signer {
 		return this.doSign(null, previewSigned);
 	}	
 
+	/**
+	 *  @deprecated moved to CadESChecker 
+	 */
 	@Override
-	@Deprecated
 	public boolean checkAttached(byte[] signedData) {
 		return this.check(null, signedData);
 	}
 
+	/**
+	 *  @deprecated moved to CadESChecker
+	 */
 	@Override
-	@Deprecated
 	public boolean checkDetattached(byte[] content, byte[] signedData) {
 		return this.check(content, signedData);
 	}
 	
+	
+	/**
+	 * @deprecated moved to CadESChecker
+	 */
 	@Override
-	@Deprecated
 	public  List<SignatureInformations> checkAttachedSignature(byte[] signedData){
 		if (this.check(null, signedData)){
 			return this.getSignatureInfo();
@@ -888,8 +895,10 @@ public class CAdESSigner implements PKCS7Signer {
 		}
 	}
     
+	/**
+	 * @deprecated moved to CadESChecker 
+	 */
 	@Override
-	@Deprecated
 	public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData){
 		if (this.check(content, signedData)){
 			return this.getSignatureInfo();
@@ -899,9 +908,10 @@ public class CAdESSigner implements PKCS7Signer {
 	}
 	
 	
-
+	/**
+	 * @deprecated moved to CadESChecker
+	 */
 	@Override
-	@Deprecated
 	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{
 		this.checkHash = true;
 		this.hashes.put(digestAlgorithmOID, calculatedHashContent);
