@@ -16,4 +16,6 @@
     <xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
     <xi:include href="funcionalidades-certificate.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
     <xi:include href="funcionalidades-keystore.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    <xi:include href="configuracoes-ambiente.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+    
 </part>

@@ -66,6 +66,7 @@ import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.core.repository.Configuration;
+import org.demoiselle.signer.core.util.Proxy;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -220,6 +221,13 @@ public class CAdESSignerTest {
 
 			// MSCAPI off
 			//org.demoiselle.signer.core.keystore.loader.configuration.Configuration.setMSCAPI_ON(false);
+
+			// Setar Proxy
+			// Proxy.setProxyEndereco("localhost");
+			//Proxy.setProxyPorta("3128");
+			//Proxy.setProxySenha("senha");
+			//Proxy.setProxyUsuario("usuario");
+			//Proxy.setProxy();
 
 			
 			// Para certificado NeoID e windows token

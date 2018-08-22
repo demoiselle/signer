@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="core-configuracoes-ambiente">
+
+    <title>Configurações de Ambiente</title>
+
+    <section>
+        <title>Configurações de Proxy</title>
+        
+        <para>
+            Caso o ambiente que esteja rodando a aplicação esteja sob um Proxy de rede, é possível fazer a configuração da seguinte forma: 
+            
+        </para>
+        
+            <programlisting role="JAVA"><![CDATA[...
+                        import org.demoiselle.signer.core.util.Proxy;
+                        ...
+                        Proxy.setProxyEndereco("endereco_ou_ip");
+					Proxy.setProxyPorta("numero_da_porta");						
+					Proxy.setProxyUsuario("usuario"); // Caso necessário
+					Proxy.setProxySenha("senha"); // Caso necessário
+					Proxy.setProxy();
+                        ...]]></programlisting>
+
+    </section>
+    
+</chapter>
