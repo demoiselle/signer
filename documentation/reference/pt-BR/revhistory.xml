@@ -4,6 +4,16 @@
 
 <revhistory>
     <revision>
+    <revnumber>3.2.12</revnumber>
+        <date>23/08/2018</date>
+        <authorinitials>ess</authorinitials>
+        <revremark>
+            <itemizedlist>
+            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/22?closed=1">Milestone 3.2.12</ulink></listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+    <revision>
     <revnumber>3.2.11</revnumber>
         <date>10/08/2018</date>
         <authorinitials>ess</authorinitials>
