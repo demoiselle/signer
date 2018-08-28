@@ -214,8 +214,10 @@ public class PolicyFactory {
             	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
             }            
         }catch(RuntimeException ex){
+        	LOGGER.error(ex.getMessage());
         	ex.printStackTrace();        	
 		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
 			e.printStackTrace();			
 		}
         
