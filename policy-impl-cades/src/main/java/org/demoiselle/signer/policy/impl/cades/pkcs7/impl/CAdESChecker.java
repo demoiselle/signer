@@ -423,7 +423,7 @@ public class CAdESChecker implements PKCS7Checker {
 				result = (byte[]) contentProcessable.getContent();
 			}
 			else{
-				throw new SignerException(cadesMessagesBundle.getString("error.get.content.empty"));
+				logger.info(cadesMessagesBundle.getString("error.get.content.empty"));
 			}
 		} catch (Exception exception) {
 			throw new SignerException(cadesMessagesBundle.getString("error.get.content.pkcs7"), exception);
