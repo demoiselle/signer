@@ -8,7 +8,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import org.apache.log4j.Logger;
+import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.core.util.Downloads;
+import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
  * 
@@ -16,10 +19,9 @@ import org.demoiselle.signer.core.util.Downloads;
  *
  */
 public class LPARepository {
-
-	public static final String PATH_HOME_USER = System.getProperty("user.home");
-	public static final String FOLDER_SIGNER = ".signer";
-	public static final Path FULL_PATH_FOLDER_SIGNER = Paths.get(PATH_HOME_USER, FOLDER_SIGNER);
+	
+	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private final static Logger LOGGER = Logger.getLogger(LPARepository.class.getName());
 	
 	/**
 	 * 
@@ -32,11 +34,17 @@ public class LPARepository {
 	
 	public static boolean saveLocalLPA(final String urlConLPA, final String lpaName) {
 		
-		Path pathLPA = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, lpaName);
 		try {
+			Configuration config = Configuration.getInstance();
+			Path pathLPA = Paths.get(config.getLpaPath());
+			Path pathLPAFile = Paths.get(config.getLpaPath(), lpaName);
 			
+			if (!Files.isDirectory(pathLPA)) {
+				LOGGER.info(policyMessagesBundle.getString("warn.lpa.dir.not.found", pathLPA));				
+				Files.createDirectories(pathLPA);
+			}
 			InputStream is = Downloads.getInputStreamFromURL(urlConLPA);	
-			Files.copy(is, pathLPA, StandardCopyOption.REPLACE_EXISTING);
+			Files.copy(is, pathLPAFile, StandardCopyOption.REPLACE_EXISTING);
 			is.close();
 			return true;
 		} catch (FileNotFoundException e) {			
@@ -47,6 +55,7 @@ public class LPARepository {
 			return false;
 		}		
 	}	
+	
 }
 
 
