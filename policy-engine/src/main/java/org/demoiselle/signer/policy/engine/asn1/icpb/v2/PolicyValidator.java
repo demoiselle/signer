@@ -3,19 +3,19 @@ package org.demoiselle.signer.policy.engine.asn1.icpb.v2;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-
 import org.apache.log4j.Logger;
+import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.exception.PolicyException;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.engine.repository.LPARepository;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 public class PolicyValidator {
 	
 	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 	private final static Logger LOGGER = Logger.getLogger(PolicyValidator.class.getName());
+	private final Configuration config = Configuration.getInstance();
 	
 	private SignaturePolicy sp;
 	private String policyName;
@@ -58,7 +58,7 @@ public class PolicyValidator {
 					if (tempListOfPolicies != null){
 						nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 						if (actualDate.after(nextUpdate)){
-							LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",LPARepository.FULL_PATH_FOLDER_SIGNER.toString()+"LPA_CAdES.der",sdf.format(nextUpdate)));
+							LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",config.getLpaPath()+"LPA_CAdES.der",sdf.format(nextUpdate)));
 							tempListOfPolicies = factory.loadLPACAdESUrl();
 							if (tempListOfPolicies != null)	{
 								nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
@@ -107,7 +107,7 @@ public class PolicyValidator {
 						if (tempListOfPolicies != null){
 							nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 							if (actualDate.after(nextUpdate)){
-								LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",LPARepository.FULL_PATH_FOLDER_SIGNER.toString()+"LPA_PAdES.der",sdf.format(nextUpdate)));
+								LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",config.getLpaPath()+"LPA_PAdES.der",sdf.format(nextUpdate)));
 								tempListOfPolicies = factory.loadLPAPAdESUrl();
 								if (tempListOfPolicies != null)	{
 									nextUpdate = tempListOfPolicies.getNextUpdate().getDate();

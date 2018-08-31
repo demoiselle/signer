@@ -201,7 +201,7 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	//@Test
+	// @Test
 	public void testSignDetached() {
 		try {
 
@@ -273,8 +273,13 @@ public class CAdESSignerTest {
 			// Cache LCR
 			//Configuration config = Configuration.getInstance();
 			//config.setCrlIndex(".crl_index");
-			//config.setCrlPath("/home/80621732915/lcr_cache/");
+			//config.setCrlPath("/home/{usuario}/lcr_cache/");
 			//config.setOnline(false);
+			
+			
+			// Diretorio LPA
+			//Configuration config = Configuration.getInstance();
+			//config.setLpaPath("/home/{usuario}/.signer");
 			
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);

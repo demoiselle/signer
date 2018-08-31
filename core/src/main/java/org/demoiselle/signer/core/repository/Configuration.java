@@ -53,6 +53,14 @@ public class Configuration {
      * System key to set storage location of path file of revoked certificate lists.
      */
     public static final String CRL_PATH = "signer.repository.crl.path";
+    
+    
+    /**
+     * System key to set storage location of path file of LPA 
+     */
+    public static final String LPA_PATH = "signer.repository.lpa.path";
+    
+    
     public static Configuration instance = new Configuration();
 
     
@@ -67,6 +75,7 @@ public class Configuration {
 
     private String crlIndex;
     private String crlPath;
+    private String lpaPath;    
     private boolean isOnline;
 
     /**
@@ -87,6 +96,11 @@ public class Configuration {
         crlPath = (String) System.getProperties().get(CRL_PATH);
         if (crlPath == null || crlPath.equals("")) {
             setCrlPath("/tmp/crls");
+        }
+        
+        lpaPath = (String) System.getProperties().get(LPA_PATH);
+        if (lpaPath == null || lpaPath.equals("")) {
+            setLpaPath("/tmp/lpas");
         }
     }
 
@@ -138,5 +152,24 @@ public class Configuration {
     public void setCrlPath(String crlPath) {
         this.crlPath = crlPath;
     }
+
+    /** Retrieves the location where the LPA local repository is stored
+     * 
+     * @return location of local LPA repository
+     */
+	public String getLpaPath() {
+		return lpaPath;
+	}
+	
+	/**
+	 * 
+	 *  Configures the location where the LPA local repository will be stored
+	 *  
+	 * @param lpaPath path for LPA local repository
+	 */
+
+	public void setLpaPath(String lpaPath) {
+		this.lpaPath = lpaPath;
+	}
 
 }

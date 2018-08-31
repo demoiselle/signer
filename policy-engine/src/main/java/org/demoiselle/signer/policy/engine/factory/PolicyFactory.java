@@ -47,6 +47,7 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
+import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
@@ -156,7 +157,9 @@ public class PolicyFactory {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
         InputStream is;
 		try {
-			Path pathLPA = Paths.get(LPARepository.FULL_PATH_FOLDER_SIGNER.toString(), "LPA_CAdES.der");
+			Configuration config = Configuration.getInstance();
+			Path pathLPA = Paths.get(config.getLpaPath(), "LPA_CAdES.der");
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
 			is = new FileInputStream(pathLPA.toString());
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 	        listaPoliticaAssinatura.parse(primitive);
@@ -175,7 +178,8 @@ public class PolicyFactory {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
         InputStream is;
         try {
-        	Path pathLPA = Paths.get(LPARepository.FULL_PATH_FOLDER_SIGNER.toString(), "LPA_PAdES.der");
+        	Configuration config = Configuration.getInstance();
+        	Path pathLPA = Paths.get(config.getLpaPath(), "LPA_PAdES.der");
         	is = new FileInputStream(pathLPA.toString());
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 	        listaPoliticaAssinatura.parse(primitive);
