@@ -36,6 +36,8 @@
  */
 package org.demoiselle.signer.core.repository;
 
+import java.io.File;
+
 
 public class Configuration {
 
@@ -95,12 +97,12 @@ public class Configuration {
 
         crlPath = (String) System.getProperties().get(CRL_PATH);
         if (crlPath == null || crlPath.equals("")) {
-            setCrlPath("/tmp/crls");
+        	setCrlPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "crls");
         }
         
         lpaPath = (String) System.getProperties().get(LPA_PATH);
         if (lpaPath == null || lpaPath.equals("")) {
-            setLpaPath("/tmp/lpas");
+            setLpaPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "lpas");
         }
     }
 

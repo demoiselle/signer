@@ -9,19 +9,87 @@
         <title>Configurações de Proxy</title>
         
         <para>
-            Caso o ambiente que esteja rodando a aplicação esteja sob um Proxy de rede, é possível fazer a configuração da seguinte forma: 
-            
-        </para>
+            Para o caso do ambiente de rede que esteja rodando a aplicação esteja sob um Proxy é possível fazer a configuração das seguintes formas: 
         
-            <programlisting role="JAVA"><![CDATA[...
+            <itemizedlist>
+                <listitem>
+                    <para>
+                          <emphasis>Programaticamente</emphasis>
+                    </para>
+                    <para>
+                    <programlisting role="JAVA"><![CDATA[...
                         import org.demoiselle.signer.core.util.Proxy;
                         ...
                         Proxy.setProxyEndereco("endereco_ou_ip");
-					Proxy.setProxyPorta("numero_da_porta");						
-					Proxy.setProxyUsuario("usuario"); // Caso necessário
-					Proxy.setProxySenha("senha"); // Caso necessário
-					Proxy.setProxy();
+			Proxy.setProxyPorta("numero_da_porta");						
+			Proxy.setProxyUsuario("usuario"); // Caso necessário
+			Proxy.setProxySenha("senha"); // Caso necessário
+			Proxy.setProxy();
                         ...]]></programlisting>
+                        </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Setando as variáveis de ambiente</emphasis>
+                    </para>
+                    <para>
+                    <segmentedlist> 
+                    <seglistitem>http.proxyHost</seglistitem>
+                    <seglistitem>http.proxyPort</seglistitem>
+                    <seglistitem>http.proxyUser</seglistitem>
+                    <seglistitem>http.proxyPassword</seglistitem>
+                    </segmentedlist></para>
+                </listitem>
+            </itemizedlist>
+
+
+       </para>
+        
+
+
+    </section>
+    <section>
+        <title>Repositório local de LPA (Lista de Políticas de Assinatura)</title>
+        
+        <para>
+            As Listas de Política de Assinaturas, são atualizadas trimestralmente pela ICP-BRASIL, o componenente mantem estes arquivos internamente mas 
+            haverão momentos que estes arquivos estarão desatualizados. Para evitar que seja necessário atualizar a versão do componente exclusivamente para
+            este propósito, há um mencanismo de recuperação dos arquivos diretamente do site da ICP-BRASIL. 
+            E esta funcionalidade também armazena localmente o arquivo para que não seja baixado todas as vezes que o componente for acionado.
+            O diretório padrão do aplicativo é:
+            </para>
+            <para>
+            	/tmp/lpas/
+            </para>
+        
+        <para>Para alterar o local padrão, existem duas forma de fazê-lo:
+        </para>
+        
+            <itemizedlist>
+                <listitem>
+                    <para>
+                          <emphasis>Programaticamente</emphasis>
+                    </para>
+                    <para>
+                    <programlisting role="JAVA"><![CDATA[...
+                        ...
+                        org.demoiselle.signer.core.repository.Configuration config = org.demoiselle.signer.core.repository.Configuration.getInstance();
+		        		config.setLpaPath("/tmp/meudir/");
+                        ...]]></programlisting>
+                        </para>
+                </listitem>
+                <listitem>
+                    <para>
+                        <emphasis>Setando a variável de ambiente</emphasis>
+                    </para>
+                    <para>
+                    <segmentedlist> 
+                    <seglistitem>signer.repository.lpa.path</seglistitem>
+                    </segmentedlist></para>
+                </listitem>
+            </itemizedlist>    
+        
+
 
     </section>
     
