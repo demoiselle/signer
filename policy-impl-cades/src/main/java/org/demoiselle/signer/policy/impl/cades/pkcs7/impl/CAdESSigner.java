@@ -589,7 +589,16 @@ public class CAdESSigner implements PKCS7Signer {
 				}
 			} else {
 				algAndLength = listOfAlgAndLength.get(1);
-				this.setAlgorithm(AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
+				this.pkcs1.setAlgorithm(AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
+				SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum
+						.valueOf(this.pkcs1.getAlgorithm());
+				String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
+				ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
+				varObjectIdentifier.setValue(varOIDAlgorithmHash);
+				AlgorithmIdentifier varAlgorithmIdentifier = signaturePolicy.getSignPolicyHashAlg();
+				varAlgorithmIdentifier.setAlgorithm(varObjectIdentifier);
+				signaturePolicy.setSignPolicyHashAlg(varAlgorithmIdentifier);
+
 			}
 			if (algAndLength == null) {
 				throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));

@@ -260,7 +260,10 @@ public class CAdESSignerTest {
 			// referencia de validação
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_2);
 			// para mudar o algoritimo
-			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
@@ -439,7 +442,11 @@ public class CAdESSignerTest {
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RA_CADES_2_3);
 
 			// para mudar o algoritimo
-			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
+
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
@@ -508,7 +515,10 @@ public class CAdESSignerTest {
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// para mudar o algoritimo
-			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
@@ -578,7 +588,10 @@ public class CAdESSignerTest {
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
 
 			// para mudar o algoritimo
-			// signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			}
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
