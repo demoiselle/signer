@@ -39,55 +39,50 @@ package org.demoiselle.signer.core.ca.manager;
 
 public class CAManagerConfiguration {
 
-    /**
-     * System key to set cached or not cached
-     */
-    public static final String CACHED = "signer.camanager.cached";
+	/**
+	 * System key to set cached or not cached
+	 */
+	public static final String CACHED = "signer.camanager.cached";
 
-    public static CAManagerConfiguration instance = new CAManagerConfiguration();
+	public static CAManagerConfiguration instance = new CAManagerConfiguration();
+	private boolean isCached;
 
-    
-    /**
-     * to static single instance
-     *
-     * @return current instance
-     */
-    public static CAManagerConfiguration getInstance() {
-        return instance;
-    }
+	/**
+	 * Check for system variables. If there is, assign in class variables otherwise use default values.
+	 */
+	private CAManagerConfiguration() {
+		String cachedProp = (String) System.getProperties().get(CACHED);
+		if (cachedProp == null || cachedProp.isEmpty()) {
+			setCached(false);
+		} else {
+			setCached(Boolean.valueOf(cachedProp));
+		}
+	}
 
-    private boolean isCached;
+	/**
+	 * to static single instance
+	 *
+	 * @return current instance
+	 */
+	public static CAManagerConfiguration getInstance() {
+		return instance;
+	}
 
-    /**
-     * Check for system variables. If there is, assign in class variables otherwise use default values.
-     */
-    private CAManagerConfiguration() {
-        String mode_cached = (String) System.getProperties().get(CACHED);
-        if (mode_cached == null || mode_cached.isEmpty()) {
-            setCached(false);
-        } else {
-            setCached(Boolean.valueOf(mode_cached));
-        }
-    }
+	/**
+	 * Returns whether the CAManager is cached (TRUE) or not (FALSE)
+	 *
+	 * @return true (cached) or false (not cached)
+	 */
+	public boolean isCached() {
+		return isCached;
+	}
 
-    
-    /**
-     * Returns whether the CAManager is cached (TRUE) or not (FALSE) 
-     *
-     * @return true (cached) or false (not cached)
-     */
-    public boolean isCached() {
-        return isCached;
-    }
-
-    /**
-     * Determines whether the CAManager should be done cached or not
-     *
-     * @param isCached True for cached, False for not cached.
-     */
-    public void setCached(boolean isCached) {
-        this.isCached = isCached;
-    }
-
-    
+	/**
+	 * Determines whether the CAManager should be done cached or not
+	 *
+	 * @param isCached True for cached, False for not cached.
+	 */
+	public void setCached(boolean isCached) {
+		this.isCached = isCached;
+	}
 }
