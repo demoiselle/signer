@@ -36,19 +36,6 @@
  */
 package org.demoiselle.signer.core.ca.manager;
 
-import java.security.InvalidKeyException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedList;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
@@ -57,17 +44,23 @@ import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
+import java.security.*;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.LinkedList;
+
 /**
- * 
- * Validate and Load trusted Certificate Authority chain 
- *
+ * Validate and Load trusted Certificate Authority chain
  */
 public class CAManager {
 
+	private static final String CN = "CN";
 	private static final CAManager instance = new CAManager();
 	private static final Logger LOGGER = Logger.getLogger(CAManager.class.getName());
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-	
 
 	private CAManager() {
 	}
@@ -78,34 +71,39 @@ public class CAManager {
 
 	public Collection<X509Certificate> getSignaturePolicyRootCAs(String policyOID) {
 		Collection<ProviderSignaturePolicyRootCA> providers = ProviderSignaturePolicyRootCAFactory.getInstance()
-				.factory(policyOID);
-		Collection<X509Certificate> result = new HashSet<X509Certificate>();
+			.factory(policyOID);
+		Collection<X509Certificate> result = new HashSet<>();
+
 		for (ProviderSignaturePolicyRootCA provider : providers) {
 			try {
 				result.addAll(provider.getCAs());
-			} catch (Throwable error) {
+			} catch (Exception error) {
 				// TODO: Nao foi possivel resgatar as raizes confiaveis
 				// de uma determinada politica
 				LOGGER.error(error);
 			}
 		}
+
 		return result;
 	}
 
 	public boolean validateRootCAs(Collection<X509Certificate> cas, X509Certificate certificate) {
 		boolean valid = false;
+
 		for (X509Certificate ca : cas) {
 			try {
 				this.validateRootCA(ca, certificate);
 				valid = true;
 				break;
 			} catch (CAManagerException error) {
-				continue;
+				LOGGER.debug(error.getMessage());
 			}
 		}
+
 		if (!valid) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.authority"));
 		}
+
 		return true;
 	}
 
@@ -113,13 +111,17 @@ public class CAManager {
 		if (ca == null) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.informed"));
 		}
+
 		if (!this.isRootCA(ca)) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.not.root"));
 		}
+
 		Collection<X509Certificate> acs = this.getCertificateChain(certificate);
-		if (acs == null || acs.size() <= 0) {
+
+		if (acs == null || acs.isEmpty()) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.get.chain"));
 		}
+
 		X509Certificate rootCA = null;
 		for (X509Certificate x509 : acs) {
 			if (this.isRootCA(x509)) {
@@ -127,12 +129,15 @@ public class CAManager {
 				break;
 			}
 		}
+
 		if (rootCA == null) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.found"));
 		}
+
 		if (!this.isCAofCertificate(rootCA, ca)) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.chain"));
 		}
+
 		return true;
 	}
 
@@ -140,77 +145,95 @@ public class CAManager {
 		if (ca == null) {
 			return false;
 		}
+
 		return this.isCAofCertificate(ca, ca);
 	}
 
 	public boolean isCAofCertificate(X509Certificate ca, X509Certificate certificate) {
-		
- 		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
- 		try {
- 			certificate.verify(ca.getPublicKey());
- 			return true;		
-		} catch (SignatureException error) {
- 			return false;
- 		} catch (InvalidKeyException error) {
- 			return false;
- 		} catch (CertificateException error) {
- 			throw new CAManagerException(coreMessagesBundle.getString("error.certificate.exception"), error);
- 		} catch (NoSuchAlgorithmException error) {
- 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
- 		} catch (NoSuchProviderException error) {
- 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.provider"), error);
- 		}
+		CAManagerCache managerCache = CAManagerCache.getInstance();
+		boolean isCached = CAManagerConfiguration.getInstance().isCached();
+
+		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
+		try {
+			if (isCached) {
+				Boolean isValid = managerCache.getIsCAofCertificate(ca, certificate);
+				if (null != isValid) {
+					return isValid;
+				}
+			}
+
+			certificate.verify(ca.getPublicKey());
+
+			if (isCached) {
+				managerCache.setIsCAofCertificate(ca, certificate, true);
+			}
+
+			return true;
+		} catch (SignatureException | InvalidKeyException error) {
+			if (isCached) {
+				managerCache.setIsCAofCertificate(ca, certificate, false);
+			}
+
+			return false;
+		} catch (CertificateException error) {
+			throw new CAManagerException(coreMessagesBundle.getString("error.certificate.exception"), error);
+		} catch (NoSuchAlgorithmException error) {
+			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
+		} catch (NoSuchProviderException error) {
+			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.provider"), error);
+		}
 	}
 
 	public Certificate[] getCertificateChainArray(X509Certificate certificate) {
-		Certificate[] result = null;
+		Certificate[] result;
+
 		LinkedList<X509Certificate> chain = (LinkedList<X509Certificate>) this.getCertificateChain(certificate);
-		if (chain == null || chain.size() <= 0) {
-			return result;
+
+		if (chain == null || chain.isEmpty()) {
+			return new Certificate[]{};
 		}
+
 		result = new Certificate[chain.size()];
+
 		for (int i = 0; i < chain.size(); i++) {
 			result[i] = chain.get(i);
 		}
+
 		return result;
 	}
 
 	/**
 	 * Get ALL certificate chains previously added in
-	 * 
+	 *
 	 * @param certificate final certificate in the desired chain
 	 * @return list of certificates
 	 */
 	public Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {
-
 		CAManagerConfiguration config = CAManagerConfiguration.getInstance();
- 		Collection<X509Certificate> result = new LinkedList<X509Certificate>();
-
- 		
+		Collection<X509Certificate> result = new LinkedList<>();
 
 		// Tentando obter cadeia de certificados do cache
- 		if (config.isCached()){
- 			LOGGER.info(coreMessagesBundle.getString("info.cache.mode",config.isCached()));
- 			CAManagerCache managerCache = CAManagerCache.getInstance();
- 			Collection<X509Certificate> certificates = managerCache.getCachedCertificatesFor(certificate);
- 			// Se encontrar no cache
- 			if (certificates != null) {
- 				return certificates;
- 			}
- 		}
-		
- 		result.add(certificate);
- 		if (this.isRootCA(certificate)) {
- 			return result;
+		if (config.isCached()) {
+			LOGGER.debug(coreMessagesBundle.getString("info.cache.mode", config.isCached()));
+			CAManagerCache managerCache = CAManagerCache.getInstance();
+			Collection<X509Certificate> certificates = managerCache.getCachedCertificatesFor(certificate);
+			// Se encontrar no cache
+			if (certificates != null) {
+				return certificates;
+			}
+		}
+
+		result.add(certificate);
+		if (this.isRootCA(certificate)) {
+			return result;
 		}
 
 		Collection<ProviderCA> providers = ProviderCAFactory.getInstance().factory();
 
 		for (ProviderCA provider : providers) {
 			try {
-
 				String varNameProvider = provider.getName();
-				LOGGER.info(coreMessagesBundle.getString("info.searching.on.provider",varNameProvider ));
+				LOGGER.info(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
 
 				// Get ALL CAs of ONE provider
 				Collection<X509Certificate> acs = provider.getCAs();
@@ -223,95 +246,91 @@ public class CAManager {
 					// If is CA issuer of certificate
 					String certificateCnIssuer = this.getCN(certificate.getIssuerX500Principal().getName());
 					String acCN = this.getCN(ac.getSubjectX500Principal().getName());
-					if (certificateCnIssuer.equalsIgnoreCase(acCN)){
-						if (this.isCAofCertificate(ac, certificate)) {
-							result.add(ac);
-							X509Certificate acFromAc = null;
-							for (X509Certificate ac2 : acs){
-								// If is CA Issuer of CA issuer
-								String acCnIssuer = this.getCN(ac.getIssuerX500Principal().getName());
-								String ac2CN = this.getCN(ac2.getSubjectX500Principal().getName());
-								if(acCnIssuer.equalsIgnoreCase(ac2CN)){
-									if (this.isCAofCertificate(ac2, ac)) {
-										acFromAc = ac2;
-									}									
-								}
-							}
-							while (acFromAc != null) {
-								// If the chain was created SET OK
-								result.add(acFromAc);
+					if (certificateCnIssuer.equalsIgnoreCase(acCN) && this.isCAofCertificate(ac, certificate)) {
+						result.add(ac);
+						X509Certificate acFromAc = null;
 
-								// If Certificate is ROOT end while
-								if (this.isRootCA(acFromAc)) {
-									ok = true;
-									break;
-								} 
-								else {
-									for (X509Certificate ac3 : acs){
-										// If is CA Issuer of CA issuer
-										String acFromAcIssuerCN = this.getCN(acFromAc.getIssuerX500Principal().getName());
-										String ac3CN = this.getCN(ac3.getSubjectX500Principal().getName());
-										if(acFromAcIssuerCN.equalsIgnoreCase(ac3CN)){
-											if (this.isCAofCertificate(ac3, acFromAc)) {
-												acFromAc = ac3;
-											}											
-										}
+						for (X509Certificate ac2 : acs) {
+							// If is CA Issuer of CA issuer
+							String acCnIssuer = this.getCN(ac.getIssuerX500Principal().getName());
+							String ac2CN = this.getCN(ac2.getSubjectX500Principal().getName());
+							if (acCnIssuer.equalsIgnoreCase(ac2CN) && this.isCAofCertificate(ac2, ac)) {
+								acFromAc = ac2;
+							}
+						}
+
+						while (acFromAc != null) {
+							// If the chain was created SET OK
+							result.add(acFromAc);
+
+							// If Certificate is ROOT end while
+							if (this.isRootCA(acFromAc)) {
+								ok = true;
+								break;
+							} else {
+								for (X509Certificate ac3 : acs) {
+									// If is CA Issuer of CA issuer
+									String acFromAcIssuerCN = this.getCN(acFromAc.getIssuerX500Principal().getName());
+									String ac3CN = this.getCN(ac3.getSubjectX500Principal().getName());
+									if (acFromAcIssuerCN.equalsIgnoreCase(ac3CN) && this.isCAofCertificate(ac3, acFromAc)) {
+										acFromAc = ac3;
 									}
 								}
 							}
 						}
 					}
-					if (ok == true) {
+
+					if (ok) {
 						break;
 					}
 				}
-				LOGGER.log(Level.INFO,coreMessagesBundle.getString("info.found.levels",result.size(),provider.getName()));
-				
+
+				LOGGER.log(Level.INFO, coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
+
 				// If chain is created BREAK! Doesn't go to next Provider
 				if (ok) {
 					break;
 				} else {
-					LOGGER.error(coreMessagesBundle.getString("warn.no.chain.on.provider",provider.getName()));
+					LOGGER.error(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
 				}
-			} catch (Throwable error) {
-					LOGGER.error(coreMessagesBundle.getString("error.no.ca",provider.getName()));
+			} catch (Exception error) {
+				LOGGER.error(coreMessagesBundle.getString("error.no.ca", provider.getName()));
 				// TODO: Nao foi possivel resgatar as CAs de um determinado provedor
 			}
 		}
-		if (config.isCached()){
-			if (!result.isEmpty()) {
-				CAManagerCache managerCache = CAManagerCache.getInstance();
-				managerCache.addCertificate(certificate, result);
-			}
+
+		if (config.isCached() && !result.isEmpty()) {
+			CAManagerCache.getInstance().addCertificate(certificate, result);
 		}
-		
+
 		return result;
 	}
 
 	@SuppressWarnings("unused")
 	private X509Certificate getCAFromCertificate(Collection<X509Certificate> certificates,
-			X509Certificate certificate) {
-		if (this.isRootCA(certificate)) {
+												 X509Certificate certificate) {
+		if (this.isRootCA(certificate) || certificates == null || certificates.isEmpty()) {
 			return null;
 		}
-		if (certificates == null || certificates.isEmpty()) {
-			return null;
-		}
+
 		for (X509Certificate ca : certificates) {
 			if (this.isCAofCertificate(ca, certificate)) {
 				return ca;
 			}
 		}
+
 		return null;
 	}
 
 	public Certificate[] getCertificateChainArray(KeyStore keyStore, String privateKeyPass, String certificateAlias) {
-		Certificate[] certificateChain = null;
+		Certificate[] certificateChain;
+
 		try {
 			keyStore.getKey(certificateAlias, privateKeyPass.toCharArray());
 			certificateChain = keyStore.getCertificateChain(certificateAlias);
+
 			if (certificateChain == null) {
-				throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias",certificateAlias));
+				throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias", certificateAlias));
 			}
 		} catch (KeyStoreException error) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.keystore.type"), error);
@@ -320,27 +339,31 @@ public class CAManager {
 		} catch (NoSuchAlgorithmException error) {
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
 		}
+
 		return certificateChain;
 	}
 
 	public Collection<X509Certificate> getCertificateChain(KeyStore keyStore, String privateKeyPass,
-			String certificateAlias) {
-		Collection<X509Certificate> result = null;
+														   String certificateAlias) {
+		Collection<X509Certificate> result;
+
 		Certificate[] certificateChain = this.getCertificateChainArray(keyStore, privateKeyPass, certificateAlias);
+
 		if (certificateChain != null) {
-			result = new LinkedList<X509Certificate>();
+			result = new LinkedList<>();
 			for (Certificate certificate : certificateChain) {
 				result.add((X509Certificate) certificate);
 			}
 		} else {
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias"));
 		}
+
 		return result;
 	}
-	
-	private String getCN(String x500){		
-		int indexCN = x500.indexOf("CN");
-		int indexFirstComa = x500.indexOf(",");
+
+	private String getCN(String x500) {
+		int indexCN = x500.indexOf(CN);
+		int indexFirstComa = x500.indexOf(',');
 		return x500.substring(indexCN, indexFirstComa);
 	}
 }

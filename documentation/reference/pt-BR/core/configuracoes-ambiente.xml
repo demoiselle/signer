@@ -1,96 +1,143 @@
 <?xml version='1.0' encoding="utf-8"?>
 <!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+        "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <chapter id="core-configuracoes-ambiente">
 
     <title>Configurações de Ambiente</title>
 
     <section>
         <title>Configurações de Proxy</title>
-        
+
         <para>
-            Para o caso do ambiente de rede que esteja rodando a aplicação esteja sob um Proxy é possível fazer a configuração das seguintes formas: 
-        
+            Para o caso do ambiente de rede que esteja rodando a aplicação esteja sob um Proxy é possível fazer a
+            configuração das seguintes formas:
+
             <itemizedlist>
                 <listitem>
                     <para>
-                          <emphasis>Programaticamente</emphasis>
+                        <emphasis>Programaticamente</emphasis>
                     </para>
                     <para>
-                    <programlisting role="JAVA"><![CDATA[...
+                        <programlisting role="JAVA"><![CDATA[...
                         import org.demoiselle.signer.core.util.Proxy;
                         ...
                         Proxy.setProxyEndereco("endereco_ou_ip");
-			Proxy.setProxyPorta("numero_da_porta");						
-			Proxy.setProxyUsuario("usuario"); // Caso necessário
-			Proxy.setProxySenha("senha"); // Caso necessário
-			Proxy.setProxy();
+                        Proxy.setProxyPorta("numero_da_porta");
+                        Proxy.setProxyUsuario("usuario"); // Caso necessário
+                        Proxy.setProxySenha("senha"); // Caso necessário
+                        Proxy.setProxy();
                         ...]]></programlisting>
-                        </para>
+                    </para>
                 </listitem>
                 <listitem>
                     <para>
                         <emphasis>Setando as variáveis de ambiente</emphasis>
                     </para>
                     <para>
-                    <segmentedlist> 
-                    <seglistitem>http.proxyHost</seglistitem>
-                    <seglistitem>http.proxyPort</seglistitem>
-                    <seglistitem>http.proxyUser</seglistitem>
-                    <seglistitem>http.proxyPassword</seglistitem>
-                    </segmentedlist></para>
+                        <segmentedlist>
+                            <seglistitem>http.proxyHost</seglistitem>
+                            <seglistitem>http.proxyPort</seglistitem>
+                            <seglistitem>http.proxyUser</seglistitem>
+                            <seglistitem>http.proxyPassword</seglistitem>
+                        </segmentedlist>
+                    </para>
                 </listitem>
             </itemizedlist>
-
-
-       </para>
-        
-
-
+        </para>
     </section>
     <section>
         <title>Repositório local de LPA (Lista de Políticas de Assinatura)</title>
-        
+
         <para>
-            As Listas de Política de Assinaturas, são atualizadas trimestralmente pela ICP-BRASIL, o componenente mantem estes arquivos internamente mas 
-            haverão momentos que estes arquivos estarão desatualizados. Para evitar que seja necessário atualizar a versão do componente exclusivamente para
-            este propósito, há um mencanismo de recuperação dos arquivos diretamente do site da ICP-BRASIL. 
-            E esta funcionalidade também armazena localmente o arquivo para que não seja baixado todas as vezes que o componente for acionado.
+            As Listas de Política de Assinaturas, são atualizadas trimestralmente pela ICP-BRASIL, o componenente mantem
+            estes arquivos internamente mas
+            haverão momentos que estes arquivos estarão desatualizados. Para evitar que seja necessário atualizar a
+            versão do componente exclusivamente para
+            este propósito, há um mencanismo de recuperação dos arquivos diretamente do site da ICP-BRASIL.
+            E esta funcionalidade também armazena localmente o arquivo para que não seja baixado todas as vezes que o
+            componente for acionado.
             O diretório padrão do aplicativo é:
-            </para>
-            <para>
-            	/tmp/lpas/
-            </para>
-        
-        <para>Para alterar o local padrão, existem duas forma de fazê-lo:
         </para>
-        
-            <itemizedlist>
-                <listitem>
-                    <para>
-                          <emphasis>Programaticamente</emphasis>
-                    </para>
-                    <para>
+        <para>
+            /tmp/lpas/
+        </para>
+
+        <para>Para alterar o local padrão, existem duas formas de fazê-lo:
+        </para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <emphasis>Programaticamente</emphasis>
+                </para>
+                <para>
                     <programlisting role="JAVA"><![CDATA[...
                         ...
                         org.demoiselle.signer.core.repository.Configuration config = org.demoiselle.signer.core.repository.Configuration.getInstance();
 		        		config.setLpaPath("/tmp/meudir/");
                         ...]]></programlisting>
-                        </para>
-                </listitem>
-                <listitem>
-                    <para>
-                        <emphasis>Setando a variável de ambiente</emphasis>
-                    </para>
-                    <para>
-                    <segmentedlist> 
-                    <seglistitem>signer.repository.lpa.path</seglistitem>
-                    </segmentedlist></para>
-                </listitem>
-            </itemizedlist>    
-        
-
-
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>Setando a variável de ambiente</emphasis>
+                </para>
+                <para>
+                    <segmentedlist>
+                        <seglistitem>signer.repository.lpa.path</seglistitem>
+                    </segmentedlist>
+                </para>
+            </listitem>
+        </itemizedlist>
     </section>
-    
+    <section>
+        <title>Cache no CAManager</title>
+
+        <para>
+            Em ambientes onde são executadas muitas assinaturas, algumas verificações repetitivas - que não sofrem alteração
+            entre uma assinatura e outra - podem ser colocadas em cache.
+        </para>
+        <para>Atualmente as seguintes verificações são armazenadas:</para>
+        <itemizedlist>
+            <listitem>
+                <para>recuperação da cadeia de certificados associadas a um certificado</para>
+            </listitem>
+            <listitem>
+                <para>verificação de assinatura de um certificado por um outro certificado</para>
+            </listitem>
+        </itemizedlist>
+
+        <para>Por padrão esta opção vem desativada. Existem duas formas de ativá-la:</para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <emphasis>Programaticamente</emphasis>
+                </para>
+                <para>
+                    <programlisting role="JAVA"><![CDATA[...
+                        ...
+                        org.demoiselle.signer.core.ca.manager.CAManagerConfiguration config = org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance();
+                        config.setCached(true);
+                        ...]]></programlisting>
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>Setando a variável de ambiente</emphasis>
+                </para>
+                <para>
+                    <segmentedlist>
+                        <seglistitem>signer.camanager.cached</seglistitem>
+                    </segmentedlist>
+                </para>
+            </listitem>
+        </itemizedlist>
+        <para>O cache pode ser invalidado a qualquer momento através do método invalidate:</para>
+        <programlisting role="JAVA"><![CDATA[...
+                        ...
+                        org.demoiselle.signer.core.ca.manager.CAManagerCache cacheManager = org.demoiselle.signer.core.ca.manager.CAManagerCache.getInstance();
+                        cacheManager.invalidate();
+                        ...]]></programlisting>
+    </section>
 </chapter>
