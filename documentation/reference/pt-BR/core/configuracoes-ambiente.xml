@@ -11,24 +11,26 @@
         <para>
             Para o caso do ambiente de rede que esteja rodando a aplicação esteja sob um Proxy é possível fazer a
             configuração das seguintes formas:
+            </para>
 
             <itemizedlist>
-                <listitem>
-                    <para>
-                        <emphasis>Programaticamente</emphasis>
-                    </para>
-                    <para>
-                        <programlisting role="JAVA"><![CDATA[...
-                        import org.demoiselle.signer.core.util.Proxy;
+            
+            	<listitem>
+                <para>
+                    <emphasis>Programaticamente</emphasis>
+                </para>
+                    <programlisting role="JAVA"><![CDATA[....
                         ...
+                        import org.demoiselle.signer.core.util.Proxy;
+                        
                         Proxy.setProxyEndereco("endereco_ou_ip");
                         Proxy.setProxyPorta("numero_da_porta");
                         Proxy.setProxyUsuario("usuario"); // Caso necessário
                         Proxy.setProxySenha("senha"); // Caso necessário
                         Proxy.setProxy();
                         ...]]></programlisting>
-                    </para>
-                </listitem>
+            	</listitem>
+              
                 <listitem>
                     <para>
                         <emphasis>Setando as variáveis de ambiente</emphasis>
@@ -42,8 +44,7 @@
                         </segmentedlist>
                     </para>
                 </listitem>
-            </itemizedlist>
-        </para>
+            </itemizedlist>        
     </section>
     <section>
         <title>Repositório local de LPA (Lista de Políticas de Assinatura)</title>
@@ -70,13 +71,11 @@
                 <para>
                     <emphasis>Programaticamente</emphasis>
                 </para>
-                <para>
                     <programlisting role="JAVA"><![CDATA[...
                         ...
                         org.demoiselle.signer.core.repository.Configuration config = org.demoiselle.signer.core.repository.Configuration.getInstance();
 		        		config.setLpaPath("/tmp/meudir/");
                         ...]]></programlisting>
-                </para>
             </listitem>
             <listitem>
                 <para>
@@ -114,13 +113,11 @@
                 <para>
                     <emphasis>Programaticamente</emphasis>
                 </para>
-                <para>
                     <programlisting role="JAVA"><![CDATA[...
                         ...
                         org.demoiselle.signer.core.ca.manager.CAManagerConfiguration config = org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance();
                         config.setCached(true);
                         ...]]></programlisting>
-                </para>
             </listitem>
             <listitem>
                 <para>
