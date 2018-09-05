@@ -108,7 +108,7 @@ public class CAdESSignerTest {
 			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
 			Security.addProvider(p);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("EsS201301".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 
@@ -201,7 +201,7 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	// @Test
+	@Test
 	public void testSignDetached() {
 		try {
 
@@ -211,7 +211,7 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/home/{usuario}/arquivo";
+			String fileDirName = "/home/80621732915/AAssinar/00_homolog/holog_prod.txt";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -272,6 +272,7 @@ public class CAdESSignerTest {
 			// Cache de cadeia
 			//CAManagerConfiguration config = CAManagerConfiguration.getInstance();
 			//config.setCached(true);
+			//org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance().setCached(true);
 			
 			// Cache LCR
 			//Configuration config = Configuration.getInstance();
