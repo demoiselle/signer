@@ -57,6 +57,7 @@ import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
+import org.bouncycastle.cms.SignerInformationVerifier;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.tsp.TSPAlgorithms;
@@ -65,6 +66,7 @@ import org.bouncycastle.tsp.TimeStampRequest;
 import org.bouncycastle.tsp.TimeStampRequestGenerator;
 import org.bouncycastle.tsp.TimeStampResponse;
 import org.bouncycastle.tsp.TimeStampToken;
+import org.bouncycastle.tsp.TimeStampTokenInfo;
 import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
@@ -339,6 +341,7 @@ public class TimeStampOperator {
             TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(timeStamp));
             CMSSignedData s = timeStampToken.toCMSSignedData();
 
+            
             int verified = 0;
 
             Store<?> certStore = s.getCertificates();
@@ -351,10 +354,12 @@ public class TimeStampOperator {
                 Collection<?> certCollection = certStore.getMatches(signer.getSID());
                 Iterator<?> certIt = certCollection.iterator();
                 X509CertificateHolder cert = (X509CertificateHolder) certIt.next();
-                if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert))) {
+                SignerInformationVerifier siv = new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(cert);
+                if (signer.verify(siv)) {
                     verified++;
                 }
                 cert.getExtension(new ASN1ObjectIdentifier("2.5.29.31")).getExtnValue();
+                timeStampToken.validate(siv);
             }
 
             logger.info(timeStampMessagesBundle.getString("info.signature.verified", verified));
@@ -363,12 +368,10 @@ public class TimeStampOperator {
             byte[] calculatedHash = null;
             if (content != null){
             	Digest digest = DigestFactory.getInstance().factoryDefault();
-            	if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-            		digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
-            	}else{
-            		digest.setAlgorithm(DigestAlgorithmEnum.SHA_512);
-            	}                
-                calculatedHash = digest.digest(content);
+            	TimeStampTokenInfo info = timeStampToken.getTimeStampInfo();
+                ASN1ObjectIdentifier algOID = info.getMessageImprintAlgOID();
+           		digest.setAlgorithm(algOID.toString());
+           		calculatedHash = digest.digest(content);
             }else{
             	calculatedHash = hash;
             }
