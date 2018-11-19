@@ -108,7 +108,7 @@ public class CAdESSignerTest {
 			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
 			Security.addProvider(p);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("EsS201301".toCharArray()));
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 
@@ -201,7 +201,7 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	@Test
+	//@Test
 	public void testSignDetached() {
 		try {
 
@@ -211,7 +211,7 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/home/80621732915/AAssinar/00_homolog/holog_prod.txt";
+			String fileDirName = "/home/{usuario}/arquivo";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -253,12 +253,12 @@ public class CAdESSignerTest {
 			// para arquivo
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica referencia básica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			// referencia de validação
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_3);
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
 			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
@@ -287,7 +287,7 @@ public class CAdESSignerTest {
 			
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
-			File file = new File(fileDirName + "_detached.p7s");
+			File file = new File(fileDirName + "_detached_rt.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -369,10 +369,10 @@ public class CAdESSignerTest {
 			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
 
 			// Sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 
 			// com carimbo de tempo
-			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			
 
@@ -435,12 +435,12 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 			
 			// Referencia de validação
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RA_CADES_2_3);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RA_CADES_2_4);
 
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -511,9 +511,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -584,9 +584,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -630,9 +630,10 @@ public class CAdESSignerTest {
 			byte[] signatureFile = readContent(fileSignatureDirName);
 			
 			
+			
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 			// devido a uma restrição do token branco, no windws só funciona com 256
 			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
@@ -666,9 +667,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);

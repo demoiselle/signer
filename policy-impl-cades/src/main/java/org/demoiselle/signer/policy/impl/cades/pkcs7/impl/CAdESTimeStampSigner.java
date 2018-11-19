@@ -79,7 +79,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 	private ASN1InputStream ais;
 
 	public CAdESTimeStampSigner() {
-		this.setSignaturePolicy(Policies.AD_RT_CADES_2_2);
+		this.setSignaturePolicy(Policies.AD_RT_CADES_2_3);
 	}
 
 	@Override

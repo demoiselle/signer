@@ -149,7 +149,7 @@ public class CAdESSigner implements PKCS7Signer {
 
 	public CAdESSigner() {
 		this.pkcs1.setAlgorithm((String) null);
-		this.setSignaturePolicy(Policies.AD_RB_CADES_2_2);
+		this.setSignaturePolicy(Policies.AD_RB_CADES_2_3);
 
 	}
 

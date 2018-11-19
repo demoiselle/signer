@@ -23,6 +23,7 @@ import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.SignatureInterface;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
@@ -84,7 +85,12 @@ public class PDFSigner {
 					buffer.flush();
 					byte[] content = buffer.toByteArray();		
 					try {						
-						java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+						java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-512");
+						// gera o hash do arquivo
+						// devido a uma restrição do token branco, no windws só funciona com 256
+						if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+							md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+						}
 	                	String contentEncoded = Base64.encodeBase64String(content);	                	
 	                	System.out.println(contentEncoded);	                	
 	                    byte[] hash = md.digest(content);	                    
@@ -101,13 +107,18 @@ public class PDFSigner {
 	        			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
 
 	        			// politica sem carimbo de tempo
-	        			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+	        			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 	        			// com carimbo de tempo
-	        			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_2);
-	        			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_PADES_1_0);
+	        			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+	        			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_PADES_1_1);
 
+	        			
 	        			// para mudar o algoritimo
-	        			signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+	        			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+	        			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+	        				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+	        			}	        			
+	        			
 	                    
 						byte [] assinatura =signer.doHashSign(hash);
 						

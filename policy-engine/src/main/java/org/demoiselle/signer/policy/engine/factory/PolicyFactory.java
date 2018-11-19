@@ -303,6 +303,10 @@ public class PolicyFactory {
         		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_1.der"),
         AD_RB_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.der"),
+        AD_RB_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.der",
+                		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.der"),
+                		
+                		
         AD_RT_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RT.der"),
         AD_RT_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v1_1.der",
@@ -312,7 +316,10 @@ public class PolicyFactory {
         AD_RT_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_1.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_1.der"),
         AD_RT_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.der"),      
+        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.der"),
+        AD_RT_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.der",
+                		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.der"),
+        		
         AD_RV_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RV.der"),
         AD_RV_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v1_1.der",
@@ -323,6 +330,9 @@ public class PolicyFactory {
         		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_1.der"),
         AD_RV_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_2.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_2.der"),
+        AD_RV_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_3.der",
+                		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.der"),
+        		
         AD_RC_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RC.der"),
         AD_RC_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v1_1.der",
@@ -333,6 +343,9 @@ public class PolicyFactory {
         		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_1.der"),
         AD_RC_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_2.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_2.der"),
+        AD_RC_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_3.der",
+                		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.der"),
+        		
         AD_RA_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RA.der"),
         AD_RA_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v1_1.der",
@@ -347,30 +360,63 @@ public class PolicyFactory {
         		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_2.der"),
         AD_RA_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.der",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_3.der"),
+        AD_RA_CADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.der",
+                		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.der"),        		
         		
 
-// TODO - Carregar politica em formato XML, necessário???   		
-        AD_RB_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.xml",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.xml"),        		
+// TODO - Carregar politica em formato XML, necessário??? 
+       // FORMATO XAdES
+        AD_RB_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.xml",
+                		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.xml"),
+        AD_RB_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.xml",
+                        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.xml"),        		
+        AD_RB_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_4.xml",
+                                		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_4.xml"),
+                                		
         AD_RT_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.xml",
                 		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.xml"),
+        AD_RT_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_4.xml",
+                        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_4.xml"),
+                		
    		AD_RV_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_3.xml",
-                   		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.xml"),
+                   		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.xml"),                   		
+        AD_RV_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_4.xml",
+                           		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_4.xml"),
+                   		
         AD_RC_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_3.xml",
-                        "http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.xml"),   		
+                        "http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.xml"),
+        AD_RC_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_4.xml",
+                                "http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_4.xml"),
+                        
         AD_RA_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.xml",
                    		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_3.xml"),           		
+                   		
+        AD_RA_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.xml",
+                           		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.xml"),
                         		
-                        		
+        // FORMATO PAdES 		
         		
         AD_RB_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_0.der",
                 		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_0.der"),        		
+        AD_RB_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_1.der",
+                        		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_1.der"),
+                        		
         AD_RT_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_0.der",
                 		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_0.der"),
-   		AD_RC_PADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_1.der",
-                        "http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_1.der"),
+        AD_RT_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_1.der",
+                        		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_1.der"),
+                		
+   		AD_RC_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_0.der",
+                        "http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_0.der"),
+        AD_RC_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_1.der",
+                                "http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_1.der"),
+        AD_RC_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_2.der",
+                                        "http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_2.der"),
+                                
         AD_RA_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_1.der",
-                		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_1.der");
+                		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_1.der"),
+        AD_RA_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_2.der",
+        		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_2.der");
         
                 
         private Policies(String file, String url) {
