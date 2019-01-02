@@ -226,4 +226,10 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
         this.callback = callback;
     }
 
+	@Override
+	public KeyStore getKeyStore(String pinNumber) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

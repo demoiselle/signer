@@ -60,4 +60,11 @@ public interface KeyStoreLoader {
 	 */
 	public void setCallbackHandler(CallbackHandler callback);
 
+	/**
+	 * 
+	 * @param pinNumber
+	 * @return KeyStore keystore
+	 */
+	public KeyStore getKeyStore(String pinNumber);
+
 }

@@ -56,12 +56,9 @@ import org.slf4j.LoggerFactory;
 public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 
     private static final String FILE_TYPE_PKCS12 = "PKCS12";
-    private static final String FILE_TYPE_JKS = "JKS";
-        
+    private static final String FILE_TYPE_JKS = "JKS";        
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
     private static final Logger logger = LoggerFactory.getLogger(FileSystemKeyStoreLoader.class);
-
-     
     private File fileKeyStore = null;
 
     /**
@@ -103,18 +100,25 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
     public KeyStore getKeyStore(String pinNumber) {
        
         logger.info("FileSystemKeyStoreLoader.getKeyStore()");
-
+        
         KeyStore result = null;
-        try {
-            result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_PKCS12);
-        } catch (Throwable throwable) {
-            try {
-                result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_JKS);
-            } catch (Throwable error) {
-                throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.unknow.format"), throwable);
-            }
+        //String extensao = fileKeyStore.getName().substring(fileKeyStore.getName().lastIndexOf("."), fileKeyStore.getName().length());
+        if (fileKeyStore.getName().endsWith("p12") || fileKeyStore.getName().endsWith("p12")){
+        	try {
+                result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_PKCS12);
+            } catch (Throwable throwable) {
+                    throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass",fileKeyStore.getName()), throwable);
+                }            
+        }else{if (fileKeyStore.getName().endsWith("jks")){
+        		try{
+                    result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_JKS);
+                } catch (Throwable error) {
+                    throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass",fileKeyStore.getName()), error);
+                }
+        	}else{
+        		throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.unknow.format",fileKeyStore.getName()));
+        	}
         }
-
         return result;
     }
 
@@ -148,9 +152,12 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
         return result;
     }
 
-    @Override
-    public void setCallbackHandler(CallbackHandler callback) {
+	@Override
+	public void setCallbackHandler(CallbackHandler callback) {
+		// TODO Auto-generated method stub
+		
+	}
 
-    }
+
 
 }

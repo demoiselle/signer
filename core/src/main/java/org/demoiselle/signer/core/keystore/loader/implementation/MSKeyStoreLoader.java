@@ -48,7 +48,9 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Map;
+
 import javax.security.auth.callback.CallbackHandler;
+
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -184,5 +186,11 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 
 	public void setCallback(CallbackHandler callback) {
 		this.callback = callback;
+	}
+
+	@Override
+	public KeyStore getKeyStore(String pinNumber) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
