@@ -121,12 +121,12 @@ public class CAdESChecker implements PKCS7Checker {
 	 * only with content of type DATA.: OID ContentType 1.2.840.113549.1.9.3 =
 	 * OID Data 1.2.840.113549.1.7.1
 	 *
-	 * @params content Is only necessary to inform if the PKCS7 package is NOT
-	 *         ATTACHED type. If it is of type attached, this parameter will be
-	 *         replaced by the contents of the PKCS7 package.
-	 * @params signedData Value in bytes of the PKCS7 package, such as the
-	 *         contents of a ".p7s" file. It is not only signature as in the
-	 *         case of PKCS1.
+	 * @param content Is only necessary to inform if the PKCS7 package is NOT
+	 *        ATTACHED type. If it is of type attached, this parameter will be
+	 *        replaced by the contents of the PKCS7 package.
+	 * @param signedData Value in bytes of the PKCS7 package, such as the
+	 *        contents of a ".p7s" file. It is not only signature as in the
+	 *        case of PKCS1.
 	 */
 	// TODO: Implementar validação de co-assinaturas
 
