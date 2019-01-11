@@ -41,7 +41,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
@@ -49,7 +48,6 @@ import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.regex.Pattern;
-
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoaderException;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -86,7 +84,7 @@ public class Configuration {
 		return Configuration.instance;
 	}
 
-	private final Map<String, String> drivers = new HashMap<>();
+	private final SortedMap<String,String> drivers = new TreeMap<String, String>();
 
 	/**
 	 * Load driver for Token or SmartCard installed on local machine that will
@@ -262,7 +260,7 @@ public class Configuration {
 	 *
 	 * @return map of drivers, with name as key and path as value.
 	 */
-	public Map<String, String> getDrivers() {
+	public SortedMap<String,String> getDrivers() {
 		return this.drivers;
 	}
 
