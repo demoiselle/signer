@@ -187,7 +187,7 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	@Test
+	//@Test
 	public void testSignDetached() {
 		try {
 
