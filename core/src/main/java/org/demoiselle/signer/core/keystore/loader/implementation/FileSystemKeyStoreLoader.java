@@ -103,7 +103,7 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
         
         KeyStore result = null;
         //String extensao = fileKeyStore.getName().substring(fileKeyStore.getName().lastIndexOf("."), fileKeyStore.getName().length());
-        if (fileKeyStore.getName().endsWith("p12") || fileKeyStore.getName().endsWith("p12")){
+        if (fileKeyStore.getName().endsWith("p12") || fileKeyStore.getName().endsWith("pfx")){
         	try {
                 result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_PKCS12);
             } catch (Throwable throwable) {
