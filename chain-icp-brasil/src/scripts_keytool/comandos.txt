@@ -1,2 +1,7 @@
-./listKeys.sh|grep Válido  > cadeia3.txt
+./listKeys.sh|grep Proprietário  > tabela_cadeia1.txt
+
+./listKeys.sh|grep alias  > tabela_cadeia2.txt
+
+./listKeys.sh|grep Válido  > tabela_cadeia3.txt
+
 
