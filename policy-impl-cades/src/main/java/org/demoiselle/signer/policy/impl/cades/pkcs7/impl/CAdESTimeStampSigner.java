@@ -36,24 +36,36 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
-import java.io.*;
-import java.security.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.security.PrivateKey;
+import java.security.Security;
 import java.security.cert.Certificate;
-import java.util.*;
-import org.bouncycastle.asn1.*;
-import org.bouncycastle.asn1.cms.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import org.bouncycastle.asn1.ASN1EncodableVector;
+import org.bouncycastle.asn1.ASN1InputStream;
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.ASN1Set;
+import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.cms.*;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.cms.SignerInformation;
+import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.tsp.*;
+import org.bouncycastle.tsp.TSPException;
+import org.bouncycastle.tsp.TimeStampToken;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
-import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS1Factory;
-import org.demoiselle.signer.policy.impl.cades.pkcs1.*;
+import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7TimeStampSigner;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedOrUnsignedAttribute;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.factory.AttributeFactory;
@@ -74,7 +86,6 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 	private final PKCS1Signer pkcs1 = PKCS1Factory.getInstance()
 			.factoryDefault();
 	private SignaturePolicy signaturePolicy;
-	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 	private Certificate certificateChain[];
 	private ASN1InputStream ais;
 
@@ -113,13 +124,9 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			byte[] result = cmsSignedData.getEncoded();
 			return result;
 		} catch (CMSException ex) {
-			throw new SignerException(
-					cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"),
-					ex);
+			throw new SignerException(ex.getMessage());
 		} catch (IOException ex) {
-			throw new SignerException(
-					cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"),
-					ex);
+			throw new SignerException(ex.getMessage());
 		}
 
 	}
@@ -129,9 +136,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 		try {
 			return this.doTimeStamp(content, null);
 		} catch (Exception ex) {
-			throw new SignerException(
-					cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"),
-					ex);
+			throw new SignerException(ex.getMessage());
 		}
 	}
 
@@ -140,9 +145,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 		try {
 			return this.doTimeStamp(null, hash);
 		} catch (Exception ex) {
-			throw new SignerException(
-					cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"),
-					ex);
+			throw new SignerException(ex.getMessage());
 		}
 	}
 
@@ -163,9 +166,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			byte[] result = signedOrUnsignedAttribute.getValue().getEncoded();
 			return result;
 		} catch (IOException ex) {
-			throw new SignerException(
-					cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"),
-					ex);
+			throw new SignerException(ex.getMessage());
 		}
 	}
 	@Override
