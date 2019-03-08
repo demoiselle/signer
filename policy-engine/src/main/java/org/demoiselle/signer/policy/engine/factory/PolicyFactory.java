@@ -166,7 +166,7 @@ public class PolicyFactory {
 	        return listaPoliticaAssinatura;
 		} catch (FileNotFoundException e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
-			return null;
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
 		}   
     }
     
@@ -186,7 +186,7 @@ public class PolicyFactory {
 	        return listaPoliticaAssinatura;
 		} catch (FileNotFoundException e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
-			return null;
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
 		}   
     }
     
@@ -208,21 +208,22 @@ public class PolicyFactory {
     
     public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESUrl() {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        try{
-        	String conURL = ListOfSubscriptionPolicies.CAdES_URL.getUrl();
+        String conURL = ListOfSubscriptionPolicies.CAdES_URL.getUrl();
+        try{        	
         	InputStream is = Downloads.getInputStreamFromURL(conURL);
         	ASN1Primitive primitive = this.readANS1FromStream(is);
             listaPoliticaAssinatura.parse(primitive);      
             is.close();
             if (!LPARepository.saveLocalLPA(conURL, "LPA_CAdES.der")){
             	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
+            	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
             }            
         }catch(RuntimeException ex){
         	LOGGER.error(ex.getMessage());
-        	ex.printStackTrace();        	
+        	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		} catch (IOException e) {
 			LOGGER.error(e.getMessage());
-			e.printStackTrace();			
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
         
         return listaPoliticaAssinatura;
@@ -236,19 +237,22 @@ public class PolicyFactory {
     public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdESUrl() {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
         InputStream is;
-		try {
-			String conURL = ListOfSubscriptionPolicies.PAdES_URL.getUrl();
+        String conURL = ListOfSubscriptionPolicies.PAdES_URL.getUrl();
+		try {			
 			is = Downloads.getInputStreamFromURL(conURL);
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 			is.close();
 			if (!LPARepository.saveLocalLPA(conURL, "LPA_PAdES.der")){
-	        	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_PAdES.der"));
-	        }	        
+	        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_PAdES.der"));
+	        	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+	        	}	        
 	        listaPoliticaAssinatura.parse(primitive);	       
-		} catch (RuntimeException e) {			
-			e.printStackTrace();
+		} catch (RuntimeException e) {		
+			LOGGER.equals(e.getMessage());
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.equals(e.getMessage());
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
 		 return listaPoliticaAssinatura; 
     }
