@@ -141,6 +141,7 @@ public class Configuration {
 		map.put("TokenOuSmartCard_30_safenet", "/usr/lib/libwdpkcs.so");
 		map.put("TokenOuSmartCard_31_safenet", "/usr/local/lib64/libwdpkcs.so");
 		map.put("TokenOuSmartCard_32_safenet", "/usr/local/lib/libwdpkcs.so");
+		
 		// Token Branco do Serpro
 		map.put("TokenOuSmartCard_33_watchdata", "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so");
 		map.put("TokenOuSmartCard_34_watchdata", "/usr/lib/watchdata/lib/libwdpkcs.so");
@@ -170,6 +171,13 @@ public class Configuration {
 		map.put("TokenOuSmartCard_48_neoid", "/usr/lib/libneoidp11.so");
 		// Certificado em Nuvem SERPRO NEOID - MacOS
 		map.put("TokenOuSmartCard_49_neoid",	"//Applications//NeoID Desktop.app//Contents//Java//tools//macos//libneoidp11.dylib");
+		
+		// Token Azul do Serpro
+		map.put("TokenOuSmartCard_50_safenet_64", "/usr/lib64/libeToken.so");
+		
+		map.put("TokenOuSmartCard_51_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0"); 
+		
+		
 		
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {
