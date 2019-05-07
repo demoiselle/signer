@@ -125,6 +125,7 @@ public class OffLineCRLRepository implements CRLRepository {
             ICPBR_CRL crl = null;
 
             if (new File(config.getCrlPath()).mkdirs()) {
+            	logger.info("criando...");
                 logger.info(coreMessagesBundle.getString("info.creating.crl"));
             } else {
                 logger.info(coreMessagesBundle.getString("info.created.crl"));

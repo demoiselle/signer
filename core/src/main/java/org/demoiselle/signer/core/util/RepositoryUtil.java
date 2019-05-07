@@ -82,6 +82,7 @@ public class RepositoryUtil {
             ret = bigInt.toString(16);
             return ret;
         } catch (NoSuchAlgorithmException e) {
+        	logger.error(e.getMessage());
             return null;
         }
     }
@@ -100,9 +101,10 @@ public class RepositoryUtil {
         URLConnection uCon = null;
         InputStream is = null;
         try {
+        	logger.info("Destination File"+ destinationFile);
             url = new URL(sUrl);
             uCon = url.openConnection();
-            uCon.setConnectTimeout(5000);
+            uCon.setConnectTimeout(10000);
             is = uCon.getInputStream();
             outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
             buf = new byte[1024];
@@ -111,11 +113,13 @@ public class RepositoryUtil {
                 setByteWritten(getByteWritten() + ByteRead);
             }
         } catch (MalformedURLException e) {
+        	logger.error(coreMessagesBundle.getString("error.malformed.url",sUrl));
             throw new CertificateValidatorException(coreMessagesBundle.getString("error.malformed.url",sUrl), e);
         } catch (FileNotFoundException e) {
+        	logger.error(coreMessagesBundle.getString("error.file.not.found",sUrl));
             throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found",sUrl), e);
         } catch (IOException e) {
-            logger.info(coreMessagesBundle.getString("error.crl.open.connection",sUrl) + e.getMessage());
+            logger.error(coreMessagesBundle.getString("error.crl.open.connection",sUrl) + e.getMessage());
         } finally {
             try {
                 if (is != null) {
@@ -125,6 +129,7 @@ public class RepositoryUtil {
                     outStream.close();
                 }
             } catch (Throwable e) {
+            	logger.error(coreMessagesBundle.getString("error.crl.close.connection",sUrl));
                 throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection",sUrl), e);
             }
         }
@@ -163,10 +168,13 @@ public class RepositoryUtil {
                 setByteWritten2(getByteWritten2() + ByteRead);
             }
         } catch (MalformedURLException e) {
+        	logger.error(e.getMessage());
             return false;
         } catch (FileNotFoundException e) {
+        	logger.error(e.getMessage());
             return false;
         } catch (IOException e) {
+        	logger.error(e.getMessage());
             return false;
         } finally {
             try {
@@ -174,6 +182,7 @@ public class RepositoryUtil {
                     is.close();
                 }
             } catch (Throwable e) {
+            	logger.error(coreMessagesBundle.getString("error.crl.close.connection",sUrl)+e.getMessage());
                 throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection",sUrl), e);
             }
         }

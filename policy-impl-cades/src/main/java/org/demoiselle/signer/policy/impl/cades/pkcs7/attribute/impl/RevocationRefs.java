@@ -268,7 +268,7 @@ public class RevocationRefs implements UnsignedAttribute {
 	 * @throws NoSuchAlgorithmException
 	 * @throws OCSPException
 	 * @throws IOException
-	 */
+	 
 	@SuppressWarnings("unused")
 	private OcspResponsesID makeOcspResponsesID(BasicOCSPResp ocspResp)
 			throws NoSuchAlgorithmException, OCSPException, IOException {
@@ -285,5 +285,6 @@ public class RevocationRefs implements UnsignedAttribute {
 
 		return ocsprespid;
 	}
+	*/
 
 }
