@@ -60,6 +60,7 @@ import java.util.zip.ZipInputStream;
 
 import javax.xml.bind.DatatypeConverter;
 
+import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -71,8 +72,8 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 
 public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
-	private static final String STRING_URL_ZIP = "http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip";
-	private static final String STRING_URL_HASH = "http://repositorio.serpro.gov.br/icp-brasil/hashsha512.txt";
+	private static final String STRING_URL_ZIP = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list();
+	private static final String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list_sha512();
 
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class.getName());
 	

@@ -37,6 +37,8 @@
 
 package org.demoiselle.signer.chain.icp.brasil.provider.impl;
 
+import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
+
 /**
  * 
  * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from  it's defined URL:
@@ -45,8 +47,8 @@ package org.demoiselle.signer.chain.icp.brasil.provider.impl;
  */
 public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderCA {
 
-	private static String STRING_URL_ZIP = "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip";
-	private static String STRING_URL_HASH = "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/hashsha512.txt";
+	private static String STRING_URL_ZIP = ChainICPBrasilConfig.getInstance().getUrl_iti_ac_list();
+	private static String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_iti_ac_list_sha512();
 
 	/**
 	 *  return the address where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.  
