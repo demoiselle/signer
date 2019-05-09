@@ -36,15 +36,12 @@
  */
 package org.demoiselle.signer.core.util;
 
-import org.demoiselle.signer.core.exception.CertificateValidatorException;
-
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigInteger;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -52,7 +49,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-
+import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,11 +72,10 @@ public class RepositoryUtil {
 	 */
     public static String urlToMD5(String url) {
         try {
-            String ret;
+            String ret = "";
             MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(url.getBytes());
-            BigInteger bigInt = new BigInteger(1, md.digest());
-            ret = bigInt.toString(16);
+            md.update(url.getBytes(),0,url.length());
+       		for (byte b : md.digest()) ret = ret + String.format("%02x", b);
             return ret;
         } catch (NoSuchAlgorithmException e) {
         	logger.error(e.getMessage());
