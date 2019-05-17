@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *	Settings for Chain Repositories
  *	Depending on the files: chain-icpbrasil-config.properties or chain-icpbrasil-config-default.properties
  *
- * @author 07721825741
+ * @author emerson.saito@serpro.gov.br
  */
 public class ChainICPBrasilConfig {
 
