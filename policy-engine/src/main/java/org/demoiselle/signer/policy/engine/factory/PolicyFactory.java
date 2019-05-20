@@ -167,8 +167,13 @@ public class PolicyFactory {
 	        return listaPoliticaAssinatura;
 		} catch (FileNotFoundException e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
+			listaPoliticaAssinatura = loadLPACAdESUrl();			
+		}
+		if (listaPoliticaAssinatura != null){
+			return listaPoliticaAssinatura;
+		}else{
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
-		}   
+		}
     }
     
     /**
@@ -187,8 +192,15 @@ public class PolicyFactory {
 	        return listaPoliticaAssinatura;
 		} catch (FileNotFoundException e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
-			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
-		}   
+			listaPoliticaAssinatura = loadLPAPAdESUrl();
+		}
+        if (listaPoliticaAssinatura != null){
+			return listaPoliticaAssinatura;
+		}else{
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
+		}
+        
+        
     }
     
     /**
