@@ -335,7 +335,7 @@ public class PolicyFactory {
    
     /**
      *  Load signature policy for XAdES (XML) standard from url
-     * @return
+     * 
      */
     		
     // TODO - Implementar
@@ -347,7 +347,6 @@ public class PolicyFactory {
     
     /**
      *  Load signature policy for XAdES (XML) standard from local url
-     * @return
      */
     		
     // TODO - Implementar
