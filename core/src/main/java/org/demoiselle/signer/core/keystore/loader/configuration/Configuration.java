@@ -152,7 +152,9 @@ public class Configuration {
 		map.put("TokenOuSmartCard_37_GDBurti", "/usr/lib/libaetpkss.so.3.0");
 		
 		map.put("TokenOuSmartCard_38_opensc", "/usr/lib/opensc-pkcs11.so");
+		
 		map.put("TokenOuSmartCard_39_opensc", "/usr/lib/pkcs11/opensc-pkcs11.so");
+		
 		map.put("TokenOuSmartCard_40_pronova", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
 		map.put("TokenOuSmartCard_41_Oberthur", "/usr/local/AWP/lib/libOcsCryptoki.so");
 
@@ -174,10 +176,10 @@ public class Configuration {
 		
 		// Token Azul do Serpro
 		map.put("TokenOuSmartCard_50_safenet_64", "/usr/lib64/libeToken.so");
-		
 		map.put("TokenOuSmartCard_51_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0"); 
-		
-		
+		map.put("TokenOuSmartCard_52_opensc64", "/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_53_opensc64", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
+				
 		
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {
