@@ -39,7 +39,6 @@ package org.demoiselle.signer.policy.impl.cades;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
-import java.util.List;
 
 /**
  * Basic specification for implementation of digital signatures in CADES format.
@@ -96,70 +95,6 @@ public interface Signer {
      * @return detached signature
      */
     abstract public byte[] doDetachedSign (byte[] content);
-    
-    /**
-     * Check if a digital signature, informed by parameter signedData, is valid for content
-     *
-     * @param content content to be checked
-     * @param signedData signature to be checked
-     * @return boolean true if valid, false otherwise
-     * @deprecated use {@link checkAttached} or {@link checkDetattached} or {@link checkSignatureByHash}  
-     */
-    abstract public boolean check(byte[] content, byte[] signedData);
-
-    
-    /**
-     * Check a digital signature with attached content, informed by parameter signedData
-     *
-     * @param signedData attached signature to be checked
-     * @return boolean true if valid, false otherwise
-     * @deprecated use {@link checkAttachedSignature}
-     */
-    abstract public boolean checkAttached(byte[] signedData);
-    
-    
-    /**
-     * Check an digital detached signature, informed by parameter signedData and it's content
-     *
-     * @param content content to be checked
-     * @param signedData detached signature
-     * @return boolean true if valid, false otherwise
-     * @deprecated use {@link checkDetattachedSignature}
-     */
-    abstract public boolean checkDetattached(byte[] content, byte[] signedData);
-    
-    /**
-     * Check a digital signature with attached content, informed by parameter signedData
-     * @param signedData attached signature to be checked
-     * @return List&lt;SignatureInformations&gt; list of signature information
-     * @deprecated this method will be removed to Checker class.
-     */
-    abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
-    
-    /**
-     * Check an digital detached signature, informed by parameter signedData and it's content
-     * 
-     * @param content content to be checked
-     * @param signedData detached signature
-     * @return List&lt;SignatureInformations&gt; list of signature information
-     * @deprecated this method will be removed to Checker class.
-     */
-    
-    abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
-    
-    
-    
-    /**
-     * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
-     * 
-     * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
-     * @param calculatedHashContent calculated hash
-     * @param signedData detached signature
-     * @return List&lt;SignatureInformation&gt; list of signature information
-     * @deprecated this method will be removed to Checker class.
-    */
-   abstract public List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
-
     
     /**
      * Returns the provider.

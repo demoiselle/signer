@@ -37,9 +37,8 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7;
 
 import java.security.cert.Certificate;
-import java.util.List;
+
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
-import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.Signer;
 
 /**
@@ -58,17 +57,6 @@ public interface PKCS7Signer extends Signer {
      * @param signaturePolicy Signature policy to be used
      */
     abstract public void setSignaturePolicy(Policies signaturePolicy);
-
-    /**
-     * 
-     * Extracts the signed content from the digital signature structure, 
-	 * if it is a signature with attached content.
-     * 
-     * @param signed signed content 
-     * @param validate TRUE (to execute validation) or FALSE (not execute validation)
-     * @return signed content
-     */
-    abstract public byte[] getAttached(byte[] signed, boolean validate);
     
     /**
      * 
@@ -118,64 +106,6 @@ public interface PKCS7Signer extends Signer {
     abstract public byte[] doHashCoSign (byte[] hash, byte[] previewSigned);
     
     
-    /**
-     * Check a digital signature with attached content, informed by parameter signedData
-     *
-     * @param signedData signed data to be checked
-     * @return boolean true if valid, false otherwise
-     * @deprecated use {@link checkAttachedSignature}
-     */
-    abstract public boolean checkAttached(byte[] signedData);
     
-    
-    /**
-     * Check an digital detached signature, informed by parameter signedData and it's content
-     *
-     * @param content content to be checked
-     * @param signedData signed data
-     * @return boolean true if valid, false otherwise
-     * @deprecated use {@link checkDetattachedSignature}
-     */
-    abstract public boolean checkDetattached(byte[] content, byte[] signedData);
-    
-    
-    /**
-     * Check a digital signature with attached content, informed by parameter signedData
-     * @param signedData attached signature to be checked
-     * @return List&lt;SignatureInformations&gt; list of signature informations
-     * @deprecated this method will be removed to CAdESChecker class.
-     */
-    abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
-    
-    /**
-     * Check an digital detached signature, informed by parameter signedData and it's content
-     * 
-     * @param content content to be checked
-     * @param signedData detached signature
-     * @return List&lt;SignatureInformations&gt; list of signature informations
-     * @deprecated this method will be removed to CAdESChecker class.
-     */
-    
-    abstract public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData);
-        
-    
-    /**
-     * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
-     * 
-     * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
-     * @param calculatedHashContent calculated hash
-     * @param signedData detached signature
-     * @return List&lt;SignatureInformations&gt; list of signature informations
-     * @deprecated this method will be removed to CAdESChecker class.
-     */
-    abstract public  List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
-
-    /**
-     * get Signature Information for a checked signature
-     * @return List&lt;SignatureInformations&gt;
-     * @deprecated this method will be removed to CAdESChecker class.
-     */
-    abstract public List<SignatureInformations> getSignatureInfo();
-
     
  }

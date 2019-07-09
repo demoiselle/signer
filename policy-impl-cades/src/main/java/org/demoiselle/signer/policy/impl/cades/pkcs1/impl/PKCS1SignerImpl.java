@@ -120,7 +120,6 @@ public class PKCS1SignerImpl implements PKCS1Signer {
      * @param content Original content to be compared to signed content.
      * @param signed Signed content to be verified.
      */
-    @Override
     public boolean check(byte[] content, byte[] signed) {
         if (content == null) {
             throw new SignerException(cadesMessagesBundle.getString("error.value.null"));
@@ -222,36 +221,26 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 		return null;
 	}
 
-	@Override
-	@Deprecated
 	public boolean checkAttached(byte[] signedData) {
 		//TODO não implementado
 		return false;
 	}
 
-	@Override
-	@Deprecated
 	public boolean checkDetattached(byte[] content, byte[] signedData) {
 		//TODO não implementado
 		return false;
 	}
 
-	@Override
-	@Deprecated
 	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithm, byte[] calculatedHashContent, byte[] signedData){
 		//TODO não implementado
 		return null;
 	}
 
-	@Override
-	@Deprecated
 	public List<SignatureInformations> checkAttachedSignature(byte[] signedData) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	@Override
-	@Deprecated
 	public List<SignatureInformations> checkDetattachedSignature(
 			byte[] content, byte[] signedData) {
 		// TODO Auto-generated method stub
