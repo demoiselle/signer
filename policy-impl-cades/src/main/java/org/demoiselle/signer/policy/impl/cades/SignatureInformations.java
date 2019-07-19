@@ -21,6 +21,7 @@ public class SignatureInformations {
 	private Date signDate;
     private Timestamp timeStampSigner = null;
     private SignaturePolicy signaturePolicy;
+    private Date notAfter;
     private LinkedList<String> validatorErrors = new LinkedList<String>();
 
 
@@ -92,19 +93,49 @@ public class SignatureInformations {
 		return null;		
 	}
 
+	/**
+	 *  
+	 * @return the Signature Policy used 
+	 */
 	public SignaturePolicy getSignaturePolicy() {
 		return signaturePolicy;
 	}
 
+	/**
+	 * 
+	 * @param signaturePolicy
+	 */
 	public void setSignaturePolicy(SignaturePolicy signaturePolicy) {
 		this.signaturePolicy = signaturePolicy;
 	}
 
+	/**
+	 * 
+	 * @return a list of Validator Errors
+	 */
 	public LinkedList<String> getValidatorErrors() {
 		return validatorErrors;
 	}
 
+	/**
+	 * 
+	 * @param validatorErrors
+	 */
 	public void setValidatorErrors(LinkedList<String> validatorErrors) {
 		this.validatorErrors = validatorErrors;
+	}
+
+	/**
+	 * @return the notAfter certificate date
+	 */
+	public Date getNotAfter() {
+		return notAfter;
+	}
+
+	/**
+	 * @param notAfter the notAfter to set
+	 */
+	public void setNotAfter(Date notAfter) {
+		this.notAfter = notAfter;
 	}	
 }

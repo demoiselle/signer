@@ -39,6 +39,7 @@ package org.demoiselle.signer.core.validator;
 import java.security.cert.X509Certificate;
 import java.text.Format;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.demoiselle.signer.core.IValidator;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
@@ -67,6 +68,22 @@ public class PeriodValidator implements IValidator {
         	throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date", 
             		formatter.format(x509.getNotBefore()), formatter.format(x509.getNotAfter())), e);
         }
+    }
+    
+    public Date valDate(X509Certificate x509) throws CertificateValidatorException {
+        try {
+        	if (x509 != null){
+        		x509.checkValidity();        		
+        	}else{
+        		throw new CertificateValidatorException(coreMessagesBundle.getString("error.invalid.certificate"));
+        	}
+            
+        } catch (Exception e) {
+        	Format formatter = new SimpleDateFormat("dd.MM.yyyy"); 
+        	throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date", 
+            		formatter.format(x509.getNotBefore()), formatter.format(x509.getNotAfter())), e);
+        }
+        return x509.getNotAfter();
     }
 
 }

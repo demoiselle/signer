@@ -191,8 +191,7 @@ public class CAdESChecker implements PKCS7Checker {
 				
 				PeriodValidator pV = new PeriodValidator();				
 				try{
-					pV.validate(varCert);
-			
+					signatureInfo.setNotAfter(pV.valDate(varCert));			
 				}catch (CertificateValidatorException cve) {
 					signatureInfo.getValidatorErrors().add(cve.getMessage());
 				}
