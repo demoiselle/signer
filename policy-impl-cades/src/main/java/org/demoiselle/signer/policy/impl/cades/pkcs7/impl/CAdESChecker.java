@@ -128,7 +128,6 @@ public class CAdESChecker implements PKCS7Checker {
 	 *        contents of a ".p7s" file. It is not only signature as in the
 	 *        case of PKCS1.
 	 */
-	// TODO: Implementar validação de co-assinaturas
 
 	public boolean check(byte[] content, byte[] signedData) throws SignerException{
 		Security.addProvider(new BouncyCastleProvider());

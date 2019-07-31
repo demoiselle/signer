@@ -28,6 +28,7 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
+import org.demoiselle.signer.timestamp.Timestamp;
 import org.junit.Test;
 
 @SuppressWarnings("unused")
@@ -100,6 +101,53 @@ public class PDFVerify {
 		}
 	}
 	
+	
+	
+	//@Test
+	public void testTimeStampOnly() {
+		
+	
+			String filePath = "caminho do arquivo";
+			
+			PDDocument document;
+			try {
+				document = PDDocument.load(new File(filePath));
+				Timestamp varTimeStamp = null;
+
+			for (PDSignature sig : document.getSignatureDictionaries()) {
+					COSDictionary sigDict = sig.getCOSObject();
+					COSString contents = (COSString) sigDict.getDictionaryObject(COSName.CONTENTS);
+					FileInputStream fis = new FileInputStream(filePath);
+					byte[] buf = null;
+
+					try {
+						buf = sig.getSignedContent(fis);
+					} finally {
+						fis.close();
+					}
+
+					CAdESChecker checker = new CAdESChecker();
+					CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
+					varTimeStamp = varCAdESTimeStampSigner.checkTimeStampPDFWithContent(contents.getBytes(), buf);
+				}
+			if (varTimeStamp != null){
+				System.out.println(varTimeStamp.getTimeStampAuthorityInfo());
+				System.out.println(varTimeStamp.getSerialNumber());
+				System.out.println(varTimeStamp.getCertificates());
+				System.out.println(varTimeStamp.getTimeStamp());				
+				
+			}
+			
+			
+				
+						
+			assertTrue(true);
+			
+		} catch (IOException e) {	
+			e.printStackTrace();
+			assertTrue(false);
+		}
+	}
 	
 	
 
