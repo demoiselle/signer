@@ -81,7 +81,7 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testDoTimeStampForContent() {
-		String fileDirName = "local_e_nome_do_arquivo_para_carimbar";
+		String fileDirName = "caminho do arquivo";
 				
 		try {
 			
@@ -114,7 +114,7 @@ public class CAdESTimeStampSignerTest {
 			
 			byte[] timeStampForContent = varCAdESTimeStampSigner.doTimeStampForContent(content);
 
-			File file = new File(fileDirName + ".timestamp");
+			File file = new File(fileDirName + "junit.timestamp.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(timeStampForContent);
 			os.flush();
@@ -169,7 +169,7 @@ public class CAdESTimeStampSignerTest {
 			
 			byte[] timeStampForContent = varCAdESTimeStampSigner.doTimeStampFromHashContent(hash);
 
-			File file = new File(fileDirName +"_fromHash"+ ".timestamp");
+			File file = new File(fileDirName +"_fromHash"+ ".timestamp.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(timeStampForContent);
 			os.flush();

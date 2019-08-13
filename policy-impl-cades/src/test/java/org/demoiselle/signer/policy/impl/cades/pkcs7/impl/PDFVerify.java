@@ -126,7 +126,6 @@ public class PDFVerify {
 						fis.close();
 					}
 
-					CAdESChecker checker = new CAdESChecker();
 					CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 					varTimeStamp = varCAdESTimeStampSigner.checkTimeStampPDFWithContent(contents.getBytes(), buf);
 				}
