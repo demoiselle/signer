@@ -179,6 +179,8 @@ public class Configuration {
 		map.put("TokenOuSmartCard_51_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0"); 
 		map.put("TokenOuSmartCard_52_opensc64", "/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_53_opensc64", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
+		
+		map.put("TokenOuSmartCard_54_gdBurty_Mac",	"//Applications//tokenadmin.app//Contents//Frameworks//libaetpkss.dylib");
 				
 		
 		boolean successLoad = false;

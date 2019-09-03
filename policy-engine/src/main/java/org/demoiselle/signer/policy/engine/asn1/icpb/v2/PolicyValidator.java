@@ -89,7 +89,7 @@ public class PolicyValidator {
 				Date nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 				if (actualDate.after(nextUpdate)){
 					LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
-					LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local"));
+					LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local", config.getLpaPath()));
 					tempListOfPolicies = factory.loadLPACAdESLocal();
 					if (tempListOfPolicies != null){
 						nextUpdate = tempListOfPolicies.getNextUpdate().getDate();

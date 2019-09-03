@@ -74,11 +74,14 @@ public class LPARepository {
 			Configuration config = Configuration.getInstance();
 			Path pathLPA = Paths.get(config.getLpaPath());
 			Path pathLPAFile = Paths.get(config.getLpaPath(), lpaName);
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.url.download", urlConLPA));
 			
 			if (!Files.isDirectory(pathLPA)) {
 				LOGGER.info(policyMessagesBundle.getString("warn.lpa.dir.not.found", pathLPA));				
 				Files.createDirectories(pathLPA);
 			}
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.url.download", urlConLPA));
+			
 			InputStream is = Downloads.getInputStreamFromURL(urlConLPA);	
 			Files.copy(is, pathLPAFile, StandardCopyOption.REPLACE_EXISTING);
 			is.close();
