@@ -63,7 +63,7 @@ public class ChainICPBrasilConfig {
     private String url_local_ac_list_sha512;
     private String url_iti_ac_list;
     private String url_iti_ac_list_sha512;
-    private String local_dir;
+    private String local_dir = "/tmp";
 
     
     /**
@@ -100,7 +100,7 @@ public class ChainICPBrasilConfig {
 	 */
 	public String getUrl_local_ac_list() {
 		try {
-    		url_local_ac_list = bundle.getString("url_local_ac_list");
+			setUrl_local_ac_list(bundle.getString("url_local_ac_list"));
 		} catch (MissingResourceException e) {
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list"));		}
     	return url_local_ac_list;
@@ -118,7 +118,7 @@ public class ChainICPBrasilConfig {
 	 */
 	public String getUrl_local_ac_list_sha512() {
 		try {
-			url_local_ac_list_sha512 = bundle.getString("url_local_ac_list_sha512");
+			setUrl_local_ac_list_sha512(bundle.getString("url_local_ac_list_sha512"));
 		} catch (MissingResourceException e) {
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list_sha512"));	
 		}
@@ -137,7 +137,7 @@ public class ChainICPBrasilConfig {
 	 */
 	public String getUrl_iti_ac_list() {
 		try {
-			url_iti_ac_list = bundle.getString("url_iti_ac_list");
+			setUrl_iti_ac_list(bundle.getString("url_iti_ac_list"));
 		} catch (MissingResourceException e) {
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list"));
 		}
@@ -156,7 +156,7 @@ public class ChainICPBrasilConfig {
 	 */
 	public String getUrl_iti_ac_list_sha512() {
 		try {
-			url_iti_ac_list_sha512 = bundle.getString("url_iti_ac_list_sha512");
+			setUrl_iti_ac_list_sha512(bundle.getString("url_iti_ac_list_sha512"));
 		} catch (MissingResourceException e) {
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list_sha512"));		
 		}
@@ -175,9 +175,10 @@ public class ChainICPBrasilConfig {
 	 */
 	public String getLocal_dir() {
 		try {
-			local_dir = bundle.getString("local_dir");
+			setLocal_dir(bundle.getString("local_dir"));
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "local_dir"));
+			logger.info(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "local_dir"));
+			local_dir = "/tmp";
 		}
 		return local_dir;
 	}
