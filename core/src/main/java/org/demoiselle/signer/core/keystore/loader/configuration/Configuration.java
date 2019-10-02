@@ -151,8 +151,7 @@ public class Configuration {
 		map.put("TokenOuSmartCard_36_GDBurti", "/usr/lib/libaetpkss.so.3");
 		map.put("TokenOuSmartCard_37_GDBurti", "/usr/lib/libaetpkss.so.3.0");
 		
-		map.put("TokenOuSmartCard_38_opensc", "/usr/lib/opensc-pkcs11.so");
-		
+		map.put("TokenOuSmartCard_38_opensc", "/usr/lib/opensc-pkcs11.so");		
 		map.put("TokenOuSmartCard_39_opensc", "/usr/lib/pkcs11/opensc-pkcs11.so");
 		
 		map.put("TokenOuSmartCard_40_pronova", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
@@ -181,6 +180,9 @@ public class Configuration {
 		map.put("TokenOuSmartCard_53_opensc64", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
 		
 		map.put("TokenOuSmartCard_54_gdBurty_Mac",	"//Applications//tokenadmin.app//Contents//Frameworks//libaetpkss.dylib");
+		
+		map.put("TokenOuSmartCard_55_opensc", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_56_opensc", "/usr/lib/opensc/opensc­pkcs11.so");
 				
 		
 		boolean successLoad = false;
