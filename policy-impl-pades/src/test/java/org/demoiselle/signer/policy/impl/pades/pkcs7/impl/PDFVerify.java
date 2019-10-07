@@ -39,7 +39,7 @@ public class PDFVerify {
 	public void test() {
 		
 	
-			String filePath = "/home/80621732915/AAssinar/00_Ronald/AC-TERMO_DE_TITULARIDADE_142535.pdf";
+			String filePath = "/";
 			
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
@@ -67,6 +67,39 @@ public class PDFVerify {
 					}
 					results.addAll(checker.getSignaturesInfo());
 				}
+			
+			if (!results.isEmpty()){
+				for (SignatureInformations sis : results){
+					for (String valErr : sis.getValidatorErrors()){
+						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
+						System.out.println(valErr);
+					}
+					for(X509Certificate cert : sis.getChain()){
+						BasicCertificate certificate = new BasicCertificate(cert);
+						if (!certificate.isCACertificate()){
+							System.out.println(certificate.toString());
+						}												
+					}
+					if (sis.getSignaturePolicy() != null){
+						System.out.println("------ Politica ----------------- ");
+						System.out.println(sis.getSignaturePolicy().toString());
+						
+					}
+					
+					BasicCertificate bc = sis.getSignerBasicCertificate();
+						if (bc.hasCertificatePF()){
+							System.out.println(bc.getICPBRCertificatePF().getCPF());
+						}
+						if (bc.hasCertificatePJ()){
+							System.out.println(bc.getICPBRCertificatePJ().getCNPJ());
+							System.out.println(bc.getICPBRCertificatePJ().getResponsibleCPF());
+						}					 
+					
+				}			
+				assertTrue(true);
+			}else{
+				assertTrue(false);
+			}
 			
 			
 		} catch (Exception e) {

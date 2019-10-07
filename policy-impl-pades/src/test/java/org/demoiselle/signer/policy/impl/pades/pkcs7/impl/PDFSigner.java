@@ -39,11 +39,11 @@ public class PDFSigner {
 		// INFORMAR o arquivo
 		//
 		//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-		String fileDirName = "/home/80621732915/AAssinar/00_Ronald/toSign.pdf";
+		String fileDirName = "/";
 		byte[] fileToSign = readContent(fileDirName);
 
 		ByteArrayInputStream toSign = new ByteArrayInputStream(fileToSign);
-		String filePDFAssinado = "/home/80621732915/AAssinar/00_Ronald/testArqAss.pdf";
+		String filePDFAssinado = "/";
 		
 		try {
 				this.doSigner(toSign, filePDFAssinado);
@@ -94,9 +94,9 @@ public class PDFSigner {
 			PDSignature signature = new PDSignature();
 			signature.setFilter(PDSignature.FILTER_ADOBE_PPKLITE);
 			signature.setSubFilter(PDSignature.SUBFILTER_ADBE_PKCS7_DETACHED);
-			Calendar calendar =Calendar.getInstance();
-			calendar.set(2017, Calendar.NOVEMBER, 6, 11, 25,30);
-			signature.setSignDate(calendar);
+			//Calendar calendar =Calendar.getInstance();
+			//calendar.set(2017, Calendar.NOVEMBER, 6, 11, 25,30);
+			//signature.setSignDate(calendar);
 			original.setDocumentId(documentId);
 			original.addSignature(signature, new SignatureInterface() {
 				public byte[] sign(InputStream contentToSign) throws IOException {
