@@ -42,11 +42,19 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
-
 import org.apache.commons.codec.binary.Base64;
+import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cms.CMSException;
+import org.bouncycastle.cms.CMSProcessableByteArray;
+import org.bouncycastle.cms.CMSSignedData;
+import org.bouncycastle.cms.SignerInformation;
+import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
+import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
@@ -61,13 +69,48 @@ public class CAdESCheckerTest {
 	/**
 	 * Verifica assinatura desanexada do arquivo
 	 */
-	// @Test
+	//@Test
 	public void testVerifyDetachedSignature() {
-		String fileToVerifyDirName = "/home/{usuario}/arquivo";
-		String fileSignatureDirName = "/home/{usuario}/arquivo.p7s";
+		String fileToVerifyDirName = "/home/....";
+		String fileSignatureDirName = "/home/...";
+		
+		
+		
 
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		byte[] signatureFile = readContent(fileSignatureDirName);
+		
+        //Configura cache do demoseille signer:
+        CAManagerConfiguration config = CAManagerConfiguration.getInstance();
+        config.setCached(true);
+
+        // Cache LCR
+        Configuration configlcr = Configuration.getInstance();
+        configlcr.setCrlIndex(".crl_index");
+        System.setProperty("signer.repository.crl.path", "/tmp/lcrs");
+        configlcr.setCrlPath("/tmp/lcrs");
+        configlcr.setOnline(false);
+        
+		
+		
+		/* cache interno
+		try {
+			CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(fileToVerify),signatureFile);
+		    SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
+		    X509CertificateHolder certificateHolder = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
+                .iterator().next();
+		    X509Certificate varCert;
+		
+			varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+			LcrManagerSync.getInstance().update(varCert);
+		} catch (CertificateException e) {
+			e.printStackTrace();
+		} catch (LcrManagerSyncException e) {
+			e.printStackTrace();
+		} catch (CMSException e) {
+			e.printStackTrace();		
+		}*/
+        
 
 		CAdESChecker checker = new CAdESChecker();
 
@@ -178,6 +221,8 @@ public class CAdESCheckerTest {
 			byte[] hash = md.digest(fileToVerify);
 
 			CAdESChecker checker = new CAdESChecker();
+			
+			
 
 			System.out.println("Efetuando a validacao da assinatura");
 			System.out.println("OID_hash"

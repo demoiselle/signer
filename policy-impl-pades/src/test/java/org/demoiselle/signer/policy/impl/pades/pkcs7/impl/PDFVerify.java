@@ -21,12 +21,15 @@ import org.apache.pdfbox.io.IOUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.bouncycastle.cert.X509CertificateHolder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationVerifier;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.demoiselle.signer.core.extension.BasicCertificate;
+import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.impl.CAdESTimeStampSigner;
 import org.demoiselle.signer.timestamp.Timestamp;
@@ -35,11 +38,11 @@ import org.junit.Test;
 @SuppressWarnings("unused")
 public class PDFVerify {
 
-	@Test
+	//@Test
 	public void test() {
 		
 	
-			String filePath = "/";
+			String filePath = "/home/...";
 			
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
@@ -59,6 +62,21 @@ public class PDFVerify {
 						fis.close();
 					}
 
+					
+					// Cache LCR
+					Configuration configlcr = Configuration.getInstance();
+					//configlcr.setCrlIndex(".crl_index");
+					//configlcr.setCrlPath("/home/{usuario}/lcr_cache/");
+					configlcr.setOnline(false);
+
+					/* cache interno
+					CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(buf),contents.getBytes());
+			        SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
+			        X509CertificateHolder certificateHolder = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
+			                .iterator().next();
+			        X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+			        LcrManagerSync.getInstance().update(varCert);
+					*/
 					PAdESChecker checker = new PAdESChecker();
 					result = checker.checkDetachedSignature(buf, contents.getBytes());
 					if (result == null || result.isEmpty()) {
