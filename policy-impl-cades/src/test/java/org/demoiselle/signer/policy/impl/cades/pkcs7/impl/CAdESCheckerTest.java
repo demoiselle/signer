@@ -63,8 +63,8 @@ import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import br.gov.serpro.supcd.lcrmanager.sync.LcrManagerSync;
-import br.gov.serpro.supcd.lcrmanager.sync.exception.LcrManagerSyncException;
+//import br.gov.serpro.supcd.lcrmanager.sync.LcrManagerSync;
+//import br.gov.serpro.supcd.lcrmanager.sync.exception.LcrManagerSyncException;
 
 /**
  *
