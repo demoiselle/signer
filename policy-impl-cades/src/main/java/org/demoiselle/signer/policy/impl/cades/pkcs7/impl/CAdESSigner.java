@@ -49,9 +49,11 @@ import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.cms.Attribute;
@@ -78,6 +80,7 @@ import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
@@ -119,6 +122,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private CertificateManager certificateManager;
 	private byte[] escTimeStampContent;
 	private boolean pades = false;
+	private Date notAfterSignerCertificate;
 
 
 	public CAdESSigner() {
@@ -528,6 +532,8 @@ public class CAdESSigner implements PKCS7Signer {
 			
 			logger.info(cadesMessagesBundle.getString("info.signature.ok"));
 			
+			PeriodValidator pV = new PeriodValidator();				
+			setNotAfterSignerCertificate(pV.valDate(this.certificate));			
 			return result;			
 
 		} catch (Exception ex) {
@@ -648,6 +654,20 @@ public class CAdESSigner implements PKCS7Signer {
 
 	public void setPades(boolean pades) {
 		this.pades = pades;
+	}
+
+	/**
+	 * @return the notAfterSignerCertificate
+	 */
+	public Date getNotAfterSignerCertificate() {
+		return notAfterSignerCertificate;
+	}
+
+	/**
+	 * @param notAfterSignerCertificate the notAfterSignerCertificate to set
+	 */
+	public void setNotAfterSignerCertificate(Date notAfterSignerCertificate) {
+		this.notAfterSignerCertificate = notAfterSignerCertificate;
 	}
 	
 	

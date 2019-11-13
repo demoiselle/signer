@@ -45,6 +45,7 @@ import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.List;
+
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -52,27 +53,41 @@ import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
+import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
+import org.junit.BeforeClass;
 import org.junit.Test;
+
+import br.gov.serpro.supcd.lcrmanager.sync.LcrManagerSync;
+import br.gov.serpro.supcd.lcrmanager.sync.exception.LcrManagerSyncException;
 
 /**
  *
  */
 @SuppressWarnings("unused")
 public class CAdESCheckerTest {
+	
+	@BeforeClass
+    public static void beforeClass()
+    {
+        System.setProperty("java.util.logging.config.file", ClassLoader.getSystemResource("logging.properties").getPath());
+    }
+	
+	
 
 	/**
 	 * Verifica assinatura desanexada do arquivo
 	 */
 	//@Test
 	public void testVerifyDetachedSignature() {
-		String fileToVerifyDirName = "/home/....";
-		String fileSignatureDirName = "/home/...";
+		String fileToVerifyDirName = "/";
+		String fileSignatureDirName = "/";
+		
 		
 		
 		
@@ -90,10 +105,11 @@ public class CAdESCheckerTest {
         System.setProperty("signer.repository.crl.path", "/tmp/lcrs");
         configlcr.setCrlPath("/tmp/lcrs");
         configlcr.setOnline(false);
+        System.setProperty("lcr.manager.sync.strategy", "REPLICATE");
         
-		
-		
-		/* cache interno
+        		
+		// cache interno
+        /*
 		try {
 			CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(fileToVerify),signatureFile);
 		    SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
@@ -102,7 +118,11 @@ public class CAdESCheckerTest {
 		    X509Certificate varCert;
 		
 			varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
-			LcrManagerSync.getInstance().update(varCert);
+			LcrManagerSync  lMS=  LcrManagerSync.getInstance();
+			lMS.update(varCert);
+			
+	        
+
 		} catch (CertificateException e) {
 			e.printStackTrace();
 		} catch (LcrManagerSyncException e) {

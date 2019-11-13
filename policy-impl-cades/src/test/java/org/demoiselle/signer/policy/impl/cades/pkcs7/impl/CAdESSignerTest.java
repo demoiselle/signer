@@ -97,11 +97,10 @@ public class CAdESSignerTest {
 			// ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
 
 			// Para TOKEN Branco a linha abaixo
-			// String pkcs11LibraryPath =
-			// "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+			 String pkcs11LibraryPath =	 "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
 
 			// Para TOKEN Azul a linha abaixo
-			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
+			//String pkcs11LibraryPath = "/usr/lib/libeToken.so";
 
 			StringBuilder buf = new StringBuilder();
 			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
@@ -197,13 +196,13 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "";
+			String fileDirName = "/";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			char[] senha = "senha".toCharArray();
+			//char[] senha = "senha".toCharArray();
 
 			// MSCAPI off
 			//org.demoiselle.signer.core.keystore.loader.configuration.Configuration.setMSCAPI_ON(false);
@@ -219,10 +218,10 @@ public class CAdESSignerTest {
 			// Para certificado NeoID e windows token
 			//KeyStore ks = getKeyStoreTokenBySigner();
 
-			// Para certificado em arquivo A1
-			KeyStore ks = getKeyStoreFileBySigner();
+			//// Para certificado em arquivo A1
+			//KeyStore ks = getKeyStoreFileBySigner();
 			// Para certificado token Linux
-			//KeyStore ks = getKeyStoreToken();
+			KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
@@ -233,10 +232,10 @@ public class CAdESSignerTest {
 			signer.setCertificates(ks.getCertificateChain(alias));
 
 			// para token
-			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
 
 			// para arquivo
-			signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica referencia básica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
