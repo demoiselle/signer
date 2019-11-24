@@ -96,9 +96,10 @@
 	<properties>
 		<license.header>./licence-lgpl</license.header>
 		<project.alias>signer</project.alias>
-		<java.version>1.7</java.version>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<java.version>13</java.version>
+		<jdk.version>13</jdk.version>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
 		<project.scm.id>github</project.scm.id>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
@@ -110,12 +111,24 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
+				<version>3.8.1</version>
 				<configuration>
 					<showDeprecation>true</showDeprecation>
 					<source>${maven.compiler.source}</source>
 					<target>${maven.compiler.target}</target>
 					<encoding>UTF-8</encoding>
+					<compilerArgs>
+						<arg>--add-exports</arg>
+						<arg>java.base/sun.security.x509=ALL-UNNAMED</arg>
+						<arg>--add-exports</arg>
+						<arg>java.base/sun.security.util=ALL-UNNAMED</arg>
+						<arg>--add-exports</arg>
+						<arg>java.base/com.sun.crypto.provider=ALL-UNNAMED</arg>
+						<arg>--add-exports</arg>
+						<arg>jdk.crypto.cryptoki/sun.security.pkcs11=ALL-UNNAMED</arg>
+						<arg>--add-modules</arg>
+						<arg>jdk.crypto.cryptoki</arg>
+					</compilerArgs>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -136,7 +149,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.4</version>
@@ -148,7 +161,7 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
+			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>

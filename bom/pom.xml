@@ -34,14 +34,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- Dependencies versions -->
 		<eclipse.lifecycle.mapping.plugin.version>1.0.0</eclipse.lifecycle.mapping.plugin.version>
-		<java.version>1.7</java.version>
+		<java.version>13</java.version>
 		<site.url>file://${project.build.directory}/tmp</site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- Maven plugin versions -->
-		<maven.compiler.plugin.version>3.6.0</maven.compiler.plugin.version>
+		<maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
 		<maven.war.plugin.version>3.0.0</maven.war.plugin.version>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>13</maven.compiler.source>
+		<maven.compiler.target>13</maven.compiler.target>
 		<maven.deploy.plugin.version>2.8.1</maven.deploy.plugin.version>
 		<maven.site.plugin.version>2.2</maven.site.plugin.version>
 		<maven.assembly.plugin.version>2.6</maven.assembly.plugin.version>
@@ -118,7 +118,22 @@
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcmail-jdk15on</artifactId>
-				<version>1.62</version>
+				<version>1.64</version>
+			</dependency>
+			<dependency>
+				<groupId>javax.xml.bind</groupId>
+				<artifactId>jaxb-api</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-core</artifactId>
+				<version>2.3.0</version>
+			</dependency>
+			<dependency>
+				<groupId>com.sun.xml.bind</groupId>
+				<artifactId>jaxb-impl</artifactId>
+				<version>2.3.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
