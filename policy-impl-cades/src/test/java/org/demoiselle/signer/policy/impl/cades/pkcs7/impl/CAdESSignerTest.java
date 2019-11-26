@@ -38,12 +38,11 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.security.AuthProvider;
 import java.security.KeyStore;
 import java.security.KeyStore.Builder;
 import java.security.KeyStoreException;
@@ -53,27 +52,17 @@ import java.security.Provider;
 import java.security.Security;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-import java.util.List;
-
-import javax.net.ssl.KeyManagerFactory;
 
 import org.apache.commons.codec.binary.Base64;
-import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
-import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
-import org.demoiselle.signer.core.repository.Configuration;
-import org.demoiselle.signer.core.util.Proxy;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
-import org.junit.Test;
 
 
 /**
@@ -90,7 +79,6 @@ public class CAdESSignerTest {
 	 * 
 	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do token.
 	 */
-	@SuppressWarnings("restriction")
 	private KeyStore getKeyStoreToken() {
 
 		try {
@@ -102,12 +90,13 @@ public class CAdESSignerTest {
 			// Para TOKEN Azul a linha abaixo
 			//String pkcs11LibraryPath = "/usr/lib/libeToken.so";
 
-			StringBuilder buf = new StringBuilder();
+			StringBuilder buf = new StringBuilder("--");
 			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
-			Security.addProvider(p);
+			Provider pkcs11Provider = Security.getProvider("SunPKCS11");
+			AuthProvider aprov = (AuthProvider) pkcs11Provider.configure(buf.toString());
+			Security.addProvider(aprov);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
+			Builder builder = KeyStore.Builder.newInstance("PKCS11",aprov,	new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 

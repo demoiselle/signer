@@ -1,23 +1,21 @@
 package org.demoiselle.signer.core.keystore.loader.implementation;
 
+import java.security.AuthProvider;
 import java.security.Provider;
 import java.security.Security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import sun.security.pkcs11.SunPKCS11;
+public class AuthProviderLogout {
 
-@SuppressWarnings("restriction")
-public class PKCS11Logout {
-
-	private static final Logger logger = LoggerFactory.getLogger(PKCS11Logout.class);
+	private static final Logger logger = LoggerFactory.getLogger(AuthProviderLogout.class);
 	
 	public boolean doLogout(){
 		try {
 			for (Provider provider : Security.getProviders())
-				if (provider instanceof SunPKCS11)
-					((SunPKCS11) provider).logout();
+				if (provider instanceof AuthProvider)
+					((AuthProvider)provider).logout();
 			return true;
 		} catch (Throwable error) {
 			logger.error(error.getMessage());

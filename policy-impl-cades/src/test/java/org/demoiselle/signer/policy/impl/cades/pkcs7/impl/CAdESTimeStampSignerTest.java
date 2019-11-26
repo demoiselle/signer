@@ -1,13 +1,13 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.AuthProvider;
 import java.security.KeyStore;
 import java.security.KeyStore.Builder;
 import java.security.KeyStoreException;
@@ -24,7 +24,6 @@ import javax.net.ssl.KeyManagerFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.timestamp.Timestamp;
-import org.junit.Test;
 
 @SuppressWarnings("unused")
 public class CAdESTimeStampSignerTest {
@@ -268,7 +267,6 @@ public class CAdESTimeStampSignerTest {
 		return result;
 	}
 	
-	@SuppressWarnings("restriction")
 	private KeyStore getKeyStoreToken() {
 
 		try {
@@ -281,12 +279,13 @@ public class CAdESTimeStampSignerTest {
 			// Para TOKEN Azul a linha abaixo
 			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
 
-			StringBuilder buf = new StringBuilder();
+			StringBuilder buf = new StringBuilder("--");
 			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
-			Security.addProvider(p);
+			Provider pkcs11Provider = Security.getProvider("SunPKCS11");
+			AuthProvider aprov = (AuthProvider) pkcs11Provider.configure(buf.toString());
+			Security.addProvider(aprov);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", aprov,	new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 
