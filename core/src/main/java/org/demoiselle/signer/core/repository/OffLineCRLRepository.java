@@ -143,6 +143,10 @@ public class OffLineCRLRepository implements CRLRepository {
                     logger.info(coreMessagesBundle.getString("info.update.crl"));
                     RepositoryUtil.saveURL(uRLCRL, fileCRL);
                 }
+            }else{
+            	if (!fileCRL.delete()) {
+                    logger.info(coreMessagesBundle.getString("error.file.remove", fileCRL));
+                }
             }
             return crl;
 

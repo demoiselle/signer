@@ -97,8 +97,8 @@ public class RepositoryUtil {
         URLConnection uCon = null;
         InputStream is = null;
         try {
-        	logger.info("Destination File"+ destinationFile);
-            url = new URL(sUrl);
+        	logger.info(coreMessagesBundle.getString("info.file.destination",destinationFile));
+        	url = new URL(sUrl);
             uCon = url.openConnection();
             uCon.setConnectTimeout(10000);
             is = uCon.getInputStream();
@@ -107,6 +107,11 @@ public class RepositoryUtil {
             while ((ByteRead = is.read(buf)) != -1) {
                 outStream.write(buf, 0, ByteRead);
                 setByteWritten(getByteWritten() + ByteRead);
+            }
+            if (destinationFile.length() <= 0){
+            	if (!destinationFile.delete()) {
+                    logger.info(coreMessagesBundle.getString("error.file.remove", destinationFile));
+                }
             }
         } catch (MalformedURLException e) {
         	logger.error(coreMessagesBundle.getString("error.malformed.url",sUrl));
