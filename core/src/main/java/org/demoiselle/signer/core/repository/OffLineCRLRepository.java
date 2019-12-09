@@ -98,7 +98,7 @@ public class OffLineCRLRepository implements CRLRepository {
             	validCrl = getICPBR_CRL(URLCRL);
                 if (validCrl != null) {
                     list.add(validCrl);
-                    logger.info(coreMessagesBundle.getString("info.crl.found", URLCRL));
+                    logger.info(coreMessagesBundle.getString("info.crl.offline.found"));
                     break;
                 }
             }
