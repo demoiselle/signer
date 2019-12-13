@@ -117,12 +117,12 @@ byte[] signature = signer.doDetachedSign(this.content);
         </para>
         <itemizedlist>
             <listitem>
-                <literal>AD_RB_CADES_2_2</literal>
-                Refere-se à Assinatura Digital de Referência Básica versão 2.2;
+                <literal>AD_RB_CADES_2_3</literal>
+                Refere-se à Assinatura Digital de Referência Básica versão 2.3;
             </listitem>
             <listitem>
-                <literal>AD_RT_CADES_2_2</literal>
-                Refere-se à Assinatura Digital de Referência Temporal (com carimbo de tempo) versão 2.2;
+                <literal>AD_RT_CADES_2_3</literal>
+                Refere-se à Assinatura Digital de Referência Temporal (com carimbo de tempo) versão 2.3;
             </listitem>
         </itemizedlist>
 
@@ -131,14 +131,14 @@ byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de a
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 signer.setCertificates(certificateChain);
 signer.setPrivateKey(privateKey);
-signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 byte[] signature = signer.doDetachedSign(this.content);
 ]]></programlisting>
 
 
         <important>
             <para>
-                Caso não seja especificada nenhuma política, o componente assumirá a política padrão AD_RB_CADES_2_2.
+                Caso não seja especificada nenhuma política, o componente assumirá a política padrão AD_RB_CADES_2_3.
             </para>
         </important>
     </section>
@@ -196,7 +196,7 @@ byte[] hash = md.digest(content);
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 signer.setCertificate(certificate);
 signer.setPrivateKey(privateKey);
-signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 byte[] signature = signer.doHashSign(hash);]]></programlisting>
 
         <important>
@@ -233,7 +233,7 @@ byte[] signatureFile = readContent("fileSignature.p7s"); /* implementar metodo d
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 signer.setCertificate(certificate);
 signer.setPrivateKey(privateKey);
-signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 byte[] signature = signer.doDetachedSign(content, signatureFile);
 ]]></programlisting>
         
@@ -261,7 +261,7 @@ byte[] hash = md.digest(content);
 PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 signer.setCertificate(certificate);
 signer.setPrivateKey(privateKey);
-signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 byte[] signature = signer.doHashCoSign(hash, signatureFile);
 
 ]]></programlisting>
@@ -353,20 +353,20 @@ List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(Signer
         </title>
 
         <para>
-            A seguir temos um fragmento de código que demonstra a extração (recuperação) do conteúdo de um arquivo anexado a uma assinatura PKCS7.
-            Essa funcionalidade pode ser útil quando é necessário mostrar o conteúdo assinado, pois no formato anexado (attached) o conteúdo está empacotado 
+            A seguir temos um fragmento de código que demonstra a extração (recuperação) do conteúdo de um arquivo anexado à uma assinatura PKCS7.
+            Essa funcionalidade pode ser útil quando é necessário retirar/extrair o conteúdo assinado, pois no formato anexado (attached) o conteúdo está empacotado 
             na assinatura. Esta funcionalidade também permite que seja feita a validação da assinatura no momento da extração. 
         </para>
 
         <programlisting role="JAVA"><![CDATA[
-byte[] signed = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
-PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+byte[] attachedSignature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
+CAdESChecker checker = new CAdESChecker();
 
 /* Para extrair o conteudo original validando a assinatura */
-byte[] content = signer.getAttached(signed, true);
+byte[] content = checker.getAttached(attachedSignature, true);
 
 /* Para extrair o conteudo original sem validar a assinatura */
-byte[] content = signer.getAttached(signed, false);]]></programlisting>
+byte[] content = checker.getAttached(attachedSignature, false);]]></programlisting>
 
     </section>
     <section>
