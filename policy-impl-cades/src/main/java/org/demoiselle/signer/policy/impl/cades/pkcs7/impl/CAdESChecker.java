@@ -344,9 +344,9 @@ public class CAdESChecker implements PKCS7Checker {
 					throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
 				}					
 				else{
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid"));
-					logger.info(cadesMessagesBundle.getString("error.signature.invalid"));
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid"), ex);
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
+					logger.info(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
+					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()), ex);
 				}
 			} catch (ParseException e) {
 				signatureInfo.getValidatorErrors().add(e.getMessage());
