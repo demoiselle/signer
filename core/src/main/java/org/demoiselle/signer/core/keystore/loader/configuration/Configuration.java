@@ -120,7 +120,7 @@ public class Configuration {
 		map.put("TokenOuSmartCard_17_watchdata", winRoot.concat("/System32/WDICP_P11_CCID_v34.dll"));
 		map.put("TokenOuSmartCard_18_watchdata", winRoot.concat("/SysWOW64/WDICP_P11_CCID_v34.dll"));
 		map.put("TokenOuSmartCard_19_Oberthur_x86", "/Program Files (x86)/Oberthur Technologies/AWP/DLLs/OcsCryptolib_P11.dll");
-		//map.put("TokenOuSmartCard_20_Oberthur", "/Program Files/Oberthur Technologies/AWP/DLLs/OcsCryptolib_P11.dll");
+		map.put("TokenOuSmartCard_20_pronova_Athena", winRoot.concat("/system32/asepkcs.dll"));
 		// ------------ Linux ------------
 		map.put("TokenOuSmartCard_21_safesign", "/usr/lib/libaetpkss.so");
 		map.put("TokenOuSmartCard_22_alladin", "/usr/lib/libgpkcs11.so");
