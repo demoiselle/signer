@@ -88,8 +88,7 @@
 		<module>policy-engine</module>
 		<module>policy-impl-cades</module>
 		<module>timestamp</module>
-		<!-- <module>policy-impl-xades</module> <module>policy-impl-pades</module> -->
-
+		<module>policy-impl-xades</module>
 		<module>policy-impl-pades</module>
 	</modules>
 
