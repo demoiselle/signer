@@ -130,7 +130,7 @@ public class CAdESChecker implements PKCS7Checker {
 	 *        case of PKCS1.
 	 */
 
-	public boolean check(byte[] content, byte[] signedData) throws SignerException{
+	private boolean check(byte[] content, byte[] signedData) throws SignerException{
 		Security.addProvider(new BouncyCastleProvider());
 		CMSSignedData cmsSignedData = null;
 		try {

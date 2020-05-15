@@ -88,9 +88,6 @@ public class CAdESCheckerTest {
 		String fileToVerifyDirName = "/";
 		String fileSignatureDirName = "/";
 		
-		
-		
-		
 
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		byte[] signatureFile = readContent(fileSignatureDirName);
@@ -149,7 +146,12 @@ public class CAdESCheckerTest {
 				for (X509Certificate cert : si.getChain()) {
 					BasicCertificate certificate = new BasicCertificate(cert);
 					if (!certificate.isCACertificate()) {
-						System.out.println(certificate.toString());
+						if (certificate.hasCertificatePF()) {
+							System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+						}
+						if (certificate.hasCertificatePJ()) {
+							System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+						}
 					}
 				}
 				for (String valErr : si.getValidatorErrors()) {
@@ -157,10 +159,7 @@ public class CAdESCheckerTest {
 							.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.out.println(valErr);
 				}
-				if (si.getSignaturePolicy() != null) {
-					System.out.println("------ Politica ----------------- ");
-					System.out.println(si.getSignaturePolicy().toString());
-				}
+				
 
 			}
 			assertTrue(true);
