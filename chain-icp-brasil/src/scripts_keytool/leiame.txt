@@ -1,0 +1,14 @@
+Estes scripts foram criado para atualizar o arquivo com as cadeias da ICP-Brasil
+
+1 - Baixe o arquivo de:
+   http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactadox.zip
+
+2 - Crie o diretório /novascadeias e descompacte nele as cadeias do arquivo acima.
+
+3 - Execute o comando: ./insertAllKeys.sh
+
+4 - Verifique se as cadeias foram inseridas com o comando: ./listKeys.sh
+
+5 - Copie o arquivo de /src/scripts_keytool/icpbrasil.jks para /src/main/resources/icpbrasil.jks
+
+
