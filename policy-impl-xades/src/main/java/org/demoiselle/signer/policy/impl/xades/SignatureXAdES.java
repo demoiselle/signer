@@ -55,11 +55,13 @@ public class SignatureXAdES{
 	private KeyStore keyStore;
 	private String alias;
 	private Document signedDocument;
+	private String policyId;
 	private String id = "id-"+System.currentTimeMillis();
 	public static final String XMLNS = "http://www.w3.org/2000/09/xmldsig#";
 	public static final String XMLNS_DS = "xmlns:ds";
 	public static final String XMLNS_XADES = "xmlns:xades";
 	public static final String XAdESv1_3_2 = "http://uri.etsi.org/01903/v1.3.2#";
+
 	
 	public void setAlias(String alias) {
 		this.alias = alias;
@@ -67,6 +69,10 @@ public class SignatureXAdES{
 	
 	public void setKeyStore(KeyStore keyStore) {
 		this.keyStore = keyStore;
+	}
+	
+	public void setPolicyId(String policyId) {
+		this.policyId = policyId;
 	}
 	
 	public static void main(String[] arg) throws Throwable {
@@ -111,8 +117,24 @@ public class SignatureXAdES{
 		return  Base64.toBase64String(issuerSerial.toASN1Primitive().getEncoded(ASN1Encoding.DER));
 	}
 	
+	private Element addPolicy(Document doc) {
+		Element sigPolicyIdentifier = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyIdentifier");
+
+		Element sigPolicyId = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyId");
+		sigPolicyIdentifier.appendChild(sigPolicyId);
+		
+		Element sigPId = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyId");
+		sigPolicyId.appendChild(sigPId);
+		
+		Element identifier = doc.createElementNS(XAdESv1_3_2, "xades:Identifier");
+		identifier.setTextContent(policyId);
+		sigPId.appendChild(identifier);
+		
+		return sigPolicyId;	
+	}
 	
-	private Element signObject(X509Certificate cert, Document doc) throws Exception {
+	
+	private Element signedObject(X509Certificate cert, Document doc) throws Exception {
 		
 		
 		Element sigObject = doc.createElementNS(XMLNS, "ds:Object");
@@ -155,6 +177,10 @@ public class SignatureXAdES{
 		Element sigIssuerSeria = doc.createElementNS(XAdESv1_3_2, "xades:IssuerSerialV2");
 		sigIssuerSeria.setTextContent(getIssuerSerial(cert));
 		sigCert.appendChild(sigIssuerSeria);
+		
+		if(!policyId.isEmpty()) {
+			sigProp.appendChild(addPolicy(doc));
+		}
 		
 		Element sigSigDataObjeProp = doc.createElementNS(XAdESv1_3_2, "xades:SignedDataObjectProperties");
 		sigProp.appendChild(sigSigDataObjeProp);
@@ -297,15 +323,15 @@ public class SignatureXAdES{
 		
 		Element sigTag = (Element) doc.getElementsByTagName("ds:Signature").item(0);
 		
-		Element objectTag = signObject(cert, doc);
+		Element objectTag = signedObject(cert, doc);
 		
 		Init.init();
-		Canonicalizer c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE); //"http://www.w3.org/2001/10/xml-exc-c14n#");
+		Canonicalizer c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
 		byte[] canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0)); 
 		Element sigRefTag = createSignatureHashReference(doc, canonicalized);
 		doc.getElementsByTagName("ds:SignedInfo").item(0).appendChild(sigRefTag);
 		
-		c14n = Canonicalizer.getInstance(CanonicalizationMethod.INCLUSIVE); //"http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
+		c14n = Canonicalizer.getInstance(CanonicalizationMethod.INCLUSIVE);
 		byte[] dh = c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(0));
 		
 		Signature sig = Signature.getInstance("SHA256withRSA");
