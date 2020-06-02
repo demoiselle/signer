@@ -40,6 +40,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -58,6 +59,7 @@ import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.junit.BeforeClass;
@@ -87,9 +89,6 @@ public class CAdESCheckerTest {
 	public void testVerifyDetachedSignature() {
 		String fileToVerifyDirName = "/";
 		String fileSignatureDirName = "/";
-		
-		
-		
 		
 
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
@@ -149,24 +148,26 @@ public class CAdESCheckerTest {
 				for (X509Certificate cert : si.getChain()) {
 					BasicCertificate certificate = new BasicCertificate(cert);
 					if (!certificate.isCACertificate()) {
-						System.out.println(certificate.toString());
+						if (certificate.hasCertificatePF()) {
+							System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+						}
+						if (certificate.hasCertificatePJ()) {
+							System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+						}
 					}
 				}
+				// A assinatura pode estar correta mas não foi possível verificar algum atributo
 				for (String valErr : si.getValidatorErrors()) {
-					System.out
-							.println("++++++++++++++ ERROS ++++++++++++++++++");
-					System.out.println(valErr);
+					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
+					System.err.println(valErr);
 				}
-				if (si.getSignaturePolicy() != null) {
-					System.out.println("------ Politica ----------------- ");
-					System.out.println(si.getSignaturePolicy().toString());
-				}
+				
 
 			}
 			assertTrue(true);
 
 		} else {
-			System.out.println("A assinatura foi invalidada!");
+			System.err.println("A assinatura foi invalidada!");
 			assertTrue(false);
 		}
 	}
@@ -199,17 +200,17 @@ public class CAdESCheckerTest {
 						System.out.println(certificate.toString());
 					}
 				}
+				// A assinatura pode estar correta mas não foi possível verificar algum atributo
 				for (String valErr : si.getValidatorErrors()) {
-					System.out
-							.println("++++++++++++++ ERROS ++++++++++++++++++");
-					System.out.println(valErr);
+					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
+					System.err.println(valErr);
 				}
 				System.out.println(si.getSignaturePolicy().toString());
 			}
 			assertTrue(true);
 
 		} else {
-			System.out.println("A assinatura foi invalidada!");
+			System.err.println("A assinatura foi invalidada!");
 			assertTrue(false);
 		}
 	}
@@ -266,16 +267,17 @@ public class CAdESCheckerTest {
 							System.out.println(certificate.toString());
 						}
 					}
+					// A assinatura pode estar correta mas não foi possível verificar algum atributo
 					for (String valErr : si.getValidatorErrors()) {
-						System.out
+						System.err
 								.println("++++++++++++++ ERROS ++++++++++++++++++");
-						System.out.println(valErr);
+						System.err.println(valErr);
 					}
 					System.out.println(si.getSignaturePolicy().toString());
 				}
 				assertTrue(true);
 			} else {
-				System.out.println("A assinatura foi invalidada!");
+				System.err.println("A assinatura foi invalidada!");
 				assertTrue(false);
 			}
 		} catch (Exception e) {
@@ -283,6 +285,73 @@ public class CAdESCheckerTest {
 			assertTrue(false);
 		}
 	}
+	
+	
+	
+	/**
+	 * Verifica assinatura com conteúdo anexado e extrai o conteúdo
+	 * 
+	 * O componente não interpreta o tipo do contéudo anexado na assinatura 
+	 * portanto o sistema deve ter essa informação se for tratar o contéudo anexado
+	 */
+	// @Test
+	public void testExtractAttachedSignatureContent() {
+
+		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura_com_conteudo_anexado";
+		//String fileSignatureDirName = "/home/signer/Documentos/teste.txt.p7s";
+
+		byte[] signatureFile = readContent(fileSignatureDirName);
+
+		CAdESChecker checker = new CAdESChecker();
+		AttachedContentValidation varAttachedContentValidation =checker.getAttached(signatureFile, true);
+		
+		System.out.println("Efetuando a validacao da assinatura");
+		List<SignatureInformations> signaturesInfo = varAttachedContentValidation.getSignaturesInfo();
+		if (signaturesInfo != null) {
+			System.out.println("A assinatura foi validada.");
+			for (SignatureInformations si : signaturesInfo) {
+				System.out.println(si.getSignDate());
+				if (si.getTimeStampSigner() != null) {
+					System.out.println("Serial"
+							+ si.getTimeStampSigner().toString());
+				}
+				for (X509Certificate cert : si.getChain()) {
+					BasicCertificate certificate = new BasicCertificate(cert);
+					if (!certificate.isCACertificate()) {
+						System.out.println(certificate.toString());
+					}
+				}
+				// A assinatura pode estar correta mas não foi possível verificar algum atributo
+				for (String valErr : si.getValidatorErrors()) {
+					System.err
+							.println("++++++++++++++ ERROS ++++++++++++++++++");
+					System.err.println(valErr);
+				}
+				System.out.println(si.getSignaturePolicy().toString());
+			}
+			
+			File file = new File("new_extrated_content");
+			FileOutputStream os;
+			try {
+				os = new FileOutputStream(file);
+				os.write(varAttachedContentValidation.getExtractedContent());
+				os.flush();
+				os.close();
+				System.out.println("conteudo gerado");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+						
+			assertTrue(true);
+
+		} else {
+			System.err.println("A assinatura foi invalidada!");
+			assertTrue(false);
+		}
+	}
+	
+	
 
 	private byte[] readContent(String parmFile) {
 		byte[] result = null;

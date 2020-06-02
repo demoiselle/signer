@@ -85,6 +85,7 @@ import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Checker;
@@ -130,7 +131,7 @@ public class CAdESChecker implements PKCS7Checker {
 	 *        case of PKCS1.
 	 */
 
-	public boolean check(byte[] content, byte[] signedData) throws SignerException{
+	private boolean check(byte[] content, byte[] signedData) throws SignerException{
 		Security.addProvider(new BouncyCastleProvider());
 		CMSSignedData cmsSignedData = null;
 		try {
@@ -385,10 +386,13 @@ public class CAdESChecker implements PKCS7Checker {
 	 * @param signed
 	 *            Signature and signed content.
 	 * @return content for attached signature
+	 * @deprecated it not return validation data, use: AttachedContentValidation getAttached(byte[] signed, boolean validateOnExtract)
 	 */
 	public byte[] getAttached(byte[] signed) {
-		return this.getAttached(signed, true);
+		AttachedContentValidation varAttachedContentValidation = this.getAttached(signed, true);
+		return varAttachedContentValidation.getExtractedContent();
 	}
+	
 
 	/**
 	 * Extracts the signed content from the digital signature structure, if it
@@ -402,12 +406,14 @@ public class CAdESChecker implements PKCS7Checker {
 	 * @return content for attached signature
 	 */
 	@Override
-	public byte[] getAttached(byte[] signed, boolean validateOnExtract) {
+	public AttachedContentValidation getAttached(byte[] signed, boolean validateOnExtract) {
 
-		byte[] result = null;
+		AttachedContentValidation varAttachedContentValidation = new AttachedContentValidation();
 
 		if (validateOnExtract) {
-			this.check(null, signed);
+			if (this.check(null, signed)) {
+				varAttachedContentValidation.setSignaturesInfo(getSignaturesInfo());
+			}			
 		}
 
 		CMSSignedData signedData = null;
@@ -420,7 +426,7 @@ public class CAdESChecker implements PKCS7Checker {
 		try {
 			CMSProcessable contentProcessable = signedData.getSignedContent();
 			if (contentProcessable != null) {
-				result = (byte[]) contentProcessable.getContent();
+				varAttachedContentValidation.setExtractedContent((byte[]) contentProcessable.getContent());
 			}
 			else{
 				logger.info(cadesMessagesBundle.getString("error.get.content.empty"));
@@ -429,7 +435,7 @@ public class CAdESChecker implements PKCS7Checker {
 			throw new SignerException(cadesMessagesBundle.getString("error.get.content.pkcs7"), exception);
 		}
 
-		return result;
+		return varAttachedContentValidation;
 
 	}		
 		

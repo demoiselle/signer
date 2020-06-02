@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="policy-impl-pades-master">
+
+	<title>Implementação das Políticas PAdES</title>
+
+	<partintro>
+		<para>
+			O componente
+			<emphasis>Policy-Impl-PAdES</emphasis>
+			foi desenvolvido para atender às necessidades de assinatura digital no âmbito da ICP-Brasil.
+			Conforme as políticas para o padrão   <ulink url="https://www.iti.gov.br/images/repositorio/legislacao/documentos-principais/15.3/DOC-ICP-15.03_-_Versao_7.4_REQ_DAS_POL_DE_ASSIN_DIG_NA_ICP-BRASIL.pdf">PBAD-PAdES</ulink>.
+			 Esse padrão é utilizado para Assinaturas em Arquivos PDF. 
+		</para>
+		<note>Este componente não manipula o arquivo PDF, apenas retorna o contéudo da Assinatura em confirmidade com a ICP-Brasil.</note>
+	</partintro>
+
+	<!-- capítulos -->
+	<xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="funcionalidades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+</part>
+

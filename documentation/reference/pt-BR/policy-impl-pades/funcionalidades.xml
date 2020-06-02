@@ -1,0 +1,169 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="policy-impl-pades-funcionalidades">
+
+    <title id="title-policy-impl-pades-funcionalidades">Funcionalidades</title>
+    <para>
+        Este componente provê mecanismos de assinatura digital baseado nas normas ICP-Brasil e implementa mecanismos de assinatura digital para serem incorparadas em arquivo PDF
+    </para>
+    <para>     
+        A interface <literal>org.demoiselle.signer.policy.impl.pades.pkcs7.PCKS7Signer</literal>
+        provê as funcionalidades de Assinatura.
+    </para>
+    
+    <para>     
+        Para as funções de VALIDAÇÃO temos a interface <literal>org.demoiselle.signer.policy.impl.cades.Checker</literal>
+    </para>
+
+    <para>
+        Este componente, até a presente versão, permite assinar dados representados por um array de bytes. 
+        Então se for necessário a assinatura de um arquivo PDF, por exemplo,
+        a aplicação deverá montar um array de bytes com o conteúdo a ser assinado e enviar este para o componente poder assiná-lo.
+        Também é possível enviar apenas o Hash já calculado deste conteúdo.
+        A manipulação do arquivo PDF pode ser feito com ferramentas como o <ulink url="https://pdfbox.apache.org/">Apache PDFBox®</ulink>
+    </para>
+
+    <para>
+        Para assinar um dado através do componente policy-impl-pades é preciso executar alguns passos.
+        <itemizedlist>
+            <listitem>
+                Ter um conteúdo (ou hash calculado) a ser assinado
+            </listitem>
+            <listitem>
+                Escolher qual versão da política ICP-BRASIL
+            </listitem>
+            <listitem>
+                Caso for assinar apenas o Hash é preciso informar qual o algoritmo usado
+            </listitem>
+        </itemizedlist>
+    </para>
+
+    <section id="policy-impl-cades-funcionalidades-assinar-pdf">
+        <title>Assinatura enviando contédo</title>
+        <para>
+            O formato <ulink url="https://pt.wikipedia.org/wiki/PAdES">PAdES</ulink> define o formato para assinatura.   
+            Já a ICP-Brasil define um conjunto próprio  de informações básicas para as assinaturas digitais chamado PBAD-PAdES. 
+            Esse tipo de Assinatura não é reconhecido automaticamente pelos leitores de PDF como o <ulink url="https://acrobat.adobe.com/br/pt/acrobat/pdf-reader.html">Adobe Reader</ulink>.
+            No caso do Adobe há um plugin desenvolvido pelo ITI que permite que esse formato seja reconhecido, o plugin está disponível neste <ulink url="https://www.iti.gov.br/aplicativos/111-aplicativos/4105-plugin-pades">link (clique aqui)</ulink>
+            
+        </para>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a utilização do componente
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+ byte[] content = // implentar leitura do contéudo do arquivo em PDF
+ KeyStore ks = getKeyStoreToken();
+ String alias = getAlias(ks);
+ PAdESSigner signer = new PAdESSigner();
+ signer.setCertificates(ks.getCertificateChain(alias));
+ // para token
+ signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+ byte [] assinatura =signer.doDetachedSign(content);
+]]></programlisting>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a utilização do componente com informação da política de assinatura.
+             Neste caso podemos escolher uma das políticas (em vigor) que já acompanham o componente e referem-se à Assinatura Digital padrão PAdES.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <literal>AD_RB_PADES_1_1</literal>
+                Refere-se à Assinatura Digital de Referência Básica versão 1.1;
+            </listitem>
+            <listitem>
+                <literal>AD_RT_PADES_1_1</literal>
+                Refere-se à Assinatura Digital de Referência Temporal (com carimbo de tempo) versão 1.1;
+            </listitem>
+        </itemizedlist>
+
+        <programlisting role="JAVA"><![CDATA[
+ byte[] content = // implentar leitura do contéudo do arquivo em PDF
+ KeyStore ks = getKeyStoreToken();
+ String alias = getAlias(ks);
+ PAdESSigner signer = new PAdESSigner();
+ signer.setCertificates(ks.getCertificateChain(alias));
+ // para token
+ signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+ signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_PADES_1_1);
+ byte [] assinatura =signer.doDetachedSign(content);
+]]></programlisting>
+
+
+        <important>
+            <para>
+                Caso não seja especificada nenhuma política, o componente assumirá a política padrão AD_RB_PADES_1_1.
+            </para>
+        </important>
+    </section>
+    		
+
+    <section id="policy-impl-pades-funcionalidades-validar">
+
+        <title>
+            Validação de assinatura com contéudo
+        </title>
+
+        <para>
+           Como já foi comentado, o componente até a presente versão não lê o arquivo PDF para validar a Assinatura, por isso é preciso que
+           a aplicação extraia o conteúdo e a Assinatura e envie os dois separados para o componente
+        </para>
+
+		<programlisting role="JAVA"><![CDATA[
+byte[] content = /* implementar metodo de leitura do PDF para extrair o conteúdo assinado */
+byte[] signature = /* implementar metodo de leitura do PDF para extrair a assinatura */
+PAdESChecker checker = new PAdESChecker();
+List<SignatureInformations> signaturesInfo = checker.checkDetattachedSignature(content, signature);
+]]></programlisting>
+
+	<para>
+	 O retorno é um objeto do tipo org.demoiselle.signer.policy.impl.cades.SignatureInformations que possui os seguintes atributos
+	 </para>
+	 <programlisting role="JAVA"><![CDATA[
+public class SignatureInformations {
+
+	private LinkedList<X509Certificate> chain; // cadeia do certificado que gerou a assinatura 
+	private Date signDate;  // data do equipamento no momento da geração das assinatura (não tem validade legal)
+   	private Timestamp timeStampSigner = null; // Carimbo de tempo da assinatura, quando a politica utilizada permitir
+   	private SignaturePolicy signaturePolicy; // Politica ICP-BRASIL usada para geração da assinatura
+   	private LinkedList<String> validatorErrors = new LinkedList<String>();  // Lista de erros que por ventura possam ter sido encontrados na validação da assinatura
+   	
+   	]]></programlisting>
+   	
+   	
+    </section>
+    <section>
+        <title>
+            Validação de assinatura enviando apenas o resumo (Hash) do conteúdo
+        </title>
+        <para>
+        	Da mesma forma que possibilitamos a criação da assinatura enviando o resumo (hash) calculado do conteúdo, podemos também fazer a validação da mesma forma.
+        	Assim como na geração, é preciso saber qual foi o algoritimo de resumo (hash) que foi usado para gerar a assinatura, pois o mesmo deve ser informado para 
+        	o método de validação.
+            A seguir temos um fragmento de código que demonstra esta validação.
+        </para>
+        <programlisting role="JAVA"><![CDATA[
+byte[] content = /* implementar metodo de leitura do PDF para extrair o conteúdo assinado */
+byte[] signature = /* implementar metodo de leitura do PDF para extrair a assinatura */
+PAdESChecker checker = new PAdESChecker();
+// gera o hash do arquivo que foi assinado
+md = java.security.MessageDigest
+			.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+byte[] hash = md.digest(content);
+List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash(), hash, signature);
+]]></programlisting>
+
+    </section>
+
+
+    <section>
+    <note>
+    <para>No repositório do componente no GitHub há códigos de testes unitários para os exemplos acima,
+     <ulink url="https://github.com/demoiselle/signer/blob/master/policy-impl-pades/src/test/java/org/demoiselle/signer/policy/impl/pades/pkcs7/impl/PDFSigner.java">Assinar</ulink> 
+     e <ulink url="https://github.com/demoiselle/signer/blob/master/policy-impl-pades/src/test/java/org/demoiselle/signer/policy/impl/pades/pkcs7/impl/PDFVerify.java">Validar</ulink>  </para>
+     
+    </note>
+    </section>
+</chapter>

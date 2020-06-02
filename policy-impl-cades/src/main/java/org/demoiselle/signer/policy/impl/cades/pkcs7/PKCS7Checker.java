@@ -38,6 +38,7 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7;
 
 import java.util.List;
 
+import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.Checker;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 
@@ -55,7 +56,7 @@ public interface PKCS7Checker extends Checker {
      * @param validate TRUE (to execute validation) or FALSE (not execute validation)
      * @return signed content
      */
-    abstract public byte[] getAttached(byte[] signed, boolean validate);
+    abstract public AttachedContentValidation getAttached(byte[] signed, boolean validate);
     
         
     /**
