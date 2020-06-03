@@ -53,10 +53,10 @@
 
     <dependencies>
         <dependency>
-                <groupId>org.apache.santuario</groupId>
-                        <artifactId>xmlsec</artifactId>
-                        <version>2.0.1</version>
-                </dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>2.0.1</version>
+        </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>core</artifactId>
@@ -76,6 +76,10 @@
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>timestamp</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>policy-impl-cades</artifactId>
         </dependency>
     </dependencies>
 

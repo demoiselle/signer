@@ -1,5 +1,6 @@
-package org.demoiselle.signer.policy.impl.xades;
+package org.demoiselle.signer.policy.impl.xades.xml;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -7,6 +8,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -19,6 +21,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 
 import javax.xml.crypto.dsig.CanonicalizationMethod;
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -31,6 +34,8 @@ import org.apache.xml.security.Init;
 import org.apache.xml.security.c14n.CanonicalizationException;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.c14n.InvalidCanonicalizerException;
+import org.apache.xml.security.signature.XMLSignatureInput;
+import org.apache.xml.security.transforms.Transform;
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.GeneralName;
@@ -38,11 +43,16 @@ import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.IssuerSerial;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.util.encoders.Base64;
+import org.demoiselle.signer.policy.impl.xades.SignaturePack;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import sun.misc.IOUtils;
+
 
 //import com.sun.org.apache.xml.internal.security.Init;
 //import com.sun.org.apache.xml.internal.security.c14n.CanonicalizationException;
@@ -50,13 +60,14 @@ import org.xml.sax.SAXException;
 //import com.sun.org.apache.xml.internal.security.c14n.InvalidCanonicalizerException;
 
 
-public class SignatureXAdES{
+public class XMLSigner{
 	
 	private KeyStore keyStore;
 	private String alias;
 	private Document signedDocument;
-	private String policyId;
-	private String id = "id-"+System.currentTimeMillis();
+	private String policyId = "";
+	private String id = "id-7d3a7229c93d20fd8fa2cb4b96afe48f"; //+System.currentTimeMillis();
+	private SignaturePack sigPack;
 	public static final String XMLNS = "http://www.w3.org/2000/09/xmldsig#";
 	public static final String XMLNS_DS = "xmlns:ds";
 	public static final String XMLNS_XADES = "xmlns:xades";
@@ -76,11 +87,28 @@ public class SignatureXAdES{
 	}
 	
 	public static void main(String[] arg) throws Throwable {
-		new SignatureXAdES(0);
+		new XMLSigner(0);
 	}
 	
-	public SignatureXAdES(int num) throws Exception {
+	public XMLSigner(int num) throws Exception {
 		this.buildXML("/tmp/base.xml");
+	}
+	
+	public Element getDocumentData(Document doc) throws IOException, SAXException, ParserConfigurationException {
+		
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = dbf.newDocumentBuilder();
+		dbf.setNamespaceAware(true);
+		Document bodyDoc = builder.newDocument(); 
+		Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
+		bodyDoc.appendChild(body);
+		NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
+		for(int i = 0; i < signatures.getLength(); i++)
+			signatures.item(i).getParentNode().removeChild(signatures.item(i));
+		
+		
+		return bodyDoc.getDocumentElement();
+		
 	}
 	
 	private byte[] getShaCanonizedValue(String Alg, Node xml) throws InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException, ParserConfigurationException, IOException, SAXException {
@@ -154,7 +182,8 @@ public class SignatureXAdES{
 		Element sigTime = doc.createElementNS(XAdESv1_3_2, "xades:SigningTime");
 		SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		String signDate = sdt.format(Calendar.getInstance().getTime());
-		sigTime.setTextContent(signDate+"Z");
+		//sigTime.setTextContent(signDate+"Z");
+		sigTime.setTextContent("2020-06-02T16:37:18Z");
 		sigSignedProp.appendChild(sigTime);
 		
 		Element sigCertV2 = doc.createElementNS(XAdESv1_3_2, "xades:SigningCertificateV2");
@@ -207,15 +236,16 @@ public class SignatureXAdES{
 		param.put("digAlg", "http://www.w3.org/2001/04/xmlenc#sha256");
 		
 		MessageDigest md = null;
+		
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+		
 		byte[] digestValue = md.digest(signedTagData);
 		param.put("digVal", Base64.toBase64String(digestValue));
-		//<xades:SignedProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="xades-id-8d740af63e9c0b21c76f681b4a55a2cd"><xades:SignedSignatureProperties><xades:SigningTime>2020-06-01T20:12:09Z</xades:SigningTime><xades:SigningCertificateV2><xades:Cert><xades:CertDigest><ds:DigestMethod xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">JxtpDE5iXn/5Wq70Th8PZ9ZDN/Q=</ds:DigestValue></xades:CertDigest><xades:IssuerSerialV2>MIGYMIGPpIGMMIGJMQswCQYDVQQGEwJCUjETMBEGA1UECgwKSUNQLUJyYXNpbDE2MDQGA1UECwwtU2VjcmV0YXJpYSBkYSBSZWNlaXRhIEZlZGVyYWwgZG8gQnJhc2lsIC0gUkZCMS0wKwYDVQQDDCRBdXRvcmlkYWRlIENlcnRpZmljYWRvcmEgU0VSUFJPUkZCdjUCBAEItPM=</xades:IssuerSerialV2></xades:Cert></xades:SigningCertificateV2></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#r-id-1"><xades:MimeType>text/xml</xades:MimeType></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties>
-		//<xades:SignedProperties xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" Id="xades-id-2ca19a1fee94cc3456c502c54b166716"><xades:SignedSignatureProperties><xades:SigningTime>2020-05-30T00:51:04Z</xades:SigningTime><xades:SigningCertificateV2><xades:Cert><xades:CertDigest><ds:DigestMethod xmlns:ds="http://www.w3.org/2000/09/xmldsig#" Algorithm="http://www.w3.org/2000/09/xmldsig#sha1"></ds:DigestMethod><ds:DigestValue xmlns:ds="http://www.w3.org/2000/09/xmldsig#">JxtpDE5iXn/5Wq70Th8PZ9ZDN/Q=</ds:DigestValue></xades:CertDigest><xades:IssuerSerialV2>MIGYMIGPpIGMMIGJMQswCQYDVQQGEwJCUjETMBEGA1UECgwKSUNQLUJyYXNpbDE2MDQGA1UECwwtU2VjcmV0YXJpYSBkYSBSZWNlaXRhIEZlZGVyYWwgZG8gQnJhc2lsIC0gUkZCMS0wKwYDVQQDDCRBdXRvcmlkYWRlIENlcnRpZmljYWRvcmEgU0VSUFJPUkZCdjUCBAEItPM=</xades:IssuerSerialV2></xades:Cert></xades:SigningCertificateV2></xades:SignedSignatureProperties><xades:SignedDataObjectProperties><xades:DataObjectFormat ObjectReference="#r-id-1"><xades:MimeType>text/xml</xades:MimeType></xades:DataObjectFormat></xades:SignedDataObjectProperties></xades:SignedProperties>
+		
 		return createReferenceTag(doc, param);
 	}
 	
@@ -267,7 +297,7 @@ public class SignatureXAdES{
 		dbf.setNamespaceAware(true);
 		Document bodyDoc = dbf.newDocumentBuilder().parse(
 				new InputSource(new InputStreamReader(new FileInputStream(fileName), "UTF-8")));
-	
+		Element docData = getDocumentData(bodyDoc);
 		Element signatureTag = bodyDoc.createElementNS(XMLNS, "ds:Signature");
 		signatureTag.setAttribute(XMLNS_DS, XMLNS);
 		signatureTag.setAttribute("Id", id);
@@ -290,7 +320,8 @@ public class SignatureXAdES{
 		param.put("text", "not(ancestor-or-self::ds:Signature)");
 		param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
 		param.put("digAlg", "http://www.w3.org/2001/04/xmlenc#sha256");
-		byte[] docHash = getShaCanonizedValue("SHA-256", bodyDoc.getDocumentElement());
+		
+		byte[] docHash = getShaCanonizedValue("SHA-256", docData); //bodyDoc.getDocumentElement().getFirstChild());
 		param.put("digVal", Base64.toBase64String(docHash));
 		param.put("transAlg", "http://www.w3.org/2001/10/xml-exc-c14n#");
 		
@@ -302,7 +333,7 @@ public class SignatureXAdES{
 		return bodyDoc;
 	}
 	
-	public SignatureXAdES(){
+	public XMLSigner(){
 	}
 		
 	public Document sign(String fileNameSource) throws Throwable{
@@ -321,18 +352,28 @@ public class SignatureXAdES{
 		X509Certificate cert = (X509Certificate) this.keyStore.getCertificate(alias);
 		PrivateKey myPrKey = (PrivateKey) keyStore.getKey (alias, null);
 		
-		Element sigTag = (Element) doc.getElementsByTagName("ds:Signature").item(0);
+		int numSignatures = doc.getElementsByTagName("ds:Signature").getLength() - 1;
+		
+		Element sigTag = (Element) doc.getElementsByTagName("ds:Signature").item(numSignatures);
 		
 		Element objectTag = signedObject(cert, doc);
 		
 		Init.init();
 		Canonicalizer c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
-		byte[] canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0)); 
+		
+		byte[] canonicalized = null;
+		
+		if(sigPack != SignaturePack.DETACHED){
+			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0)); 
+		}else {
+			canonicalized = null;
+		}
+		
 		Element sigRefTag = createSignatureHashReference(doc, canonicalized);
-		doc.getElementsByTagName("ds:SignedInfo").item(0).appendChild(sigRefTag);
+		doc.getElementsByTagName("ds:SignedInfo").item(numSignatures).appendChild(sigRefTag);
 		
 		c14n = Canonicalizer.getInstance(CanonicalizationMethod.INCLUSIVE);
-		byte[] dh = c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(0));
+		byte[] dh = c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(numSignatures));
 		
 		Signature sig = Signature.getInstance("SHA256withRSA");
 		sig.initSign(myPrKey);
@@ -349,7 +390,7 @@ public class SignatureXAdES{
 		
 		
 		Element keyInfo = doc.createElementNS(XMLNS, "ds:KeyInfo");
-		doc.getElementsByTagName("ds:Signature").item(0).appendChild(keyInfo);
+		doc.getElementsByTagName("ds:Signature").item(numSignatures).appendChild(keyInfo);
 		
 		Element x509 = doc.createElementNS(XMLNS, "ds:X509Data");
 		keyInfo.appendChild(x509);
