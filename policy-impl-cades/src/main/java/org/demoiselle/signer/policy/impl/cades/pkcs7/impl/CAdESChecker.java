@@ -144,7 +144,7 @@ public class CAdESChecker implements PKCS7Checker {
 				}
 				
 			} else {
-				if (this.getAttached(signedData, false) != null){
+				if (this.getAttached(signedData, false).getExtractedContent() != null){
 					cmsSignedData = new CMSSignedData(signedData);
 				}else{
 					cmsSignedData = new CMSSignedData(new CMSProcessableByteArray(content), signedData);
@@ -447,17 +447,7 @@ public class CAdESChecker implements PKCS7Checker {
 			return null;
 		}
 	}
-    
-	@Override
-	@Deprecated
-	public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData){
-		if (this.check(content, signedData)){
-			return this.getSignaturesInfo();
-		}else{
-			return null;
-		}
-	}
-	
+    		
 	@Override
 	public  List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData){
 		if (this.check(content, signedData)){
@@ -521,6 +511,8 @@ public class CAdESChecker implements PKCS7Checker {
 	public void setHash(byte[] hash) {
 		this.hash = hash;
 	}
+
+	
 	
 	
 }

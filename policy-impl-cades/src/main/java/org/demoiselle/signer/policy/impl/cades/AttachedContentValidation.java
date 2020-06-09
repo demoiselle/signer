@@ -46,7 +46,7 @@ import java.util.List;
  */
 public class AttachedContentValidation {
 	
-	private byte[] extractedContent; 
+	private byte[] extractedContent = null; 
 	private List<SignatureInformations> signaturesInfo = new ArrayList<SignatureInformations>();
 	
 	public AttachedContentValidation() {

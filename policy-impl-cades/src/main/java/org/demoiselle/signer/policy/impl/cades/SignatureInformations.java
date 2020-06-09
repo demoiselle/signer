@@ -60,6 +60,7 @@ public class SignatureInformations {
     private SignaturePolicy signaturePolicy;
     private Date notAfter;
     private LinkedList<String> validatorErrors = new LinkedList<String>();
+    private boolean invalidSignature = false; 
 
 
     /**
@@ -98,6 +99,10 @@ public class SignatureInformations {
 		}
     }
 	
+	/**
+	 * Set Date from user's computer when signature was generated (it is NOT a timestamp date) 
+	 * @param signDate
+	 */
 	
 	public void setSignDate(Date signDate) {
 		this.signDate = signDate;
@@ -111,6 +116,10 @@ public class SignatureInformations {
 		return timeStampSigner;
 	}
 
+	/**
+	 * TimeStamp stored on signature
+	 * @param timeStampSigner
+	 */
 	public void setTimeStampSigner(Timestamp timeStampSigner) {
 		this.timeStampSigner = timeStampSigner;
 	}
@@ -174,5 +183,21 @@ public class SignatureInformations {
 	 */
 	public void setNotAfter(Date notAfter) {
 		this.notAfter = notAfter;
+	}
+
+	/**
+	 * 
+	 * @return if signature is invalid 
+	 */
+	public boolean isInvalidSignature() {
+		return invalidSignature;
+	}
+
+	/**
+	 * set true (invalid) ou false (valid)
+	 * @param invalidSignature
+	 */
+	public void setInvalidSignature(boolean invalidSignature) {
+		this.invalidSignature = invalidSignature;
 	}	
 }

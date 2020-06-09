@@ -41,14 +41,15 @@ public class PDFVerify {
 	//@Test
 	public void test() {
 		
-	
-			String filePath = "/home/...";
+
+
+			String filePath = "/";
 			
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
 			try {
 				document = PDDocument.load(new File(filePath));
-						List<SignatureInformations> result = null;
+				List<SignatureInformations> result = null;
 
 			for (PDSignature sig : document.getSignatureDictionaries()) {
 					COSDictionary sigDict = sig.getCOSObject();
@@ -78,7 +79,22 @@ public class PDFVerify {
 			        LcrManagerSync.getInstance().update(varCert);
 					*/
 					PAdESChecker checker = new PAdESChecker();
-					result = checker.checkDetachedSignature(buf, contents.getBytes());
+					byte[] assinatura =contents.getBytes();
+					/*
+					 *  gravar a assinatura em um arquivo separado
+					 
+					
+					  
+					File file = new File(filePath + "_.p7s");
+					FileOutputStream os = new FileOutputStream(file);
+					os.write(assinatura);
+					os.flush();
+					os.close();
+				*/
+					
+					result = checker.checkDetachedSignature(buf, assinatura);
+					
+					
 					if (result == null || result.isEmpty()) {
 						System.out.println("Erro ao validar");
 						//Erro
