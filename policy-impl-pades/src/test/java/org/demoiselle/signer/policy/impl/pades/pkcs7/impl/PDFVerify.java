@@ -45,6 +45,7 @@ public class PDFVerify {
 
 			String filePath = "/";
 			
+			
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
 			try {
@@ -108,26 +109,26 @@ public class PDFVerify {
 						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
 						System.out.println(valErr);
 					}
-					for(X509Certificate cert : sis.getChain()){
-						BasicCertificate certificate = new BasicCertificate(cert);
-						if (!certificate.isCACertificate()){
-							System.out.println(certificate.toString());
-						}												
-					}
 					if (sis.getSignaturePolicy() != null){
 						System.out.println("------ Politica ----------------- ");
 						System.out.println(sis.getSignaturePolicy().toString());
 						
 					}
 					
-					BasicCertificate bc = sis.getSignerBasicCertificate();
+					BasicCertificate bc = sis.getIcpBrasilcertificate();
+					System.out.println(bc.toString()); 
 						if (bc.hasCertificatePF()){
 							System.out.println(bc.getICPBRCertificatePF().getCPF());
 						}
 						if (bc.hasCertificatePJ()){
 							System.out.println(bc.getICPBRCertificatePJ().getCNPJ());
 							System.out.println(bc.getICPBRCertificatePJ().getResponsibleCPF());
-						}					 
+						}
+						
+					if(sis.getTimeStampSigner()!= null) {
+						System.out.println(sis.getTimeStampSigner().toString());
+					}
+						
 					
 				}			
 				assertTrue(true);
@@ -156,7 +157,7 @@ public class PDFVerify {
 						
 					}
 					
-					BasicCertificate bc = sis.getSignerBasicCertificate();
+					BasicCertificate bc = sis.getIcpBrasilcertificate();
 						if (bc.hasCertificatePF()){
 							System.out.println(bc.getICPBRCertificatePF().getCPF());
 						}
@@ -202,6 +203,7 @@ public class PDFVerify {
 					varTimeStamp = varCAdESTimeStampSigner.checkTimeStampPDFWithContent(contents.getBytes(), buf);
 				}
 			if (varTimeStamp != null){
+				System.out.println("Carimbo do tempo");
 				System.out.println(varTimeStamp.getTimeStampAuthorityInfo());
 				System.out.println(varTimeStamp.getSerialNumber());
 				System.out.println(varTimeStamp.getCertificates());

@@ -61,6 +61,7 @@ public class SignatureInformations {
     private Date notAfter;
     private LinkedList<String> validatorErrors = new LinkedList<String>();
     private boolean invalidSignature = false; 
+    private BasicCertificate icpBrasilcertificate = null;
 
 
     /**
@@ -126,6 +127,7 @@ public class SignatureInformations {
 	
 	/** 
 	 * 
+	 * @deprecated use getIcpBrasilcertificate()
 	 * @return list of Signers BasicCertificates
 	 */
 	public BasicCertificate getSignerBasicCertificate(){
@@ -199,5 +201,13 @@ public class SignatureInformations {
 	 */
 	public void setInvalidSignature(boolean invalidSignature) {
 		this.invalidSignature = invalidSignature;
+	}
+
+	public BasicCertificate getIcpBrasilcertificate() {
+		return icpBrasilcertificate;
+	}
+
+	public void setIcpBrasilcertificate(BasicCertificate icpBrasilcertificate) {
+		this.icpBrasilcertificate = icpBrasilcertificate;
 	}	
 }

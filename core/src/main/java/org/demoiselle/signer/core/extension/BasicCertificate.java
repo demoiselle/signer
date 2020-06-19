@@ -64,7 +64,7 @@ import org.bouncycastle.asn1.x509.Extension;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.PolicyInformation;
-import org.bouncycastle.x509.extension.X509ExtensionUtil;
+import org.bouncycastle.cert.jcajce.JcaX509ExtensionUtils;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -521,8 +521,8 @@ public class BasicCertificate {
 		try {
 			byte[] authorityInfoAccess = certificate.getExtensionValue(Extension.authorityInfoAccess.getId());
 			if (authorityInfoAccess != null && authorityInfoAccess.length > 0) {
-				AuthorityInformationAccess infoAccess = AuthorityInformationAccess.getInstance(X509ExtensionUtil
-						.fromExtensionValue(authorityInfoAccess));
+				AuthorityInformationAccess infoAccess = AuthorityInformationAccess.getInstance(
+						JcaX509ExtensionUtils.parseExtensionValue(authorityInfoAccess));
 				for (AccessDescription desc : infoAccess.getAccessDescriptions())
 					if (desc.getAccessLocation().getTagNo() == GeneralName.uniformResourceIdentifier)
 						address.add(((DERIA5String) desc.getAccessLocation().getName()).getString());

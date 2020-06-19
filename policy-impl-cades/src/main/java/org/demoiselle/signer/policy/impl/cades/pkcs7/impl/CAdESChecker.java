@@ -79,6 +79,7 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.exception.CertificateRevocationException;
 import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
@@ -330,6 +331,12 @@ public class CAdESChecker implements PKCS7Checker {
 				if (varChain.size() < 3){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
 					logger.info(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
+				}
+				for (X509Certificate cert : varChain) {
+					BasicCertificate signerCertificate = new BasicCertificate(cert);
+					if (!signerCertificate.isCACertificate()) {
+						signatureInfo.setIcpBrasilcertificate(signerCertificate);
+					}
 				}
 				signatureInfo.setSignDate(dataHora);
 				signatureInfo.setChain(varChain);

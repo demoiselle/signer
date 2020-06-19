@@ -33,7 +33,7 @@ import org.junit.Test;
 @SuppressWarnings("unused")
 public class PDFSigner {
 
-	@Test
+	//@Test
 	public void testComFile() {
 		
 		// INFORMAR o arquivo
@@ -43,7 +43,7 @@ public class PDFSigner {
 		byte[] fileToSign = readContent(fileDirName);
 
 		ByteArrayInputStream toSign = new ByteArrayInputStream(fileToSign);
-		String filePDFAssinado = "/";
+		String filePDFAssinado = "/_assinado.pdf";
 		
 		try {
 				this.doSigner(toSign, filePDFAssinado);
@@ -120,7 +120,11 @@ public class PDFSigner {
 	                    String hashEncoded = new String(Base64.encodeBase64(hash));	                    
 	                    System.out.println(hashEncoded);
 
-	                    KeyStore ks = getKeyStoreToken();
+	                    //windows e NeoID
+	                    KeyStore ks = getKeyStoreTokenBySigner(); 
+
+	                    
+	                    //KeyStore ks = getKeyStoreToken();
 	                    String alias = getAlias(ks);
 	                    
 	                    PAdESSigner signer = new PAdESSigner();
