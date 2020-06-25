@@ -109,6 +109,12 @@ public class PDFVerify {
 						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
 						System.out.println(valErr);
 					}
+					
+					for (String valWarn : sis.getValidatorWarnins()) {
+						System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+						System.err.println(valWarn);
+					}
+
 					if (sis.getSignaturePolicy() != null){
 						System.out.println("------ Politica ----------------- ");
 						System.out.println(sis.getSignaturePolicy().toString());
@@ -144,6 +150,10 @@ public class PDFVerify {
 					for (String valErr : sis.getValidatorErrors()){
 						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
 						System.out.println(valErr);
+					}
+					for (String valWarn : sis.getValidatorWarnins()) {
+						System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+						System.err.println(valWarn);
 					}
 					for(X509Certificate cert : sis.getChain()){
 						BasicCertificate certificate = new BasicCertificate(cert);

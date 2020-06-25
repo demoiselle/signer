@@ -167,7 +167,10 @@ public class CAdESCheckerTest {
 					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.err.println(valErr);
 				}
-				
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
 
 			}
 			assertTrue(true);
@@ -221,7 +224,10 @@ public class CAdESCheckerTest {
 					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.err.println(valErr);
 				}
-				System.out.println(si.getSignaturePolicy().toString());
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
 			}
 			assertTrue(true);
 
@@ -297,7 +303,11 @@ public class CAdESCheckerTest {
 						System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 						System.err.println(valErr);
 					}
-					System.out.println(si.getSignaturePolicy().toString());
+					for (String valWarn : si.getValidatorWarnins()) {
+						System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+						System.err.println(valWarn);
+					}
+
 				}
 				assertTrue(true);
 			} else {
@@ -360,7 +370,11 @@ public class CAdESCheckerTest {
 					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.err.println(valErr);
 				}
-				System.out.println(si.getSignaturePolicy().toString());
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
+
 			}
 			
 			File file = new File("new_extrated_content");

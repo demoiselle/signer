@@ -89,6 +89,7 @@ public class PDFSigner {
 			contentForPDF = new ByteArrayInputStream(bytes);
 			
 			PDDocument original = PDDocument.load(contentForPDF);
+			original.setVersion(1.5f);
 						
 			FileOutputStream fos = new FileOutputStream(new File(signedFile));
 			PDSignature signature = new PDSignature();

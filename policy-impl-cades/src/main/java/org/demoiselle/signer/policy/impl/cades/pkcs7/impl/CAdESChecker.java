@@ -187,7 +187,7 @@ public class CAdESChecker implements PKCS7Checker {
 					signatureInfo.getValidatorErrors().add(cvce.getMessage());
 					logger.info(cvce.getMessage());
 				}catch (CertificateRevocationException cre) {
-					signatureInfo.getValidatorErrors().add(cre.getMessage());
+					signatureInfo.getValidatorWarnins().add(cre.getMessage());
 					logger.info("certificado revogado");
 				}
 				
@@ -195,7 +195,7 @@ public class CAdESChecker implements PKCS7Checker {
 				try{
 					signatureInfo.setNotAfter(pV.valDate(varCert));			
 				}catch (CertificateValidatorException cve) {
-					signatureInfo.getValidatorErrors().add(cve.getMessage());
+					signatureInfo.getValidatorWarnins().add(cve.getMessage());
 				}
 				
 				if (signerInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
@@ -210,7 +210,7 @@ public class CAdESChecker implements PKCS7Checker {
 				String varOIDPolicy = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId();
 				AttributeTable signedAttributes = signerInfo.getSignedAttributes();
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
+					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					logger.info(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					//throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}else{
@@ -218,7 +218,7 @@ public class CAdESChecker implements PKCS7Checker {
 					Attribute idSigningPolicy = null;					
 					idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(varOIDPolicy));
 					if (idSigningPolicy == null) {							
-							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found",varOIDPolicy));
+							signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found",varOIDPolicy));
 					}else{
 						for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
 							String policyOnSignature = p.nextElement().toString();
@@ -267,7 +267,7 @@ public class CAdESChecker implements PKCS7Checker {
 				}
 								
 				if (signaturePolicy == null){
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
+					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
 					logger.info(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
 				}else{					
 					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()

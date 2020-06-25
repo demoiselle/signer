@@ -59,6 +59,7 @@ public class SignatureInformations {
     private Timestamp timeStampSigner = null;
     private SignaturePolicy signaturePolicy;
     private Date notAfter;
+    private LinkedList<String> validatorWarnins = new LinkedList<String>();
     private LinkedList<String> validatorErrors = new LinkedList<String>();
     private boolean invalidSignature = false; 
     private BasicCertificate icpBrasilcertificate = null;
@@ -209,5 +210,13 @@ public class SignatureInformations {
 
 	public void setIcpBrasilcertificate(BasicCertificate icpBrasilcertificate) {
 		this.icpBrasilcertificate = icpBrasilcertificate;
+	}
+
+	public LinkedList<String> getValidatorWarnins() {
+		return validatorWarnins;
+	}
+
+	public void setValidatorWarnins(LinkedList<String> validatorWarnins) {
+		this.validatorWarnins = validatorWarnins;
 	}	
 }
