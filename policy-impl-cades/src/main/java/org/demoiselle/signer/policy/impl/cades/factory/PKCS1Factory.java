@@ -37,6 +37,7 @@
 
 package org.demoiselle.signer.policy.impl.cades.factory;
 
+import org.demoiselle.signer.core.factory.GenericFactory;
 import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
 import org.demoiselle.signer.policy.impl.cades.pkcs1.impl.PKCS1SignerImpl;
 

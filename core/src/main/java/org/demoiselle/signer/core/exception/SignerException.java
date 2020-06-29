@@ -35,43 +35,32 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.policy.impl.cades.factory;
-
-import org.demoiselle.signer.core.factory.GenericFactory;
-import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
-import org.demoiselle.signer.policy.impl.cades.pkcs7.impl.CAdESSigner;
+package org.demoiselle.signer.core.exception;
 
 /**
- * Factory specialized in manufacturing objects for interface {@link PKCS7Signer}
+ * custom unchecked exceptions for package   
  */
-public class PKCS7Factory extends GenericFactory<PKCS7Signer> {
+public class SignerException extends RuntimeException {
 
-	public static final PKCS7Factory instance = new PKCS7Factory();
-
-	public static final PKCS7Factory getInstance() {
-		return PKCS7Factory.instance;
-	}
-
+	
 	/**
-	 * Defines a default object for the factory.
-	 * The Component has a default implementation
 	 * 
-	 * @return pkcs7 signer
-	 * @see CAdESSigner
 	 */
-	@Override
-	public PKCS7Signer factoryDefault() {
-		return new CAdESSigner();
+	private static final long serialVersionUID = 1865670514512806467L;
+
+	public SignerException() {
+		super();
 	}
 
-	/**
-	 * Defines the environment variable used by the abstract factory 
-	 * to fetch the name of the class to be fabricated.
-	 * @return variable name
-	 */
-	@Override
-	protected String getVariableName() {
-		return "pkcs7.implementation";
+	public SignerException(String message) {
+		super(message);
 	}
 
+	public SignerException(String message, Throwable cause) {
+		super(message, cause);
+	}
+
+	public SignerException(Throwable cause) {
+		super(cause);
+	}
 }

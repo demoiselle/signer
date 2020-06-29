@@ -139,7 +139,7 @@ public class CAdESCheckerTest {
 				.checkDetachedSignature(fileToVerify, signatureFile);
 
 		if (signaturesInfo != null) {
-			System.out.println("A assinatura foi validada.");
+			System.out.println("A assinatura foi validada. e retornou resultados");
 			for (SignatureInformations si : signaturesInfo) {
 				System.out.println(si.getSignDate());
 				if (si.getTimeStampSigner() != null) {
@@ -162,11 +162,12 @@ public class CAdESCheckerTest {
 					
 					System.out.println(si.getTimeStampSigner().toString());
 				}
-				// A assinatura pode estar correta mas não foi possível verificar algum atributo
+				// A assinatura pode estar correta mas não foi possível verificar algum atributo exigido pela ICP-Brasil
 				for (String valErr : si.getValidatorErrors()) {
 					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.err.println(valErr);
 				}
+				//A assinatura pode estar correta mas não foi possível verificar alguma condição de validação exigida pela ICP-Brasil
 				for (String valWarn : si.getValidatorWarnins()) {
 					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
 					System.err.println(valWarn);

@@ -198,6 +198,7 @@ public class CAdESSignerTest {
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			String fileDirName = "/";
 			
+
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -216,12 +217,12 @@ public class CAdESSignerTest {
 
 			
 			// Para certificado NeoID e windows token
-			//KeyStore ks = getKeyStoreTokenBySigner();
+			KeyStore ks = getKeyStoreTokenBySigner();
 
 			//// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFileBySigner();
 			// Para certificado token Linux
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
@@ -294,7 +295,7 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM HASH *****************");
 
 			// INFORMAR o arquivo para gerar o hash
-			String fileDirName = "/home/teste.txt";
+			String fileDirName = "/";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -311,10 +312,10 @@ public class CAdESSignerTest {
 
 			
 			// Para certificado em token
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 			
 			// Para certificado NeoID e windows token
-			//KeyStore ks = getKeyStoreTokenBySigner();
+			KeyStore ks = getKeyStoreTokenBySigner();
 
 
 			String alias = getAlias(ks);
@@ -365,7 +366,7 @@ public class CAdESSignerTest {
 			byte[] signature = signer.doHashSign(hash);
 			String signatureEncoded = new String(Base64.encodeBase64(signature));
 			System.out.println("signatureEncoded :"+signatureEncoded);
-			File file = new File(fileDirName + ".p7s");
+			File file = new File(fileDirName + "by_hash.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -378,7 +379,7 @@ public class CAdESSignerTest {
 	}
 
 	/**
-	 * Teste com envio do conteúdo
+	 * Teste com conteúdo anexado
 	 */
 	//@Test
 	public void testSignAttached() {
@@ -387,7 +388,7 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM CONTEÚDO ATACHADO*****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "/home/arquivo.txt";
+			String fileDirName = "/";
 			
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -396,10 +397,10 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 			
 			// Para certificado NeoID e windows token
-			//KeyStore ks = getKeyStoreTokenBySigner();
+			KeyStore ks = getKeyStoreTokenBySigner();
 
 
 			// Para certificado em arquivo A1
@@ -437,7 +438,7 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Com conteudo atachado
 			byte[] signature = signer.doAttachedSign(fileToSign);
-			File file = new File(fileDirName + "_atached.p7s");
+			File file = new File(fileDirName + "_attached.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();

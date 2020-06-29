@@ -34,6 +34,7 @@
 
 package org.demoiselle.signer.cryptography.factory;
 
+import org.demoiselle.signer.core.factory.GenericFactory;
 import org.demoiselle.signer.cryptography.Cryptography;
 import org.demoiselle.signer.cryptography.implementation.CriyptographyImpl;
 
