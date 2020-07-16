@@ -1,294 +1,367 @@
 package org.demoiselle.signer.policy.impl.xades.xml;
 
-import java.security.Security;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
+import java.security.SignatureException;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
-import java.text.ParseException;
-import java.util.Collection;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.TimeZone;
 
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1UTCTime;
-import org.bouncycastle.asn1.cms.Attribute;
-import org.bouncycastle.asn1.cms.AttributeTable;
-import org.bouncycastle.asn1.cms.CMSAttributes;
-import org.bouncycastle.asn1.cms.ContentInfo;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSProcessableByteArray;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.CMSSignerDigestMismatchException;
-import org.bouncycastle.cms.SignerInformation;
-import org.bouncycastle.cms.SignerInformationStore;
-import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
-import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.operator.OperatorCreationException;
-import org.bouncycastle.util.Store;
-import org.demoiselle.signer.core.ca.manager.CAManager;
-import org.demoiselle.signer.core.exception.CertificateRevocationException;
-import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
-import org.demoiselle.signer.core.exception.CertificateValidatorException;
-import org.demoiselle.signer.core.validator.CRLValidator;
-import org.demoiselle.signer.core.validator.PeriodValidator;
-import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.xml.security.Init;
+import org.apache.xml.security.c14n.CanonicalizationException;
+import org.apache.xml.security.c14n.Canonicalizer;
+import org.apache.xml.security.c14n.InvalidCanonicalizerException;
+import org.bouncycastle.util.encoders.Base64;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.impl.cades.Checker;
-import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
-import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.impl.CAdESChecker;
-import org.demoiselle.signer.timestamp.Timestamp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
-public class XMLChecker implements Checker{
+public class XMLChecker {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CAdESChecker.class);
+	private XMLSigner signer = new XMLSigner();
+	
+	public PolicyFactory.Policies getPolicyByOid(String oid) {
+		
+		switch (oid) {
+		case "2.16.76.1.7.1.6.2.2":
+			return PolicyFactory.Policies.AD_RB_XADES_2_2;
+		case "2.16.76.1.7.1.6.2.3":
+			return PolicyFactory.Policies.AD_RB_XADES_2_3;
+		case "2.16.76.1.7.1.6.2.4":
+			return PolicyFactory.Policies.AD_RB_XADES_2_4;
 
-	@Override
-	public List<SignatureInformations> checkAttachedSignature(byte[] signedData) {
-		// TODO Auto-generated method stub
-		return null;
+		default:
+			return null;
+		}
 	}
-
-	@Override
-	public List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	List<String> validationErrors  = new ArrayList<String>();
+	List<String> validationWaring  = new ArrayList<String>();
+	
+	public Element getSignatureElement(String tagName, Element parent, boolean mandatory){
+		NodeList value = parent.getElementsByTagNameNS(XMLSigner.XMLNS, tagName);
+		if(value.getLength() == 0) {
+			if(mandatory)
+				validationErrors.add("Element: "+tagName+ " not found");
+			else
+				validationWaring.add("Element: "+tagName+ " not found");
+		}
+		return (Element) value.item(0);
 	}
-
-	@Override
-	public List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData) {
-		// TODO Auto-generated method stub
-		return null;
+	
+	public Element getXadesElement(String tagName, Element parent, boolean mandatory){
+		NodeList value = parent.getElementsByTagNameNS(XMLSigner.XAdESv1_3_2, tagName);
+		if(value.getLength() == 0) {
+			if(mandatory)
+				validationErrors.add("Element: "+tagName+ " not found");
+			else
+				validationWaring.add("Element: "+tagName+ " not found");
+			return null;
+		}
+		return (Element) value.item(0);
 	}
-
-	@Override
-	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent,
-			byte[] signedData) {
-		// TODO Auto-generated method stub
+	
+	public String getAttribute(Element node, String attr, boolean mandatory){
+		String attribute = node.getAttribute(attr);
+		if(attr.isEmpty()) {
+			if(mandatory)
+				validationErrors.add("Attribute: "+attr+ " not found");
+			else
+				validationWaring.add("Attribute: "+attr+ " not found");
+		}
+		return attribute;
+	}
+	
+	private boolean verifyDigest(Element signatureTag, String digestMethod, String digestValue, String canonicalString) {
+		Element objectTag = (Element)signatureTag.getElementsByTagNameNS(XMLSigner.XMLNS,"Object").item(0);
+		
+		byte[] canonicalized = null;
+		Init.init();
+		Canonicalizer c14n;
+		try {
+			c14n = Canonicalizer.getInstance(canonicalString);
+			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0)); 
+		} catch (InvalidCanonicalizerException | CanonicalizationException e1) {
+			validationErrors.add("Dados do resumo inválidos: "+digestMethod);
+			return false;
+		}
+		MessageDigest md = null;
+		
+		try {
+			String algorithm = AlgorithmsValues.getSignatureDigest(digestMethod);
+			if(algorithm != null) {
+				md = MessageDigest.getInstance(algorithm);
+				byte[] signatureDigestValue = md.digest(canonicalized);
+				if(!Base64.toBase64String(signatureDigestValue).equals(digestValue)) {
+					validationErrors.add("Valor do resumo inválido");
+					return false;
+				}
+			}else {
+				validationErrors.add("Invalid signature hash algorithm: "+digestMethod);
+				return false;
+			}
+		} catch (NoSuchAlgorithmException e) {
+			validationErrors.add("Algoritmo inválido: "+digestMethod);
+			return false;
+		}
+		return true;
+	}
+	
+	private boolean verifyXPath(Document doc, String digestMethod, String digestValue, NodeList transformsTags) {
+		
+		String xPathTransformAlgorithm = "";
+		
+		for(int i = 0; i < transformsTags.getLength(); i++) {	
+			NodeList transformTag = ((Element)transformsTags.item(i)).getElementsByTagNameNS(XMLSigner.XMLNS, "Transform");
+			for(int j = 0; j < transformTag.getLength(); j++) {
+				if(((Element)transformTag.item(j)).getAttribute("Algorithm").equals("http://www.w3.org/2001/10/xml-exc-c14n#")) {
+					xPathTransformAlgorithm = "http://www.w3.org/2001/10/xml-exc-c14n#";
+					break;
+				}
+			}
+		}
+		
+		try {
+			Element docData = signer.getDocumentData(doc);
+			byte[] docHash = signer.getShaCanonizedValue(AlgorithmsValues.getSignatureDigest(digestMethod), docData, xPathTransformAlgorithm);
+			if(!Base64.toBase64String(docHash).equals(digestValue)) {
+				
+				return false;
+			}
+		} catch (Exception e) {
+			validationErrors.add("Erro ao validar o resumo do documento");
+			return false;
+		}
+		
+		return true;
+	}
+	
+	private X509Certificate getCertificate(String x509Certificate) throws CertificateException {
+		byte encodedCert[] = Base64.decode(x509Certificate);
+		ByteArrayInputStream inputStream  =  new ByteArrayInputStream(encodedCert);
+		CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+		return (X509Certificate)certFactory.generateCertificate(inputStream); 
+	}
+	
+	private boolean verifyHash(Element signatureTag, Element signatureInfoTag, String signatureValue, X509Certificate cert) {
+		
+		try {
+			Element canonicalizationMethodTag = (Element)signatureTag.getElementsByTagNameNS(XMLSigner.XMLNS, "CanonicalizationMethod").item(0);
+			Element signatureMethod = (Element)signatureTag.getElementsByTagNameNS(XMLSigner.XMLNS, "SignatureMethod").item(0);
+			
+			
+			
+			Init.init();
+			Canonicalizer c14n = Canonicalizer.getInstance(canonicalizationMethodTag.getAttribute("Algorithm"));
+		
+			byte[] dh = c14n.canonicalizeSubtree(signatureInfoTag);
+			
+			Signature verify = Signature.getInstance(AlgorithmsValues.getSignatureAlgorithm(signatureMethod.getAttribute("Algorithm")));
+			verify.initVerify(cert);
+			verify.update(dh);
+			if(!verify.verify(Base64.decode(signatureValue))){
+				validationErrors.add("Resumo criptográfico da assinatura inválido");
+			}else {
+				return true;
+			}
+				
+					
+		}catch (InvalidCanonicalizerException | CanonicalizationException | InvalidKeyException | DOMException e) {
+			validationErrors.add("Erro ao validar o resumo criptográfico da assinatura");
+		}catch(NoSuchAlgorithmException e) {
+			validationErrors.add("Algorítmo de assinatura inválido ou não suportado");
+		}catch(SignatureException e) {
+			validationErrors.add("Conteúdo da assinatura inválido");
+		}
+		
+		return false;
+		
+	}
+	
+	private Element getElement(String value, Element doc) {
+		
+		NodeList nl = doc.getElementsByTagName(value);
+		if(nl.getLength() > 0)
+			return (Element)nl.item(0);
+		
 		return null;
 	}
 	
-	private boolean check(byte[] content, byte[] signedData) throws SignerException{
-		Security.addProvider(new BouncyCastleProvider());
-		CMSSignedData cmsSignedData = null;
-		/*TODO Get data form ENVELOPED or DETACHED
+	private void verifyPolicy(Element signature, String policyOID, String signatureMethod, String signatureValue) {
+		boolean isValidAlgorithm = false;
 		try {
-			//Get data form ENVELOPED or DETACHED
-		} catch (CMSException ex) {
-			throw new SignerException(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"), ex);
-		}*/
-
-		// Quantity of validate signatures
-		/*int verified = 0;
-
-		Store<?> certStore = cmsSignedData.getCertificates();
-		SignerInformationStore signers = cmsSignedData.getSignerInfos();
-		Iterator<?> it = signers.getSigners().iterator();
-
-		// Realização da verificação básica de todas as assinaturas
-		while (it.hasNext()) {
-			SignatureInformations signatureInfo = new SignatureInformations();
-			try {
-				SignerInformation signerInfo = (SignerInformation) it.next();
-				SignerInformationStore signerInfoStore = signerInfo.getCounterSignatures();
-				
-				logger.info("Foi(ram) encontrada(s) " + signerInfoStore.size() + " contra-assinatura(s).");
-
-				@SuppressWarnings("unchecked")
-				Collection<?> certCollection = certStore.getMatches(signerInfo.getSID());
-
-				Iterator<?> certIt = certCollection.iterator();
-				X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
-				
-				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
-					
-				CRLValidator cV = new CRLValidator();				
-				try {
-					cV.validate(varCert);	
-				}catch (CertificateValidatorCRLException cvce) {
-					signatureInfo.getValidatorErrors().add(cvce.getMessage());
-					logger.info(cvce.getMessage());
-				}catch (CertificateRevocationException cre) {
-					signatureInfo.getValidatorErrors().add(cre.getMessage());
-					logger.info("certificado revogado");
-				}
-				
-				PeriodValidator pV = new PeriodValidator();				
-				try{
-					signatureInfo.setNotAfter(pV.valDate(varCert));			
-				}catch (CertificateValidatorException cve) {
-					signatureInfo.getValidatorErrors().add(cve.getMessage());
-				}
-				
-				if (signerInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
-					verified++;
-					logger.info(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
+			Document doc = PolicyFactory.getInstance().loadXMLPolicy(getPolicyByOid(policyOID));
+			Element mandatedSignedQProperties = getElement("pa:MandatedSignedQProperties", doc.getDocumentElement());
+			NodeList qPropertyID = mandatedSignedQProperties.getElementsByTagName("pa:QPropertyID");
+			NodeList signingPeriod = doc.getElementsByTagName("pa:SigningPeriod");
+			NodeList algorithmConstraintSet = doc.getElementsByTagName("pa:AlgorithmConstraintSet");
+			
+			for(int i = 0; i < qPropertyID.getLength(); i++) {
+				String tagText = qPropertyID.item(i).getTextContent();
+				if(signature.getElementsByTagNameNS(XMLSigner.XAdESv1_3_2, tagText).getLength() < 1) {
+					validationWaring.add("Elemento "+tagText+" obrigatório para a política não encontrado");
 				}				
+			}
+			if(signingPeriod.getLength() > 0) {
+				Element notBefore = getElement("pa:NotBefore", (Element)signingPeriod.item(0));
+				Element notAfter = getElement("pa:NotAfter", (Element)signingPeriod.item(0));
+			}
 			
-				
-				
-				// recupera atributos assinados
-				logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
-				String varOIDPolicy = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId();
-				AttributeTable signedAttributes = signerInfo.getSignedAttributes();
-				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
-					logger.info(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
-					//throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
-				}else{
-					//Validando atributos assinados de acordo com a politica
-					Attribute idSigningPolicy = null;					
-					idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(varOIDPolicy));
-					if (idSigningPolicy == null) {							
-							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found",varOIDPolicy));
-					}else{
-						for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
-							String policyOnSignature = p.nextElement().toString();
-							for (PolicyFactory.Policies pv : PolicyFactory.Policies.values()){
-								if (policyOnSignature.contains(pv.getUrl())){
-									setSignaturePolicy(pv);
-									break;
-								}							
+			for(int i = 0; i < algorithmConstraintSet.getLength(); i++) {
+				Element algId = getElement("pa:AlgId", (Element)algorithmConstraintSet.item(i));
+				Element minKeyLength = getElement("pa:MinKeyLength", (Element)algorithmConstraintSet.item(i));
+				if(algId != null) {
+					if(algId.getTextContent().equals(signatureMethod)) {
+						if(minKeyLength != null) {
+							if((8 * Base64.decode(signatureValue).length) >= Integer.parseInt(minKeyLength.getTextContent())) {
+								isValidAlgorithm = true;
+							}else {
+								validationWaring.add("Tamanho da chave criptográfica menor que a requisitada pela política");
 							}
-						}						
-					}
-				}
-				Date dataHora = null;
-				if (signedAttributes != null) {
-					// Valida o atributo ContentType
-					Attribute attributeContentType = signedAttributes.get(CMSAttributes.contentType);
-					if (attributeContentType == null) {
-						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
-						//throw new SignerException(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
-						logger.info(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
-					}
-
-					if (!attributeContentType.getAttrValues().getObjectAt(0).equals(ContentInfo.data)) {
-						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.content.not.data"));
-						//throw new SignerException(cadesMessagesBundle.getString("error.content.not.data"));
-						logger.info(cadesMessagesBundle.getString("error.content.not.data"));
-					}
-
-					// Validando o atributo MessageDigest
-					Attribute attributeMessageDigest = signedAttributes.get(CMSAttributes.messageDigest);
-					if (attributeMessageDigest == null) {
-						throw new SignerException(
-								cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
-					}
-					// Mostra data e  hora da assinatura, não é carimbo de tempo
-					Attribute timeAttribute = signedAttributes.get(CMSAttributes.signingTime);
-					
-					if (timeAttribute != null) {
-						TimeZone.setDefault(null);
-						dataHora = (((ASN1UTCTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
-						logger.info(cadesMessagesBundle.getString("info.date.utc",dataHora));																
-					} else {
-						logger.info(cadesMessagesBundle.getString("info.date.utc","N/D"));
-					}
-
-				}
-								
-				if (signaturePolicy == null){
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
-					logger.info(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
-				}else{					
-					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-							.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-							.getObjectIdentifiers() != null) {
-						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-								.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-								.getMandatedSignedAttr().getObjectIdentifiers()) {
-								String oi = objectIdentifier.getValue();
-								Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
-								logger.info(oi);
-								if (signedAtt == null){
-								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-								}										
 						}
+						break;
 					}
 				}
-				
+			}
+			if(!isValidAlgorithm) {
+				validationWaring.add("Algoritmo inválido para a política "+policyOID);
+
+			}
 			
-				
-				// recupera os atributos NÃO assinados
-				logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
-				AttributeTable unsignedAttributes = signerInfo.getUnsignedAttributes();
-				if ((unsignedAttributes == null) || (unsignedAttributes != null && unsignedAttributes.size() == 0)) {
-					// Apenas info pois a RB não tem atributos não assinados
-					logger.info(cadesMessagesBundle.getString("error.unsigned.attribute.table.not.found"));
-				}
-				if (signaturePolicy != null){
-					// Validando atributos NÃO assinados de acordo com a politica
-					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-							.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-							.getObjectIdentifiers() != null) {
-							for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-								.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-								.getMandatedUnsignedAttr().getObjectIdentifiers()) {
-								String oi = objectIdentifier.getValue();
-								Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
-								logger.info(oi);
-								if (unSignedAtt == null){
-									signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.unsigned.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-								}
-								if (oi.equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())){
-									//Verificando timeStamp
-									try{
-											byte[] varSignature = signerInfo.getSignature();
-											Timestamp varTimeStampSigner = validateTimestamp(unSignedAtt, varSignature); 
-											signatureInfo.setTimeStampSigner(varTimeStampSigner);
-									}catch (Exception ex) {
-										signatureInfo.getValidatorErrors().add(ex.getMessage());
-										// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.						
-									}
-								}
-								if (oi.equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")){
-									logger.info("++++++++++  EscTimeStamp ++++++++++++");
-								}
-							}
-						}						
-				}
-				
-				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
-				if (varChain.size() < 3){
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
-					logger.info(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
-				}
-				signatureInfo.setSignDate(dataHora);
-				signatureInfo.setChain(varChain);
-				signatureInfo.setSignaturePolicy(signaturePolicy);
-				this.getSignaturesInfo().add(signatureInfo);
-				
-			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
-				signatureInfo.getValidatorErrors().add(ex.getMessage());
-				logger.info(ex.getMessage());
-			} catch (CMSException ex) {				
-				// When file is mismatch with sign
-				if (ex instanceof CMSSignerDigestMismatchException){
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
-					logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
-				}					
-				else{
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
-					logger.info(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()), ex);
-				}
-			} catch (ParseException e) {
-				signatureInfo.getValidatorErrors().add(e.getMessage());
-				logger.info(e.getMessage());
-			} 
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+		}catch (SAXException | IOException e) {
+			e.printStackTrace();
 		}
-		logger.info(cadesMessagesBundle.getString("info.signature.verified", verified));
-		// TODO Efetuar o parsing da estrutura CMS*/
-		return true;
+		
+	}
+	
+	
+	public void verify(String fileName) {
+		
+		File fXmlFile = new File(fileName);
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		dbFactory.setNamespaceAware(true);
+		DocumentBuilder dBuilder;
+		try {
+			dBuilder = dbFactory.newDocumentBuilder();
+			Document doc = dBuilder.parse(fXmlFile);
+			String canonicalizationMethod = "";
+			String signatureMethod = "";
+			
+			NodeList signatureListTags = doc.getElementsByTagNameNS(XMLSigner.XMLNS, "Signature");
+			if(signatureListTags.getLength() < 0) {
+				validationErrors.add("O documento não contém assinatura");
+				return;
+			}else {
+				for(int i = 0; i < signatureListTags.getLength(); i++) {
+					 
+					Element signatureTag = (Element)signatureListTags.item(i);
+					Element signatureInfoTag = getSignatureElement("SignedInfo", signatureTag, true);
+					Element canonicalizationMethodTag = getSignatureElement("CanonicalizationMethod", signatureTag, true);
+					canonicalizationMethod = getAttribute(canonicalizationMethodTag, "Algorithm", true);
+					Element signatureMethodTag = getSignatureElement("SignatureMethod", signatureTag, true);
+					signatureMethod = getAttribute(signatureMethodTag, "Algorithm", true);
+					NodeList referenceTag = doc.getElementsByTagNameNS(XMLSigner.XMLNS,"Reference");
+					
+					
+					for(int j = 0; j < referenceTag.getLength(); j++) {
+						Element actualReferenceTag = (Element)referenceTag.item(j);
+						NodeList transformsTags = actualReferenceTag.getElementsByTagNameNS(XMLSigner.XMLNS, "Transforms");
+
+						Element digestMethodTag = getSignatureElement("DigestMethod", (Element)referenceTag.item(j), true);
+						String digestMethod = getAttribute(digestMethodTag, "Algorithm", true);
+						Element digestValueTag = getSignatureElement("DigestValue", (Element)referenceTag.item(j), true);
+						String digestValue = digestValueTag.getTextContent();
+						
+						if(actualReferenceTag.getElementsByTagNameNS(XMLSigner.XMLNS, "XPath").getLength() > 0) {
+							verifyXPath(doc, digestMethod, digestValue, transformsTags);
+						}else if(((Element)referenceTag.item(j)).hasAttribute("Type")) {
+							if(((Element)referenceTag.item(j)).getAttribute("Type").endsWith("#SignedProperties")) {
+								Element transformTag = (Element)((Element)referenceTag.item(j)).getElementsByTagNameNS(XMLSigner.XMLNS, "Transform").item(0);
+								String canonString = transformTag.getAttribute("Algorithm");
+								verifyDigest((Element)signatureListTags.item(i), digestMethod, digestValue, canonString);
+							}
+						}
+						
+					}
+					Element signatureValueTag = getSignatureElement("SignatureValue", signatureTag, true);
+					String signatureValue = signatureValueTag.getTextContent();
+					Element keyInfoTag = getSignatureElement("KeyInfo", signatureTag, true);
+					Element X509DataTag = getSignatureElement("X509Data", keyInfoTag, true);
+					Element X509CertificateTag = getSignatureElement("X509Certificate", X509DataTag, true);
+					String x509Certificate = X509CertificateTag.getTextContent();
+					
+					Element objectTag = getSignatureElement("Object", signatureTag, true);
+					
+					Element qualifyingPropertiesTag = getXadesElement("QualifyingProperties", objectTag, true);
+					Element signedPropertiesTag = getXadesElement("SignedProperties", qualifyingPropertiesTag, true);
+					Element signedSignaturePropertiesTag = getXadesElement("SignedSignatureProperties", signedPropertiesTag, true);
+					Element signingTimeTag = getXadesElement("SigningTime", signedSignaturePropertiesTag, true);
+					String signingTime = signingTimeTag.getTextContent();
+					Element signingCertificateTag = getXadesElement("SigningCertificate", signedSignaturePropertiesTag, true);
+					if(signingCertificateTag == null) {
+						signingCertificateTag = getXadesElement("SigningCertificateV2", signedSignaturePropertiesTag, true);
+					}
+					Element certTag = getXadesElement("Cert", signingCertificateTag, true);
+					Element certDigestTag = getXadesElement("CertDigest", certTag, true);
+					Element digestMethodTag = getSignatureElement("DigestMethod", certDigestTag, true);
+					String certDigestMethod = getAttribute(digestMethodTag, "Algorithm", true);
+					Element digestValueTag = getSignatureElement("DigestValue", certDigestTag, true);
+					String certDigestValue = digestValueTag.getTextContent();
+					Element issuerSerialV2Tag = getXadesElement("IssuerSerialV2", certTag, true);
+					Element signedDataObjectPropertiesTag = getXadesElement("SignedDataObjectProperties", signedPropertiesTag, true);
+					Element dataObjectFormatTag = getXadesElement("DataObjectFormat", signedDataObjectPropertiesTag, true);
+					Element mimeTypeTag = getXadesElement("MimeType", dataObjectFormatTag, true);
+					Element signaturePolicyIdentifier = getXadesElement("SignaturePolicyIdentifier", qualifyingPropertiesTag, false);			
+					if(signaturePolicyIdentifier != null) {
+						getXadesElement("sigPolicyId", signaturePolicyIdentifier, false);
+					}
+					X509Certificate cert = null;
+					try {
+						cert = getCertificate(x509Certificate);
+					} catch (CertificateException e) {
+						validationErrors.add("Certificado inválido");
+					}
+					
+					if(cert != null) {
+						verifyHash(signatureTag, signatureInfoTag, signatureValue, cert);
+						verifyPolicy(signatureTag, "2.16.76.1.7.1.6.2.3", signatureMethod, signatureValue);
+					}
+				}
+			}
+			
+		
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		if(validationErrors.size() > 0) {
+			System.out.println("Verification failed");
+			for(String msg:validationErrors)
+				System.out.println("Error: "+msg);
+		}
+		
+		for(String msg : validationWaring)
+			System.out.println("Waring: "+msg);
 	}
 
 }

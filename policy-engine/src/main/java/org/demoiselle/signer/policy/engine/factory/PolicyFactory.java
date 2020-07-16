@@ -43,6 +43,10 @@ import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1InputStream;
@@ -54,6 +58,8 @@ import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
 import org.demoiselle.signer.policy.engine.repository.LPARepository;
 import org.demoiselle.signer.policy.engine.repository.PolicyEngineConfig;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 /**
  * 
@@ -81,6 +87,20 @@ public class PolicyFactory {
         signaturePolicy.parse(primitive);
         signaturePolicy.setSignPolicyURI(policy.getUrl());
         return signaturePolicy;
+    }
+    
+    public Document loadXMLPolicy(Policies policy) throws ParserConfigurationException, SAXException, IOException {
+    	
+        InputStream is = this.getClass().getResourceAsStream(policy.getFile());
+        
+        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder;
+		
+		dBuilder = dbFactory.newDocumentBuilder();
+		Document doc = dBuilder.parse(is);
+        
+        
+        return doc;
     }
 
     

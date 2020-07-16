@@ -1,6 +1,5 @@
 package org.demoiselle.signer.policy.impl.xades.xml;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -8,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.math.BigInteger;
-import java.nio.file.Files;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -34,8 +32,6 @@ import org.apache.xml.security.Init;
 import org.apache.xml.security.c14n.CanonicalizationException;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.c14n.InvalidCanonicalizerException;
-import org.apache.xml.security.signature.XMLSignatureInput;
-import org.apache.xml.security.transforms.Transform;
 import org.bouncycastle.asn1.ASN1Encoding;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.GeneralName;
@@ -50,8 +46,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import sun.misc.IOUtils;
 
 
 //import com.sun.org.apache.xml.internal.security.Init;
@@ -73,6 +67,14 @@ public class XMLSigner{
 	public static final String XMLNS_XADES = "xmlns:xades";
 	public static final String XAdESv1_3_2 = "http://uri.etsi.org/01903/v1.3.2#";
 
+	public XMLSigner(){}
+	
+
+	public XMLSigner(int num) throws Exception {
+		this.buildXML("/tmp/base.xml");
+	}
+	
+	
 	
 	public void setAlias(String alias) {
 		this.alias = alias;
@@ -90,9 +92,6 @@ public class XMLSigner{
 		new XMLSigner(0);
 	}
 	
-	public XMLSigner(int num) throws Exception {
-		this.buildXML("/tmp/base.xml");
-	}
 	
 	public Element getDocumentData(Document doc) throws IOException, SAXException, ParserConfigurationException {
 		
@@ -111,10 +110,10 @@ public class XMLSigner{
 		
 	}
 	
-	private byte[] getShaCanonizedValue(String Alg, Node xml) throws InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException, ParserConfigurationException, IOException, SAXException {
+	public byte[] getShaCanonizedValue(String alg, Node xml, String canonical) throws InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException, ParserConfigurationException, IOException, SAXException {
 		Init.init();
-		Canonicalizer c14n = Canonicalizer.getInstance("http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
-		MessageDigest messageDigest = MessageDigest.getInstance(Alg);
+		Canonicalizer c14n = Canonicalizer.getInstance(canonical);
+		MessageDigest messageDigest = MessageDigest.getInstance(alg);
 		return messageDigest.digest(c14n.canonicalizeSubtree(xml));
 	}
 	
@@ -151,12 +150,12 @@ public class XMLSigner{
 		Element sigPolicyId = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyId");
 		sigPolicyIdentifier.appendChild(sigPolicyId);
 		
-		Element sigPId = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyId");
-		sigPolicyId.appendChild(sigPId);
+		//Element sigPId = doc.createElementNS     (XAdESv1_3_2, "xades:SignaturePolicyId");
+		//sigPolicyId.appendChild(sigPId);
 		
 		Element identifier = doc.createElementNS(XAdESv1_3_2, "xades:Identifier");
 		identifier.setTextContent(policyId);
-		sigPId.appendChild(identifier);
+		sigPolicyId.appendChild(identifier);
 		
 		return sigPolicyId;	
 	}
@@ -182,12 +181,12 @@ public class XMLSigner{
 		Element sigTime = doc.createElementNS(XAdESv1_3_2, "xades:SigningTime");
 		SimpleDateFormat sdt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 		String signDate = sdt.format(Calendar.getInstance().getTime());
-		//sigTime.setTextContent(signDate+"Z");
-		sigTime.setTextContent("2020-06-02T16:37:18Z");
+		sigTime.setTextContent(signDate+"Z");
 		sigSignedProp.appendChild(sigTime);
 		
-		Element sigCertV2 = doc.createElementNS(XAdESv1_3_2, "xades:SigningCertificateV2");
+		Element sigCertV2 = doc.createElementNS(XAdESv1_3_2, "xades:SigningCertificate");
 		sigSignedProp.appendChild(sigCertV2);
+		
 		
 		Element sigCert = doc.createElementNS(XAdESv1_3_2, "xades:Cert");
 		sigCertV2.appendChild(sigCert);
@@ -226,11 +225,11 @@ public class XMLSigner{
 	
 	}
 	
-	private Element createSignatureHashReference(Document doc, byte[] signedTagData) {
+	public Element createSignatureHashReference(Document doc, byte[] signedTagData) {
 		
 		
 		HashMap<String, String> param = new HashMap<String, String>();
-		param.put("type", "http://uri.etsi.org/01903#SignedProperties");
+		param.put("type", Constants.SignedProperties);
 		param.put("uri", "#xades-"+id);
 		param.put("alg", "http://www.w3.org/2001/10/xml-exc-c14n#");
 		param.put("digAlg", "http://www.w3.org/2001/04/xmlenc#sha256");
@@ -262,14 +261,16 @@ public class XMLSigner{
 		Element transformsTag = doc.createElementNS(XMLNS, "ds:Transforms");
 		referenceTag.appendChild(transformsTag);
 		
-		Element transformTag = doc.createElementNS(XMLNS, "ds:Transform");
-		transformTag.setAttribute("Algorithm", params.get("alg"));
-		transformsTag.appendChild(transformTag);
+		if(params.containsKey("alg")){
+			Element transformTag = doc.createElementNS(XMLNS, "ds:Transform");
+			transformTag.setAttribute("Algorithm", params.get("alg"));
+			transformsTag.appendChild(transformTag);
 		
-		if(params.containsKey("text")){
-			Element xPathTag = doc.createElementNS(XMLNS, "ds:XPath");
-			xPathTag.setTextContent(params.get("text"));
-			transformTag.appendChild(xPathTag);
+			if(params.containsKey("text")){
+				Element xPathTag = doc.createElementNS(XMLNS, "ds:XPath");
+				xPathTag.setTextContent(params.get("text"));
+				transformTag.appendChild(xPathTag);
+			}
 		}
 		
 		if(params.containsKey("transAlg")){
@@ -310,7 +311,7 @@ public class XMLSigner{
 		sigInfTag.appendChild(canonicalizationMethodTag);
 		
 		Element signatureMethodTag = bodyDoc.createElementNS(XMLNS, "ds:SignatureMethod");
-		signatureMethodTag.setAttribute("Algorithm", "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256");
+		signatureMethodTag.setAttribute("Algorithm", Constants.RSA_SHA256);
 		sigInfTag.appendChild(signatureMethodTag );
 		
 		HashMap<String, String> param = new HashMap<String, String>();
@@ -319,22 +320,22 @@ public class XMLSigner{
 		param.put("id", "r-id-1");
 		param.put("text", "not(ancestor-or-self::ds:Signature)");
 		param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
-		param.put("digAlg", "http://www.w3.org/2001/04/xmlenc#sha256");
+		param.put("digAlg", Constants.DIGEST_SHA256);
 		
-		byte[] docHash = getShaCanonizedValue("SHA-256", docData); //bodyDoc.getDocumentElement().getFirstChild());
+		byte[] docHash = getShaCanonizedValue("SHA-256", docData, Canonicalizer.ALGO_ID_C14N_OMIT_COMMENTS);
 		param.put("digVal", Base64.toBase64String(docHash));
 		param.put("transAlg", "http://www.w3.org/2001/10/xml-exc-c14n#");
 		
-		Element referenceTag = createReferenceTag(bodyDoc, param);
-		sigInfTag.appendChild(referenceTag);
+		//TODO Verify is is it necessary
+		//Element referenceTag = createReferenceTag(bodyDoc, param);
+		//sigInfTag.appendChild(referenceTag);
 		
 		bodyDoc.getDocumentElement().appendChild(signatureTag);
 		
 		return bodyDoc;
 	}
 	
-	public XMLSigner(){
-	}
+	
 		
 	public Document sign(String fileNameSource) throws Throwable{
 		
@@ -383,7 +384,7 @@ public class XMLSigner{
 		Element signValueTag = doc.createElementNS(XMLNS, "ds:SignatureValue");
 		signValueTag.setAttribute("Id", "value-"+id);
 		String hash = Base64.toBase64String(s);
-		String result = splitString(hash);
+		String result = hash;
 		
 		signValueTag.setTextContent(result);
 		sigTag.appendChild(signValueTag);
@@ -396,7 +397,7 @@ public class XMLSigner{
 		keyInfo.appendChild(x509);
 				
 		Element x509Certificate = doc.createElementNS(XMLNS, "ds:X509Certificate");
-		x509Certificate.setTextContent(splitString(Base64.toBase64String(cert.getEncoded())));
+		x509Certificate.setTextContent(Base64.toBase64String(cert.getEncoded()));
 		x509.appendChild(x509Certificate );
 		
 		sigTag.appendChild(objectTag);
@@ -413,16 +414,4 @@ public class XMLSigner{
 		trans.transform(new DOMSource(signedDocument), new StreamResult(os));
 	}
 	
-	private String splitString(String data) {
-		return data;
-		/*
-		String retVal = "";
-		while (data.length() > 75) {
-			retVal += data.substring(0, 76)+"\n";
-			data = data.substring(76);
-		}
-		return retVal+data;*/
-	}
-	
-
 }
