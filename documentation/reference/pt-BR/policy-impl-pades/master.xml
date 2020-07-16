@@ -11,7 +11,10 @@
 			<emphasis>Policy-Impl-PAdES</emphasis>
 			foi desenvolvido para atender às necessidades de assinatura digital no âmbito da ICP-Brasil.
 			Conforme as políticas para o padrão   <ulink url="https://www.iti.gov.br/images/repositorio/legislacao/documentos-principais/15.3/DOC-ICP-15.03_-_Versao_7.4_REQ_DAS_POL_DE_ASSIN_DIG_NA_ICP-BRASIL.pdf">PBAD-PAdES</ulink>.
-			 Esse padrão é utilizado para Assinaturas em Arquivos PDF. 
+			 Esse padrão é utilizado para Assinaturas Digitais em Arquivos PDF, conforme define a ICP-Brasil, não é o mesmo padrão que as ferramentas como Adobe Reader geram. 
+			 A validação dessas assinaturas no Adobe-Reader dependem de um <ulink url="https://www.iti.gov.br/aplicativos/111-aplicativos/4105-plugin-pades">plugin disponibilizado pelo ITI</ulink>, 
+			 ou através do Site: <ulink url="https://verificador.iti.gov.br/">https://verificador.iti.gov.br/</ulink> ou utilizando o <ulink url="http://www.serpro.gov.br/assinador-digital/">Assinador SERPRO.</ulink> 
+			  
 		</para>
 		<note>Este componente não manipula o arquivo PDF, apenas retorna o contéudo da Assinatura em confirmidade com a ICP-Brasil.</note>
 	</partintro>

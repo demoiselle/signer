@@ -90,6 +90,7 @@ public class CAdESCheckerTest {
 		String fileToVerifyDirName = "/";
 		String fileSignatureDirName = "/";
 		
+		
 
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		byte[] signatureFile = readContent(fileSignatureDirName);
@@ -138,30 +139,39 @@ public class CAdESCheckerTest {
 				.checkDetachedSignature(fileToVerify, signatureFile);
 
 		if (signaturesInfo != null) {
-			System.out.println("A assinatura foi validada.");
+			System.out.println("A assinatura foi validada. e retornou resultados");
 			for (SignatureInformations si : signaturesInfo) {
 				System.out.println(si.getSignDate());
 				if (si.getTimeStampSigner() != null) {
 					System.out.println("Serial"
 							+ si.getTimeStampSigner().toString());
 				}
-				for (X509Certificate cert : si.getChain()) {
-					BasicCertificate certificate = new BasicCertificate(cert);
-					if (!certificate.isCACertificate()) {
-						if (certificate.hasCertificatePF()) {
-							System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
-						}
-						if (certificate.hasCertificatePJ()) {
-							System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
-						}
+				System.out.println("informações do assinante:");
+				BasicCertificate certificate = si.getIcpBrasilcertificate();
+				if (!certificate.isCACertificate()) {
+					if (certificate.hasCertificatePF()) {
+						System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+						System.out.println("Titulo de Eleitor: "+certificate.getICPBRCertificatePF().getElectoralDocument());
+					}
+					if (certificate.hasCertificatePJ()) {
+						System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
 					}
 				}
-				// A assinatura pode estar correta mas não foi possível verificar algum atributo
+				// Carimbo do tempo
+				if(si.getTimeStampSigner()!= null) {
+					
+					System.out.println(si.getTimeStampSigner().toString());
+				}
+				// A assinatura pode estar correta mas não foi possível verificar algum atributo exigido pela ICP-Brasil
 				for (String valErr : si.getValidatorErrors()) {
 					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.err.println(valErr);
 				}
-				
+				//A assinatura pode estar correta mas não foi possível verificar alguma condição de validação exigida pela ICP-Brasil
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
 
 			}
 			assertTrue(true);
@@ -194,18 +204,31 @@ public class CAdESCheckerTest {
 					System.out.println("Serial"
 							+ si.getTimeStampSigner().toString());
 				}
-				for (X509Certificate cert : si.getChain()) {
-					BasicCertificate certificate = new BasicCertificate(cert);
-					if (!certificate.isCACertificate()) {
-						System.out.println(certificate.toString());
+				System.out.println("informações do assinante:");
+				BasicCertificate certificate = si.getIcpBrasilcertificate();
+				if (!certificate.isCACertificate()) {
+					if (certificate.hasCertificatePF()) {
+						System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+						System.out.println("Titulo de Eleitor: "+certificate.getICPBRCertificatePF().getElectoralDocument());
 					}
+					if (certificate.hasCertificatePJ()) {
+						System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+					}
+				}
+				// Carimbo do tempo
+				if(si.getTimeStampSigner()!= null) {
+					
+					System.out.println(si.getTimeStampSigner().toString());
 				}
 				// A assinatura pode estar correta mas não foi possível verificar algum atributo
 				for (String valErr : si.getValidatorErrors()) {
 					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.err.println(valErr);
 				}
-				System.out.println(si.getSignaturePolicy().toString());
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
 			}
 			assertTrue(true);
 
@@ -260,20 +283,32 @@ public class CAdESCheckerTest {
 						System.out.println("Serial"
 								+ si.getTimeStampSigner().toString());
 					}
-					for (X509Certificate cert : si.getChain()) {
-						BasicCertificate certificate = new BasicCertificate(
-								cert);
-						if (!certificate.isCACertificate()) {
-							System.out.println(certificate.toString());
+					System.out.println("informações do assinante:");
+					BasicCertificate certificate = si.getIcpBrasilcertificate();
+					if (!certificate.isCACertificate()) {
+						if (certificate.hasCertificatePF()) {
+							System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+							System.out.println("Titulo de Eleitor: "+certificate.getICPBRCertificatePF().getElectoralDocument());
 						}
+						if (certificate.hasCertificatePJ()) {
+							System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+						}
+					}
+					// Carimbo do tempo
+					if(si.getTimeStampSigner()!= null) {
+						
+						System.out.println(si.getTimeStampSigner().toString());
 					}
 					// A assinatura pode estar correta mas não foi possível verificar algum atributo
 					for (String valErr : si.getValidatorErrors()) {
-						System.err
-								.println("++++++++++++++ ERROS ++++++++++++++++++");
+						System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 						System.err.println(valErr);
 					}
-					System.out.println(si.getSignaturePolicy().toString());
+					for (String valWarn : si.getValidatorWarnins()) {
+						System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+						System.err.println(valWarn);
+					}
+
 				}
 				assertTrue(true);
 			} else {
@@ -315,19 +350,32 @@ public class CAdESCheckerTest {
 					System.out.println("Serial"
 							+ si.getTimeStampSigner().toString());
 				}
-				for (X509Certificate cert : si.getChain()) {
-					BasicCertificate certificate = new BasicCertificate(cert);
-					if (!certificate.isCACertificate()) {
-						System.out.println(certificate.toString());
+				System.out.println("informações do assinante:");
+				BasicCertificate certificate = si.getIcpBrasilcertificate();
+				if (!certificate.isCACertificate()) {
+					if (certificate.hasCertificatePF()) {
+						System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+						System.out.println("Titulo de Eleitor: "+certificate.getICPBRCertificatePF().getElectoralDocument());
 					}
+					if (certificate.hasCertificatePJ()) {
+						System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+					}
+				}
+				// Carimbo do tempo
+				if(si.getTimeStampSigner()!= null) {
+					
+					System.out.println(si.getTimeStampSigner().toString());
 				}
 				// A assinatura pode estar correta mas não foi possível verificar algum atributo
 				for (String valErr : si.getValidatorErrors()) {
-					System.err
-							.println("++++++++++++++ ERROS ++++++++++++++++++");
+					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 					System.err.println(valErr);
 				}
-				System.out.println(si.getSignaturePolicy().toString());
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
+
 			}
 			
 			File file = new File("new_extrated_content");

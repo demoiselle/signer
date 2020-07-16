@@ -35,10 +35,11 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  *
  */
-package org.demoiselle.signer.policy.impl.cades.factory;
+package org.demoiselle.signer.core.factory;
 
+import org.demoiselle.signer.core.exception.SignerException;
 import org.demoiselle.signer.core.util.MessagesBundle;
-import org.demoiselle.signer.policy.impl.cades.SignerException;
+
 
 /**
  * Abstract factory that concentrates the reading of the configurations for 
@@ -50,7 +51,8 @@ import org.demoiselle.signer.policy.impl.cades.SignerException;
 abstract public class GenericFactory<F> {
 
     private String className = null;
-    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+
 
     /**
      * Main method of the factory. 
@@ -89,13 +91,13 @@ abstract public class GenericFactory<F> {
         try {
             clazz = Class.forName(className);
         } catch (Throwable error) {
-            throw new SignerException(cadesMessagesBundle.getString("error.class.not.exist", className ), error);
+            throw new SignerException(coreMessagesBundle.getString("error.class.not.exist", className ), error);
         }
         if (clazz != null) {
             try {
                 result = (F) clazz.newInstance();
             } catch (Throwable error) {
-                throw new SignerException(cadesMessagesBundle.getString("error.class.incompatible",clazz.getCanonicalName()), error);
+                throw new SignerException(coreMessagesBundle.getString("error.class.incompatible",clazz.getCanonicalName()), error);
             }
         }
 

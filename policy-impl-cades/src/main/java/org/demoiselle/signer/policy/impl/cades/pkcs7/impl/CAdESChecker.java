@@ -79,6 +79,7 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.exception.CertificateRevocationException;
 import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
@@ -144,7 +145,7 @@ public class CAdESChecker implements PKCS7Checker {
 				}
 				
 			} else {
-				if (this.getAttached(signedData, false) != null){
+				if (this.getAttached(signedData, false).getExtractedContent() != null){
 					cmsSignedData = new CMSSignedData(signedData);
 				}else{
 					cmsSignedData = new CMSSignedData(new CMSProcessableByteArray(content), signedData);
@@ -186,7 +187,7 @@ public class CAdESChecker implements PKCS7Checker {
 					signatureInfo.getValidatorErrors().add(cvce.getMessage());
 					logger.info(cvce.getMessage());
 				}catch (CertificateRevocationException cre) {
-					signatureInfo.getValidatorErrors().add(cre.getMessage());
+					signatureInfo.getValidatorWarnins().add(cre.getMessage());
 					logger.info("certificado revogado");
 				}
 				
@@ -194,7 +195,7 @@ public class CAdESChecker implements PKCS7Checker {
 				try{
 					signatureInfo.setNotAfter(pV.valDate(varCert));			
 				}catch (CertificateValidatorException cve) {
-					signatureInfo.getValidatorErrors().add(cve.getMessage());
+					signatureInfo.getValidatorWarnins().add(cve.getMessage());
 				}
 				
 				if (signerInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
@@ -209,7 +210,7 @@ public class CAdESChecker implements PKCS7Checker {
 				String varOIDPolicy = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId();
 				AttributeTable signedAttributes = signerInfo.getSignedAttributes();
 				if ((signedAttributes == null) || (signedAttributes != null && signedAttributes.size() == 0)) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
+					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					logger.info(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					//throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 				}else{
@@ -217,7 +218,7 @@ public class CAdESChecker implements PKCS7Checker {
 					Attribute idSigningPolicy = null;					
 					idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(varOIDPolicy));
 					if (idSigningPolicy == null) {							
-							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found",varOIDPolicy));
+							signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found",varOIDPolicy));
 					}else{
 						for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
 							String policyOnSignature = p.nextElement().toString();
@@ -266,7 +267,7 @@ public class CAdESChecker implements PKCS7Checker {
 				}
 								
 				if (signaturePolicy == null){
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
+					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
 					logger.info(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
 				}else{					
 					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
@@ -330,6 +331,12 @@ public class CAdESChecker implements PKCS7Checker {
 				if (varChain.size() < 3){
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
 					logger.info(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
+				}
+				for (X509Certificate cert : varChain) {
+					BasicCertificate signerCertificate = new BasicCertificate(cert);
+					if (!signerCertificate.isCACertificate()) {
+						signatureInfo.setIcpBrasilcertificate(signerCertificate);
+					}
 				}
 				signatureInfo.setSignDate(dataHora);
 				signatureInfo.setChain(varChain);
@@ -447,17 +454,7 @@ public class CAdESChecker implements PKCS7Checker {
 			return null;
 		}
 	}
-    
-	@Override
-	@Deprecated
-	public  List<SignatureInformations> checkDetattachedSignature(byte[] content, byte[] signedData){
-		if (this.check(content, signedData)){
-			return this.getSignaturesInfo();
-		}else{
-			return null;
-		}
-	}
-	
+    		
 	@Override
 	public  List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData){
 		if (this.check(content, signedData)){
@@ -521,6 +518,8 @@ public class CAdESChecker implements PKCS7Checker {
 	public void setHash(byte[] hash) {
 		this.hash = hash;
 	}
+
+	
 	
 	
 }

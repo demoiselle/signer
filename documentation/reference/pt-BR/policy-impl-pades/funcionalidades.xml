@@ -134,7 +134,7 @@ public class SignatureInformations {
    	
    	
     </section>
-    <section>
+    <section  id="policy-impl-pades-funcionalidades-val-hash">
         <title>
             Validação de assinatura enviando apenas o resumo (Hash) do conteúdo
         </title>
@@ -157,8 +157,86 @@ List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(Signer
 
     </section>
 
+<section id="policy-impl-pades-funcionalidades-resultados-validacao">
+        <title>
+            Tratando os resultados da valiação
+        </title>
+        <para>
+        	Como é possível que um mesmo arquivo possa contar várias assinaturas (PAdES principalmente), só será gerada exceção quando a assinatura estiver comprometida
+        	Nos demais casos, o Demoiselle-Signer irá devolver o resultado numa lista de objetos SignatureInformations.
+        	Essa classe contém os seguintes atributos:
+        	
+        	<para> 
+        	<itemizedlist>
+        		<listitem> <para> chain;</para> <para> Lista X509Certificate com a cadeia completa do certificado do Assinante</para>
+        		</listitem>
+        		<listitem> <para> signDate</para> <para>A data do equipamento onde foi gerada a assinatura, e serve apenas como referência, não tem nenhuma validade legal</para>
+        		</listitem>
+        		<listitem> <para> timeStampSigner </para> <para>É o carimbo do Tempo (Timestamp) incluído na Assinatura, é a prova legal da data e hora que a Assinatura foi gerada.</para>
+        		</listitem>
+        		<listitem> <para> signaturePolicy;</para> <para>A política (SignaturePolicy) que foi usada para gerar a Assinatura</para>
+        		</listitem>
+        		<listitem> <para> notAfter;</para> <para>A data de validade do Certificado do Assinante</para>
+        		</listitem>
+        		<listitem> <para> validatorWarnins </para> <para>Lista de Avisos. A assinatura pode estar correta mas não foi possível verificar algum atributo exigido por uma política da ICP-Brasil, que serão listados aqui</para>
+        		</listitem>
+        		<listitem> <para>validatorErrors </para> <para> Lista de Erros. A assinatura pode estar correta mas não foi possível verificar alguma condição de validação exigida pela ICP-Brasil</para>
+        		</listitem>
+        		<listitem> <para>invalidSignature </para> <para>valor booleano, que indica que Assinatura não está válida</para>
+        		</listitem>
+        		<listitem> <para>icpBrasilcertificate  </para> <para> BasicCertificate do Assinante</para>
+        		</listitem>
+        	</itemizedlist>
+        	</para> 
+        	Cabe ao sistema com base nos avisos ou erros, aceitar ou não a Assinatura. Apesar de existirem as políticas, qualquer tipo de Assinatura gerada com um certificado ICP-Brasil tem validade legal.
+            A seguir temos um fragmento de código que demonstra esta validação.
+        </para>
+        <programlisting role="JAVA"><![CDATA[
+List<SignatureInformations> signaturesInfo = checker
+				.checkDetachedSignature(fileToVerify, signatureFile);
 
-    <section>
+		if (signaturesInfo != null) {
+			System.out.println("A assinatura foi validada. e retornou resultados");
+			for (SignatureInformations si : signaturesInfo) {
+				System.out.println(si.getSignDate());
+				if (si.getTimeStampSigner() != null) {
+					System.out.println("Serial"
+							+ si.getTimeStampSigner().toString());
+				}
+				System.out.println("informações do assinante:");
+				BasicCertificate certificate = si.getIcpBrasilcertificate();
+				if (!certificate.isCACertificate()) {
+					if (certificate.hasCertificatePF()) {
+						System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+						System.out.println("Titulo de Eleitor: "+certificate.getICPBRCertificatePF().getElectoralDocument());
+					}
+					if (certificate.hasCertificatePJ()) {
+						System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+					}
+				}
+				// Carimbo do tempo
+				if(si.getTimeStampSigner()!= null) {
+					
+					System.out.println(si.getTimeStampSigner().toString());
+				}
+				// A assinatura pode estar correta mas não foi possível verificar algum atributo exigido pela ICP-Brasil
+				for (String valErr : si.getValidatorErrors()) {
+					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
+					System.err.println(valErr);
+				}
+				//A assinatura pode estar correta mas não foi possível verificar alguma condição de validação exigida pela ICP-Brasil
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
+
+			}
+]]></programlisting>
+
+    </section>
+
+
+    <section id="policy-impl-pades-exemplos">
     <note>
     <para>No repositório do componente no GitHub há códigos de testes unitários para os exemplos acima,
      <ulink url="https://github.com/demoiselle/signer/blob/master/policy-impl-pades/src/test/java/org/demoiselle/signer/policy/impl/pades/pkcs7/impl/PDFSigner.java">Assinar</ulink> 

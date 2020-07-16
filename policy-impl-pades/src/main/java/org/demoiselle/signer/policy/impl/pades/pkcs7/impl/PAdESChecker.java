@@ -16,12 +16,6 @@ public class PAdESChecker implements PKCS7Checker {
 		return cAdESChecker.checkAttachedSignature(signedData);
 	}
 
-	@Override	
-	public List<SignatureInformations> checkDetattachedSignature(
-			byte[] content, byte[] signedData) {
-		return cAdESChecker.checkDetachedSignature(content, signedData);
-	}
-
 	@Override
 	public List<SignatureInformations> checkDetachedSignature(byte[] content,
 			byte[] signedData) {

@@ -41,14 +41,16 @@ public class PDFVerify {
 	//@Test
 	public void test() {
 		
-	
-			String filePath = "/home/...";
+
+
+			String filePath = "/";
+			
 			
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
 			try {
 				document = PDDocument.load(new File(filePath));
-						List<SignatureInformations> result = null;
+				List<SignatureInformations> result = null;
 
 			for (PDSignature sig : document.getSignatureDictionaries()) {
 					COSDictionary sigDict = sig.getCOSObject();
@@ -78,7 +80,22 @@ public class PDFVerify {
 			        LcrManagerSync.getInstance().update(varCert);
 					*/
 					PAdESChecker checker = new PAdESChecker();
-					result = checker.checkDetachedSignature(buf, contents.getBytes());
+					byte[] assinatura =contents.getBytes();
+					/*
+					 *  gravar a assinatura em um arquivo separado
+					 
+					
+					  
+					File file = new File(filePath + "_.p7s");
+					FileOutputStream os = new FileOutputStream(file);
+					os.write(assinatura);
+					os.flush();
+					os.close();
+				*/
+					
+					result = checker.checkDetachedSignature(buf, assinatura);
+					
+					
 					if (result == null || result.isEmpty()) {
 						System.out.println("Erro ao validar");
 						//Erro
@@ -92,26 +109,32 @@ public class PDFVerify {
 						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
 						System.out.println(valErr);
 					}
-					for(X509Certificate cert : sis.getChain()){
-						BasicCertificate certificate = new BasicCertificate(cert);
-						if (!certificate.isCACertificate()){
-							System.out.println(certificate.toString());
-						}												
+					
+					for (String valWarn : sis.getValidatorWarnins()) {
+						System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+						System.err.println(valWarn);
 					}
+
 					if (sis.getSignaturePolicy() != null){
 						System.out.println("------ Politica ----------------- ");
 						System.out.println(sis.getSignaturePolicy().toString());
 						
 					}
 					
-					BasicCertificate bc = sis.getSignerBasicCertificate();
+					BasicCertificate bc = sis.getIcpBrasilcertificate();
+					System.out.println(bc.toString()); 
 						if (bc.hasCertificatePF()){
 							System.out.println(bc.getICPBRCertificatePF().getCPF());
 						}
 						if (bc.hasCertificatePJ()){
 							System.out.println(bc.getICPBRCertificatePJ().getCNPJ());
 							System.out.println(bc.getICPBRCertificatePJ().getResponsibleCPF());
-						}					 
+						}
+						
+					if(sis.getTimeStampSigner()!= null) {
+						System.out.println(sis.getTimeStampSigner().toString());
+					}
+						
 					
 				}			
 				assertTrue(true);
@@ -128,6 +151,10 @@ public class PDFVerify {
 						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
 						System.out.println(valErr);
 					}
+					for (String valWarn : sis.getValidatorWarnins()) {
+						System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+						System.err.println(valWarn);
+					}
 					for(X509Certificate cert : sis.getChain()){
 						BasicCertificate certificate = new BasicCertificate(cert);
 						if (!certificate.isCACertificate()){
@@ -140,7 +167,7 @@ public class PDFVerify {
 						
 					}
 					
-					BasicCertificate bc = sis.getSignerBasicCertificate();
+					BasicCertificate bc = sis.getIcpBrasilcertificate();
 						if (bc.hasCertificatePF()){
 							System.out.println(bc.getICPBRCertificatePF().getCPF());
 						}
@@ -186,6 +213,7 @@ public class PDFVerify {
 					varTimeStamp = varCAdESTimeStampSigner.checkTimeStampPDFWithContent(contents.getBytes(), buf);
 				}
 			if (varTimeStamp != null){
+				System.out.println("Carimbo do tempo");
 				System.out.println(varTimeStamp.getTimeStampAuthorityInfo());
 				System.out.println(varTimeStamp.getSerialNumber());
 				System.out.println(varTimeStamp.getCertificates());

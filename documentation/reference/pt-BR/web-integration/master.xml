@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="web-intregration-master">
+
+	<title>Integração com Sistemas Web para geração de Assinaturas</title>
+
+	<partintro>
+		<para>
+			No antecessor do Demoiselle-Signer, existia o componente chamado
+			<emphasis>demoiselle-certificate-desktop</emphasis> que fornecia algumas interfaces para que o desenvolvedor implementasse os métodos para comunicação 
+			com os certificados digitais instalados na máquina do usuário usando a tecnologia chamada Java Web Start, que utiliza JNLP (Java Network Launch Protocol) 
+			mas que foi depreciado pela Oracle no Java SE 9 e removido no Java SE 11.
+		</para>
+		<para>Para resolver esse problema e possibilitar a integração com sistemas web, o SERPRO criou e disponibilizou a solução chamada
+		Assinador SERPRO (<ulink url="http://www.serpro.gov.br/assinador-digital/">http://www.serpro.gov.br/assinador-digital/</ulink>)</para>
+	</partintro>
+
+</part>
+
