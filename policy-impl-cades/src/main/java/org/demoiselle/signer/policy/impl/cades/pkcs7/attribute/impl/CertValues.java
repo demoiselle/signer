@@ -46,6 +46,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
@@ -76,7 +77,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute
  */
 public class CertValues implements UnsignedAttribute {
 
-    private final String identifier = "1.2.840.113549.1.9.16.2.23";
+    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_certValues;
     private Certificate[] certificates = null;
 //    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
@@ -87,7 +88,7 @@ public class CertValues implements UnsignedAttribute {
 
     @Override
     public String getOID() {
-        return identifier;
+        return identifier.getId();
     }
 
     @Override
@@ -103,7 +104,7 @@ public class CertValues implements UnsignedAttribute {
     		  	  certificateValues.add(org.bouncycastle.asn1.x509.Certificate.getInstance(data));    		  	  
     		 }	 
     		  org.bouncycastle.asn1.x509.Certificate[] certValuesArray = new org.bouncycastle.asn1.x509.Certificate[certificateValues.size()];
-			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(certificateValues.toArray(certValuesArray))));
+			return new Attribute(identifier, new DERSet(new DERSequence(certificateValues.toArray(certValuesArray))));
     	} catch (CertificateEncodingException e) {
     		throw new SignerException(e.getMessage());
 		}

@@ -48,11 +48,13 @@ import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.ess.ESSCertIDv2;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.asn1.x509.IssuerSerial;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 import org.demoiselle.signer.cryptography.Digest;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.cryptography.factory.DigestFactory;
@@ -85,7 +87,7 @@ public class SigningCertificateV2 implements SignedAttribute {
 
 	// private static final Logger logger =
 	// LoggerFactory.getLogger(SigningCertificateV2.class);
-	private final String identifier = "1.2.840.113549.1.9.16.2.47";
+	private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_signingCertificateV2;
 	private Certificate[] certificates = null;
 
 	@Override
@@ -96,7 +98,7 @@ public class SigningCertificateV2 implements SignedAttribute {
 
 	@Override
 	public String getOID() {
-		return identifier;
+		return identifier.getId();
 	}
 
 	@Override
@@ -107,7 +109,7 @@ public class SigningCertificateV2 implements SignedAttribute {
 			Digest digest = DigestFactory.getInstance().factoryDefault();
 			digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
 			byte[] certHash = digest.digest(cert.getEncoded());
-			X500Name dirName = new X500Name(issuerCert.getSubjectX500Principal().getName());
+			X500Name dirName =new JcaX509CertificateHolder(issuerCert).getSubject();
 			GeneralName name = new GeneralName(dirName);
 			GeneralNames issuer = new GeneralNames(name);
 			ASN1Integer serialNumber = new ASN1Integer(cert.getSerialNumber());
@@ -115,8 +117,8 @@ public class SigningCertificateV2 implements SignedAttribute {
 			AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);// SHA-256
 			ESSCertIDv2 essCertIDv2 = new ESSCertIDv2(algId, certHash, issuerSerial);
 //			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(essCertIDv2)));
-			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(
-					new ASN1Encodable[] { new DERSequence(essCertIDv2) })));
+			return new Attribute(identifier, new DERSet(new DERSequence(
+					new ASN1Encodable[] { new DERSequence(essCertIDv2) })));		
 		} catch (CertificateEncodingException ex) {
 			throw new SignerException(ex.getMessage());
 		}

@@ -49,6 +49,7 @@ import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.ess.ESSCertID;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.GeneralName;
 import org.bouncycastle.asn1.x509.GeneralNames;
@@ -80,7 +81,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
  */
 public class SigningCertificate implements SignedAttribute {
 
-    private final String identifier = "1.2.840.113549.1.9.16.2.12";
+    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_signingCertificate;
     private Certificate[] certificates = null;
 
     @Override
@@ -90,7 +91,7 @@ public class SigningCertificate implements SignedAttribute {
 
     @Override
     public String getOID() {
-        return identifier;
+        return identifier.getId();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class SigningCertificate implements SignedAttribute {
             ASN1Integer serial = new ASN1Integer(cert.getSerialNumber());
             IssuerSerial issuerSerial = new IssuerSerial(issuer, serial);
             ESSCertID essCertId = new ESSCertID(hash, issuerSerial);
-            return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(new ASN1Encodable[]{new DERSequence(essCertId), new DERSequence(DERNull.INSTANCE)})));
+            return new Attribute(identifier, new DERSet(new DERSequence(new ASN1Encodable[]{new DERSequence(essCertId), new DERSequence(DERNull.INSTANCE)})));
 
         } catch (CertificateEncodingException ex) {
             throw new SignerException(ex.getMessage());

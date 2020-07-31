@@ -63,6 +63,7 @@ import org.bouncycastle.asn1.esf.OcspResponsesID;
 import org.bouncycastle.asn1.esf.OtherHash;
 import org.bouncycastle.asn1.esf.OtherHashAlgAndValue;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cert.ocsp.BasicOCSPResp;
@@ -133,7 +134,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute
  */
 public class RevocationRefs implements UnsignedAttribute {
 
-	private final String identifier = "1.2.840.113549.1.9.16.2.22";
+	private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_revocationRefs;
 	private Certificate[] certificates = null;
 	private final CRLRepository crlRepository = CRLRepositoryFactory.factoryCRLRepository();
 
@@ -145,7 +146,7 @@ public class RevocationRefs implements UnsignedAttribute {
 
 	@Override
 	public String getOID() {
-		return identifier;
+		return identifier.getId();
 	}
 
 	@Override
@@ -209,9 +210,7 @@ public class RevocationRefs implements UnsignedAttribute {
 			//CrlOcspRef crlOcspRef = new CrlOcspRef(crlids, ocspids, null);
 			//OtherRevRefs OtherRevRefs = new OtherRevRefs(null, OtherRevRefs);
 			//CrlOcspRef crlOcspRef = new CrlOcspRef(crlids, null, null);
-			return new Attribute(
-					new ASN1ObjectIdentifier(identifier),
-					new DERSet(completeRevocationRefs ));
+			return new Attribute(identifier,new DERSet(completeRevocationRefs ));
 			// CrlOcspRef[] crlOcspRefArray = new
 			// CrlOcspRef[completeRevocationRefs.size()];
 

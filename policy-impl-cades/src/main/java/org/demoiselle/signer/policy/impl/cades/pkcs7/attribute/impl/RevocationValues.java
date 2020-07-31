@@ -61,6 +61,7 @@ import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.esf.OtherRevVals;
 import org.bouncycastle.asn1.ocsp.BasicOCSPResponse;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.CertificateList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,8 +105,8 @@ import org.slf4j.LoggerFactory;
  */
 public class RevocationValues implements UnsignedAttribute {
 
-    private static final Logger logger = LoggerFactory.getLogger(RevocationValues.class);
-    private final String identifier = "1.2.840.113549.1.9.16.2.24";
+    //private static final Logger logger = LoggerFactory.getLogger(RevocationValues.class);
+    private final ASN1ObjectIdentifier identifier =  PKCSObjectIdentifiers.id_aa_ets_revocationValues;
     private Certificate[] certificates = null;
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
     private final CRLRepository crlRepository = CRLRepositoryFactory.factoryCRLRepository();
@@ -117,7 +118,7 @@ public class RevocationValues implements UnsignedAttribute {
 
     @Override
     public String getOID() {
-        return identifier;
+        return identifier.getId();
     }
 
     @Override
@@ -140,8 +141,6 @@ public class RevocationValues implements UnsignedAttribute {
     		}else{
     			for(X509CRL varCrl : crlList){
     				crlVals.add(CertificateList.getInstance(varCrl.getEncoded()));
-    				
-    				
     			}
     		}
     		CertificateList[] crlValuesArray = new CertificateList[crlVals.size()];
@@ -150,7 +149,7 @@ public class RevocationValues implements UnsignedAttribute {
     		//return new Attribute(new ASN1ObjectIdentifier(identifier),	new DERSet(null));
     		//org.bouncycastle.asn1.esf.RevocationValues revocationVals = new org.bouncycastle.asn1.esf.RevocationValues(crlVals.toArray(crlValuesArray), ocspVals.toArray(ocspValuesArray), null);
     		//org.bouncycastle.asn1.esf.RevocationValues revocationVals = new org.bouncycastle.asn1.esf.RevocationValues(crlVals.toArray(crlValuesArray), null, null);
-    		return new Attribute(new ASN1ObjectIdentifier(identifier),new DERSet(new DERSequence(crlVals.toArray(crlValuesArray))));
+    		return new Attribute(identifier,new DERSet(new DERSequence(crlVals.toArray(crlValuesArray))));
     	} catch (Exception e) {
     		throw new SignerException(e.getMessage());
 		}
