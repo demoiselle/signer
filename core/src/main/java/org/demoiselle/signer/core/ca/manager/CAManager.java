@@ -36,21 +36,27 @@
  */
 package org.demoiselle.signer.core.ca.manager;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.demoiselle.signer.core.ca.provider.ProviderCA;
-import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
-import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
-import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
-import org.demoiselle.signer.core.util.MessagesBundle;
-
-import java.security.*;
+import java.security.InvalidKeyException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.SignatureException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
+import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
+import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
+import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+
 
 /**
  * Validate and Load trusted Certificate Authority chain
@@ -59,7 +65,7 @@ public class CAManager {
 
 	private static final String CN = "CN";
 	private static final CAManager instance = new CAManager();
-	private static final Logger LOGGER = Logger.getLogger(CAManager.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(CAManager.class);
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 	private CAManager() {
@@ -80,7 +86,7 @@ public class CAManager {
 			} catch (Exception error) {
 				// TODO: Nao foi possivel resgatar as raizes confiaveis
 				// de uma determinada politica
-				LOGGER.error(error);
+				LOGGER.error(error.getMessage());
 			}
 		}
 
@@ -101,6 +107,7 @@ public class CAManager {
 		}
 
 		if (!valid) {
+			LOGGER.error(coreMessagesBundle.getString("error.no.authority"));
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.authority"));
 		}
 
@@ -233,7 +240,7 @@ public class CAManager {
 		for (ProviderCA provider : providers) {
 			try {
 				String varNameProvider = provider.getName();
-				LOGGER.info(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
+				LOGGER.debug(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
 
 				// Get ALL CAs of ONE provider
 				Collection<X509Certificate> acs = provider.getCAs();
@@ -285,7 +292,7 @@ public class CAManager {
 					}
 				}
 
-				LOGGER.log(Level.INFO, coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
+				LOGGER.debug(coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
 
 				// If chain is created BREAK! Doesn't go to next Provider
 				if (ok) {
