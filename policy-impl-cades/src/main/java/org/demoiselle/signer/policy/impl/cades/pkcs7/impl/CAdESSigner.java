@@ -529,7 +529,9 @@ public class CAdESSigner implements PKCS7Signer {
 			
 			byte[] result = cmsSignedData.getEncoded();
 			
-			logger.info(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0], certificate.getSerialNumber()));
+			
+			String SN = certificate.getSerialNumber().toString()+"("+certificate.getSerialNumber().toString(16).toUpperCase()+")";
+			logger.info(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0],SN));
 			
 			PeriodValidator pV = new PeriodValidator();				
 			setNotAfterSignerCertificate(pV.valDate(this.certificate));			
