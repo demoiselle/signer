@@ -52,6 +52,7 @@ import org.bouncycastle.asn1.esf.OtherHashAlgAndValue;
 import org.bouncycastle.asn1.esf.SigPolicyQualifierInfo;
 import org.bouncycastle.asn1.esf.SigPolicyQualifiers;
 import org.bouncycastle.asn1.esf.SignaturePolicyId;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 /**
  * 
@@ -64,12 +65,12 @@ import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
  */
 public class IdSigningPolicy implements SignedAttribute {
 
-    private final String oid = "1.2.840.113549.1.9.16.2.15";
+    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId;
     private SignaturePolicy signaturePolicy = null;
 
     @Override
     public String getOID() {
-        return oid;
+        return identifier.getId();
     }
 
     /**
@@ -99,7 +100,7 @@ public class IdSigningPolicy implements SignedAttribute {
         SigPolicyQualifiers sigPolicyQualifiers = new SigPolicyQualifiers(sigPolicyQualifierInfos.toArray(new SigPolicyQualifierInfo[]{}));
 
         SignaturePolicyId signaturePolicyId = new SignaturePolicyId(sigPolicyId, sigPolicyHash, sigPolicyQualifiers);
-        return new Attribute(new ASN1ObjectIdentifier(oid), new DERSet(signaturePolicyId));
+        return new Attribute(identifier, new DERSet(signaturePolicyId));
         
         
     }

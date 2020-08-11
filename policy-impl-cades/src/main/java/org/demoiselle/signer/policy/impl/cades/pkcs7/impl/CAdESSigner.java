@@ -161,10 +161,10 @@ public class CAdESSigner implements PKCS7Signer {
 					add = false;
 			
 			if (add) {
-				logger.info("Adicionando Certificado no CertStore");
+				logger.debug("Adicionando Certificado no CertStore");
 				certificates.addAll(Arrays.asList(certificateChain[0]));
 			} else {
-				logger.info("Certificado já assinou este arquivo. Não adicionar no CertStore");
+				logger.debug("Certificado já assinou este arquivo. Não adicionar no CertStore");
 			}
 			
 			// CollectionCertStoreParameters cert = new
@@ -353,12 +353,11 @@ public class CAdESSigner implements PKCS7Signer {
 			if (algAndLength == null) {
 				throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
 			}
-			logger.info(cadesMessagesBundle.getString("info.algorithm.id", algAndLength.getAlgID().getValue()));
-			logger.info(cadesMessagesBundle.getString("info.algorithm.name",
-					AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue())));
-			logger.info(cadesMessagesBundle.getString("info.min.key.length", algAndLength.getMinKeyLength()));
+			logger.debug(cadesMessagesBundle.getString("info.algorithm.id", algAndLength.getAlgID().getValue()));
+			logger.debug(cadesMessagesBundle.getString("info.algorithm.name",AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue())));
+			logger.debug(cadesMessagesBundle.getString("info.min.key.length", algAndLength.getMinKeyLength()));
 			// Recupera o tamanho minimo da chave para validacao
-			logger.info(cadesMessagesBundle.getString("info.validating.key.length"));
+			logger.debug(cadesMessagesBundle.getString("info.validating.key.length"));
 			int keyLegth = ((RSAKey) certificate.getPublicKey()).getModulus().bitLength();
 			if (keyLegth < algAndLength.getMinKeyLength()) {
 				throw new SignerException(cadesMessagesBundle.getString("error.min.key.length",
@@ -370,7 +369,7 @@ public class CAdESSigner implements PKCS7Signer {
 			// Consulta e adiciona os atributos assinados
 			ASN1EncodableVector signedAttributes = new ASN1EncodableVector();
 
-			logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
+			//logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
 			if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
 					.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
 					.getObjectIdentifiers() != null) {
@@ -406,7 +405,7 @@ public class CAdESSigner implements PKCS7Signer {
 			Collection<CertificateTrustPoint> ctp = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
 					.getCommonRules().getSigningCertTrustCondition().getSignerTrustTrees().getCertificateTrustPoints();
 			for (CertificateTrustPoint certificateTrustPoint : ctp) {
-				logger.info(cadesMessagesBundle.getString("info.trust.point",
+				logger.debug(cadesMessagesBundle.getString("info.trust.point",
 						certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
 				trustedCAs.add(certificateTrustPoint.getTrustpoint());
 			}
@@ -418,7 +417,7 @@ public class CAdESSigner implements PKCS7Signer {
 			}			
 			X509Certificate rootOfCertificate = null;
 			for (X509Certificate tcac : certificateChainTrusted) {
-			    logger.info(tcac.getIssuerDN().toString());
+			    logger.debug(tcac.getIssuerDN().toString());
 				if (CAManager.getInstance().isRootCA(tcac)){
 					rootOfCertificate = tcac;
 				}
@@ -434,7 +433,7 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 				
 			//  validade da politica
-			logger.info(cadesMessagesBundle.getString("info.policy.valid.period"));
+			logger.debug(cadesMessagesBundle.getString("info.policy.valid.period"));
 			PolicyValidator pv = new PolicyValidator(this.signaturePolicy, this.policyName);
 			pv.validate();
 			// Realiza a assinatura do conteudo
@@ -442,7 +441,7 @@ public class CAdESSigner implements PKCS7Signer {
 			gen.addCertificates(this.generatedCertStore(certStore));
 			String algorithmOID = algAndLength.getAlgID().getValue();
 
-			logger.info(cadesMessagesBundle.getString("info.algorithm.id", algorithmOID));
+			logger.debug(cadesMessagesBundle.getString("info.algorithm.id", algorithmOID));
 			SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder()
 					.setSignedAttributeGenerator(signedAttributeGenerator)
 					.setUnsignedAttributeGenerator(null)
@@ -468,7 +467,7 @@ public class CAdESSigner implements PKCS7Signer {
 			ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
 			
 			
-			logger.info(cadesMessagesBundle.getString("info.unsigned.attribute"));
+			logger.debug(cadesMessagesBundle.getString("info.unsigned.attribute"));
 			Collection<SignerInformation> vNewSigners = cmsSignedData.getSignerInfos().getSigners();
  			
 			Iterator<SignerInformation> it = vNewSigners.iterator();
@@ -530,7 +529,9 @@ public class CAdESSigner implements PKCS7Signer {
 			
 			byte[] result = cmsSignedData.getEncoded();
 			
-			logger.info(cadesMessagesBundle.getString("info.signature.ok"));
+			
+			String SN = certificate.getSerialNumber().toString()+"("+certificate.getSerialNumber().toString(16).toUpperCase()+")";
+			logger.info(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0],SN));
 			
 			PeriodValidator pV = new PeriodValidator();				
 			setNotAfterSignerCertificate(pV.valDate(this.certificate));			

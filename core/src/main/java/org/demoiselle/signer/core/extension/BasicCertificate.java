@@ -604,7 +604,7 @@ public class BasicCertificate {
                         if (genName.getTagNo() == GeneralName.uniformResourceIdentifier) {
                             String url = DERIA5String.getInstance(genName.getName()).getString();
                             crlUrls.add(url);
-                            logger.info("Adicionando a url {}", url);
+                            logger.debug("Adicionando a url {}", url);
                         }
                     }
                 }

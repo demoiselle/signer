@@ -51,6 +51,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -88,8 +89,8 @@ import org.slf4j.LoggerFactory;
  */
 public class EscTimeStamp implements UnsignedAttribute {
 
-    private static final Logger logger = LoggerFactory.getLogger(RevocationRefs.class);
-    private final String identifier = "1.2.840.113549.1.9.16.2.25";
+    private static final Logger logger = LoggerFactory.getLogger(EscTimeStamp.class);
+    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_escTimeStamp;
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
     private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
     private PrivateKey privateKey = null;
@@ -109,7 +110,7 @@ public class EscTimeStamp implements UnsignedAttribute {
 
     @Override
     public String getOID() {
-        return identifier;
+        return identifier.getId();
     }
 
     @Override
@@ -127,7 +128,7 @@ public class EscTimeStamp implements UnsignedAttribute {
                 //Valida o carimbo de tempo gerado
                 timeStampGenerator.validateTimeStamp(content, response, hash);
 
-                return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(ASN1Primitive.fromByteArray(response)));
+                return new Attribute(identifier, new DERSet(ASN1Primitive.fromByteArray(response)));
             } else {
                 throw new SignerException(cadesMessagesBundle.getString("error.tsa.not.found"));
             }

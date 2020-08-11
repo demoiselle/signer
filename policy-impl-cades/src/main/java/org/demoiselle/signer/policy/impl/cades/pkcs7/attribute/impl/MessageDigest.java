@@ -43,6 +43,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 import org.slf4j.Logger;
@@ -57,14 +58,14 @@ import org.slf4j.LoggerFactory;
 public class MessageDigest implements SignedAttribute {
 
     private static final Logger logger = LoggerFactory.getLogger(MessageDigest.class);
-    private final String identifier = "1.2.840.113549.1.9.4";
+    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.pkcs_9_at_messageDigest ;
     private byte[] content = null;
     private SignaturePolicy signaturePolicy = null;
     private byte[] hash = null;
 
     @Override
     public String getOID() {
-        return identifier;
+        return identifier.getId();
     }
 
     @Override
@@ -74,7 +75,7 @@ public class MessageDigest implements SignedAttribute {
         		java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
         		this.hash = md.digest(content);
         	}
-             return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DEROctetString(this.hash)));            
+             return new Attribute(identifier, new DERSet(new DEROctetString(this.hash)));            
         } catch (NoSuchAlgorithmException ex) {
             logger.info(ex.getMessage());
             return null;

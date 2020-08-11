@@ -97,10 +97,10 @@ public class CAdESSignerTest {
 			// ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
 
 			// Para TOKEN Branco a linha abaixo
-			 String pkcs11LibraryPath =	 "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+			 //String pkcs11LibraryPath =	 "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
 
 			// Para TOKEN Azul a linha abaixo
-			//String pkcs11LibraryPath = "/usr/lib/libeToken.so";
+			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
 
 			StringBuilder buf = new StringBuilder();
 			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
@@ -197,6 +197,8 @@ public class CAdESSignerTest {
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			String fileDirName = "/";
+
+
 			
 
 			
@@ -246,7 +248,8 @@ public class CAdESSignerTest {
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_3);
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			String varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
 
@@ -328,7 +331,8 @@ public class CAdESSignerTest {
 					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 
 			// devido a uma restrição do token branco, no windws só funciona com 256
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			String varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			}
 			
@@ -343,7 +347,7 @@ public class CAdESSignerTest {
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
 			
@@ -429,7 +433,8 @@ public class CAdESSignerTest {
 
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			String varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
 
@@ -502,7 +507,8 @@ public class CAdESSignerTest {
 
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			String varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
 
@@ -575,7 +581,8 @@ public class CAdESSignerTest {
 
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			String varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
 
@@ -620,7 +627,8 @@ public class CAdESSignerTest {
 			java.security.MessageDigest md = java.security.MessageDigest
 					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 			// devido a uma restrição do token branco, no windws só funciona com 256
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			String varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			}
 
@@ -658,7 +666,8 @@ public class CAdESSignerTest {
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
-			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
 

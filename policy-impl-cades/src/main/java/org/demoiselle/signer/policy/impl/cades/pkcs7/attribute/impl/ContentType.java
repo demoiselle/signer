@@ -42,6 +42,7 @@ import java.security.cert.Certificate;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 
@@ -77,17 +78,16 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
  */
 public class ContentType implements SignedAttribute {
 
-	private final String identifier = "1.2.840.113549.1.9.3";
+	private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.pkcs_9_at_contentType ;
 
 	@Override
 	public String getOID() {
-		return identifier;
+		return identifier.getId();
 	}
 
 	@Override
 	public Attribute getValue() {
-		return new Attribute(new ASN1ObjectIdentifier(identifier),
-				new DERSet(new ASN1ObjectIdentifier(contentType.data.getOid())));
+		return new Attribute(identifier,new DERSet(new ASN1ObjectIdentifier(contentType.data.getOid())));
 	}
 
 	@Override

@@ -5,6 +5,17 @@
 <revhistory>
 
 	<revision>
+    <revnumber>3.6.1</revnumber>
+        <date>05/05/2020</date>
+        <authorinitials>ess</authorinitials>
+        <revremark>
+            <itemizedlist>
+            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/33?closed=1">Milestone 3.6.1</ulink></listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+
+	<revision>
     <revnumber>3.6.0</revnumber>
         <date>30/06/2020</date>
         <authorinitials>ess</authorinitials>

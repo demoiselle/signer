@@ -44,6 +44,7 @@ import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
 import org.demoiselle.signer.core.timestamp.TimeStampGeneratorSelector;
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -72,7 +73,7 @@ public class TimeStampToken implements UnsignedAttribute {
     private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
-    private final String identifier = "1.2.840.113549.1.9.16.2.14";
+    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_signatureTimeStampToken;
     private PrivateKey privateKey = null;
     private Certificate[] certificates = null;
     byte[] content = null;
@@ -80,7 +81,7 @@ public class TimeStampToken implements UnsignedAttribute {
 
     @Override
     public String getOID() {
-        return identifier;
+        return identifier.getId();
     }
 
     @Override
@@ -106,7 +107,7 @@ public class TimeStampToken implements UnsignedAttribute {
                 //Valida o carimbo de tempo gerado
                 timeStampGenerator.validateTimeStamp(content, response, hash);
 
-                return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(ASN1Primitive.fromByteArray(response)));
+                return new Attribute(identifier, new DERSet(ASN1Primitive.fromByteArray(response)));
             } else {
                 throw new SignerException(cadesMessagesBundle.getString("error.tsa.not.found"));
             }

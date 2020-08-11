@@ -46,8 +46,6 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * 
