@@ -33,6 +33,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+
+//Validate type of signature like ENVELOPED
+
 public class XMLChecker {
 	
 	private static final Logger logger = LoggerFactory.getLogger(CAdESChecker.class);
@@ -101,6 +104,7 @@ public class XMLChecker {
 			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0)); 
 		} catch (InvalidCanonicalizerException | CanonicalizationException e1) {
 			validationErrors.add("Dados do resumo inválidos: "+digestMethod);
+			logger.debug("Dados do resumo inválidos: "+digestMethod);
 			return false;
 		}
 		MessageDigest md = null;
@@ -116,10 +120,12 @@ public class XMLChecker {
 				}
 			}else {
 				validationErrors.add("Invalid signature hash algorithm: "+digestMethod);
+				logger.debug("Invalid signature hash algorithm: "+digestMethod);
 				return false;
 			}
 		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add("Algoritmo inválido: "+digestMethod);
+			
 			return false;
 		}
 		return true;
@@ -148,6 +154,7 @@ public class XMLChecker {
 			}
 		} catch (Exception e) {
 			validationErrors.add("Erro ao validar o resumo do documento");
+			logger.debug("Erro ao validar o resumo do documento");
 			return false;
 		}
 		
@@ -223,6 +230,8 @@ public class XMLChecker {
 			if(signingPeriod.getLength() > 0) {
 				Element notBefore = getElement("pa:NotBefore", (Element)signingPeriod.item(0));
 				Element notAfter = getElement("pa:NotAfter", (Element)signingPeriod.item(0));
+				
+				//Use local system date
 			}
 			
 			for(int i = 0; i < algorithmConstraintSet.getLength(); i++) {
@@ -333,7 +342,7 @@ public class XMLChecker {
 					Element mimeTypeTag = getXadesElement("MimeType", dataObjectFormatTag, true);
 					Element signaturePolicyIdentifier = getXadesElement("SignaturePolicyIdentifier", qualifyingPropertiesTag, false);			
 					if(signaturePolicyIdentifier != null) {
-						getXadesElement("sigPolicyId", signaturePolicyIdentifier, false);
+						getXadesElement("SigPolicyId", signaturePolicyIdentifier, false);
 					}
 					X509Certificate cert = null;
 					try {

@@ -6,13 +6,11 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.math.BigInteger;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
-import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -32,13 +30,8 @@ import org.apache.xml.security.Init;
 import org.apache.xml.security.c14n.CanonicalizationException;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.c14n.InvalidCanonicalizerException;
-import org.bouncycastle.asn1.ASN1Encoding;
-import org.bouncycastle.asn1.x500.X500Name;
-import org.bouncycastle.asn1.x509.GeneralName;
-import org.bouncycastle.asn1.x509.GeneralNames;
-import org.bouncycastle.asn1.x509.IssuerSerial;
-import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.util.encoders.Base64;
+import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.xades.SignaturePack;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -127,7 +120,7 @@ public class XMLSigner{
 		}
 	}
 	
-	private String getIssuerSerial(X509Certificate cert) throws IOException {
+	/*private String getIssuerSerialV2(X509Certificate cert) throws IOException {
 		X500Name issuerX500Name = null;
 		try {
 			issuerX500Name = new X509CertificateHolder(cert.getEncoded()).getIssuer();
@@ -142,7 +135,7 @@ public class XMLSigner{
 		final IssuerSerial issuerSerial = new IssuerSerial(generalNames, serialNumber);
 		
 		return  Base64.toBase64String(issuerSerial.toASN1Primitive().getEncoded(ASN1Encoding.DER));
-	}
+	}*/
 	
 	private Element addPolicy(Document doc) {
 		Element sigPolicyIdentifier = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyIdentifier");
@@ -150,14 +143,57 @@ public class XMLSigner{
 		Element sigPolicyId = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyId");
 		sigPolicyIdentifier.appendChild(sigPolicyId);
 		
-		//Element sigPId = doc.createElementNS     (XAdESv1_3_2, "xades:SignaturePolicyId");
-		//sigPolicyId.appendChild(sigPId);
+		Element sigPId = doc.createElementNS     (XAdESv1_3_2, "xades:SigPolicyId");
+		sigPolicyId .appendChild(sigPId);
 		
 		Element identifier = doc.createElementNS(XAdESv1_3_2, "xades:Identifier");
 		identifier.setTextContent(policyId);
-		sigPolicyId.appendChild(identifier);
+		sigPId.appendChild(identifier);
 		
-		return sigPolicyId;	
+		Element sigTransforms = doc.createElementNS(XMLNS, "ds:Transforms");
+		sigPolicyId.appendChild(sigTransforms);
+		
+		Element sigTransform = doc.createElementNS(XMLNS, "ds:Transform");
+		sigTransform.setAttribute("Algorithm", "http://www.w3.org/2001/10/xml-exc-c14n#");
+		sigTransforms.appendChild(sigTransform);
+		
+		Element sigPolicyHash = doc.createElementNS(XAdESv1_3_2, "xades:SigPolicyHash");
+		sigPolicyId.appendChild(sigPolicyHash);
+		
+		Element sigDigestMethod = doc.createElementNS(XMLNS, "ds:DigestMethod");
+		sigDigestMethod.setAttribute("Algorithm", "http://www.w3.org/2001/04/xmlenc#sha256");
+		sigPolicyHash.appendChild(sigDigestMethod);
+		
+		String hash = "";
+		
+		Document policyDoc = null;
+		try {
+			policyDoc = PolicyFactory.getInstance().loadXMLPolicy(new XMLChecker().getPolicyByOid(this.policyId)); // "2.16.76.1.7.1.6.2.3"));
+			NodeList listHash = policyDoc.getElementsByTagName("pa:SignPolicyDigest");
+			if(listHash.getLength() > 0) {
+				hash = listHash.item(0).getTextContent();
+			}
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+		Element sigDigestValue = doc.createElementNS(XMLNS, "ds:DigestValue");
+		sigDigestValue.setTextContent(hash); //"gh8ZgWP10SSwGxsW1N6d5LpYv3uTt1IAVYU4hj4y0RA=");
+		sigPolicyHash.appendChild(sigDigestValue);
+		
+
+		Element sigPolicyQualifiers = doc.createElementNS(XAdESv1_3_2, "xades:SigPolicyQualifiers");
+		sigPolicyId.appendChild(sigPolicyQualifiers);
+		
+		Element sigPolicyQualifier = doc.createElementNS(XAdESv1_3_2, "xades:SigPolicyQualifier");
+		sigPolicyQualifiers.appendChild(sigPolicyQualifier);
+		
+		Element sigSPURI = doc.createElementNS(XAdESv1_3_2, "xades:SPURI");
+		sigSPURI.setTextContent("http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.xml");
+		sigPolicyQualifier.appendChild(sigSPURI);
+		
+		return sigPolicyIdentifier;	
 	}
 	
 	
@@ -202,12 +238,28 @@ public class XMLSigner{
 		sigDigValue.setTextContent(getCertificateDigest(cert, "SHA1"));
 		sigCertDig.appendChild(sigDigValue);
 		
-		Element sigIssuerSeria = doc.createElementNS(XAdESv1_3_2, "xades:IssuerSerialV2");
-		sigIssuerSeria.setTextContent(getIssuerSerial(cert));
-		sigCert.appendChild(sigIssuerSeria);
+		Element sigIssuerSerial = doc.createElementNS(XAdESv1_3_2, "xades:IssuerSerial");
+		//sigIssuerSerial.setTextContent(getIssuerSerialV2(cert));
+		sigCert.appendChild(sigIssuerSerial);
+		
+		String issuerName = cert.getIssuerX500Principal().toString();
+		String serialId = cert.getSerialNumber().toString();
+				
+		//Element sigIssuerSeria = doc.createElementNS(XAdESv1_3_2, "xades:IssuerSerialV2");
+		//sigIssuerSerial.setTextContent(getIssuerSerialV2(cert));
+		//sigCert.appendChild(sigIssuerSerial);
+		
+
+		Element sigIssuerName = doc.createElementNS(XMLNS, "ds:X509IssuerName");
+		sigIssuerName.setTextContent(issuerName);
+		sigIssuerSerial.appendChild(sigIssuerName);
+		
+		Element sigIssuerNumber = doc.createElementNS(XMLNS, "ds:X509SerialNumber");
+		sigIssuerNumber.setTextContent(serialId);
+		sigIssuerSerial.appendChild(sigIssuerNumber);
 		
 		if(!policyId.isEmpty()) {
-			sigProp.appendChild(addPolicy(doc));
+			sigSignedProp.appendChild(addPolicy(doc));
 		}
 		
 		Element sigSigDataObjeProp = doc.createElementNS(XAdESv1_3_2, "xades:SignedDataObjectProperties");
@@ -338,7 +390,7 @@ public class XMLSigner{
 	
 		
 	public Document sign(String fileNameSource) throws Throwable{
-		
+		//TODO validate policy before sign
 		Init.init();
 		
 		Document doc = buildXML(fileNameSource);
@@ -412,6 +464,12 @@ public class XMLSigner{
 		TransformerFactory tf = TransformerFactory.newInstance();
 		Transformer trans = tf.newTransformer();
 		trans.transform(new DOMSource(signedDocument), new StreamResult(os));
+	}
+
+
+	public void setSignaturePackaging(SignaturePack pack) {
+		sigPack = pack;
+		
 	}
 	
 }
