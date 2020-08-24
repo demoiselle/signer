@@ -58,6 +58,7 @@ import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.Configuration;
+import org.demoiselle.signer.core.util.Base64Utils;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -243,12 +244,13 @@ public class CAdESCheckerTest {
 	 * arquivo anexado. Neste exemplo, informa-se o arquivo que foi assinado
 	 * para facilitar o teste.
 	 */
-	// @Test
+	//@Test
 	public void testVerifySignatureByHash() {
-		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileSignatureDirName = "/";
+
 
 		// Apenas para gerar o HASH
-		String fileToVerifyDirName = "local_e_nome_do_arquivo";
+		String fileToVerifyDirName = "/";
 
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 
@@ -258,23 +260,32 @@ public class CAdESCheckerTest {
 		try {
 			// é necessário ter certeza do OID do Hash que foi gerada a
 			// assinatura (no windws por restrição do token branco, é 256.
+			
 			md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			
+			//md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 
 			// gera o hash do arquivo que foi assinado
 			byte[] hash = md.digest(fileToVerify);
+			
+			
+			String base64String = 	Base64Utils.base64Encode(hash);
+			
+			System.out.println(base64String);
 
 			CAdESChecker checker = new CAdESChecker();
 			
 			
 
 			System.out.println("Efetuando a validacao da assinatura");
-			System.out.println("OID_hash"
-					+ SignerAlgorithmEnum.SHA512withRSA.getOIDAlgorithmHash());
+			System.out.println("OID_hash"+ SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash());
+			//System.out.println("OID_hash"+ SignerAlgorithmEnum.SHA512withRSA.getOIDAlgorithmHash());
 
-			List<SignatureInformations> signaturesInfo = checker
-					.checkSignatureByHash(SignerAlgorithmEnum.SHA512withRSA
-							.getOIDAlgorithmHash(), hash, signatureFile);
+			List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA
+					.getOIDAlgorithmHash(), hash, signatureFile);
+			//List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA512withRSA
+				//			.getOIDAlgorithmHash(), hash, signatureFile);
 			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				for (SignatureInformations si : signaturesInfo) {
@@ -398,6 +409,75 @@ public class CAdESCheckerTest {
 			assertTrue(false);
 		}
 	}
+	
+	/**
+	 * Verifica assinatura desanexada do a partir de um BASE64
+	 */
+	//@Test
+	public void testVerifyDetachedSignatureBase64() {
+		String fileToVerifyOnBase64 = "";
+		String signatureOnBase64 = "";
+		
+		byte[] fileToVerify = Base64Utils.base64Decode(fileToVerifyOnBase64);
+		byte[] signatureFile = Base64Utils.base64Decode(signatureOnBase64);
+		
+        //Configura cache do demoseille signer:
+        CAManagerConfiguration config = CAManagerConfiguration.getInstance();
+        config.setCached(true);
+
+		CAdESChecker checker = new CAdESChecker();
+
+		System.out.println("Efetuando a validacao da assinatura");
+		List<SignatureInformations> signaturesInfo = checker
+				.checkDetachedSignature(fileToVerify, signatureFile);
+
+		if (signaturesInfo != null) {
+			System.out.println("A assinatura foi validada. e retornou resultados");
+			for (SignatureInformations si : signaturesInfo) {
+				System.out.println(si.getSignDate());
+				if (si.getTimeStampSigner() != null) {
+					System.out.println("Serial"
+							+ si.getTimeStampSigner().toString());
+				}
+				System.out.println("informações do assinante:");
+				BasicCertificate certificate = si.getIcpBrasilcertificate();
+				if (!certificate.isCACertificate()) {
+					if (certificate.hasCertificatePF()) {
+						System.out.println("CPF: "+certificate.getICPBRCertificatePF().getCPF());
+						System.out.println("Titulo de Eleitor: "+certificate.getICPBRCertificatePF().getElectoralDocument());
+					}
+					if (certificate.hasCertificatePJ()) {
+						System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+					}
+				}
+				// Carimbo do tempo
+				if(si.getTimeStampSigner()!= null) {
+					
+					System.out.println(si.getTimeStampSigner().toString());
+				}
+				// A assinatura pode estar correta mas não foi possível verificar algum atributo exigido pela ICP-Brasil
+				for (String valErr : si.getValidatorErrors()) {
+					System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
+					System.err.println(valErr);
+				}
+				//A assinatura pode estar correta mas não foi possível verificar alguma condição de validação exigida pela ICP-Brasil
+				for (String valWarn : si.getValidatorWarnins()) {
+					System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+					System.err.println(valWarn);
+				}
+
+			}
+			assertTrue(true);
+
+		} else {
+			System.err.println("A assinatura foi invalidada!");
+			assertTrue(false);
+		}
+	}
+	
+	
+	
+	
 	
 	
 
