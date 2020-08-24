@@ -2,6 +2,8 @@ package org.demoiselle.signer.policy.impl.xades.xml;
 
 import java.util.HashMap;
 
+import org.apache.xml.security.c14n.Canonicalizer;
+
 public class AlgorithmsValues {
 	static HashMap<String, String> signatureMethods = null;
 	static HashMap<String, String> digestMethods = null;
@@ -80,7 +82,7 @@ public class AlgorithmsValues {
 		
 	}
 	
-final static String getSignatureAlgorithm(String value) {
+	final static String getSignatureAlgorithm(String value) {
 		
 		if(signatureAlgorithms == null) {
 			loadMethodsData();
@@ -89,5 +91,20 @@ final static String getSignatureAlgorithm(String value) {
 		return signatureAlgorithms.containsKey(value) ? signatureAlgorithms.get(value) : null;
 		
 	}
+	 final static boolean isCanonicalMethods(String method) {
+		 switch (method) {
+		case Canonicalizer.ALGO_ID_C14N_OMIT_COMMENTS:
+			return true;
+		case Canonicalizer.ALGO_ID_C14N11_WITH_COMMENTS:
+			return true;
+		case Canonicalizer.ALGO_ID_C14N_EXCL_OMIT_COMMENTS:
+			return true;
+		case Canonicalizer.ALGO_ID_C14N_EXCL_WITH_COMMENTS:
+			return true;
+		default:
+			return false;
+		}
+	 
+	 }
 
 }

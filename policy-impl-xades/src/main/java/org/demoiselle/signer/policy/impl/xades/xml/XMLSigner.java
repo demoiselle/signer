@@ -1,11 +1,14 @@
 package org.demoiselle.signer.policy.impl.xades.xml;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -40,20 +43,13 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-
-//import com.sun.org.apache.xml.internal.security.Init;
-//import com.sun.org.apache.xml.internal.security.c14n.CanonicalizationException;
-//import com.sun.org.apache.xml.internal.security.c14n.Canonicalizer;
-//import com.sun.org.apache.xml.internal.security.c14n.InvalidCanonicalizerException;
-
-
 public class XMLSigner{
 	
 	private KeyStore keyStore;
 	private String alias;
 	private Document signedDocument;
 	private String policyId = "";
-	private String id = "id-7d3a7229c93d20fd8fa2cb4b96afe48f"; //+System.currentTimeMillis();
+	private String id = "id-"+System.currentTimeMillis();
 	private SignaturePack sigPack;
 	public static final String XMLNS = "http://www.w3.org/2000/09/xmldsig#";
 	public static final String XMLNS_DS = "xmlns:ds";
@@ -63,12 +59,6 @@ public class XMLSigner{
 	public XMLSigner(){}
 	
 
-	public XMLSigner(int num) throws Exception {
-		this.buildXML("/tmp/base.xml");
-	}
-	
-	
-	
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
@@ -79,12 +69,7 @@ public class XMLSigner{
 	
 	public void setPolicyId(String policyId) {
 		this.policyId = policyId;
-	}
-	
-	public static void main(String[] arg) throws Throwable {
-		new XMLSigner(0);
-	}
-	
+	}	
 	
 	public Element getDocumentData(Document doc) throws IOException, SAXException, ParserConfigurationException {
 		
@@ -301,7 +286,7 @@ public class XMLSigner{
 	}
 	
 	private Element createReferenceTag(Document doc, HashMap<String, String>params) {
-		//String type, String uri, String id, String text, String alg
+		
 		Element referenceTag = doc.createElementNS(XMLNS, "ds:Reference");
 		if(params.containsKey("id")) {
 			referenceTag.setAttribute("Id", params.get("id"));
@@ -310,25 +295,26 @@ public class XMLSigner{
 		referenceTag.setAttribute("URI", params.get("uri"));
 		//sigInfTag.appendChild(referenceTag );
 		
-		Element transformsTag = doc.createElementNS(XMLNS, "ds:Transforms");
-		referenceTag.appendChild(transformsTag);
-		
-		if(params.containsKey("alg")){
-			Element transformTag = doc.createElementNS(XMLNS, "ds:Transform");
-			transformTag.setAttribute("Algorithm", params.get("alg"));
-			transformsTag.appendChild(transformTag);
-		
-			if(params.containsKey("text")){
-				Element xPathTag = doc.createElementNS(XMLNS, "ds:XPath");
-				xPathTag.setTextContent(params.get("text"));
-				transformTag.appendChild(xPathTag);
+		if(!params.containsKey("no_transforms")) {
+			Element transformsTag = doc.createElementNS(XMLNS, "ds:Transforms");
+			referenceTag.appendChild(transformsTag);
+			
+			if(params.containsKey("alg")){
+				Element transformTag = doc.createElementNS(XMLNS, "ds:Transform");
+				transformTag.setAttribute("Algorithm", params.get("alg"));
+				transformsTag.appendChild(transformTag);
+				if(params.containsKey("text")){
+					Element xPathTag = doc.createElementNS(XMLNS, "ds:XPath");
+					xPathTag.setTextContent(params.get("text"));
+					transformTag.appendChild(xPathTag);
+				}
 			}
-		}
-		
-		if(params.containsKey("transAlg")){
-			Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
-			transAlg.setAttribute("Algorithm", "http://www.w3.org/2001/10/xml-exc-c14n#");;
-			transformsTag.appendChild(transAlg);
+			
+			if(params.containsKey("transAlg")){
+				Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
+				transAlg.setAttribute("Algorithm", "http://www.w3.org/2001/10/xml-exc-c14n#");;
+				transformsTag.appendChild(transAlg);
+			}
 		}
 		
 		if(params.containsKey("digAlg")) { 
@@ -348,9 +334,15 @@ public class XMLSigner{
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setNamespaceAware(true);
-		Document bodyDoc = dbf.newDocumentBuilder().parse(
-				new InputSource(new InputStreamReader(new FileInputStream(fileName), "UTF-8")));
-		Element docData = getDocumentData(bodyDoc);
+		Document bodyDoc = null;
+		
+		if(sigPack == SignaturePack.DETACHED){
+			bodyDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		}else {
+			bodyDoc = dbf.newDocumentBuilder().parse(
+					new InputSource(new InputStreamReader(new FileInputStream(fileName), "UTF-8")));
+		}
+			
 		Element signatureTag = bodyDoc.createElementNS(XMLNS, "ds:Signature");
 		signatureTag.setAttribute(XMLNS_DS, XMLNS);
 		signatureTag.setAttribute("Id", id);
@@ -374,15 +366,45 @@ public class XMLSigner{
 		param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
 		param.put("digAlg", Constants.DIGEST_SHA256);
 		
-		byte[] docHash = getShaCanonizedValue("SHA-256", docData, Canonicalizer.ALGO_ID_C14N_OMIT_COMMENTS);
-		param.put("digVal", Base64.toBase64String(docHash));
-		param.put("transAlg", "http://www.w3.org/2001/10/xml-exc-c14n#");
+		byte[] docHash = null; 
 		
-		//TODO Verify is is it necessary
-		//Element referenceTag = createReferenceTag(bodyDoc, param);
-		//sigInfTag.appendChild(referenceTag);
+		if(sigPack == SignaturePack.DETACHED){
+			InputStream inputStream = new FileInputStream(fileName);
+			long fileSize = new File(fileName).length();
+			docHash = new byte[(int) fileSize];
+			inputStream.read(docHash);
+			inputStream.close();
+			param.put("no_transforms", "true");
+			param.put("type", "");
+			param.put("uri", Paths.get(fileName).getFileName().toString());
+			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			param.put("digVal", Base64.toBase64String(messageDigest.digest(docHash)));
+			
+			Element referenceTag = createReferenceTag(bodyDoc, param);
+			sigInfTag.appendChild(referenceTag);
+			
+			bodyDoc.appendChild(signatureTag);
+			
+		}else {
+			Element docData = getDocumentData(bodyDoc);
+			docHash = getShaCanonizedValue("SHA-256", docData, Canonicalizer.ALGO_ID_C14N_OMIT_COMMENTS);
+			param.put("type", "");
+			param.put("uri", "");
+			param.put("id", "r-id-1");
+			param.put("text", "not(ancestor-or-self::ds:Signature)");
+			param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
+			param.put("digAlg", Constants.DIGEST_SHA256);
+			param.put("transAlg", "http://www.w3.org/2001/10/xml-exc-c14n#");
+			param.put("digVal", Base64.toBase64String(docHash));
+			
+			
+			Element referenceTag = createReferenceTag(bodyDoc, param);
+			sigInfTag.appendChild(referenceTag);
+			
+			bodyDoc.getDocumentElement().appendChild(signatureTag);
+			
+		}
 		
-		bodyDoc.getDocumentElement().appendChild(signatureTag);
 		
 		return bodyDoc;
 	}
@@ -416,11 +438,7 @@ public class XMLSigner{
 		
 		byte[] canonicalized = null;
 		
-		if(sigPack != SignaturePack.DETACHED){
-			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0)); 
-		}else {
-			canonicalized = null;
-		}
+		canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0)); 
 		
 		Element sigRefTag = createSignatureHashReference(doc, canonicalized);
 		doc.getElementsByTagName("ds:SignedInfo").item(numSignatures).appendChild(sigRefTag);
