@@ -157,8 +157,7 @@ public class Configuration {
 		map.put("TokenOuSmartCard_42_Oberthur", "/usr/local/AWP/lib/libOcsCryptoki.so");
 
 		map.put("TokenOuSmartCard_43_safenet", "/usr/lib/libscmccid.so");
-		
-		
+				
 		
 		// ------------ Mac ------------		
 		map.put("TokenOuSmartCard_44_watchdata", "//usr//lib//libwdpkcs.dylib"); // Token Branco do Serpro
@@ -186,6 +185,9 @@ public class Configuration {
 		
 		map.put("TokenOuSmartCard_59_opensc", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_60_opensc", "/usr/lib/opensc/opensc­pkcs11.so");
+		
+		map.put("TokenOuSmartCard_61_birdid", "/opt/Assistente Desktop birdID/resources/extraResources/linux/x64/vault-pkcs11.so");
+		
 				
 		
 		boolean successLoad = false;
