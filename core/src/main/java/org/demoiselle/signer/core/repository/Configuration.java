@@ -37,6 +37,13 @@
 package org.demoiselle.signer.core.repository;
 
 import java.io.File;
+import java.net.Authenticator;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.PasswordAuthentication;
+import java.net.Proxy;
+import java.net.SocketAddress;
+import java.net.UnknownHostException;
 
 
 public class Configuration {
@@ -56,11 +63,35 @@ public class Configuration {
      */
     public static final String CRL_PATH = "signer.repository.crl.path";
     
-    
     /**
      * System key to set storage location of path file of LPA 
      */
     public static final String LPA_PATH = "signer.repository.lpa.path";
+    
+    /**
+     * System key to set host of settings proxy
+     */
+    public static final String PROXY_HOST = "signer.proxy.host";
+    
+    /**
+     * System key to set host of settings proxy
+     */
+    public static final String PROXY_PORT = "signer.proxy.port";
+
+    /**
+     * System key to set host of settings proxy
+     */
+    public static final String PROXY_USER = "signer.proxy.user";
+
+    /**
+     * System key to set host of settings proxy
+     */
+    public static final String PROXY_PASSWORD = "signer.proxy.password";
+
+    /**
+     * System key to set host of settings proxy
+     */
+    public static final String PROXY_TYPE = "signer.proxy.type";
     
     
     public static Configuration instance = new Configuration();
@@ -79,6 +110,8 @@ public class Configuration {
     private String crlPath;
     private String lpaPath;    
     private boolean isOnline;
+    private Proxy proxy;
+    private Proxy.Type type;
 
     /**
      * Check for system variables. If there is, assign in class variables otherwise use default values.
@@ -96,13 +129,26 @@ public class Configuration {
         }
 
         crlPath = (String) System.getProperties().get(CRL_PATH);
-        if (crlPath == null || crlPath.equals("")) {
+        if (crlPath == null || crlPath.isEmpty()) {
         	setCrlPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "crls");
         }
         
         lpaPath = (String) System.getProperties().get(LPA_PATH);
-        if (lpaPath == null || lpaPath.equals("")) {
+        if (lpaPath == null || lpaPath.isEmpty()) {
             setLpaPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "lpas");
+        }
+        
+        String hostName = (String) System.getProperties().get(PROXY_HOST);
+        if (hostName == null || hostName.isEmpty()) {
+        	setProxy(Proxy.NO_PROXY);
+        } else {
+        	String proxyType = (String) System.getProperties().get(PROXY_TYPE);
+        	setType(proxyType);
+        	
+        	String port = (String) System.getProperties().get(PROXY_PORT);
+        	String user = (String) System.getProperties().get(PROXY_USER);
+        	String password = (String) System.getProperties().get(PROXY_PASSWORD);
+        	setProxy(hostName, port, user, password);
         }
     }
 
@@ -174,4 +220,41 @@ public class Configuration {
 		this.lpaPath = lpaPath;
 	}
 
+	public Proxy getProxy() {
+		return proxy;
+	}
+
+	public void setProxy(Proxy proxy) {
+		this.proxy = proxy;
+	}
+	
+	public Proxy.Type getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		if (type == null || type.isEmpty()) {
+			this.type = Proxy.Type.HTTP;
+        } else {
+        	this.type = Proxy.Type.valueOf(type.toUpperCase());
+        }
+	}
+
+	public void setProxy(String hostName, String port, final String userName, final String password) {
+		try {
+			InetAddress inetAddress = InetAddress.getByName(hostName);
+			SocketAddress socketAddress = new InetSocketAddress(inetAddress, Integer.parseInt(port));
+			this.proxy = new Proxy(type, socketAddress);
+			if (userName == null || userName.isEmpty()) {
+				Authenticator authenticator = new Authenticator() {
+					public PasswordAuthentication getPasswordAuthentication() {
+						return (new PasswordAuthentication(userName, password.toCharArray()));
+					}
+				};
+				Authenticator.setDefault(authenticator);
+	        }
+		} catch(UnknownHostException uhe) {
+			this.proxy = Proxy.NO_PROXY;
+		}
+	}
 }

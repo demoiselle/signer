@@ -52,7 +52,7 @@ public class CRLRepositoryFactory {
 	public static CRLRepository factoryCRLRepository() {
 		Configuration conf = Configuration.getInstance();
 		if (conf.isOnline()) {
-			return new OnLineCRLRepository();
+			return new OnLineCRLRepository(conf.getProxy());
 		} else {
 			return new OffLineCRLRepository();
 		}

@@ -39,6 +39,7 @@ package org.demoiselle.signer.core.repository;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.security.cert.CRLException;
@@ -48,11 +49,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Representa um repositório online. Neste caso não ha necessidade de um serviço
@@ -64,8 +65,17 @@ public class OnLineCRLRepository implements CRLRepository {
 
     private final Logger logger = LoggerFactory.getLogger(OnLineCRLRepository.class);
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+    private Proxy proxy;
+    
+    public OnLineCRLRepository() {
+    	this.proxy = Proxy.NO_PROXY;
+    }
 
-    @Override
+    public OnLineCRLRepository(Proxy proxy) {
+		this.proxy = proxy;
+	}
+
+	@Override
     public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {
 
         Collection<ICPBR_CRL> list = new ArrayList<ICPBR_CRL>();
@@ -99,7 +109,7 @@ public class OnLineCRLRepository implements CRLRepository {
     private ICPBR_CRL getICPBR_CRL(String uRLCRL) {
         try {
             URL url = new URL(uRLCRL);
-            URLConnection conexao = url.openConnection();
+            URLConnection conexao = url.openConnection(proxy);
             conexao.setConnectTimeout(5000);
             conexao.setReadTimeout(5000);
             DataInputStream inStream = new DataInputStream(conexao.getInputStream());
