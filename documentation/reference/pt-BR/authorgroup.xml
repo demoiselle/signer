@@ -3,18 +3,22 @@
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <authorgroup>
 	<author>
-		<firstname>Ednara</firstname>
-		<surname>Oliveira</surname>
-	</author>
-	<author>
 		<firstname>Denis A. Altoé</firstname>
 		<surname>Falqueto</surname>		
+	</author>
+	<author>
+		<firstname>Ednara</firstname>
+		<surname>Oliveira</surname>
 	</author>
 	<author>
 		<firstname>Emerson</firstname>
 		<surname>Sachio Saito</surname>
 		<email>emerson.saito@gmail.com</email>
 	</author>
+	<author>
+		<firstname>Erick Luiz Flores</firstname>
+		<surname>Guimarães</surname>
+	</author>	
 	<author>
 		<firstname>Fabiano</firstname>
 		<surname>Kuss</surname>
@@ -34,7 +38,5 @@
 	<author>
 		<firstname>Thiago</firstname>
 		<surname>Laubstein Ribeiro</surname>
-	</author>
-	
-	   	
+	</author>	   	
 </authorgroup>
