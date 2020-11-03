@@ -108,6 +108,7 @@ public class RepositoryUtil {
                 outStream.write(buf, 0, ByteRead);
                 setByteWritten(getByteWritten() + ByteRead);
             }
+            outStream.flush();            
             if (destinationFile.length() <= 0){
             	if (!destinationFile.delete()) {
                     logger.info(coreMessagesBundle.getString("error.file.remove", destinationFile));
