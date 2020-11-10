@@ -1,5 +1,6 @@
 package org.demoiselle.signer.policy.impl.xades.xml;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.security.MessageDigest;
@@ -330,6 +332,59 @@ public class XMLSigner{
 		return referenceTag;
 	}
 	
+	private Document buildXML(InputStream inputStream) throws UnsupportedEncodingException, SAXException, IOException, ParserConfigurationException, InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		Document bodyDoc = null;
+		
+		bodyDoc = dbf.newDocumentBuilder().parse(new InputSource(new InputStreamReader(inputStream, "UTF-8")));
+			
+		Element signatureTag = bodyDoc.createElementNS(XMLNS, "ds:Signature");
+		signatureTag.setAttribute(XMLNS_DS, XMLNS);
+		signatureTag.setAttribute("Id", id);
+		
+		Element sigInfTag = bodyDoc.createElementNS(XMLNS, "ds:SignedInfo");
+		signatureTag.appendChild(sigInfTag);
+		
+		Element canonicalizationMethodTag = bodyDoc.createElementNS(XMLNS, "ds:CanonicalizationMethod");
+		canonicalizationMethodTag.setAttribute("Algorithm", "http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
+		sigInfTag.appendChild(canonicalizationMethodTag);
+		
+		Element signatureMethodTag = bodyDoc.createElementNS(XMLNS, "ds:SignatureMethod");
+		signatureMethodTag.setAttribute("Algorithm", Constants.RSA_SHA256);
+		sigInfTag.appendChild(signatureMethodTag );
+		
+		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("type", "");
+		param.put("uri", "");
+		param.put("id", "r-id-1");
+		param.put("text", "not(ancestor-or-self::ds:Signature)");
+		param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
+		param.put("digAlg", Constants.DIGEST_SHA256);
+		
+		byte[] docHash = null; 
+		
+
+		Element docData = getDocumentData(bodyDoc);
+		docHash = getShaCanonizedValue("SHA-256", docData, Canonicalizer.ALGO_ID_C14N_OMIT_COMMENTS);
+		param.put("type", "");
+		param.put("uri", "");
+		param.put("id", "r-id-1");
+		param.put("text", "not(ancestor-or-self::ds:Signature)");
+		param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
+		param.put("digAlg", Constants.DIGEST_SHA256);
+		param.put("transAlg", "http://www.w3.org/2001/10/xml-exc-c14n#");
+		param.put("digVal", Base64.toBase64String(docHash));
+		
+		
+		Element referenceTag = createReferenceTag(bodyDoc, param);
+		sigInfTag.appendChild(referenceTag);
+		
+		bodyDoc.getDocumentElement().appendChild(signatureTag);
+			
+		return bodyDoc;
+	}
+	
 	private Document buildXML(String fileName) throws FileNotFoundException, SAXException, IOException, ParserConfigurationException, InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException {
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -409,14 +464,24 @@ public class XMLSigner{
 		return bodyDoc;
 	}
 	
-	
-		
-	public Document sign(String fileNameSource) throws Throwable{
-		//TODO validate policy before sign
+	public Document doEnvelopedSign(InputStream stream) throws Throwable {
+		if(sigPack != SignaturePack.ENVELOPED) {
+			new Throwable("Not enveloped");
+		}
 		Init.init();
-		
+		Document doc = buildXML(stream);
+		return sign(doc);
+	}
+	
+	public Document sign(String fileNameSource) throws Throwable {
+		Init.init();
 		Document doc = buildXML(fileNameSource);
-						
+		return sign(doc);
+	}
+	
+	public Document sign(Document doc) throws Throwable{
+		Init.init();
+			
 		if(keyStore == null) {
 			new Throwable("Keystore nula");
 		}
@@ -475,6 +540,18 @@ public class XMLSigner{
 		signedDocument = doc;
 		
 		return doc;
+	}
+	
+	public byte[] getXMLFile() throws TransformerException {
+		return getXMLFile(signedDocument);
+	}
+	
+	public byte[] getXMLFile(Document doc) throws TransformerException {
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer trans = tf.newTransformer();
+		trans.transform(new DOMSource(doc),  new StreamResult(baos));
+		return baos.toByteArray();
 	}
 	
 	public void saveSignedDocument(String fileName) throws TransformerException, FileNotFoundException {
