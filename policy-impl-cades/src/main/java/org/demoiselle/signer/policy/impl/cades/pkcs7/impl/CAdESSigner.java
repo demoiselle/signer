@@ -288,10 +288,12 @@ public class CAdESSigner implements PKCS7Signer {
 			if (this.certificate == null && this.certificateChain != null && this.certificateChain.length > 0) {
 				this.certificate = (X509Certificate) this.certificateChain[0];
 			}
-
-			this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 			
-			if (this.certificateChain.length < 3) {
+			if(this.certificateChain == null || this.certificateChain.length == 0) {
+				this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
+			}
+			
+			if (this.certificateChain.length < 3 && defaultCertificateValidators) {
 				throw new SignerException(cadesMessagesBundle.getString("error.no.ca", this.certificate.getIssuerDN()));
 			}
 			
@@ -399,37 +401,39 @@ public class CAdESSigner implements PKCS7Signer {
 				signedAttributeGenerator = new DefaultSignedAttributeTableGenerator(signedAttributesTable);
 			}			
 			
-			// Recupera o(s) certificado(s) de confianca para validacao
-			Collection<X509Certificate> trustedCAs = new HashSet<X509Certificate>();
-
-			Collection<CertificateTrustPoint> ctp = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-					.getCommonRules().getSigningCertTrustCondition().getSignerTrustTrees().getCertificateTrustPoints();
-			for (CertificateTrustPoint certificateTrustPoint : ctp) {
-				logger.debug(cadesMessagesBundle.getString("info.trust.point",
-						certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
-				trustedCAs.add(certificateTrustPoint.getTrustpoint());
-			}
-			
-			// Efetua a validacao das cadeias do certificado baseado na politica
-			Collection<X509Certificate> certificateChainTrusted = new HashSet<X509Certificate>();
-			for (Certificate certCA : certificateChain){
-				certificateChainTrusted.add((X509Certificate) certCA);
-			}			
-			X509Certificate rootOfCertificate = null;
-			for (X509Certificate tcac : certificateChainTrusted) {
-			    logger.debug(tcac.getIssuerDN().toString());
-				if (CAManager.getInstance().isRootCA(tcac)){
-					rootOfCertificate = tcac;
+			if(defaultCertificateValidators) {
+				// Recupera o(s) certificado(s) de confianca para validacao
+				Collection<X509Certificate> trustedCAs = new HashSet<X509Certificate>();
+	
+				Collection<CertificateTrustPoint> ctp = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
+						.getCommonRules().getSigningCertTrustCondition().getSignerTrustTrees().getCertificateTrustPoints();
+				for (CertificateTrustPoint certificateTrustPoint : ctp) {
+					logger.debug(cadesMessagesBundle.getString("info.trust.point",
+							certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
+					trustedCAs.add(certificateTrustPoint.getTrustpoint());
 				}
-			}
-			if (trustedCAs.contains(rootOfCertificate)){
-					logger.info(cadesMessagesBundle.getString("info.trust.in.point", rootOfCertificate.getSubjectDN()));
-			}else{
-					// Não encontrou na política, verificará nas cadeias do
-					// componente chain-icp-brasil provavelmente certificado de
-					// homologação.
-					logger.warn(cadesMessagesBundle.getString("info.trust.poin.homolog"));
-					CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
+				
+				// Efetua a validacao das cadeias do certificado baseado na politica
+				Collection<X509Certificate> certificateChainTrusted = new HashSet<X509Certificate>();
+				for (Certificate certCA : certificateChain){
+					certificateChainTrusted.add((X509Certificate) certCA);
+				}			
+				X509Certificate rootOfCertificate = null;
+				for (X509Certificate tcac : certificateChainTrusted) {
+				    logger.debug(tcac.getIssuerDN().toString());
+					if (CAManager.getInstance().isRootCA(tcac)){
+						rootOfCertificate = tcac;
+					}
+				}
+				if (trustedCAs.contains(rootOfCertificate)){
+						logger.info(cadesMessagesBundle.getString("info.trust.in.point", rootOfCertificate.getSubjectDN()));
+				}else{
+						// Não encontrou na política, verificará nas cadeias do
+						// componente chain-icp-brasil provavelmente certificado de
+						// homologação.
+						logger.warn(cadesMessagesBundle.getString("info.trust.poin.homolog"));
+						CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
+				}
 			}
 				
 			//  validade da politica
