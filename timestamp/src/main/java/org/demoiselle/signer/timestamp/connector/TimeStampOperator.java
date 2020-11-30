@@ -236,7 +236,7 @@ public class TimeStampOperator {
             inputStream.read(retornoCarimboDeTempo, 0, tamanho);
             timeStampResponse = new TimeStampResponse(retornoCarimboDeTempo);
 
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.status", timeStampResponse.getStatus()));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.status", timeStampResponse.getStatus()));
 
             switch (timeStampResponse.getStatus()) {
                 case 0: {
@@ -277,7 +277,7 @@ public class TimeStampOperator {
                 failInfo = Integer.parseInt(new String(timeStampResponse.getFailInfo().getBytes()));
             }
 
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.failinfo", failInfo));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.failinfo", failInfo));
 
             switch (failInfo) {
                 case 0:
@@ -317,7 +317,7 @@ public class TimeStampOperator {
             connector.close();
 
             //Imprime os dados do carimbo de tempo
-            logger.info(timestamp.toString());
+            logger.debug(timestamp.toString());
 
             //Retorna o carimbo de tempo gerado
             return timestamp.getEncoded();

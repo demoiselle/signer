@@ -84,10 +84,10 @@ public class SocketConnector implements Connector {
         try {
             logger.info(timeStampMessagesBundle.getString("info.timestamp.send.request"));
             socket = new Socket(hostname, port);
-
+            socket.setSoTimeout(30000);
             logger.info(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
 
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
+            //logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
             // A "direct TCP-based TSA message" consists of:length (32-bits), flag (8-bits), value
             out = socket.getOutputStream();
             out.write(Utils.intToByteArray(1 + content.length));
@@ -95,7 +95,7 @@ public class SocketConnector implements Connector {
             out.write(content);
             out.flush();
 
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
+            //logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
             return socket.getInputStream();
         } catch (IOException e) {
         	logger.info(e.getMessage());        		
