@@ -95,7 +95,7 @@ public class TimeStampToken implements UnsignedAttribute {
     @Override
     public Attribute getValue() throws SignerException {
         try {
-            logger.info(cadesMessagesBundle.getString("info.tsa.connecting"));
+            logger.debug(cadesMessagesBundle.getString("info.tsa.connecting"));
 
             if (timeStampGenerator != null) {
                   //Inicializa os valores para o timestmap

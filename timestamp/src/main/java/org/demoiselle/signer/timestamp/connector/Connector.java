@@ -37,6 +37,9 @@
 package org.demoiselle.signer.timestamp.connector;
 
 import java.io.InputStream;
+import java.net.UnknownHostException;
+
+import org.demoiselle.signer.core.exception.CertificateCoreException;
 
 /**
  * Defines the basic methods for connecting to the time stamp authority.
@@ -45,7 +48,7 @@ import java.io.InputStream;
  */
 public interface Connector {
 
-    InputStream connect(byte[] content);
+    InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException;
 
     void close();
 
