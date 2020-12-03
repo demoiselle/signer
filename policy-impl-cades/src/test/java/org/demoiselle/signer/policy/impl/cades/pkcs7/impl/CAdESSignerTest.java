@@ -145,7 +145,10 @@ public class CAdESSignerTest {
 		try {
 			
 			// informar o caminho e nome do arquivo
-			File filep12 = new File(".p12");
+			File filep12 = new File("/home/");
+			
+
+
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
 			// Informar a senha
 			KeyStore keystore = loader.getKeyStore("senha");
@@ -196,7 +199,7 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/";
+			String fileDirName = "/home/";
 
 
 			
@@ -205,7 +208,7 @@ public class CAdESSignerTest {
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			//char[] senha = "senha".toCharArray();
+			//char[] senha = "1234".toCharArray();
 
 			// MSCAPI off
 			//org.demoiselle.signer.core.keystore.loader.configuration.Configuration.setMSCAPI_ON(false);
@@ -240,9 +243,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica referencia básica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			// referencia de validação
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_3);
@@ -275,7 +278,7 @@ public class CAdESSignerTest {
 			
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
-			File file = new File(fileDirName + "_detached_rb.p7s");
+			File file = new File(fileDirName + "_detached_rb_22.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -298,8 +301,8 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM HASH *****************");
 
 			// INFORMAR o arquivo para gerar o hash
-			String fileDirName = "/";
-			
+			String fileDirName = "/home/signer/Documentos/co_sign.txt";
+						
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -328,7 +331,7 @@ public class CAdESSignerTest {
 
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 
 			// devido a uma restrição do token branco, no windws só funciona com 256
 			String varSO = System.getProperty("os.name");
@@ -346,7 +349,7 @@ public class CAdESSignerTest {
 			
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
-			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
@@ -614,9 +617,9 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "local_e_nome_do_arquivo_para_assinar";
-			String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
-			
+			String fileDirName = "/home/signer/Documentos/co_sign.txt";
+			String fileSignatureDirName = "/home/signer/Documentos/co_sign.txt.p7s";
+						
 
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
@@ -634,12 +637,15 @@ public class CAdESSignerTest {
 
 			
 			byte[] hash = md.digest(fileToSign);
+			
+			String hashEncoded = new String(Base64.encodeBase64(hash));
+			System.out.println("Hash_Encoded"+hashEncoded);
 
 			// quando certificado em arquivo, precisa informar a senha
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
@@ -647,6 +653,9 @@ public class CAdESSignerTest {
 			
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
+			
+			
+			KeyStore ks = getKeyStoreTokenBySigner();
 
 			String alias = getAlias(ks);
 			
@@ -665,11 +674,17 @@ public class CAdESSignerTest {
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
-			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			varSO = System.getProperty("os.name");
 			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
+			
+			// Cache LCR
+			Configuration config = Configuration.getInstance();
+			//config.setCrlIndex(".crl_index");
+			//config.setCrlPath("/home/{usuario}/lcr_cache/");
+			config.setOnline(false);
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
