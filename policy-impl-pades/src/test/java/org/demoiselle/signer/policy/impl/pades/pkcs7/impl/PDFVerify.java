@@ -39,12 +39,13 @@ import org.junit.Test;
 public class PDFVerify {
 
 	//@Test
-	public void test() {
+	public void testPDFVerify() {
 		
 
 
 			String filePath = "/";
-			
+
+
 			
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
@@ -92,12 +93,12 @@ public class PDFVerify {
 					os.flush();
 					os.close();
 				*/
-					
+					System.out.println("validando");
 					result = checker.checkDetachedSignature(buf, assinatura);
 					
 					
 					if (result == null || result.isEmpty()) {
-						System.out.println("Erro ao validar");
+						System.err.println("Erro ao validar");
 						//Erro
 					}
 					results.addAll(checker.getSignaturesInfo());
@@ -106,8 +107,8 @@ public class PDFVerify {
 			if (!results.isEmpty()){
 				for (SignatureInformations sis : results){
 					for (String valErr : sis.getValidatorErrors()){
-						System.out.println( "++++++++++++++ ERROS ++++++++++++++++++");
-						System.out.println(valErr);
+						System.err.println( "++++++++++++++ ERROS ++++++++++++++++++");
+						System.err.println(valErr);
 					}
 					
 					for (String valWarn : sis.getValidatorWarnins()) {
@@ -231,58 +232,6 @@ public class PDFVerify {
 			assertTrue(false);
 		}
 	}
-	
-	
-
-    public void testValidateSignatureVlidationTestAdbePkcs7Sha1() throws Exception
-    {
-        String filePath = "caminho arquivo";
-        
-        byte[] pdfByte;
-        PDDocument pdfDoc = null;
-        SignerInformationVerifier verifier = null;
-        try
-        {
-            //pdfByte = IOUtils.toByteArray(this.getClass().getResourceAsStream("Teste_AI_Assinado_Assinador_Livre.pdf"));
-            pdfDoc = PDDocument.load(new File(filePath));
-            PDSignature signature = pdfDoc.getSignatureDictionaries().get(0);
-            byte[] signedContentAsBytes = signature.getSignedContent(new FileInputStream(filePath));
-
-            byte[] signatureAsBytes = signature.getContents(new FileInputStream(filePath));
-            
-            PAdESChecker checker = new PAdESChecker();
-            checker.checkDetachedSignature(signedContentAsBytes, signatureAsBytes);
-                        
-            CMSSignedData cms = new CMSSignedData(new ByteArrayInputStream(signatureAsBytes));
-                        
-            SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
-            @SuppressWarnings("unchecked")
-			X509CertificateHolder cert = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
-                    .iterator().next();
-            verifier = new JcaSimpleSignerInfoVerifierBuilder().setProvider(new BouncyCastleProvider()).build(cert);
-
-            boolean verifyRt = signerInfo.verify(verifier);
-            System.out.println("Verify result: " + verifyRt);
-
-            
-            MessageDigest md = MessageDigest.getInstance("SHA1");
-            byte[] calculatedDigest = md.digest(signedContentAsBytes);
-            byte[] signedDigest = (byte[]) cms.getSignedContent().getContent();
-            System.out.println("Document digest equals: " + Arrays.equals(calculatedDigest, signedDigest));
-            
-            
-        		
-			
-        }
-        finally
-        {
-            if (pdfDoc != null)
-            {
-                pdfDoc.close();
-            }
-        }
-    }
-	
 }
 
 
