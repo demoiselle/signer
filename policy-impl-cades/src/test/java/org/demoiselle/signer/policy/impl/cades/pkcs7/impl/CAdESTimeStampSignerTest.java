@@ -182,9 +182,9 @@ public class CAdESTimeStampSignerTest {
 		}
 	}
 
-	@Test
+	// @Test
 	public void testCheckTimeStampOnSignature() {
-		String fileSignatureDirName = "/home/signer/eclipse-workspace-teste/serpro-test/src/main/resources/timestamp_mail_bytearray.p7s";
+		String fileSignatureDirName = "/";
 		
 
 		
