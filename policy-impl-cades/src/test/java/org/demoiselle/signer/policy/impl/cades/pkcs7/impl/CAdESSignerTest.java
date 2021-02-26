@@ -199,9 +199,7 @@ public class CAdESSignerTest {
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/home/";
-
-
+			String fileDirName = "/";
 			
 
 			
@@ -243,9 +241,9 @@ public class CAdESSignerTest {
 			// para arquivo
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			// politica referencia básica sem carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
 			// referencia de validação
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_3);
@@ -278,7 +276,7 @@ public class CAdESSignerTest {
 			
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
-			File file = new File(fileDirName + "_detached_rb_22.p7s");
+			File file = new File(fileDirName + "_detached_rb.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -301,7 +299,7 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM HASH *****************");
 
 			// INFORMAR o arquivo para gerar o hash
-			String fileDirName = "/home/signer/Documentos/co_sign.txt";
+			String fileDirName = "/";
 						
 			
 			byte[] fileToSign = readContent(fileDirName);
@@ -617,8 +615,8 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
 
 			// INFORMAR o arquivo
-			String fileDirName = "/home/signer/Documentos/co_sign.txt";
-			String fileSignatureDirName = "/home/signer/Documentos/co_sign.txt.p7s";
+			String fileDirName = "/";
+			String fileSignatureDirName = "/";
 						
 
 			byte[] fileToSign = readContent(fileDirName);

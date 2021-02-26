@@ -41,12 +41,7 @@ public class PDFVerify {
 	//@Test
 	public void testPDFVerify() {
 		
-
-
 			String filePath = "/";
-
-
-			
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
 			try {
@@ -85,14 +80,14 @@ public class PDFVerify {
 					/*
 					 *  gravar a assinatura em um arquivo separado
 					 
-					
+				*/	
 					  
 					File file = new File(filePath + "_.p7s");
 					FileOutputStream os = new FileOutputStream(file);
 					os.write(assinatura);
 					os.flush();
 					os.close();
-				*/
+				
 					System.out.println("validando");
 					result = checker.checkDetachedSignature(buf, assinatura);
 					

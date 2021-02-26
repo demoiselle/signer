@@ -182,9 +182,11 @@ public class CAdESTimeStampSignerTest {
 		}
 	}
 
-	//@Test
+	@Test
 	public void testCheckTimeStampOnSignature() {
-		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileSignatureDirName = "/home/signer/eclipse-workspace-teste/serpro-test/src/main/resources/timestamp_mail_bytearray.p7s";
+		
+
 		
 		
 		try {
@@ -209,8 +211,12 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testCheckTimeStampWithContent() {
-		String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
-		String fileContentDirName = "local_e_nome_do_arquivo_assinado";
+		String fileTimeStampDirName = "/home/signer/eclipse-workspace-teste/serpro-test/src/main/resources/mail_bytearray.timestamp.p7s";
+		String fileContentDirName = "/home/signer/eclipse-workspace-teste/serpro-test/src/main/resources/mail_bytearray";
+		
+
+		
+
 		
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
