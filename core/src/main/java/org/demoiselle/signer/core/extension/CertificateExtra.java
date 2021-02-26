@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -46,6 +46,8 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_6;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_7;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_8;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.security.cert.CertificateParsingException;
 import java.security.cert.X509Certificate;
@@ -59,7 +61,8 @@ import java.util.Map;
  *
  * Extra Informations for ICP-BRASIL (DOC-ICP-04) Certificates. Abstracts the
  * rules to "PESSOA FISICA", "PESSOA JURIDICA" and "EQUIPAMENTO/APLICAÇÃO"
- *
+ * 
+ * 
  */
 public class CertificateExtra {
 
@@ -69,7 +72,7 @@ public class CertificateExtra {
     private String email = null;
     private final Map<String, OIDGeneric> extras = new HashMap<>();
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-
+    private static final Logger logger = LoggerFactory.getLogger(CertificateExtra.class);
     /**
      *
      * @param certificate The certificate to be analyzed
@@ -104,9 +107,9 @@ public class CertificateExtra {
                 }
             }
         } catch (CertificateParsingException e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage());
         } catch (Exception e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage());
         }
     }
 

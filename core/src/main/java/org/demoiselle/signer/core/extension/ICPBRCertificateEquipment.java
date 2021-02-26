@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -44,9 +44,32 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_2;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_3;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_4;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_8;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
+ * 
+ * 
+  *
+    * oid1 2.16.76.1.3.2 and content = name of the person responsible for
+     *  the certificate
+     *
+     * oid2 2.16.76.1.3.3 and content= Brazilian National Registry of Bussiness Entities called
+     *  Cadastro Nacional de Pessoa Juridica (CNPJ), if the certificate is a CNPJ
+     * 
+     *  
+     * oid3 2.16.76.1.3.4 and content = In the first 8 (eight) positions, the
+     * Date of birth of the person responsible for the certificate, in ddmmaaaa format;
+     * In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
+     * Responsible; In the 11 (eleven) subsequent positions, the number of
+     * Brazilian Social Identification number - NIS (PIS, PASEP or CI); In the 15 (fifteen) positions
+     * Subsequent, the Brazilian ID number (called RG) of the responsible for the certificate; In the six (6) positions
+     * Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brasilian state).
+     *
+     * oid4 2.16.76.1.3.8 and content = Corporate name in the the Brazilian IRS's Bussiness Company Registry Number caled CNPJ without abbreviations, 
+     * if its is an equipment certificate
+
  * 
  *
  */
@@ -56,6 +79,8 @@ public class ICPBRCertificateEquipment {
     private OID_2_16_76_1_3_3 oID_2_16_76_1_3_3 = null;
     private OID_2_16_76_1_3_4 oID_2_16_76_1_3_4 = null;
     private OID_2_16_76_1_3_8 oID_2_16_76_1_3_8 = null;
+    
+    private static final Logger logger = LoggerFactory.getLogger(ICPBRCertificateEquipment.class);
 
     /**
      *
@@ -118,7 +143,7 @@ public class ICPBRCertificateEquipment {
             SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
             return sdf.parse(oID_2_16_76_1_3_4.getBirthDate());
         } catch (ParseException e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage());
             return null;
         }
     }

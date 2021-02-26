@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -146,8 +146,7 @@ public class TimeStampOperator {
             RequestSigner requestSigner = new RequestSigner();
             byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request, varAlgo);
             return signedRequest;
-        } catch (IOException ex) { 
-        
+        } catch (IOException ex) {         
             throw new CertificateCoreException(ex.getMessage());
         }
     }
@@ -188,7 +187,6 @@ public class TimeStampOperator {
             Connector connector = ConnectorFactory.buildConnector(ConnectionType.SOCKET);
             connector.setHostname(TimeStampConfig.getInstance().getTspHostname());
             connector.setPort(TimeStampConfig.getInstance().getTSPPort());
-
             logger.info(timeStampMessagesBundle.getString("info.timestamp.response"));
             inputStream = connector.connect(request);
 
@@ -200,7 +198,7 @@ public class TimeStampOperator {
                 try {
                     Thread.sleep(1L);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                	logger.error(e.getMessage());
                 }
             }
 
@@ -215,7 +213,7 @@ public class TimeStampOperator {
                     try {
                         Thread.sleep(1L);
                     } catch (InterruptedException e) {
-                        e.printStackTrace();
+                        logger.error(e.getMessage());
                     }
                 }
                 if (System.currentTimeMillis() >= tempo) {
