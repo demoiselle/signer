@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -252,7 +252,7 @@ public class BasicCertificate {
             }
             return nome;
         } catch (IOException e) {
-            e.printStackTrace();
+        	logger.error(e.getMessage());
         }
         return null;
     }
@@ -276,7 +276,6 @@ public class BasicCertificate {
             return name;
         } catch (Exception e) {
         	logger.info(e.getMessage());
-            e.printStackTrace();
             return null;
         }
         
@@ -504,8 +503,7 @@ public class BasicCertificate {
             }
             return null;
         } catch (Exception e) {
-        	logger.info(e.getMessage());
-            e.printStackTrace();
+        	logger.error(e.getMessage());
             return null;
         }
     }
@@ -529,7 +527,7 @@ public class BasicCertificate {
 			}
 			return address;
 		} catch (Exception error) {
-			logger.info(error.getMessage());
+			logger.error(error.getMessage());
 			return address;
 		}
 	}
@@ -551,7 +549,7 @@ public class BasicCertificate {
     		DEROctetString oct = (DEROctetString) taggedObject.getObject();
     		return toString(oct.getOctets());
     	} catch (Exception error) {
-    		logger.info(error.getMessage());
+    		logger.error(error.getMessage());
     		return null;
     	}
     		
@@ -573,7 +571,7 @@ public class BasicCertificate {
 
             return toString(oct.getOctets());
     	}catch (Exception error) {
-    		logger.info(error.getMessage());
+    		logger.error(error.getMessage());
     		return null;
     	}
         
@@ -631,7 +629,7 @@ public class BasicCertificate {
             varASN1InputStream = new ASN1InputStream(oct.getOctets());
             return varASN1InputStream.readObject();
         } catch (Exception e) {
-        	logger.info(e.getMessage());
+        	logger.error(e.getMessage());
             return null;
         }        
     }
@@ -700,10 +698,8 @@ public class BasicCertificate {
             sb.append(coreMessagesBundle.getString("text.certicate.subject.key")).append(this.getSubjectKeyIdentifier()).append("\n");
             sb.append(coreMessagesBundle.getString("text.certicate.crl.url")).append(this.getCRLDistributionPoint()).append("\n");
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error(e.getMessage());
         }
-
         return sb.toString();
     }
-
 }
