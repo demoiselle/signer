@@ -41,7 +41,7 @@
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>signer-reference</artifactId>
 	<packaging>jdocbook</packaging>
-	<version>3.6.3</version>
+	<version>3.6.4</version>
 
 	<parent>
 		<groupId>br.gov.frameworkdemoiselle</groupId>
