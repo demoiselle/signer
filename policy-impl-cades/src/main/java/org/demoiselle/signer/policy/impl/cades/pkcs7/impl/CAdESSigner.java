@@ -308,7 +308,8 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 
 			
-			setCertificateManager(new CertificateManager(this.certificate));
+			PeriodValidator pV = new PeriodValidator();
+			setCertificateManager(new CertificateManager(this.certificate,false, pV));
 			
 			// Recupera a lista de algoritmos da politica e o tamanho minimo da
 			// chave
@@ -533,7 +534,7 @@ public class CAdESSigner implements PKCS7Signer {
 			String SN = certificate.getSerialNumber().toString()+"("+certificate.getSerialNumber().toString(16).toUpperCase()+")";
 			logger.info(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0],SN));
 			
-			PeriodValidator pV = new PeriodValidator();				
+			//PeriodValidator pV = new PeriodValidator();				
 			setNotAfterSignerCertificate(pV.valDate(this.certificate));			
 			return result;			
 

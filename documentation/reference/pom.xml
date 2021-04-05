@@ -91,12 +91,12 @@
 		</repository>
 	</repositories>
 
-	<distributionManagement>
+<!--  	<distributionManagement>
 		<site>
 			<id>demoiselle.sourceforge.net</id>
 			<url>${site.url}</url>
 		</site>
-	</distributionManagement>
+	</distributionManagement>-->
 
 	<properties>
 		<project.context>signer/reference</project.context>

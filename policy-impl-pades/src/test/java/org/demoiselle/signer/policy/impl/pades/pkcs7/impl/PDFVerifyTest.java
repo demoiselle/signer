@@ -1,7 +1,6 @@
 package org.demoiselle.signer.policy.impl.pades.pkcs7.impl;
 
 import static org.junit.Assert.assertTrue;
-
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSString;
@@ -36,12 +34,14 @@ import org.demoiselle.signer.timestamp.Timestamp;
 import org.junit.Test;
 
 @SuppressWarnings("unused")
-public class PDFVerify {
+public class PDFVerifyTest {
 
 	//@Test
 	public void testPDFVerify() {
 		
 			String filePath = "/";
+			
+
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
 			try {
@@ -88,7 +88,7 @@ public class PDFVerify {
 					os.flush();
 					os.close();
 				
-					System.out.println("validando");
+					//System.out.println("validando");
 					result = checker.checkDetachedSignature(buf, assinatura);
 					
 					

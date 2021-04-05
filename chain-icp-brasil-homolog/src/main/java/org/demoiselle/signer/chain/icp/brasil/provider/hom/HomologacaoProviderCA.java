@@ -45,6 +45,8 @@ import java.util.List;
 
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
 * 
@@ -57,6 +59,8 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 public class HomologacaoProviderCA implements ProviderCA {
 	
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
+	private static final Logger logger = LoggerFactory.getLogger(HomologacaoProviderCA.class);
+	
 
     @SuppressWarnings("finally")
 	public Collection<X509Certificate> getCAs() {
@@ -130,7 +134,7 @@ public class HomologacaoProviderCA implements ProviderCA {
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPROSSLv1Hom));
             
         } catch (Throwable error) {
-            error.printStackTrace();
+        	logger.error(error.getMessage());
             return null;
         } finally {
             return result;

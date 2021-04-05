@@ -53,13 +53,11 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
 import javax.xml.bind.DatatypeConverter;
 
+import org.apache.log4j.Logger;
 import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.Downloads;
@@ -75,7 +73,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	private static final String STRING_URL_ZIP = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list();
 	private static final String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list_sha512();
 
-	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class);
 	
 	
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
@@ -140,7 +138,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 					}
 
 				} else {
-					LOGGER.log(Level.WARNING, chainMessagesBundle.getString("error.hash.empty"));
+					LOGGER.warn(chainMessagesBundle.getString("error.hash.empty"));
 				}
 			}
 
@@ -148,12 +146,11 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			// salva localmente
 			if (!useCache) {
 				// Baixa um novo arquivo
-				LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.file.downloading",getURLZIP() ));
+				LOGGER.debug(chainMessagesBundle.getString("info.file.downloading",getURLZIP() ));
 				InputStream inputStreamZip = Downloads.getInputStreamFromURL(getURLZIP());
 				Files.copy(inputStreamZip, pathZip, StandardCopyOption.REPLACE_EXISTING);
 				inputStreamZip.close();
-
-				LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.sucess"));	
+				LOGGER.debug(chainMessagesBundle.getString("info.sucess"));	
 			}
 			
 			// Pega os certificados locais
@@ -161,18 +158,18 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			result = getFromZip(inputStreamZipReturn);
 			inputStreamZipReturn.close();
 
-			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.recovered.certs",result.size()));
+			LOGGER.debug(chainMessagesBundle.getString("info.recovered.certs",result.size()));
 
 		} catch (IOException e) {			
-			LOGGER.log(Level.WARNING,chainMessagesBundle.getString("error.recover.file") , e.getMessage());			
+			LOGGER.warn(chainMessagesBundle.getString("error.recover.file")+e.getMessage());			
 		} catch (Exception e) {
-			LOGGER.log(Level.SEVERE, chainMessagesBundle.getString("error.exception.recorver.chain"), e.getMessage());
+			LOGGER.warn(chainMessagesBundle.getString("error.exception.recorver.chain")+e.getMessage());
 		}
 
 		if (result != null) {
-			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.number.certificates.found",getName(), result.size()));
+			LOGGER.debug(chainMessagesBundle.getString("info.number.certificates.found",getName(), result.size()));
 		} else {
-			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.none.certificates",getName()));
+			LOGGER.info(chainMessagesBundle.getString("info.none.certificates",getName()));
 		}
 
 		return result;
@@ -221,9 +218,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			timeAfter = System.currentTimeMillis();
 		} catch (Throwable error) {
 			timeAfter = System.currentTimeMillis();
-			LOGGER.log(Level.SEVERE, chainMessagesBundle.getString("error.throwable", error.getMessage()));
+			LOGGER.warn(chainMessagesBundle.getString("error.throwable", error.getMessage()));
 		} finally {
-			LOGGER.log(Level.INFO, chainMessagesBundle.getString("info.time.total", (timeAfter - timeBefore)));  
+			LOGGER.debug(chainMessagesBundle.getString("info.time.total", (timeAfter - timeBefore)));  
 		}
 
 		return result;
@@ -257,8 +254,10 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				}
 			}
 		} catch (CertificateException error) {
+			LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate")+error.getMessage());
 			throw new RuntimeException(chainMessagesBundle.getString("error.invalid.certificate"), error);
 		} catch (IOException error) {
+			LOGGER.error(chainMessagesBundle.getString("error.stream")+error.getMessage());
 			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
 		return result;

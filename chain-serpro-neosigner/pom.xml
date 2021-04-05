@@ -1,6 +1,6 @@
 <!--
  Demoiselle Framework
- Copyright (C) 2010 SERPRO
+ Copyright (C) 2021 SERPRO
  ============================================================================
  This file is part of Demoiselle Framework.
 
@@ -30,43 +30,32 @@
  para maiores detalhes.
 
  Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
- "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses />
+ "License.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses />
  ou escreva para a Fundação do Software Livre (FSF) Inc.,
  51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>core</artifactId>
+    <artifactId>chain-serpro-neosigner</artifactId>
     <packaging>jar</packaging>
 
-    <parent>
-        <groupId>org.demoiselle.signer</groupId>
-        <artifactId>parent</artifactId>
-        <version>3.6.5-SNAPSHOT</version>
-        <relativePath>../parent</relativePath>
-    </parent>
-
-    <name>Demoiselle Signature Core</name>
-    <description>Demoiselle Signature Core project</description>
+    
+    <name>SERPRO CA NeoSigner</name>
+    <description>Prover cadeias para plataforma de Assinaturas Digitais do SERPRO</description>
     <url>http://www.demoiselle.org</url>
 
-<dependencies>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-core</artifactId>
-			<version>2.3.0.1</version>
-		</dependency>
-		<dependency>
-			<groupId>javax.xml.bind</groupId>
-			<artifactId>jaxb-api</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-		<dependency>
-			<groupId>com.sun.xml.bind</groupId>
-			<artifactId>jaxb-impl</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-	</dependencies>   
+	<parent>
+        <groupId>org.demoiselle.signer</groupId>
+        <artifactId>parent</artifactId>
+        <relativePath>../parent</relativePath>
+        <version>3.6.5-SNAPSHOT</version>
+	</parent>
 
-</project>
+    <dependencies>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>core</artifactId>
+        </dependency>
+    </dependencies>
+    </project>

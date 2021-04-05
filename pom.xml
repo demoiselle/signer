@@ -85,12 +85,11 @@
 		<module>cryptography</module>
 		<module>chain-icp-brasil</module>
 		<module>chain-icp-brasil-homolog</module>
+		<module>chain-serpro-neosigner</module>
 		<module>policy-engine</module>
 		<module>policy-impl-cades</module>
 		<module>timestamp</module>
-		<!-- modulo xades desativado nesta versão -->
-		<!--<module>policy-impl-xades</module>  -->
-		
+		<module>policy-impl-xades</module>		
 		<module>policy-impl-pades</module>
 	</modules>
 
@@ -215,31 +214,32 @@
 			<name>Sonatype Nexus Snapshots</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</pluginRepository>
-		<pluginRepository>		
+<!-- 		<pluginRepository>		
 			<id>demoiselle.sourceforge.net-release</id>
-			<url>http://demoiselle.sourceforge.net/repository/release</url>
+			<url>http://demoiselle.sourceforge.net/repository/release</url>			 
 			
 		</pluginRepository>
+		-->
 		<pluginRepository>
-			<id>nexus.jboss.org</id>
+			<id>nexus-jboss-org</id>
 			<name>JBoss Maven Repository</name>
 			<url>http://repository.jboss.org/nexus/content/groups/public</url>
 			
 		</pluginRepository>
 
 		<pluginRepository>
-			<id>http://repo1.maven.org/maven2/</id>
+			<id>repo1-maven-org</id>
 			<url>https://repo1.maven.org/maven2/</url>
 		</pluginRepository>
 		<pluginRepository>
-			<id>http://repo.maven.apache.org/maven2/</id>
+			<id>repo-maven-apache-org</id>
 			<url>https://repo.maven.apache.org/maven2</url>
 		</pluginRepository> 
 		<!--    
 		<pluginRepository>
-			<id>http://insecure.repo1.maven.org/maven2</id>
+			<id>insecure.repo1.maven.org</id>
 			<url>http://insecure.repo1.maven.org/maven2/</url>
-		</pluginRepository>    -->
+		</pluginRepository> -->
   </pluginRepositories>
   
 	<reporting>
@@ -277,10 +277,11 @@
 	</scm>
 
 	<distributionManagement>
-		<site>
-			<id>demoiselle.sourceforge.net</id>
+		<!-- <site>
+			<id>demoiselle-sourceforge-net</id>
 			<url>${site.url}</url>
 		</site>
+		 -->
 
 		<snapshotRepository>
 			<id>sonatype-nexus-snapshots</id>
@@ -302,34 +303,33 @@
 		<repository>
 			<id>sonatype-nexus-releases</id>
 			<name>Sonatype Nexus Releases</name>
-			<url>https://oss.sonatype.org/content/repositories/releases</url>
-	
+			<url>https://oss.sonatype.org/content/repositories/releases</url>	
 		</repository>
 
-		<!-- Legacy -->
+		<!-- Legacy 
 		<repository>
-			<id>demoiselle.sourceforge.net-release</id>
+			<id>demoiselle-sourceforge-net-release</id>
 			<url>http://demoiselle.sourceforge.net/repository/release</url>
 		
 		</repository>
 		<repository>
-			<id>snapshot.sourceforge.net-release</id>
+			<id>snapshot-sourceforge-net-release</id>
 			<url>http://demoiselle.sourceforge.net/repository/snapshot</url>
-		
 		</repository>
+		-->
 		<repository>
-			<id>nexus.jboss.org</id>
+			<id>nexus-jboss-org</id>
 			<name>JBoss Maven Repository</name>
 			<url>http://repository.jboss.org/nexus/content/groups/public</url>
 			
 		</repository>
 
 		<repository>
-			<id>http://repo1.maven.org/maven2/</id>
+			<id>repo1-maven-org</id>
 			<url>https://repo1.maven.org/maven2</url>
 		</repository>
 		<repository>
-			<id>http://repo.maven.apache.org/maven2/</id>
+			<id>repo-maven-apache-org</id>
 			<url>https://repo.maven.apache.org/maven2</url>
 			
 		</repository>

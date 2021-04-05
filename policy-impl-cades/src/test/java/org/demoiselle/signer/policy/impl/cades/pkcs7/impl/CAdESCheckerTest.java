@@ -75,13 +75,6 @@ import org.junit.Test;
 @SuppressWarnings("unused")
 public class CAdESCheckerTest {
 	
-	@BeforeClass
-    public static void beforeClass()
-    {
-        System.setProperty("java.util.logging.config.file", ClassLoader.getSystemResource("logging.properties").getPath());
-    }
-	
-	
 
 	/**
 	 * Verifica assinatura desanexada do arquivo
@@ -524,7 +517,7 @@ public class CAdESCheckerTest {
 	//@Test
 	public void testGerarBase64FromFile (){
 		
-		String fileToVerifyDirName = "";
+		String fileToVerifyDirName = "/";
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		String S = Base64.encodeBase64String(fileToVerify);
 		System.out.println(S);

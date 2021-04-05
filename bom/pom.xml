@@ -8,7 +8,7 @@
 	<name>Demoiselle Signer Bill of Materials</name>
 
 	<description>Contains the list of all dependencies needed for build Demoiselle Signer Project.</description>
-	<url>http://signer.demoiselle.io</url>
+	<url>http://www.frameworkdemoiselle.gov.br</url>
 
 	<licenses>
 		<license>
@@ -104,6 +104,12 @@
 				<artifactId>timestamp</artifactId>
 				<version>${demoiselle.signer.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>chain-serpro-neosigner</artifactId>
+				<version>${demoiselle.signer.version}</version>
+			</dependency>
+			
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>

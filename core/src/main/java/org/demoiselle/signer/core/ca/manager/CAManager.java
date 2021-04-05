@@ -49,6 +49,9 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedList;
+
+import javax.security.auth.x500.X500Principal;
+
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
 import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
@@ -237,6 +240,7 @@ public class CAManager {
 
 		Collection<ProviderCA> providers = ProviderCAFactory.getInstance().factory();
 
+		boolean ok = false;
 		for (ProviderCA provider : providers) {
 			try {
 				String varNameProvider = provider.getName();
@@ -246,50 +250,52 @@ public class CAManager {
 				Collection<X509Certificate> acs = provider.getCAs();
 
 				// Variable to control if go to next Provider is necessery
-				boolean ok = false;
-
 				// Iterate this provider to create a Cert Chain
 				for (X509Certificate ac : acs) {
 					// If is CA issuer of certificate
-					String certificateCnIssuer = this.getCN(certificate.getIssuerX500Principal().getName());
-					String acCN = this.getCN(ac.getSubjectX500Principal().getName());
-					if (certificateCnIssuer.equalsIgnoreCase(acCN) && this.isCAofCertificate(ac, certificate)) {
-						result.add(ac);
-						X509Certificate acFromAc = null;
+					X500Principal issuer = certificate.getIssuerX500Principal(); 
+					if (issuer != null) {
+						String issuerName = certificate.getIssuerX500Principal().getName();
+						String certificateCnIssuer = this.getCN(issuerName);
+						String acCN = this.getCN(ac.getSubjectX500Principal().getName());
+						if (certificateCnIssuer.equalsIgnoreCase(acCN) && this.isCAofCertificate(ac, certificate)) {
+							result.add(ac);
+							X509Certificate acFromAc = null;
 
-						for (X509Certificate ac2 : acs) {
-							// If is CA Issuer of CA issuer
-							String acCnIssuer = this.getCN(ac.getIssuerX500Principal().getName());
-							String ac2CN = this.getCN(ac2.getSubjectX500Principal().getName());
-							if (acCnIssuer.equalsIgnoreCase(ac2CN) && this.isCAofCertificate(ac2, ac)) {
-								acFromAc = ac2;
+							for (X509Certificate ac2 : acs) {
+								// If is CA Issuer of CA issuer
+								String acCnIssuer = this.getCN(ac.getIssuerX500Principal().getName());
+								String ac2CN = this.getCN(ac2.getSubjectX500Principal().getName());
+								if (acCnIssuer.equalsIgnoreCase(ac2CN) && this.isCAofCertificate(ac2, ac)) {
+									acFromAc = ac2;
+								}
 							}
-						}
 
-						while (acFromAc != null) {
-							// If the chain was created SET OK
-							result.add(acFromAc);
+							while (acFromAc != null) {
+								// If the chain was created SET OK
+								result.add(acFromAc);
 
-							// If Certificate is ROOT end while
-							if (this.isRootCA(acFromAc)) {
-								ok = true;
-								break;
-							} else {
-								for (X509Certificate ac3 : acs) {
-									// If is CA Issuer of CA issuer
-									String acFromAcIssuerCN = this.getCN(acFromAc.getIssuerX500Principal().getName());
-									String ac3CN = this.getCN(ac3.getSubjectX500Principal().getName());
-									if (acFromAcIssuerCN.equalsIgnoreCase(ac3CN) && this.isCAofCertificate(ac3, acFromAc)) {
-										acFromAc = ac3;
+								// If Certificate is ROOT end while
+								if (this.isRootCA(acFromAc)) {
+									ok = true;
+									break;
+								} else {
+									for (X509Certificate ac3 : acs) {
+										// If is CA Issuer of CA issuer
+										String acFromAcIssuerCN = this.getCN(acFromAc.getIssuerX500Principal().getName());
+										String ac3CN = this.getCN(ac3.getSubjectX500Principal().getName());
+										if (acFromAcIssuerCN.equalsIgnoreCase(ac3CN) && this.isCAofCertificate(ac3, acFromAc)) {
+											acFromAc = ac3;
+										}
 									}
 								}
 							}
 						}
+						if (ok) {
+							break;
+						}						
 					}
 
-					if (ok) {
-						break;
-					}
 				}
 
 				LOGGER.debug(coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
@@ -298,14 +304,17 @@ public class CAManager {
 				if (ok) {
 					break;
 				} else {
-					LOGGER.error(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
+					LOGGER.debug(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
 				}
 			} catch (Exception error) {
 				LOGGER.error(coreMessagesBundle.getString("error.no.ca", provider.getName()));
 				// TODO: Nao foi possivel resgatar as CAs de um determinado provedor
 			}
 		}
-
+		
+		if (!ok) {
+			LOGGER.error(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
+		}
 		if (config.isCached() && !result.isEmpty()) {
 			CAManagerCache.getInstance().addCertificate(certificate, result);
 		}
@@ -370,7 +379,7 @@ public class CAManager {
 
 	private String getCN(String x500) {
 		int indexCN = x500.indexOf(CN);
-		int indexFirstComa = x500.indexOf(',');
+		int indexFirstComa = x500.indexOf(',',indexCN);
 		return x500.substring(indexCN, indexFirstComa);
 	}
 }

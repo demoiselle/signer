@@ -21,6 +21,8 @@ import java.util.List;
 
 import javax.net.ssl.KeyManagerFactory;
 
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.timestamp.Timestamp;
@@ -33,15 +35,15 @@ public class CAdESTimeStampSignerTest {
 	
 	//@Test
 	public void testDoTimeStampForSignature() {
-		String fileSignatureDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileSignatureDirName = "/.p7s";
 						
 		try {
 			
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 
-			// Para certificados no so windows (mascapi)
-			// KeyStore ks = getKeyStoreOnWindows();
+			// Para certificados no so windows ou NeoID
+			 KeyStore ks = getKeyStoreTokenBySigner();
 			
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
@@ -65,7 +67,7 @@ public class CAdESTimeStampSignerTest {
 			byte[] signatureWithTimeStamp = varCAdESTimeStampSigner
 					.doTimeStampForSignature(signatureFile);
 
-			File file = new File(fileSignatureDirName + ".timestamp" + ".p7s");
+			File file = new File(fileSignatureDirName + "_timestamp" + ".p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signatureWithTimeStamp);
 			os.flush();
@@ -81,7 +83,7 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testDoTimeStampForContent() {
-		String fileDirName = "caminho do arquivo";
+		String fileDirName = "/";
 				
 		try {
 			
@@ -182,12 +184,11 @@ public class CAdESTimeStampSignerTest {
 		}
 	}
 
-	// @Test
+	//@Test
 	public void testCheckTimeStampOnSignature() {
 		String fileSignatureDirName = "/";
-		
 
-		
+
 		
 		try {
 			byte[] signatureFile = readContent(fileSignatureDirName);
@@ -211,8 +212,8 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testCheckTimeStampWithContent() {
-		String fileTimeStampDirName = "/home/signer/eclipse-workspace-teste/serpro-test/src/main/resources/mail_bytearray.timestamp.p7s";
-		String fileContentDirName = "/home/signer/eclipse-workspace-teste/serpro-test/src/main/resources/mail_bytearray";
+		String fileTimeStampDirName = "/.p7s";
+		String fileContentDirName = "/";
 		
 
 		
@@ -334,27 +335,24 @@ public class CAdESTimeStampSignerTest {
 
 	}
 
-	/**
-	 * 
-	 * Keytore a partir de MSCAPI
-	 */
-
-	private KeyStore getKeyStoreOnWindows() {
+	
+	private KeyStore getKeyStoreTokenBySigner() {
 
 		try {
 			
-			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
-			
-			KeyStore ks = msKeyStoreLoader.getKeyStore();
+			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+			KeyStore keyStore = keyStoreLoader.getKeyStore();
 
-			return ks;
+			return keyStore;
 
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
+		} finally {
 		}
 
 	}
+
 	
 	private String getAlias(KeyStore ks) {
 		Certificate[] certificates = null;
