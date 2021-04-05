@@ -44,6 +44,8 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
 import org.demoiselle.signer.core.util.Base64Utils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -53,6 +55,7 @@ import org.demoiselle.signer.core.util.Base64Utils;
 public class ICPBR_CRL {
 
     private X509CRL x509crl = null;
+    private final Logger logger = LoggerFactory.getLogger(ICPBR_CRL.class);
 
     /**
      *
@@ -96,11 +99,13 @@ public class ICPBR_CRL {
         } catch (CRLException e) {
             // Nao conseguiu carregar o arquivo. Verifica se ele esta codificado
             // em Base64
+        	logger.error(e.getMessage());
             byte[] data2 = null;
             try {
                 data2 = Base64Utils.base64Decode(new String(data));
             } catch (Exception e2) {
                 // Nao foi possivel decodificar o arquivo em Base64
+            	logger.error(e.getMessage());
                 throw e;
             }
 

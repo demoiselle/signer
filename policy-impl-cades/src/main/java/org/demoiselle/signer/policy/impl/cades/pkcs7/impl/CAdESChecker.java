@@ -188,10 +188,10 @@ public class CAdESChecker implements PKCS7Checker {
 					cV.validate(varCert);	
 				}catch (CertificateValidatorCRLException cvce) {
 					signatureInfo.getValidatorErrors().add(cvce.getMessage());
-					logger.info(cvce.getMessage());
+					logger.debug(cvce.getMessage());
 				}catch (CertificateRevocationException cre) {
-					signatureInfo.getValidatorWarnins().add(cre.getMessage());
-					logger.info("certificado revogado");
+					signatureInfo.getValidatorErrors().add(cre.getMessage());
+					logger.debug(cre.getMessage());
 				}
 				
 				PeriodValidator pV = new PeriodValidator();				
@@ -240,19 +240,20 @@ public class CAdESChecker implements PKCS7Checker {
 					Attribute attributeContentType = signedAttributes.get(CMSAttributes.contentType);
 					if (attributeContentType == null) {
 						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
-						//throw new SignerException(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
 						logger.info(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
+						throw new SignerException(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "ContentType"));
 					}
 
 					if (!attributeContentType.getAttrValues().getObjectAt(0).equals(ContentInfo.data)) {
 						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.content.not.data"));
-						//throw new SignerException(cadesMessagesBundle.getString("error.content.not.data"));
 						logger.info(cadesMessagesBundle.getString("error.content.not.data"));
+						throw new SignerException(cadesMessagesBundle.getString("error.content.not.data"));
 					}
 
 					// Validando o atributo MessageDigest
 					Attribute attributeMessageDigest = signedAttributes.get(CMSAttributes.messageDigest);
 					if (attributeMessageDigest == null) {
+						logger.info(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 						throw new SignerException(
 								cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 					}
