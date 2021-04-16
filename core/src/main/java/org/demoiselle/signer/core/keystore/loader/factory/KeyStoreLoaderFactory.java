@@ -44,6 +44,8 @@ import org.demoiselle.signer.core.keystore.loader.implementation.FileSystemKeySt
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import java.io.File;
+import java.io.InputStream;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,6 +94,34 @@ public class KeyStoreLoaderFactory {
      */
     public static KeyStoreLoader factoryKeyStoreLoader(File file) {
         return new FileSystemKeyStoreLoader(file);
+    }
+    
+    
+    /**
+     * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
+     *
+     * @param InputStrean containing keystore
+     * @return {@link KeyStoreLoader}
+     */
+    public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream) {
+        return new FileSystemKeyStoreLoader(inputStream);
+    }
+    
+    /**
+     * 
+     *
+     * 
+     */
+    
+    /**
+     * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
+     * 
+     * @param InputStrean containing keystore
+     * @param type type of keystore (maybe PKCS12 or JKS
+     * @return {@link KeyStoreLoader}
+     */
+    public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream, String type) {
+        return new FileSystemKeyStoreLoader(inputStream, type);
     }
 
     /**

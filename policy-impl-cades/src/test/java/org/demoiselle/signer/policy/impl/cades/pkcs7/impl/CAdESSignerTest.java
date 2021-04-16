@@ -140,6 +140,35 @@ public class CAdESSignerTest {
 
 	}
 	
+	
+	// lê pelo InputStream
+	private KeyStore getKeyStoreStreamBySigner() {
+
+		try {
+			
+			// informar o caminho e nome do arquivo
+			String filep12 = "/";
+						
+			InputStream readStream = readStream(filep12);
+
+			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(readStream);
+			// Informar a senha
+			KeyStore keystore = loader.getKeyStore("senha");
+			return keystore;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		} finally {
+		}
+
+	}
+	
+	
+	/**
+	 * le a partir do arquivo .p12 ou pfx
+	 * @return
+	 */
 	private KeyStore getKeyStoreFileBySigner() {
 
 		try {
@@ -161,7 +190,8 @@ public class CAdESSignerTest {
 		}
 
 	}
-		
+	
+	
 	/**
 	 * 
 	 * Keytore a partir de MSCAPI
@@ -201,12 +231,9 @@ public class CAdESSignerTest {
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			String fileDirName = "/";
 			
-
 			
 			byte[] fileToSign = readContent(fileDirName);
 
-			// quando certificado em arquivo, precisa informar a senha
-			//char[] senha = "1234".toCharArray();
 
 			// MSCAPI off
 			//org.demoiselle.signer.core.keystore.loader.configuration.Configuration.setMSCAPI_ON(false);
@@ -224,6 +251,7 @@ public class CAdESSignerTest {
 
 			//// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFileBySigner();
+			//KeyStore ks = getKeyStoreStreamBySigner();
 			// Para certificado token Linux
 			//KeyStore ks = getKeyStoreToken();
 
@@ -239,7 +267,10 @@ public class CAdESSignerTest {
 			signer.setPrivateKey((PrivateKey) ks.getKey(alias, null));
 
 			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			//char[] senha = "teste".toCharArray();
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			
 			// politica referencia básica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
@@ -708,6 +739,17 @@ public class CAdESSignerTest {
 			result = new byte[(int) file.length()];
 			is.read(result);
 			is.close();
+		} catch (IOException ex) {
+			ex.printStackTrace();
+		}
+		return result;
+	}
+	
+	private InputStream readStream(String parmFile) {
+		InputStream result = null;
+		try {
+			File file = new File(parmFile);
+			result = new FileInputStream(parmFile);
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
