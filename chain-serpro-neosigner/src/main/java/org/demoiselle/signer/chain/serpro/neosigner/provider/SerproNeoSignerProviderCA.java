@@ -66,14 +66,15 @@ public class SerproNeoSignerProviderCA implements ProviderCA {
         try {
             
         	
-        	InputStream	AutoridadeCertificadoraRaizdoSERPRODesenv = SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
-            InputStream	AutoridadeCertificadoraFinaldoSERPRODesenv = SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");
-            InputStream	AutoridadeCertificadoraFinaldoSERPROSoftware = SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPROSoftware.crt");
-            InputStream	NeoSignerSERPROTeste = SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/NeoSignerSERPRO.crt");
+        	InputStream	AutoridadeCertificadoraRaizdoSERPRODesenv = 
+        			SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
+            InputStream	AutoridadeCertificadoraFinaldoSERPRODesenv = 
+            		SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");
+            InputStream	NeoSignerSERPROTeste = 
+            		SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/NeoSignerSERPRO.crt");
             
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPRODesenv));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPRODesenv));
-            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPROSoftware));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(NeoSignerSERPROTeste));
             
         } catch (Throwable error) {
