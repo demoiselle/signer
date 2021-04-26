@@ -73,8 +73,8 @@ public class SerproNeoSignerProviderCA implements ProviderCA {
             InputStream	NeoSignerSERPROTeste = 
             		SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/NeoSignerSERPRO.crt");
             
-            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPRODesenv));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPRODesenv));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPRODesenv));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(NeoSignerSERPROTeste));
             
         } catch (Throwable error) {
