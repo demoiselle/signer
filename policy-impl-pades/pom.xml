@@ -77,6 +77,11 @@
 		
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>chain-serpro-neosigner</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>chain-icp-brasil</artifactId>
 			<scope>test</scope>
 		</dependency>
@@ -85,11 +90,7 @@
 			<artifactId>chain-icp-brasil-homolog</artifactId>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
-			<groupId>org.demoiselle.signer</groupId>
-			<artifactId>chain-serpro-neosigner</artifactId>
-			<scope>test</scope>
-		</dependency>
+		
 
 	</dependencies>
 

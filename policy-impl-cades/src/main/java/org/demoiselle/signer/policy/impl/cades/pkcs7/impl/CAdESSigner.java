@@ -424,12 +424,12 @@ public class CAdESSigner implements PKCS7Signer {
 				}
 			}
 			if (trustedCAs.contains(rootOfCertificate)){
-					logger.info(cadesMessagesBundle.getString("info.trust.in.point", rootOfCertificate.getSubjectDN()));
+					logger.debug(cadesMessagesBundle.getString("info.trust.in.point", rootOfCertificate.getSubjectDN()));
 			}else{
 					// Não encontrou na política, verificará nas cadeias do
 					// componente chain-icp-brasil provavelmente certificado de
 					// homologação.
-					logger.warn(cadesMessagesBundle.getString("info.trust.poin.homolog"));
+					logger.info(cadesMessagesBundle.getString("info.trust.poin.homolog"));
 					CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
 			}
 				

@@ -119,16 +119,19 @@ public class CAManager {
 
 	public boolean validateRootCA(X509Certificate ca, X509Certificate certificate) {
 		if (ca == null) {
+			LOGGER.error(coreMessagesBundle.getString("error.root.ca.not.informed"));
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.informed"));
 		}
 
 		if (!this.isRootCA(ca)) {
+			LOGGER.error(coreMessagesBundle.getString("error.not.root"));
 			throw new CAManagerException(coreMessagesBundle.getString("error.not.root"));
 		}
 
 		Collection<X509Certificate> acs = this.getCertificateChain(certificate);
 
 		if (acs == null || acs.isEmpty()) {
+			LOGGER.error(coreMessagesBundle.getString("error.get.chain"));
 			throw new CAManagerException(coreMessagesBundle.getString("error.get.chain"));
 		}
 
@@ -141,10 +144,12 @@ public class CAManager {
 		}
 
 		if (rootCA == null) {
+			LOGGER.error(coreMessagesBundle.getString("error.root.ca.not.found"));
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.found"));
 		}
 
 		if (!this.isCAofCertificate(rootCA, ca)) {
+			LOGGER.error(coreMessagesBundle.getString("error.root.ca.not.chain"));
 			throw new CAManagerException(coreMessagesBundle.getString("error.root.ca.not.chain"));
 		}
 
@@ -186,10 +191,13 @@ public class CAManager {
 
 			return false;
 		} catch (CertificateException error) {
+			LOGGER.error(coreMessagesBundle.getString("error.certificate.exception"), error);
 			throw new CAManagerException(coreMessagesBundle.getString("error.certificate.exception"), error);
 		} catch (NoSuchAlgorithmException error) {
+			LOGGER.error(coreMessagesBundle.getString("error.no.such.algorithm"), error);
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
 		} catch (NoSuchProviderException error) {
+			LOGGER.error(coreMessagesBundle.getString("error.no.such.provider"), error);
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.provider"), error);
 		}
 	}
@@ -307,8 +315,7 @@ public class CAManager {
 					LOGGER.debug(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
 				}
 			} catch (Exception error) {
-				LOGGER.error(coreMessagesBundle.getString("error.no.ca", provider.getName()));
-				// TODO: Nao foi possivel resgatar as CAs de um determinado provedor
+				LOGGER.info(coreMessagesBundle.getString("error.no.ca", provider.getName()));				
 			}
 		}
 		
@@ -346,13 +353,17 @@ public class CAManager {
 			certificateChain = keyStore.getCertificateChain(certificateAlias);
 
 			if (certificateChain == null) {
+				LOGGER.error(coreMessagesBundle.getString("error.no.chain.alias", certificateAlias));
 				throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias", certificateAlias));
 			}
 		} catch (KeyStoreException error) {
+			LOGGER.error(coreMessagesBundle.getString("error.keystore.type"), error);
 			throw new CAManagerException(coreMessagesBundle.getString("error.keystore.type"), error);
 		} catch (UnrecoverableKeyException error) {
+			LOGGER.error(coreMessagesBundle.getString("error.unrecoverable.key"), error);
 			throw new CAManagerException(coreMessagesBundle.getString("error.unrecoverable.key"), error);
 		} catch (NoSuchAlgorithmException error) {
+			LOGGER.error(coreMessagesBundle.getString("error.no.such.algorithm"), error);
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.such.algorithm"), error);
 		}
 
@@ -371,6 +382,7 @@ public class CAManager {
 				result.add((X509Certificate) certificate);
 			}
 		} else {
+			LOGGER.error(coreMessagesBundle.getString("error.no.chain.alias"));
 			throw new CAManagerException(coreMessagesBundle.getString("error.no.chain.alias"));
 		}
 

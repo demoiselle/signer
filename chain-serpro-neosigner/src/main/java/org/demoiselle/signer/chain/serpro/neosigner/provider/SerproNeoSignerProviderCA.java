@@ -63,18 +63,23 @@ public class SerproNeoSignerProviderCA implements ProviderCA {
     @SuppressWarnings("finally")
 	public Collection<X509Certificate> getCAs() {
         List<X509Certificate> result = new ArrayList<X509Certificate>();
-        try {
-            
+        try {                   	
         	
-        	InputStream	AutoridadeCertificadoraRaizdoSERPRODesenv = 
+        	InputStream	AutoridadeCertificadoraRaizdoSERPRO = 
         			SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
-            InputStream	AutoridadeCertificadoraFinaldoSERPRODesenv = 
-            		SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");
+            InputStream	AutoridadeCertificadoraFinaldoSERPRO = 
+            		SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");        	
+        	InputStream	AutoridadeCertificadoraRaizdoSERPROSoftware = 
+        			SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPROSoftware.crt");
+            InputStream	AutoridadeCertificadoraFinaldoSERPROSoftware = 
+            		SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPROSoftware.crt");
             InputStream	NeoSignerSERPROTeste = 
             		SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/NeoSignerSERPRO.crt");
             
-            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPRODesenv));
-            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPRODesenv));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPRO));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPRO));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPROSoftware));
+            result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPROSoftware));
             result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(NeoSignerSERPROTeste));
             
         } catch (Throwable error) {
