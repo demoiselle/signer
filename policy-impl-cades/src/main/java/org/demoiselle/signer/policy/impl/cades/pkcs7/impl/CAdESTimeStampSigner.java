@@ -223,44 +223,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 	}
 	
 
-	public Timestamp checkTimeStampPDFWithContent(byte[] timeStamp, byte[] content) {
-		try {
-			return this.checkTimeStampPDF(timeStamp,content,null);
-			} catch (CertificateCoreException e) {
-			throw new SignerException(e);
-		}	
-	}
-
-
-	public Timestamp checkTimeStampPDFWithHash(byte[] timeStamp, byte[] hash) {
-		try {
-			return this.checkTimeStampPDF(timeStamp,null,hash);
-			} catch (CertificateCoreException e) {
-			throw new SignerException(e);
-		}
-	}
-	
-	
-	private Timestamp checkTimeStampPDF(byte[] timeStamp, byte[] content,  byte[] hash){
-		try {
-			Security.addProvider(new BouncyCastleProvider());
-			byte[] varTimeStamp = timeStamp;
-			TimeStampOperator timeStampOperator = new TimeStampOperator();
-			if (content != null){
-				timeStampOperator.validate(content, varTimeStamp,null);
-			}else{
-				timeStampOperator.validate(null, varTimeStamp,hash);
-			}			
-			TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
-			Timestamp timeStampSigner = new Timestamp(timeStampToken);
-			return timeStampSigner;
-		} catch (CertificateCoreException | IOException | TSPException
-			| CMSException e) {
-			throw new SignerException(e);
-		}
-		
-	}
-	private Timestamp checkTimeStamp(byte[] timeStamp, byte[] content,  byte[] hash){
+		private Timestamp checkTimeStamp(byte[] timeStamp, byte[] content,  byte[] hash){
 		try {
 			Security.addProvider(new BouncyCastleProvider());
 			ais = new ASN1InputStream(new ByteArrayInputStream(timeStamp));

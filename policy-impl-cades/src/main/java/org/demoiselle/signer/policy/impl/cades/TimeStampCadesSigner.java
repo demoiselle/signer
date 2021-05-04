@@ -46,8 +46,7 @@ import org.demoiselle.signer.timestamp.Timestamp;
 /**
  * Basic specification for implementation of Time Stamp on CADES format.
  */
-@Deprecated
-public interface TimeStampSigner {
+public interface TimeStampCadesSigner {
 
 
     /**

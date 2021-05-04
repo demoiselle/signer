@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -34,14 +34,17 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.policy.impl.cades.pkcs7;
+package org.demoiselle.signer.policy.impl.pades.pkcs7;
 
-import org.demoiselle.signer.policy.impl.cades.TimeStampCadesSigner;
+import org.demoiselle.signer.policy.impl.pades.TimeStampPAdESSigner;
 
 /**
  * Basic specification for implementing Time Stamp in PKCS7 Format.
  */
-public interface PKCS7TimeStampSigner extends TimeStampCadesSigner {
+public interface PKCS7TimeStampSigner extends TimeStampPAdESSigner {
+	
+	
+		
 	
     
  }
