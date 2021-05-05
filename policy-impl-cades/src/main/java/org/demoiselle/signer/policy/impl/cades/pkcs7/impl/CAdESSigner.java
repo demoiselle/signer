@@ -123,6 +123,7 @@ public class CAdESSigner implements PKCS7Signer {
 	private byte[] escTimeStampContent;
 	private boolean pades = false;
 	private Date notAfterSignerCertificate;
+	private String signatory;
 
 
 	public CAdESSigner() {
@@ -283,10 +284,12 @@ public class CAdESSigner implements PKCS7Signer {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
 			if (this.certificateChain == null) {
+				logger.error(cadesMessagesBundle.getString("error.certificate.null"));
 				throw new SignerException(cadesMessagesBundle.getString("error.certificate.null"));
 			}
 			
 			if (getPrivateKey() == null) {
+				logger.error(cadesMessagesBundle.getString("error.privatekey.null"));
 				throw new SignerException(cadesMessagesBundle.getString("error.privatekey.null"));
 			}
 			
@@ -435,7 +438,7 @@ public class CAdESSigner implements PKCS7Signer {
 					// Não encontrou na política, verificará nas cadeias do
 					// componente chain-icp-brasil provavelmente certificado de
 					// homologação.
-					logger.info(cadesMessagesBundle.getString("info.trust.poin.homolog"));
+					logger.debug(cadesMessagesBundle.getString("info.trust.poin.homolog"));
 					CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
 			}
 				
@@ -492,6 +495,7 @@ public class CAdESSigner implements PKCS7Signer {
 						switch(signedOrUnsignedAttribute.getOID()) {
 							//PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
 						  case "1.2.840.113549.1.9.16.2.14":
+							  logger.debug("TimeStampToken");							  
 							  PrivateKey pkForTimeStamp = this.pkcs1.getPrivateKeyForTimeStamp();
 								if( pkForTimeStamp == null) {
 									pkForTimeStamp = this.pkcs1.getPrivateKey(); 
@@ -510,6 +514,7 @@ public class CAdESSigner implements PKCS7Signer {
 								break;
 						//PKCSObjectIdentifiers.id_aa_ets_escTimeStamp
 						  case "1.2.840.113549.1.9.16.2.25":
+							  logger.debug("ets_escTimeStamp");
 								ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
 								outputStream.write(oSi.getSignature());
 								AttributeTable varUnsignedAttributes = oSi.getUnsignedAttributes();
@@ -541,11 +546,6 @@ public class CAdESSigner implements PKCS7Signer {
 								signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
 										signaturePolicy, this.hash);
 						}
-
-							
-						
-						
-						
 						
 						unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 						AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
@@ -568,9 +568,8 @@ public class CAdESSigner implements PKCS7Signer {
 			
 			
 			String SN = certificate.getSerialNumber().toString()+"("+certificate.getSerialNumber().toString(16).toUpperCase()+")";
-			logger.info(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0],SN));
-			
-			//PeriodValidator pV = new PeriodValidator();				
+			logger.debug(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0],SN));
+			setSignatory(certificate.getSubjectDN().toString().split(",")[0]+" " +SN);
 			setNotAfterSignerCertificate(pV.valDate(this.certificate));			
 			return result;			
 
@@ -714,6 +713,9 @@ public class CAdESSigner implements PKCS7Signer {
 		
 	}
 
+	/**
+	 * the private key to use for request timestamp
+	 */
 	@Override
 	public void setPrivateKeyForTimeStamp(PrivateKey privateKeyForTimeStamp) {
 		this.pkcs1.setPrivateKeyForTimeStamp(privateKeyForTimeStamp);
@@ -724,6 +726,18 @@ public class CAdESSigner implements PKCS7Signer {
 	@Override
 	public PrivateKey getPrivateKeyForTimeStamp() {
 		return this.pkcs1.getPrivateKeyForTimeStamp();
+	}
+
+	/**
+	 *  
+	 * @return who perform the signature
+	 */
+	public String getSignatory() {
+		return signatory;
+	}
+
+	public void setSignatory(String signatory) {
+		this.signatory = signatory;
 	}
 	
 	
