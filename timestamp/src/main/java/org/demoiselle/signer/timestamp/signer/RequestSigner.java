@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -55,6 +55,7 @@ import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
+import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -80,7 +81,7 @@ public class RequestSigner {
      */
     public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request, String algorithm) {
         try {
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.sign.request"));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.sign.request"));
             Security.addProvider(new BouncyCastleProvider());
 
             X509Certificate signCert = (X509Certificate) certificates[0];
@@ -96,11 +97,11 @@ public class RequestSigner {
             	
             	// If is WINDOWS, is ONLY WORKS with SHA256
 				if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-					logger.info(timeStampMessagesBundle.getString("info.timestamp.winhash"));
+					logger.debug(timeStampMessagesBundle.getString("info.timestamp.winhash"));
 					
 					varAlgorithm = "SHA256withRSA";
 				}else{
-					logger.info(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));					
+					logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));					
 					varAlgorithm = "SHA512withRSA";
 				}
 				
@@ -120,9 +121,10 @@ public class RequestSigner {
             return signed.getEncoded();
 
         } catch (CMSException | IOException | OperatorCreationException | CertificateEncodingException ex) {
-            logger.info(ex.getMessage());
+            logger.error(ex.getMessage());
+            throw new CertificateCoreException(ex.getMessage());
         }
-        return null;
+        
     }
 
 }

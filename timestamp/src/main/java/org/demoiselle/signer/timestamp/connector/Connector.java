@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -48,11 +48,11 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
  */
 public interface Connector {
 
-    InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException;
+	abstract public InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException;
 
-    void close();
+	abstract public void close();
 
-    void setHostname(String hostname);
+	abstract public void setHostname(String hostname);
 
-    void setPort(int port);
+	abstract public void setPort(int port);
 }

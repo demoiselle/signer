@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -57,17 +57,17 @@ public class ConnectorFactory {
         switch (connectionType) {
 
             case HTTP: {
-                logger.info(timeStampMessagesBundle.getString("info.timestamp.connection.http"));
+                logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.http"));
                 return new HttpConnector();
             }
 
             case SOCKET: {
-                logger.info(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
+                logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
                 return new SocketConnector();
             }
 
             default: {
-                logger.info(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
+                logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
                 return new SocketConnector();
             }
         }

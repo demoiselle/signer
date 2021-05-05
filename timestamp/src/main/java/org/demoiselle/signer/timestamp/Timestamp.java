@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -83,7 +83,7 @@ public class Timestamp {
         try {
             return timeStampToken.getEncoded();
         } catch (IOException ex) {
-            logger.info(ex.getMessage());
+            logger.error(ex.getMessage());
         }
         return null;
     }

@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -82,10 +82,10 @@ public class SocketConnector implements Connector {
     @Override
     public InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException {
         try {
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.send.request"));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.send.request"));
             socket = new Socket(hostname, port);
             socket.setSoTimeout(30000);
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
 
             //logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
             // A "direct TCP-based TSA message" consists of:length (32-bits), flag (8-bits), value
@@ -98,7 +98,7 @@ public class SocketConnector implements Connector {
             //logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
             return socket.getInputStream();
         } catch (IOException e) {
-        	logger.info(e.getMessage());        		
+        	logger.error(e.getMessage());        		
         	throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.socket", e.getMessage()));
         }
     }
@@ -119,7 +119,7 @@ public class SocketConnector implements Connector {
             socket.close();
             out.close();
         } catch (IOException ex) {
-            logger.info(ex.getMessage());
+            logger.debug(ex.getMessage());
         }
 
     }

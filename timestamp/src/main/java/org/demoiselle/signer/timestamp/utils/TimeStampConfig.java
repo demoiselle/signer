@@ -85,7 +85,7 @@ public class TimeStampConfig {
 	            try {
 	            	bundle = getBundle("timestamp-config-default");
 	            } catch (MissingResourceException e) {
-	            	 logger.info(e.getMessage());
+	            	 logger.error(e.getMessage());
 	            }
 	        }
         }
@@ -95,7 +95,9 @@ public class TimeStampConfig {
     	try {
     		tspHostname = bundle.getString("tsp_hostname");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));		}
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));
+			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));		
+		}
     	return tspHostname;
     }
 
@@ -103,6 +105,7 @@ public class TimeStampConfig {
     	try {
 			tspPort = Integer.parseInt(bundle.getString("tsp_port"));
 		} catch (MissingResourceException e) {
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.config","tspPort"));
 			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config","tspPort"));
 		}
     	return tspPort;
@@ -112,6 +115,7 @@ public class TimeStampConfig {
     	try {
     		tspOid =  bundle.getString("tsp_oid");
 		} catch (MissingResourceException e) {
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.config","tspOid"));
 			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config","tspOid"));
 		}
     	return tspOid;
