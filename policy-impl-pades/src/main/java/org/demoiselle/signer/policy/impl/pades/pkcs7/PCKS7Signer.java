@@ -20,5 +20,11 @@ public interface PCKS7Signer extends Signer {
     abstract public void setSignaturePolicy(Policies signaturePolicy);
     
     
+    /**
+	 *  Assign a Certificate for get timeStamp
+	 * @param certificate certificate to be used
+	 */
+    abstract public void setCertificatesForTimeStamp(Certificate certificates[]);
+    
 
 }

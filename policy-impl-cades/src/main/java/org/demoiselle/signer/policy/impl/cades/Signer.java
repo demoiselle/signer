@@ -132,4 +132,16 @@ public interface Signer {
      * @return detached PCKS7 signature
      */
     abstract public byte[] doHashSign (byte[] hash);
+    
+    
+    
+    /**
+     * Private key required for sign timestamp request
+     *
+     * @param privateKey private key to be used
+     */
+    abstract public void setPrivateKeyForTimeStamp(PrivateKey privateKey);
+    
+    
+    abstract public PrivateKey getPrivateKeyForTimeStamp();
 }

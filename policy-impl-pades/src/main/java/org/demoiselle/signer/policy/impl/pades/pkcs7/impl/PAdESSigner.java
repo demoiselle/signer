@@ -100,4 +100,21 @@ public class PAdESSigner implements PCKS7Signer{
 	public void setSignaturePolicy(Policies signaturePolicy) {
 		cAdESSigner.setSignaturePolicy(signaturePolicy);
 	}
+
+	@Override
+	public void setCertificatesForTimeStamp(Certificate[] certificates) {
+		cAdESSigner.setCertificatesForTimeStamp(certificates);
+		
+	}
+
+	@Override
+	public void setPrivateKeyForTimeStamp(PrivateKey privateKeyForTimeStamp) {
+		cAdESSigner.setPrivateKeyForTimeStamp(privateKeyForTimeStamp);		
+		
+	}
+
+	@Override
+	public PrivateKey getPrivateKeyForTimeStamp() {
+		return cAdESSigner.getPrivateKeyForTimeStamp();
+	}
 }

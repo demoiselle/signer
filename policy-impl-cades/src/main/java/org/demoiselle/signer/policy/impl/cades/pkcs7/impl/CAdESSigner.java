@@ -111,8 +111,8 @@ public class CAdESSigner implements PKCS7Signer {
 
 	private final PKCS1Signer pkcs1 = PKCS1Factory.getInstance().factoryDefault();
 	private X509Certificate certificate;
-	private Certificate certificateChain[];
-	private Certificate certificateChainTimeStamp[];
+	private Certificate certificateChain[] = null;
+	private Certificate certificateChainTimeStamp[] = null;
 	private boolean attached = false;
 	private SignaturePolicy signaturePolicy = null;
 	private boolean defaultCertificateValidators = true;
@@ -220,8 +220,7 @@ public class CAdESSigner implements PKCS7Signer {
 	@Override
 	public void setCertificates(Certificate[] certificates) {
 		this.certificateChain = certificates;
-		this.certificateChainTimeStamp = certificates;
-		
+	
 	}
 
 	public void setDefaultCertificateValidators(boolean defaultCertificateValidators) {
@@ -283,6 +282,13 @@ public class CAdESSigner implements PKCS7Signer {
 	private byte[] doSign(byte[] content, byte[] previewSignature) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
+			if (this.certificateChain == null) {
+				throw new SignerException(cadesMessagesBundle.getString("error.certificate.null"));
+			}
+			
+			if (getPrivateKey() == null) {
+				throw new SignerException(cadesMessagesBundle.getString("error.privatekey.null"));
+			}
 			
 			// Completa os certificados ausentes da cadeia, se houver
 			if (this.certificate == null && this.certificateChain != null && this.certificateChain.length > 0) {
@@ -482,35 +488,65 @@ public class CAdESSigner implements PKCS7Signer {
 					.getMandatedUnsignedAttr().getObjectIdentifiers()) {
 						SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 						.factory(objectIdentifier.getValue());
-						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())) 
-						{
-							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, oSi.getSignature(),
-									signaturePolicy, this.hash);
-						}
-						if (signedOrUnsignedAttribute.getOID().equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")) //EscTimeStamp
-						{
-							
-							ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-							outputStream.write(oSi.getSignature());
-							AttributeTable varUnsignedAttributes = oSi.getUnsignedAttributes();
-							Attribute varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
-							outputStream.write(varAttribute.getAttrType().getEncoded());
-							outputStream.write(varAttribute.getAttrValues().getEncoded());
-							varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_certificateRefs.getId()));
-							outputStream.write(varAttribute.getAttrType().getEncoded());
-							outputStream.write(varAttribute.getAttrValues().getEncoded());
-							varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_revocationRefs.getId()));
-							outputStream.write(varAttribute.getAttrType().getEncoded());
-							outputStream.write(varAttribute.getAttrValues().getEncoded());
-							escTimeStampContent = outputStream.toByteArray( );						
-							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), this.certificateChainTimeStamp, escTimeStampContent,
-									signaturePolicy, this.hash);
-						}
 						
-						else{
-							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
+						switch(signedOrUnsignedAttribute.getOID()) {
+							//PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
+						  case "1.2.840.113549.1.9.16.2.14":
+							  PrivateKey pkForTimeStamp = this.pkcs1.getPrivateKeyForTimeStamp();
+								if( pkForTimeStamp == null) {
+									pkForTimeStamp = this.pkcs1.getPrivateKey(); 
+								}
+								Certificate varCertificateChainTimeStamp[] = this.certificateChainTimeStamp;
+							
+								if (varCertificateChainTimeStamp == null || varCertificateChainTimeStamp.length < 1) {
+									varCertificateChainTimeStamp = this.certificateChain;
+								}else {
+									varCertificateChainTimeStamp =
+											CAManager.getInstance().getCertificateChainArray((X509Certificate) varCertificateChainTimeStamp[0]);
+								}	
+								signedOrUnsignedAttribute.initialize(pkForTimeStamp, varCertificateChainTimeStamp, oSi.getSignature(),
 									signaturePolicy, this.hash);
-						}						
+
+								break;
+						//PKCSObjectIdentifiers.id_aa_ets_escTimeStamp
+						  case "1.2.840.113549.1.9.16.2.25":
+								ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+								outputStream.write(oSi.getSignature());
+								AttributeTable varUnsignedAttributes = oSi.getUnsignedAttributes();
+								Attribute varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
+								outputStream.write(varAttribute.getAttrType().getEncoded());
+								outputStream.write(varAttribute.getAttrValues().getEncoded());
+								varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_certificateRefs.getId()));
+								outputStream.write(varAttribute.getAttrType().getEncoded());
+								outputStream.write(varAttribute.getAttrValues().getEncoded());
+								varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_revocationRefs.getId()));
+								outputStream.write(varAttribute.getAttrType().getEncoded());
+								outputStream.write(varAttribute.getAttrValues().getEncoded());
+								escTimeStampContent = outputStream.toByteArray( );
+								PrivateKey pkForEscTimeStamp = this.pkcs1.getPrivateKeyForTimeStamp();
+								if( pkForEscTimeStamp == null) {
+									pkForEscTimeStamp = this.pkcs1.getPrivateKey(); 
+								}
+								Certificate varCertificateChainEscTimeStamp[] = this.certificateChainTimeStamp;
+								if (varCertificateChainEscTimeStamp == null || varCertificateChainEscTimeStamp.length < 1) {
+									varCertificateChainEscTimeStamp = this.certificateChain;
+								}else {
+									varCertificateChainEscTimeStamp =
+											CAManager.getInstance().getCertificateChainArray((X509Certificate) varCertificateChainEscTimeStamp[0]);
+								}
+								signedOrUnsignedAttribute.initialize(pkForEscTimeStamp, varCertificateChainEscTimeStamp, escTimeStampContent,
+										signaturePolicy, this.hash);
+						    break;
+						  default:
+								signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
+										signaturePolicy, this.hash);
+						}
+
+							
+						
+						
+						
+						
 						unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 						AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
 						vNewSigners.remove(oSi);
@@ -670,6 +706,24 @@ public class CAdESSigner implements PKCS7Signer {
 	 */
 	public void setNotAfterSignerCertificate(Date notAfterSignerCertificate) {
 		this.notAfterSignerCertificate = notAfterSignerCertificate;
+	}
+
+	@Override
+	public void setCertificatesForTimeStamp(Certificate[] certificates) {
+		this.certificateChainTimeStamp = certificates;
+		
+	}
+
+	@Override
+	public void setPrivateKeyForTimeStamp(PrivateKey privateKeyForTimeStamp) {
+		this.pkcs1.setPrivateKeyForTimeStamp(privateKeyForTimeStamp);
+
+		
+	}
+
+	@Override
+	public PrivateKey getPrivateKeyForTimeStamp() {
+		return this.pkcs1.getPrivateKeyForTimeStamp();
 	}
 	
 	

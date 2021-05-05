@@ -148,6 +148,7 @@ public class CAdESSignerTest {
 			
 			// informar o caminho e nome do arquivo
 			String filep12 = "/";
+			
 						
 			InputStream readStream = readStream(filep12);
 
@@ -172,9 +173,11 @@ public class CAdESSignerTest {
 	private KeyStore getKeyStoreFileBySigner() {
 
 		try {
+
+
 			
 			// informar o caminho e nome do arquivo
-			File filep12 = new File("/home/");
+			File filep12 = new File("/");
 			
 
 
@@ -230,7 +233,7 @@ public class CAdESSignerTest {
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			String fileDirName = "/";
-			
+						
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -251,7 +254,8 @@ public class CAdESSignerTest {
 
 			//// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFileBySigner();
-			//KeyStore ks = getKeyStoreStreamBySigner();
+			// Keystore diferente para timestamp
+			//KeyStore ksToTS = getKeyStoreStreamBySigner();
 			// Para certificado token Linux
 			//KeyStore ks = getKeyStoreToken();
 
@@ -259,8 +263,11 @@ public class CAdESSignerTest {
 			// KeyStore ks = getKeyStoreOnWindows();
 			
 			String alias = getAlias(ks);
+			//String aliasToTs = getAlias(ksToTS);
+			//char[] senhaTS = "senha".toCharArray();
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
+			
 			signer.setCertificates(ks.getCertificateChain(alias));
 
 			// para token
@@ -268,14 +275,17 @@ public class CAdESSignerTest {
 
 			// para arquivo
 			// quando certificado em arquivo, precisa informar a senha
-			//char[] senha = "teste".toCharArray();
+			//char[] senha = "senha".toCharArray();
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			
 			// politica referencia básica sem carimbo de tempo
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
-
+			// pode ser outro certificado para timestamp
+			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));
+			//signer.setPrivateKeyForTimeStamp((PrivateKey) ksToTS.getKey(aliasToTs, senhaTS));
+						
 			// referencia de validação
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_3);
 			// para mudar o algoritimo
@@ -307,7 +317,7 @@ public class CAdESSignerTest {
 			
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
-			File file = new File(fileDirName + "_detached_rb.p7s");
+			File file = new File(fileDirName + "_detached_rt.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();

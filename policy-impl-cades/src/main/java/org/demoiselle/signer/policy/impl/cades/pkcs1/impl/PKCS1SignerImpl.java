@@ -65,8 +65,11 @@ public class PKCS1SignerImpl implements PKCS1Signer {
     private String algorithm = SignerAlgorithmEnum.SHA512withRSA.getAlgorithm();
     private PublicKey publicKey = null;
     private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+    private PrivateKey privateKeyForTimeStamp = null;
 
-    /**
+    
+
+	/**
      * Performs the signature using the Java API. 
      * It uses the algorithm value on property: algorithm. 
      * If this property is not set, the {@link SignerAlgorithmEnum.DEFAULT} enumeration algorithm
@@ -245,6 +248,16 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 			byte[] content, byte[] signedData) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void setPrivateKeyForTimeStamp(PrivateKey privateKeyToTimeStamp) {
+		this.privateKeyForTimeStamp = privateKeyToTimeStamp;
+		
+	}
+	@Override
+	public PrivateKey getPrivateKeyForTimeStamp() {
+		return privateKeyForTimeStamp;
 	}
 
 }
