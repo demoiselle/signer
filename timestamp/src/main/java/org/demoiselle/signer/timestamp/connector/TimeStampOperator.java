@@ -135,7 +135,7 @@ public class TimeStampOperator {
             }else{
             	hashedMessage = hash;
             }            
-            logger.info(timeStampMessagesBundle.getString("info.timestamp.prepare.request"));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.prepare.request"));
             TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();                        
             timeStampRequestGenerator.setReqPolicy(new ASN1ObjectIdentifier(TimeStampConfig.getInstance().getTSPOid()));
             timeStampRequestGenerator.setCertReq(true);

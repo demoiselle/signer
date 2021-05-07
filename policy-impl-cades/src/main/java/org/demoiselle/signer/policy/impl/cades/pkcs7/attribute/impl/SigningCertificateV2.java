@@ -40,10 +40,9 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
-import org.bouncycastle.asn1.ASN1Encodable;
+
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERSet;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.ess.ESSCertIDv2;
@@ -116,9 +115,12 @@ public class SigningCertificateV2 implements SignedAttribute {
 			IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
 			AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);// SHA-256
 			ESSCertIDv2 essCertIDv2 = new ESSCertIDv2(algId, certHash, issuerSerial);
-//			return new Attribute(new ASN1ObjectIdentifier(identifier), new DERSet(new DERSequence(essCertIDv2)));
-			return new Attribute(identifier, new DERSet(new DERSequence(
-					new ASN1Encodable[] { new DERSequence(essCertIDv2) })));		
+			
+			org.bouncycastle.asn1.ess.SigningCertificateV2  signingCertificateV2 = new org.bouncycastle.asn1.ess.SigningCertificateV2(essCertIDv2);
+			
+			return new Attribute(identifier, new DERSet(signingCertificateV2));
+			
+			
 		} catch (CertificateEncodingException ex) {
 			throw new SignerException(ex.getMessage());
 		}
