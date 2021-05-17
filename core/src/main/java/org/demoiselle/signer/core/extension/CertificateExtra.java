@@ -84,6 +84,7 @@ public class CertificateExtra {
             }
             for (List<?> list : certificate.getSubjectAlternativeNames()) {
                 if (list.size() != 2) {
+                	logger.error(coreMessagesBundle.getString("error.extra.size.incorret"));
                     throw new Exception(coreMessagesBundle.getString("error.extra.size.incorret"));
                 }
 
@@ -93,6 +94,7 @@ public class CertificateExtra {
                 e2 = list.get(1);
 
                 if (!(e1 instanceof Integer)) {
+                	logger.error(coreMessagesBundle.getString("error.type.not.integer"));
                     throw new Exception(coreMessagesBundle.getString("error.type.not.integer"));
                 }
 
@@ -107,9 +109,9 @@ public class CertificateExtra {
                 }
             }
         } catch (CertificateParsingException e) {
-        	logger.error(e.getMessage());
+        	logger.debug(e.getMessage());
         } catch (Exception e) {
-        	logger.error(e.getMessage());
+        	logger.debug(e.getMessage());
         }
     }
 
