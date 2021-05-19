@@ -44,10 +44,11 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.apache.log4j.Logger;
 import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -57,7 +58,7 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 public class LPARepository {
 	
 	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
-	private final static Logger LOGGER = Logger.getLogger(LPARepository.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(LPARepository.class);
 	
 	/**
 	 * 
@@ -72,6 +73,9 @@ public class LPARepository {
 		
 		try {
 			Configuration config = Configuration.getInstance();
+			if (config.isOnlineLPA()) {
+				return true;
+			}
 			Path pathLPA = Paths.get(config.getLpaPath());
 			Path pathLPAFile = Paths.get(config.getLpaPath(), lpaName);
 			LOGGER.info(policyMessagesBundle.getString("info.lpa.url.download", urlConLPA));
