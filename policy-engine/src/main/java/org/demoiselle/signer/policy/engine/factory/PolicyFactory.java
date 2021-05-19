@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -42,13 +42,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.core.repository.Configuration;
@@ -58,6 +54,8 @@ import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
 import org.demoiselle.signer.policy.engine.repository.LPARepository;
 import org.demoiselle.signer.policy.engine.repository.PolicyEngineConfig;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -71,7 +69,8 @@ import org.xml.sax.SAXException;
 public class PolicyFactory {
 
     public static final PolicyFactory instance = new PolicyFactory();
-    private final static Logger LOGGER = Logger.getLogger(PolicyFactory.class.getName());    
+  
+    private static final Logger LOGGER = LoggerFactory.getLogger(PolicyFactory.class);
     private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
     public static PolicyFactory getInstance() {
@@ -180,7 +179,7 @@ public class PolicyFactory {
 		try {
 			Configuration config = Configuration.getInstance();
 			Path pathLPA = Paths.get(config.getLpaPath(), "LPA_CAdES.der");
-			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
+			LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
 			is = new FileInputStream(pathLPA.toString());
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 	        listaPoliticaAssinatura.parse(primitive);
@@ -192,7 +191,9 @@ public class PolicyFactory {
 		if (listaPoliticaAssinatura != null){
 			return listaPoliticaAssinatura;
 		}else{
+			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
+			
 		}
     }
     
@@ -217,6 +218,7 @@ public class PolicyFactory {
         if (listaPoliticaAssinatura != null){
 			return listaPoliticaAssinatura;
 		}else{
+			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 		}
         
@@ -382,13 +384,13 @@ public class PolicyFactory {
         try {
             primitive = asn1is.readObject();
         } catch (IOException error) {
-        	LOGGER.getLevel();
-			LOGGER.log(Level.ERROR, "Error reading stream.", error);
+			LOGGER.error("Error reading stream.", error);
             throw new RuntimeException(error);
         } finally {
             try {
                 asn1is.close();
             } catch (IOException error) {
+            	LOGGER.error(error.getMessage());
                 throw new RuntimeException(error);
             }
         }

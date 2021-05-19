@@ -235,6 +235,9 @@ public class CAdESSignerTest {
 			String fileDirName = "/";
 						
 			
+	
+
+			
 			byte[] fileToSign = readContent(fileDirName);
 
 
@@ -322,7 +325,8 @@ public class CAdESSignerTest {
 			os.write(signature);
 			os.flush();
 			os.close();
-			assertTrue(true);
+			System.out.println(signer.getSignatory());
+			assertTrue(!signer.getSignatory().isEmpty());
 
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();

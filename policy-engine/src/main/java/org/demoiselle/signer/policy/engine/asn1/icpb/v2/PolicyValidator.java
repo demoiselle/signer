@@ -39,18 +39,19 @@ package org.demoiselle.signer.policy.engine.asn1.icpb.v2;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import org.apache.log4j.Logger;
 import org.demoiselle.signer.core.repository.Configuration;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.exception.PolicyException;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class PolicyValidator {
 	
 	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
-	private final static Logger LOGGER = Logger.getLogger(PolicyValidator.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(PolicyValidator.class);
 	private final Configuration config = Configuration.getInstance();
 	
 	private SignaturePolicy sp;
@@ -89,7 +90,7 @@ public class PolicyValidator {
 				Date nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 				if (actualDate.after(nextUpdate)){
 					LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",sdf.format(nextUpdate)));
-					LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local", config.getLpaPath()));
+					LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", config.getLpaPath()));
 					tempListOfPolicies = factory.loadLPACAdESLocal();
 					if (tempListOfPolicies != null){
 						nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
@@ -127,6 +128,7 @@ public class PolicyValidator {
 					if (policyInfo.getPolicyOID().getValue().contentEquals(sp.getSignPolicyInfo().getSignPolicyIdentifier().getValue())){
 						GeneralizedTime revocationDate = policyInfo.getRevocationDate();
 						if (revocationDate != null){
+							LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 							throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 						}						
 					}
@@ -174,6 +176,7 @@ public class PolicyValidator {
 						if (policyInfo.getPolicyOID().getValue().contentEquals(sp.getSignPolicyInfo().getSignPolicyIdentifier().getValue())){
 							GeneralizedTime revocationDate = policyInfo.getRevocationDate();
 							if (revocationDate != null){
+								LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 								throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 							}						
 						}
@@ -183,6 +186,7 @@ public class PolicyValidator {
 						// TODO verificar como é procesado em XML
 						listOfPolicies = factory.loadLPAXAdES();
 					}else{
+						policyMessagesBundle.getString(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 						throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 					}
 				}

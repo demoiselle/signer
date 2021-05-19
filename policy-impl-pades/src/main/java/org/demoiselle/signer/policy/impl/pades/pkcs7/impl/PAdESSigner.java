@@ -4,6 +4,7 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
+import java.util.Date;
 
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
@@ -116,5 +117,15 @@ public class PAdESSigner implements PCKS7Signer{
 	@Override
 	public PrivateKey getPrivateKeyForTimeStamp() {
 		return cAdESSigner.getPrivateKeyForTimeStamp();
+	}
+
+	@Override
+	public Date getNotAfterSignerCertificate() {
+		return cAdESSigner.getNotAfterSignerCertificate();
+	}
+
+	@Override
+	public String getSignatory() {
+		return cAdESSigner.getSignatory();
 	}
 }

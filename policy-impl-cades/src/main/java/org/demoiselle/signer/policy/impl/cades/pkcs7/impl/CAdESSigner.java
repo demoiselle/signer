@@ -696,6 +696,7 @@ public class CAdESSigner implements PKCS7Signer {
 	/**
 	 * @return the notAfterSignerCertificate
 	 */
+	@Override
 	public Date getNotAfterSignerCertificate() {
 		return notAfterSignerCertificate;
 	}
@@ -732,6 +733,7 @@ public class CAdESSigner implements PKCS7Signer {
 	 *  
 	 * @return who perform the signature
 	 */
+	@Override
 	public String getSignatory() {
 		return signatory;
 	}

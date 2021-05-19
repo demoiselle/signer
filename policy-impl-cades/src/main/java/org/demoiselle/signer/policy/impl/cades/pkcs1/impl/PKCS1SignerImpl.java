@@ -43,6 +43,7 @@ import java.security.Provider;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
+import java.util.Date;
 import java.util.List;
 
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -258,6 +259,18 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 	@Override
 	public PrivateKey getPrivateKeyForTimeStamp() {
 		return privateKeyForTimeStamp;
+	}
+
+	@Override
+	public Date getNotAfterSignerCertificate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getSignatory() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

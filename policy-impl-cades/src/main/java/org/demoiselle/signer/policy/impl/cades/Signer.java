@@ -39,6 +39,7 @@ package org.demoiselle.signer.policy.impl.cades;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
+import java.util.Date;
 
 /**
  * Basic specification for implementation of digital signatures in CADES format.
@@ -138,10 +139,28 @@ public interface Signer {
     /**
      * Private key required for sign timestamp request
      *
-     * @param privateKey private key to be used
+     * @param privateKey to be used for request timestamp
      */
     abstract public void setPrivateKeyForTimeStamp(PrivateKey privateKey);
     
     
+    /**
+     * 
+     * @return privateKey to be used for request timestamp
+     */
+    		
     abstract public PrivateKey getPrivateKeyForTimeStamp();
+    
+    /**
+     * Data of end of Certificate use 
+     * @return
+     */
+    abstract public Date getNotAfterSignerCertificate();
+    
+     /**
+	 *  
+	 * @return who perform the signature
+	 */
+    abstract public String getSignatory() ;
+    
 }
