@@ -39,7 +39,8 @@ package org.demoiselle.signer.policy.engine.asn1.icpb.v2;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
-import org.demoiselle.signer.core.repository.Configuration;
+
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.exception.PolicyException;
@@ -52,7 +53,7 @@ public class PolicyValidator {
 	
 	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 	private static final Logger LOGGER = LoggerFactory.getLogger(PolicyValidator.class);
-	private final Configuration config = Configuration.getInstance();
+	private final ConfigurationRepo config = ConfigurationRepo.getInstance();
 	
 	private SignaturePolicy sp;
 	private String policyName;

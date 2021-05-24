@@ -15,7 +15,7 @@ import org.apache.pdfbox.cos.COSString;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.interactive.digitalsignature.PDSignature;
 import org.demoiselle.signer.core.extension.BasicCertificate;
-import org.demoiselle.signer.core.repository.Configuration;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.timestamp.Timestamp;
 
@@ -47,7 +47,7 @@ public class PDFVerifyTest {
 
 					
 					// Cache LCR
-					Configuration configlcr = Configuration.getInstance();
+					ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
 					//configlcr.setCrlIndex(".crl_index");
 					//configlcr.setCrlPath("/home/{usuario}/lcr_cache/");
 					configlcr.setOnline(false);

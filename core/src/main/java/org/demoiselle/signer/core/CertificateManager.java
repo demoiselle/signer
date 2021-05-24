@@ -39,6 +39,7 @@ package org.demoiselle.signer.core;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
@@ -207,7 +208,8 @@ public class CertificateManager {
      */
     private void loadDefaultValidators() {
         validators.add(new PeriodValidator());
-        validators.add(new CRLValidator());
+        if (ConfigurationRepo.getInstance().isValidateLCR()) {
+        	validators.add(new CRLValidator());
+        }        
     }
-
 }

@@ -10,8 +10,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignPolicyHash;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
-import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;

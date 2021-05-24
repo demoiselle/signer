@@ -50,16 +50,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-/**
- * deprecated use: ConfigurationRepo
- */
-@Deprecated 
-public class Configuration {
+public class ConfigurationRepo {
 	
 
-	private static final Logger LOGGER = LoggerFactory.getLogger(Configuration.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationRepo.class);
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-	
+
     /**
      * System key to set online or offline mode
      */
@@ -169,7 +165,7 @@ public class Configuration {
     public static final String ENV_PROXY_TYPE = "SIGNER_PROXY_TYPE";
     
     
-    public static Configuration instance = new Configuration();
+    public static ConfigurationRepo instance = new ConfigurationRepo();
 
     
     /**
@@ -177,99 +173,85 @@ public class Configuration {
      *
      * @return instance of Configuration
      */
-    public static Configuration getInstance() {
+    public static ConfigurationRepo getInstance() {
         return instance;
     }
 
     private String crlIndex = null;
     private String crlPath = null;
     private String lpaPath = null;    
-    private boolean isOnline = true;
-    private Proxy proxy = null;
-    private Proxy.Type type = null;
+    private boolean isOnlineLCR = true;
+    private Proxy proxy = Proxy.NO_PROXY;
+    private Proxy.Type type = Proxy.Type.HTTP;
     private boolean isOnlineLPA = false;
+    private boolean validateLCR = true;
 
     /**
      * Check for system variables. If there is, assign in class variables otherwise use default values.
      */
-    @Deprecated
-    private Configuration() {
+    private ConfigurationRepo() {
     	
         String mode_online = System.getenv(ENV_MODE_ONLINE);
         if (mode_online == null || mode_online.isEmpty()) {
         	mode_online = (String) System.getProperties().get(MODE_ONLINE);
         	if (mode_online == null || mode_online.isEmpty()) {
-                setOnline(true);
-                LOGGER.debug(coreMessagesBundle.getString("info.crl.online", isOnline()));
+                setOnline(true);                
         	}else {
         		setOnline(Boolean.valueOf(mode_online));
-        		LOGGER.debug(coreMessagesBundle.getString("info.crl.online", isOnline()));
         	}        	
         } else {
             setOnline(Boolean.valueOf(mode_online));
-            LOGGER.debug(coreMessagesBundle.getString("info.crl.online", isOnline()));
         }
         
         crlIndex = System.getenv(ENV_CRL_INDEX);
         if (crlIndex == null || crlIndex.isEmpty()) {
         	crlIndex =  (String) System.getProperties().get(CRL_INDEX);
         	if (crlIndex == null || crlIndex.isEmpty()) {
-        		setCrlIndex(".crl_index");
-        		LOGGER.debug(coreMessagesBundle.getString("info.crl.index", getCrlIndex()));
+        		setCrlIndex(".crl_index");        		
         	}else {
         		setCrlIndex(crlIndex);
-        		LOGGER.debug(coreMessagesBundle.getString("info.crl.index", getCrlIndex()));
         	}
         }else {
         	setCrlIndex(crlIndex);
-        	LOGGER.debug(coreMessagesBundle.getString("info.crl.index", getCrlIndex()));
         }
 
         crlPath =  System.getenv(ENV_CRL_PATH);
         if (crlPath == null || crlPath.isEmpty()) {
         	crlPath = (String) System.getProperties().get(CRL_PATH);
         	if (crlPath == null || crlPath.isEmpty()) {
-        		setCrlPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "crls");
-        		LOGGER.debug(coreMessagesBundle.getString("info.crl.path", getCrlPath()));
+        		setCrlPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "crls");        		
         	}
         	else {
             	setCrlPath(crlPath);
-            	LOGGER.debug(coreMessagesBundle.getString("info.crl.path", getCrlPath()));
             }
         }else {
         	setCrlPath(crlPath);
-        	LOGGER.debug(coreMessagesBundle.getString("info.crl.path", getCrlPath()));
         }
         
         lpaPath = System.getenv(ENV_LPA_PATH); 
         if (lpaPath == null || lpaPath.isEmpty()) {
         	lpaPath = (String) System.getProperties().get(LPA_PATH);
         	if (lpaPath == null || lpaPath.isEmpty()) {
-        		setLpaPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "lpas");
-        		LOGGER.debug(coreMessagesBundle.getString("info.lpa.path", getLpaPath()));
+        		setLpaPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "lpas");        		
         	}else {
             	setLpaPath(lpaPath);
-            	LOGGER.debug(coreMessagesBundle.getString("info.lpa.path", getLpaPath()));
             }
         }else {
         	setLpaPath(lpaPath);
-        	LOGGER.debug(coreMessagesBundle.getString("info.lpa.path", getLpaPath()));
         }
         
         String hostName = System.getenv(ENV_PROXY_HOST);
         if (hostName == null || hostName.isEmpty()) {
         	hostName = (String) System.getProperties().get(PROXY_HOST);
         	if (hostName == null || hostName.isEmpty()) {
-        		setProxy(Proxy.NO_PROXY);	
-        		LOGGER.debug(coreMessagesBundle.getString("info.proxy.noproxy"));        		
+        		setProxy(Proxy.NO_PROXY);
         	}else {
             	String proxyType = (String) System.getProperties().get(PROXY_TYPE);
             	setType(proxyType);            	
             	String port = (String) System.getProperties().get(PROXY_PORT);
             	String user = (String) System.getProperties().get(PROXY_USER);
             	String password = (String) System.getProperties().get(PROXY_PASSWORD);
-            	setProxy(hostName, port, user, password);            	
-            	LOGGER.debug(coreMessagesBundle.getString("info.proxy.running",hostName,port, user));
+            	setProxy(hostName, port, user, password);
             }        	
         } else {
         	String proxyType = System.getenv(ENV_PROXY_TYPE);
@@ -278,7 +260,6 @@ public class Configuration {
         	String user = System.getenv(ENV_PROXY_USER);
         	String password = System.getenv(ENV_PROXY_PASSWORD);
         	setProxy(hostName, port, user, password);
-        	LOGGER.debug(coreMessagesBundle.getString("info.proxy.running",hostName,port, user));
         }
         
         String lpa_online =  System.getenv(ENV_LPA_ONLINE);
@@ -286,15 +267,12 @@ public class Configuration {
         if (lpa_online == null || lpa_online.isEmpty()) {
         	lpa_online = (String) System.getProperties().get(LPA_ONLINE);
         	if (lpa_online == null || lpa_online.isEmpty()) {
-        		setOnlineLPA(false);
-        		LOGGER.debug(coreMessagesBundle.getString("info.lpa.online",isOnlineLPA()));        		
+        		setOnlineLPA(false);        		        		
         	}else{
         		setOnlineLPA(Boolean.valueOf(lpa_online));
-        		LOGGER.debug(coreMessagesBundle.getString("info.lpa.online",isOnlineLPA()));
         	}        		
         } else {
             setOnlineLPA(Boolean.valueOf(lpa_online));
-            LOGGER.debug(coreMessagesBundle.getString("info.lpa.online",isOnlineLPA()));
         }
     }
 
@@ -303,14 +281,13 @@ public class Configuration {
      *
      * @return location of CRL index file, default is .crl_index
      */
-    @Deprecated
     public String getCrlIndex() {
         return crlIndex;
     }
 
-    @Deprecated
     public void setCrlIndex(String crlIndex) {
         this.crlIndex = crlIndex;
+        LOGGER.debug(coreMessagesBundle.getString("info.crl.index", getCrlIndex()));
     }
 
     /**
@@ -319,9 +296,8 @@ public class Configuration {
      *
      * @return true (online) or false (offline)
      */
-    @Deprecated
     public boolean isOnline() {
-        return isOnline;
+        return isOnlineLCR;
     }
 
     /**
@@ -329,9 +305,9 @@ public class Configuration {
      *
      * @param isOnline True for online, False for offline.
      */
-    @Deprecated
     public void setOnline(boolean isOnline) {
-        this.isOnline = isOnline;
+        this.isOnlineLCR = isOnline;
+        LOGGER.debug(coreMessagesBundle.getString("info.crl.online", isOnline()));
     }
 
     /**
@@ -340,7 +316,6 @@ public class Configuration {
      * Default is "java.io.tmpdir" + "crls"
      * @return location of CRL repository 
      */
-    @Deprecated
     public String getCrlPath() {
         return crlPath;
     }
@@ -350,9 +325,9 @@ public class Configuration {
      *
      * @param crlPath path for CRL repository
      */
-    @Deprecated
     public void setCrlPath(String crlPath) {
         this.crlPath = crlPath;
+        LOGGER.debug(coreMessagesBundle.getString("info.crl.path", getCrlPath()));
     }
 
     /** Retrieves the location where the LPA local repository is stored
@@ -360,7 +335,6 @@ public class Configuration {
      * Default is "java.io.tmpdir" + "lpas"
      * @return location of local LPA repository
      */
-    @Deprecated
 	public String getLpaPath() {
 		return lpaPath;
 	}
@@ -371,35 +345,33 @@ public class Configuration {
 	 *  
 	 * @param lpaPath path for LPA local repository
 	 */
-    @Deprecated
+
 	public void setLpaPath(String lpaPath) {
 		this.lpaPath = lpaPath;
+		LOGGER.debug(coreMessagesBundle.getString("info.lpa.path", getLpaPath()));
 	}
 
 	/**
 	 * 
 	 * @return  Proxy was set
 	 */
-    @Deprecated
 	public Proxy getProxy() {
 		return proxy;
 	}
 
-    @Deprecated
 	public void setProxy(Proxy proxy) {
 		this.proxy = proxy;
+		LOGGER.debug(coreMessagesBundle.getString("info.proxy.noproxy"));
 	}
 	
 	/**
 	 * 
 	 * @return Proxy.Type was set
 	 */
-    @Deprecated
 	public Proxy.Type getType() {
 		return type;
 	}
 
-    @Deprecated
 	public void setType(String type) {
 		if (type == null || type.isEmpty()) {
 			this.type = Proxy.Type.HTTP;
@@ -416,7 +388,6 @@ public class Configuration {
 	 * @param userName
 	 * @param password
 	 */
-    @Deprecated
 	public void setProxy(String hostName, String port, final String userName, final String password) {
 		try {
 			InetAddress inetAddress = InetAddress.getByName(hostName);
@@ -429,10 +400,11 @@ public class Configuration {
 					}
 				};
 				Authenticator.setDefault(authenticator);
+				LOGGER.debug(coreMessagesBundle.getString("info.proxy.running",hostName,port, userName));
 	        }
 		} catch(UnknownHostException uhe) {
 			LOGGER.error("Error setting:"+hostName+port +"\n"+uhe.getMessage());
-			this.proxy = Proxy.NO_PROXY;
+			setProxy(Proxy.NO_PROXY);
 		}
 	}
 
@@ -440,12 +412,20 @@ public class Configuration {
 	 * 
 	 * @return if LPA recovery mode is online
 	 */
-    @Deprecated
 	public boolean isOnlineLPA() {
 		return isOnlineLPA;
 	}
-    @Deprecated
+
 	public void setOnlineLPA(boolean isOnlineLPA) {
 		this.isOnlineLPA = isOnlineLPA;
+		LOGGER.debug(coreMessagesBundle.getString("info.lpa.online",isOnlineLPA()));
+	}
+
+	public boolean isValidateLCR() {
+		return validateLCR;
+	}
+
+	public void setValidateLCR(boolean validateLCR) {
+		this.validateLCR = validateLCR;
 	}
 }

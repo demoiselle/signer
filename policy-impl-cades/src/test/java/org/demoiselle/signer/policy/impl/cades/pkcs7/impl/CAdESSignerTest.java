@@ -65,7 +65,7 @@ import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
-import org.demoiselle.signer.core.repository.Configuration;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.Proxy;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
@@ -73,6 +73,7 @@ import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
+import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 import org.junit.Test;
 
 
@@ -177,13 +178,12 @@ public class CAdESSignerTest {
 
 			
 			// informar o caminho e nome do arquivo
-			File filep12 = new File("/");
+			File filep12 = new File("/home/signer/Documentos/00NeoSigner/pf01.p12");
 			
-
 
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
 			// Informar a senha
-			KeyStore keystore = loader.getKeyStore("senha");
+			KeyStore keystore = loader.getKeyStore("teste");
 			return keystore;
 
 		} catch (Exception e1) {
@@ -233,10 +233,6 @@ public class CAdESSignerTest {
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			String fileDirName = "/";
-						
-			
-	
-
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -278,7 +274,7 @@ public class CAdESSignerTest {
 
 			// para arquivo
 			// quando certificado em arquivo, precisa informar a senha
-			//char[] senha = "senha".toCharArray();
+			//char[] senha = "teste".toCharArray();
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			
 			// politica referencia básica sem carimbo de tempo
@@ -308,16 +304,22 @@ public class CAdESSignerTest {
 			//org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance().setCached(true);
 			
 			// Cache LCR
-			//Configuration config = Configuration.getInstance();
-			//config.setCrlIndex(".crl_index");
-			//config.setCrlPath("/home/{usuario}/lcr_cache/");
+			//ConfigurationRepo config = ConfigurationRepo.getInstance();
+			//config.setCrlIndex("crl_index");
+			//config.setCrlPath("/tmp/lcr_cache/");
 			//config.setOnline(false);
+			//config.setValidateLCR(false);
 			
 			
 			// Diretorio LPA
-			//Configuration config = Configuration.getInstance();
-			//config.setLpaPath("/home/{usuario}/.signer");
+			//ConfigurationRepo config = ConfigurationRepo.getInstance();
+			//config.setLpaPath("/home/signer/lpa/");
+			// LPA online
+			//config.setOnlineLPA(false);
 			
+			
+			//TimeStampConfig tsConfig = TimeStampConfig.getInstance();
+			//tsConfig.setTimeOut(40000);
 			
 			byte[] signature = signer.doDetachedSign(fileToSign);
 			File file = new File(fileDirName + "_detached_rt.p7s");
@@ -724,7 +726,7 @@ public class CAdESSignerTest {
 			}
 			
 			// Cache LCR
-			Configuration config = Configuration.getInstance();
+			ConfigurationRepo config = ConfigurationRepo.getInstance();
 			//config.setCrlIndex(".crl_index");
 			//config.setCrlPath("/home/{usuario}/lcr_cache/");
 			config.setOnline(false);

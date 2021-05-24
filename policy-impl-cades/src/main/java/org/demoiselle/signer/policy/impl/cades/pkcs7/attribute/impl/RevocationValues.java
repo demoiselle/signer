@@ -36,6 +36,21 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.X509CRL;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
+import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.DERSet;
+import org.bouncycastle.asn1.cms.Attribute;
+import org.bouncycastle.asn1.ocsp.BasicOCSPResponse;
+import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x509.CertificateList;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
 import org.demoiselle.signer.core.repository.CRLRepository;
 import org.demoiselle.signer.core.repository.CRLRepositoryFactory;
@@ -43,28 +58,6 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
-
-import java.security.PrivateKey;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateEncodingException;
-import java.security.cert.X509CRL;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
-import org.bouncycastle.asn1.ASN1Object;
-import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERSet;
-import org.bouncycastle.asn1.cms.Attribute;
-import org.bouncycastle.asn1.esf.OtherRevVals;
-import org.bouncycastle.asn1.ocsp.BasicOCSPResponse;
-import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
-import org.bouncycastle.asn1.x509.CertificateList;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  *

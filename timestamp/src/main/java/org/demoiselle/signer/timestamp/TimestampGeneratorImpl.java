@@ -42,7 +42,10 @@ import java.security.cert.Certificate;
 import org.demoiselle.signer.core.Priority;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
+import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service
@@ -52,6 +55,9 @@ import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 
 @Priority(Priority.MIN_PRIORITY)
 public class TimestampGeneratorImpl implements TimeStampGenerator {
+	
+	private static final Logger logger = LoggerFactory.getLogger(TimestampGeneratorImpl.class);
+	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
 
     private byte[] content = null;
@@ -83,9 +89,27 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
      */
     @Override
     public byte[] generateTimeStamp() throws CertificateCoreException {
-        TimeStampOperator timeStampOperator = new TimeStampOperator();
-        byte[] request = timeStampOperator.createRequest(privateKey, certificates, content, hash);
-        return timeStampOperator.invoke(request);
+        byte[] resp = null;
+        int attempt  = 1;
+        while (attempt < 3) {
+        	try {
+        		TimeStampOperator timeStampOperator = new TimeStampOperator();
+                byte[] request = timeStampOperator.createRequest(privateKey, certificates, content, hash);
+                resp = timeStampOperator.invoke(request);
+                break;
+    		} catch (CertificateCoreException e) {
+    			attempt++;
+    			logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
+    		}	
+        }
+        if (resp != null && resp.length > 1) {
+        	logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
+        	return resp;
+        }else {
+        	logger.error(timeStampMessagesBundle.getString("info.timestamp.attempt.exceeded", attempt));
+        	throw new CertificateCoreException(timeStampMessagesBundle.getString("info.timestamp.attempt.exceeded", attempt));
+        } 
+        
     }
 
     /**

@@ -121,7 +121,7 @@ public class RequestSigner {
             return signed.getEncoded();
 
         } catch (CMSException | IOException | OperatorCreationException | CertificateEncodingException ex) {
-            logger.error(ex.getMessage());
+            logger.error("signRequest:"+ex.getMessage());
             throw new CertificateCoreException(ex.getMessage());
         }
         

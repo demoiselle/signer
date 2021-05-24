@@ -44,6 +44,7 @@ import java.net.UnknownHostException;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 import org.demoiselle.signer.timestamp.utils.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,12 +83,13 @@ public class SocketConnector implements Connector {
     @Override
     public InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException {
         try {
+        	TimeStampConfig tsConfig = TimeStampConfig.getInstance();
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.send.request"));
             socket = new Socket(hostname, port);
-            socket.setSoTimeout(30000);
+            socket.setSoTimeout(tsConfig.getTimeOut());
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
 
-            //logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
             // A "direct TCP-based TSA message" consists of:length (32-bits), flag (8-bits), value
             out = socket.getOutputStream();
             out.write(Utils.intToByteArray(1 + content.length));
@@ -95,7 +97,7 @@ public class SocketConnector implements Connector {
             out.write(content);
             out.flush();
 
-            //logger.info(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
             return socket.getInputStream();
         } catch (IOException e) {
         	logger.error(e.getMessage());        		

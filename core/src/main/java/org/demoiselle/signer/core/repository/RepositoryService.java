@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -66,8 +66,8 @@ public class RepositoryService {
                 String url = args[1];
                 String file_index = args[2];
                 File file = new File(file_index);
-                Configuration.getInstance().setCrlIndex(file.getName());
-                Configuration.getInstance().setCrlPath(file.getParent());
+                ConfigurationRepo.getInstance().setCrlIndex(file.getName());
+                ConfigurationRepo.getInstance().setCrlPath(file.getParent());
                 OffLineCRLRepository rp = new OffLineCRLRepository();
                 rp.addFileIndex(url);
                 update(url);
@@ -76,7 +76,7 @@ public class RepositoryService {
 
                 String file_index = args[1];
                 File fileIndex = new File(file_index);
-                Configuration.getInstance().setCrlIndex(file_index);
+                ConfigurationRepo.getInstance().setCrlIndex(file_index);
 
                 if (!fileIndex.exists()) {
                 	
@@ -114,7 +114,7 @@ public class RepositoryService {
 
     private static void update(String url) {
         try {
-            Configuration config = Configuration.getInstance();
+            ConfigurationRepo config = ConfigurationRepo.getInstance();
             File fileCLR = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(url));
             print(coreMessagesBundle.getString("info.repository.service.download",url));
             RepositoryUtil.saveURL(url, fileCLR);

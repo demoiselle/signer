@@ -44,7 +44,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import org.demoiselle.signer.core.repository.Configuration;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -72,7 +72,7 @@ public class LPARepository {
 	public static boolean saveLocalLPA(final String urlConLPA, final String lpaName) {
 		
 		try {
-			Configuration config = Configuration.getInstance();
+			ConfigurationRepo config = ConfigurationRepo.getInstance();
 			if (config.isOnlineLPA()) {
 				return true;
 			}

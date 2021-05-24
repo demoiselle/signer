@@ -88,6 +88,7 @@ public interface Cryptography {
 	 * @param provider new provider
 	 * @see com.sun.crypto.provider.SunJCE
 	 */
+	@SuppressWarnings("restriction")
 	public void setProvider(Provider provider);
 
 	/**

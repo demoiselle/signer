@@ -147,7 +147,7 @@ public class TimeStampOperator {
             byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request, varAlgo);
             return signedRequest;
         } catch (IOException ex) {         
-        	logger.error(ex.getMessage());
+        	logger.error("createRequest :"+ex.getMessage());
             throw new CertificateCoreException(ex.getMessage());
         }
     }
@@ -200,7 +200,7 @@ public class TimeStampOperator {
                 try {
                     Thread.sleep(1L);
                 } catch (InterruptedException e) {
-                	logger.error(e.getMessage());
+                	logger.debug(e.getMessage());
                 }
             }
 

@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
  */
 public class OffLineCRLRepository implements CRLRepository {
 	
-	private final Configuration config;
+	private final ConfigurationRepo config;
     private final Logger logger = LoggerFactory.getLogger(OffLineCRLRepository.class);
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
@@ -74,7 +74,7 @@ public class OffLineCRLRepository implements CRLRepository {
      * New Instance
      */
     public OffLineCRLRepository() {
-        config = Configuration.getInstance();
+        config = ConfigurationRepo.getInstance();
     }
 
     /**

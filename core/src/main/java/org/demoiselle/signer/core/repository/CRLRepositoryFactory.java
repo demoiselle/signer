@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2021 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  * 
@@ -50,7 +50,7 @@ public class CRLRepositoryFactory {
 	 * @return CRLRepository
 	 */
 	public static CRLRepository factoryCRLRepository() {
-		Configuration conf = Configuration.getInstance();
+		ConfigurationRepo conf = ConfigurationRepo.getInstance();
 		if (conf.isOnline()) {
 			return new OnLineCRLRepository(conf.getProxy());
 		} else {

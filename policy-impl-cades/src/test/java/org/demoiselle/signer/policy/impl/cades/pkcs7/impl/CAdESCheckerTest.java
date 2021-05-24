@@ -57,7 +57,7 @@ import org.bouncycastle.cms.SignerInformation;
 import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
-import org.demoiselle.signer.core.repository.Configuration;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.Base64Utils;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
@@ -94,7 +94,7 @@ public class CAdESCheckerTest {
         config.setCached(true);
 
         // Cache LCR
-        Configuration configlcr = Configuration.getInstance();
+        ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
         configlcr.setCrlIndex(".crl_index");
         System.setProperty("signer.repository.crl.path", "/tmp/lcrs");
         configlcr.setCrlPath("/tmp/lcrs");

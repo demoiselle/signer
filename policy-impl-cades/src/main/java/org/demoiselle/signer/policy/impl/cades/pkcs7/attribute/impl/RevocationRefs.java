@@ -36,7 +36,6 @@
  */
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
@@ -46,10 +45,10 @@ import java.security.cert.X509CRL;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
+
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.DERGeneralizedTime;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERSet;
@@ -58,16 +57,12 @@ import org.bouncycastle.asn1.DERUTCTime;
 import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.esf.CrlIdentifier;
 import org.bouncycastle.asn1.esf.CrlValidatedID;
-import org.bouncycastle.asn1.esf.OcspIdentifier;
-import org.bouncycastle.asn1.esf.OcspResponsesID;
 import org.bouncycastle.asn1.esf.OtherHash;
 import org.bouncycastle.asn1.esf.OtherHashAlgAndValue;
 import org.bouncycastle.asn1.nist.NISTObjectIdentifiers;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
-import org.bouncycastle.cert.ocsp.BasicOCSPResp;
-import org.bouncycastle.cert.ocsp.OCSPException;
 import org.demoiselle.signer.core.extension.ICPBR_CRL;
 import org.demoiselle.signer.core.repository.CRLRepository;
 import org.demoiselle.signer.core.repository.CRLRepositoryFactory;
