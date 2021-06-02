@@ -220,9 +220,11 @@ public class TimeStampOperator {
                 }
                 if (System.currentTimeMillis() >= tempo) {
                     logger.error(timeStampMessagesBundle.getString("info.timestamp.timeout"));
+                    throw new CertificateCoreException(timeStampMessagesBundle.getString("info.timestamp.timeout"));
                 }
             } else {
                 logger.error(timeStampMessagesBundle.getString("info.timestamp.timeout"));
+                throw new CertificateCoreException(timeStampMessagesBundle.getString("info.timestamp.timeout"));
             }
 
             // Lendo flag

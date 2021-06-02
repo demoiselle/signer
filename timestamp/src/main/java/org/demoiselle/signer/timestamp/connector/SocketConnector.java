@@ -40,7 +40,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -81,11 +80,12 @@ public class SocketConnector implements Connector {
     private Socket socket = null;
 
     @Override
-    public InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException {
+    public InputStream connect(byte[] content) throws CertificateCoreException {
         try {
         	TimeStampConfig tsConfig = TimeStampConfig.getInstance();
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.send.request"));
             socket = new Socket(hostname, port);
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", tsConfig.getTimeOut()));
             socket.setSoTimeout(tsConfig.getTimeOut());
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
 

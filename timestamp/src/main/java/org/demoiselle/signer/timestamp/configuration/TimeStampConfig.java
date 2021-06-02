@@ -79,15 +79,18 @@ public class TimeStampConfig {
     
     private TimeStampConfig() {
     	try {
-    		String varTimeOut =  System.getenv(ENV_TIMESTAMP_TIMEOUT.trim());    		
+    		String varTimeOut =  System.getenv(ENV_TIMESTAMP_TIMEOUT);    		
             if (varTimeOut == null || varTimeOut.isEmpty()) {
-            	varTimeOut = (String) System.getProperties().get(TIMESTAMP_TIMEOUT.trim());
+            	varTimeOut = (String) System.getProperties().get(TIMESTAMP_TIMEOUT);
             	if (varTimeOut == null || varTimeOut.isEmpty()) {
+            		LOGGER.debug("DEFAULT");
             		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
             	}else {
+            		LOGGER.debug("key");
             		setTimeOut(Integer.valueOf(varTimeOut));
             	}
             } else {
+            	LOGGER.debug("ENV");
             	setTimeOut(Integer.valueOf(varTimeOut));
             }            
     	}catch (Exception e) {

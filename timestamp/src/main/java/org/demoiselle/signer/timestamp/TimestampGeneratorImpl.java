@@ -93,10 +93,11 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
         int attempt  = 1;
         while (attempt < 3) {
         	try {
+        		logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
         		TimeStampOperator timeStampOperator = new TimeStampOperator();
                 byte[] request = timeStampOperator.createRequest(privateKey, certificates, content, hash);
                 resp = timeStampOperator.invoke(request);
-                break;
+                if (resp != null)   break;
     		} catch (CertificateCoreException e) {
     			attempt++;
     			logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
