@@ -191,6 +191,7 @@ public class TimeStampOperator {
             connector.setPort(TimeStampConfig.getInstance().getTSPPort());
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.response"));
             inputStream = connector.connect(request);
+            
 
             long tempo;
             // Valor do timeout da verificacao de dados disponiveis para leitura

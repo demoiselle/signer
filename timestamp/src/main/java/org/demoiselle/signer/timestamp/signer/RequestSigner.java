@@ -118,6 +118,7 @@ public class RequestSigner {
             // Create the signed data object
             CMSTypedData data = new CMSProcessableByteArray(request);
             CMSSignedData signed = generator.generate(data, true);
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.sign.request.end"));
             return signed.getEncoded();
 
         } catch (CMSException | IOException | OperatorCreationException | CertificateEncodingException ex) {

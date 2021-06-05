@@ -43,6 +43,7 @@ import org.demoiselle.signer.core.Priority;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +92,7 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
     public byte[] generateTimeStamp() throws CertificateCoreException {
         byte[] resp = null;
         int attempt  = 1;
-        while (attempt < 3) {
+        while (attempt <= TimeStampConfig.getInstance().getConnectReplay()) {
         	try {
         		logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
         		TimeStampOperator timeStampOperator = new TimeStampOperator();
@@ -100,7 +101,6 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
                 if (resp != null)   break;
     		} catch (CertificateCoreException e) {
     			attempt++;
-    			logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
     		}	
         }
         if (resp != null && resp.length > 1) {

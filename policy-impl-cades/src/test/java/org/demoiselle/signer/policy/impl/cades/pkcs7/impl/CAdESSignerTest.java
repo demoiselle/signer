@@ -233,6 +233,7 @@ public class CAdESSignerTest {
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			String fileDirName = "/";
+
 			
 			byte[] fileToSign = readContent(fileDirName);
 
@@ -278,9 +279,9 @@ public class CAdESSignerTest {
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			
 			// politica referencia básica sem carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 			// pode ser outro certificado para timestamp
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));
 			//signer.setPrivateKeyForTimeStamp((PrivateKey) ksToTS.getKey(aliasToTs, senhaTS));
@@ -318,9 +319,9 @@ public class CAdESSignerTest {
 			//config.setOnlineLPA(false);
 			
 			
-			//TimeStampConfig tsConfig = TimeStampConfig.getInstance();
-			//tsConfig.setTimeOut(40000);
-			
+			TimeStampConfig tsConfig = TimeStampConfig.getInstance();
+			tsConfig.setTimeOut(40000);
+			tsConfig.setConnectReplay(2);
 			byte[] signature = signer.doDetachedSign(fileToSign);
 			File file = new File(fileDirName + "_detached_rt.p7s");
 			FileOutputStream os = new FileOutputStream(file);

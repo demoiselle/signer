@@ -64,10 +64,26 @@ public class TimeStampConfig {
      */
     public static final String ENV_TIMESTAMP_TIMEOUT = "SIGNER_TIMESTAMP_TIMEOUT";
     
+    
+	
+	/**
+     * System key to set how many times replay timestamp connector
+     */
+    public static final String TIMESTAMP_CONNECT_REPLAY = "signer.timestamp.connect_replay";
+
+    
+    /**
+     * System environment key to set how many times replay timestamp connector
+     */
+    public static final String ENV_TIMESTAMP_CONNECT_REPLAY = "SIGNER_TIMESTAMP_CONNECT_REPLAY";
+
+    
     public static TimeStampConfig instance = new TimeStampConfig();
     
     // default is 30 seconds 
     private int timeOut =30000;
+    
+    private int connectReplay= 3;
 
     
     public static TimeStampConfig getInstance() {
@@ -97,6 +113,25 @@ public class TimeStampConfig {
     		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
 
 		}    	
+    	try {
+    		String varConnectReplay =  System.getenv(ENV_TIMESTAMP_CONNECT_REPLAY);    		
+            if (varConnectReplay == null || varConnectReplay.isEmpty()) {
+            	varConnectReplay = (String) System.getProperties().get(TIMESTAMP_CONNECT_REPLAY);
+            	if (varConnectReplay == null || varConnectReplay.isEmpty()) {
+            		LOGGER.debug("DEFAULT");
+            		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
+            	}else {
+            		LOGGER.debug("key");
+            		setConnectReplay(Integer.valueOf(varConnectReplay));
+            	}
+            } else {
+            	LOGGER.debug("ENV");
+            	setConnectReplay(Integer.valueOf(varConnectReplay));
+            }            
+    	}catch (Exception e) {
+    		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
+
+		}
     }
 
     /**
@@ -110,6 +145,15 @@ public class TimeStampConfig {
 	public void setTimeOut(int parmTimeOut) {
 		this.timeOut = parmTimeOut;
 		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
+	}
+
+	public int getConnectReplay() {
+		return connectReplay;
+	}
+
+	public void setConnectReplay(int connectReplay) {
+		this.connectReplay = connectReplay;
+		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
 	}
     
 }

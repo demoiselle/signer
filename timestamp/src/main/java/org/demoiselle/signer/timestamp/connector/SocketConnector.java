@@ -82,11 +82,11 @@ public class SocketConnector implements Connector {
     @Override
     public InputStream connect(byte[] content) throws CertificateCoreException {
         try {
-        	TimeStampConfig tsConfig = TimeStampConfig.getInstance();
+        	TimeStampConfig.getInstance().getTimeOut();
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.send.request"));
             socket = new Socket(hostname, port);
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", tsConfig.getTimeOut()));
-            socket.setSoTimeout(tsConfig.getTimeOut());
+            logger.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", TimeStampConfig.getInstance().getTimeOut()));
+            socket.setSoTimeout(TimeStampConfig.getInstance().getTimeOut());
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
 
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
