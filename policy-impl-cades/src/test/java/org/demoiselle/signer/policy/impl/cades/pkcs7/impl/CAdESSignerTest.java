@@ -80,7 +80,6 @@ import org.junit.Test;
 /**
  *
  */
-@SuppressWarnings("unused")
 public class CAdESSignerTest {
 
 	// A anotação @Test está comentada, para passar o buld, pois as
@@ -226,16 +225,18 @@ public class CAdESSignerTest {
 	public void testSignDetached() {
 		try {
 
-			System.out.println("******** TESTANDO COM CONTEÚDO *****************");
+			System.out.println("******** TESTANDO COM ARQUIVO *****************");
 
 			// INFORMAR o arquivo
 			
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/";
-
+			String fileDirName = "/tmp/";
+			byte[] fileToSign;
 			
-			byte[] fileToSign = readContent(fileDirName);
+			fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
+			// se informar o fileDirName decomentar abaixo
+			//fileToSign = readContent(fileDirName);
 
 
 			// MSCAPI off
@@ -279,9 +280,9 @@ public class CAdESSignerTest {
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 			
 			// politica referencia básica sem carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_2);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 			// pode ser outro certificado para timestamp
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));
 			//signer.setPrivateKeyForTimeStamp((PrivateKey) ksToTS.getKey(aliasToTs, senhaTS));
@@ -320,9 +321,11 @@ public class CAdESSignerTest {
 			
 			
 			TimeStampConfig tsConfig = TimeStampConfig.getInstance();
-			tsConfig.setTimeOut(40000);
+			tsConfig.setTimeOut(100);
 			tsConfig.setConnectReplay(2);
 			byte[] signature = signer.doDetachedSign(fileToSign);
+			String varSignature = Base64.encodeBase64String(signature);
+			System.out.println(varSignature);
 			File file = new File(fileDirName + "_detached_rt.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
@@ -345,16 +348,17 @@ public class CAdESSignerTest {
 		try {
 
 			System.out.println("******** TESTANDO COM HASH *****************");
-
-			// INFORMAR o arquivo para gerar o hash
-			String fileDirName = "/";
-						
 			
-			byte[] fileToSign = readContent(fileDirName);
+			// INFORMAR o arquivo para gerar o hash
+			String fileDirName = "/tmp/";
+									
+						
+			//byte[] fileToSign = readContent(fileDirName);
 
+		
 			// Para certificado em arquivo A1 é preciso essa senha para PrivateKey
 			// para token troque a senha em: getKeyStoreToken()
-			char[] senha = "senha".toCharArray();
+			//char[] senha = "senha".toCharArray();
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
@@ -377,7 +381,7 @@ public class CAdESSignerTest {
 
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 
 			// devido a uma restrição do token branco, no windws só funciona com 256
 			String varSO = System.getProperty("os.name");
@@ -385,17 +389,16 @@ public class CAdESSignerTest {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			}
 			
-			byte[] hash = md.digest(fileToSign);
-			
-			
-			String contentEncoded = Base64.encodeBase64String(fileToSign);	                	
-        	System.out.println("contentEncoded : "+contentEncoded);	                	
-            String hashEncoded = new String(Base64.encodeBase64(hash));	                    
-            System.out.println("hashEncoded: "+hashEncoded);
+			byte[] hash = Base64.decodeBase64("dvlpOKVdXfIrnWqTVRyMcElaRRcbSqXokpISZxawfoU\\u003d");
+					
+			//String contentEncoded = Base64.encodeBase64String(fileToSign);	                	
+        	//System.out.println("contentEncoded : "+contentEncoded);	                	
+            //String hashEncoded = new String(Base64.encodeBase64(hash));	                    
+            //System.out.println("hashEncoded: "+hashEncoded);
 			
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
-			signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
+			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
 			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}

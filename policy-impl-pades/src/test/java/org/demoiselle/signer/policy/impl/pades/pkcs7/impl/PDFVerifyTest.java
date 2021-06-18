@@ -18,14 +18,17 @@ import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.timestamp.Timestamp;
+import org.junit.Test;
 
 public class PDFVerifyTest {
 
 	//@Test
 	public void testPDFVerify() {
-		
+	
 			String filePath = "/";
 			
+
+
 
 			List<SignatureInformations> results = new ArrayList<SignatureInformations>();			
 			PDDocument document;
