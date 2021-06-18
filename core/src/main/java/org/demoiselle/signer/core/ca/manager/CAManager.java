@@ -171,13 +171,16 @@ public class CAManager {
 		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
 		try {
 			if (isCached) {
+				LOGGER.info("Com CACHE");
 				Boolean isValid = managerCache.getIsCAofCertificate(ca, certificate);
 				if (null != isValid) {
 					return isValid;
 				}
 			}
 
+			LOGGER.info("Executando o verify");
 			certificate.verify(ca.getPublicKey());
+			LOGGER.info("Verify executado");
 
 			if (isCached) {
 				managerCache.setIsCAofCertificate(ca, certificate, true);
@@ -266,6 +269,8 @@ public class CAManager {
 						String issuerName = certificate.getIssuerX500Principal().getName();
 						String certificateCnIssuer = this.getCN(issuerName);
 						String acCN = this.getCN(ac.getSubjectX500Principal().getName());
+						LOGGER.info("++ certificateCnIssuer "+ certificateCnIssuer);
+						LOGGER.info("++ acCN "+ acCN);
 						if (certificateCnIssuer.equalsIgnoreCase(acCN) && this.isCAofCertificate(ac, certificate)) {
 							result.add(ac);
 							X509Certificate acFromAc = null;
