@@ -252,7 +252,7 @@ public class CAManager {
 		for (ProviderCA provider : providers) {
 			try {
 				String varNameProvider = provider.getName();
-				LOGGER.debug(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
+				LOGGER.info(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
 
 				// Get ALL CAs of ONE provider
 				Collection<X509Certificate> acs = provider.getCAs();
@@ -306,13 +306,13 @@ public class CAManager {
 
 				}
 
-				LOGGER.debug(coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
+				LOGGER.info(coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
 
 				// If chain is created BREAK! Doesn't go to next Provider
 				if (ok) {
 					break;
 				} else {
-					LOGGER.debug(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
+					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
 				}
 			} catch (Exception error) {
 				LOGGER.info(coreMessagesBundle.getString("error.no.ca", provider.getName()));				
