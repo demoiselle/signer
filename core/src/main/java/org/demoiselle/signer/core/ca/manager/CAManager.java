@@ -179,6 +179,7 @@ public class CAManager {
 			}
 
 			LOGGER.info("Executando o verify");
+			LOGGER.info(certificate.getIssuerX500Principal().getName());
 			certificate.verify(ca.getPublicKey());
 			LOGGER.info("Verify executado");
 
@@ -188,6 +189,7 @@ public class CAManager {
 
 			return true;
 		} catch (SignatureException | InvalidKeyException error) {
+			LOGGER.error("Erro Verify: "+error.getMessage());
 			if (isCached) {
 				managerCache.setIsCAofCertificate(ca, certificate, false);
 			}
