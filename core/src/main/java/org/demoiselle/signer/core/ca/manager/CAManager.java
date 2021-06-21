@@ -170,18 +170,15 @@ public class CAManager {
 
 		//TODO - verificar se precisa lançar exceção ou não ser método de retorno boolean
 		try {
+			LOGGER.debug(coreMessagesBundle.getString("info.ca.cache", isCached));
 			if (isCached) {
-				LOGGER.info("Com CACHE");
 				Boolean isValid = managerCache.getIsCAofCertificate(ca, certificate);
 				if (null != isValid) {
 					return isValid;
 				}
 			}
-
-			LOGGER.info("Executando o verify");
-			LOGGER.info(certificate.getIssuerX500Principal().getName());
 			certificate.verify(ca.getPublicKey());
-			LOGGER.info("Verify executado");
+			LOGGER.debug(coreMessagesBundle.getString("info.ca.validated"));
 
 			if (isCached) {
 				managerCache.setIsCAofCertificate(ca, certificate, true);
@@ -189,11 +186,10 @@ public class CAManager {
 
 			return true;
 		} catch (SignatureException | InvalidKeyException error) {
-			LOGGER.error("Erro Verify: "+error.getMessage());
+			LOGGER.error(coreMessagesBundle.getString("error.ca.verify.certificate.signature", error.getMessage()));
 			if (isCached) {
 				managerCache.setIsCAofCertificate(ca, certificate, false);
 			}
-
 			return false;
 		} catch (CertificateException error) {
 			LOGGER.error(coreMessagesBundle.getString("error.certificate.exception"), error);
@@ -257,7 +253,7 @@ public class CAManager {
 		for (ProviderCA provider : providers) {
 			try {
 				String varNameProvider = provider.getName();
-				LOGGER.info(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
+				LOGGER.debug(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
 
 				// Get ALL CAs of ONE provider
 				Collection<X509Certificate> acs = provider.getCAs();
@@ -271,8 +267,6 @@ public class CAManager {
 						String issuerName = certificate.getIssuerX500Principal().getName();
 						String certificateCnIssuer = this.getCN(issuerName);
 						String acCN = this.getCN(ac.getSubjectX500Principal().getName());
-						LOGGER.info("++ certificateCnIssuer "+ certificateCnIssuer);
-						LOGGER.info("++ acCN "+ acCN);
 						if (certificateCnIssuer.equalsIgnoreCase(acCN) && this.isCAofCertificate(ac, certificate)) {
 							result.add(ac);
 							X509Certificate acFromAc = null;
@@ -313,7 +307,7 @@ public class CAManager {
 
 				}
 
-				LOGGER.info(coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
+				LOGGER.debug(coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
 
 				// If chain is created BREAK! Doesn't go to next Provider
 				if (ok) {
@@ -322,7 +316,7 @@ public class CAManager {
 					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
 				}
 			} catch (Exception error) {
-				LOGGER.info(coreMessagesBundle.getString("error.no.ca", provider.getName()));				
+				LOGGER.warn(coreMessagesBundle.getString("error.no.ca", provider.getName()));				
 			}
 		}
 		

@@ -25,7 +25,7 @@
 	<parent>
 		<groupId>org.demoiselle.signer</groupId>
 		<artifactId>build</artifactId>
-		<version>3.7.0.5-SNAPSHOT</version>
+		<version>3.7.0-SNAPSHOT</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -52,7 +52,7 @@
 		<maven.install.plugin.version>2.3.1</maven.install.plugin.version>
 		<maven.release.plugin.version>2.5</maven.release.plugin.version>
 		<wagon.plugin.version>1.0-beta-3</wagon.plugin.version>
-		<demoiselle.signer.version>3.7.0.5-SNAPSHOT</demoiselle.signer.version>
+		<demoiselle.signer.version>3.7.0-SNAPSHOT</demoiselle.signer.version>
 	</properties>
 
 	<dependencyManagement>
