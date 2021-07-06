@@ -34,15 +34,65 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.xades;
 
-/**
- * 
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
- *
- */
-public enum SignaturePack{
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
+import java.security.KeyStore.Builder;
+import java.security.Provider;
+import java.security.Security;
+import java.security.cert.Certificate;
+import java.util.Enumeration;
 
-	ENVELOPED, DETACHED
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.demoiselle.signer.policy.impl.xades.xml.XMLSigner;
+import org.junit.Test;
+import org.w3c.dom.Document;
+
+public class VerifyXAdESTest {
+
+	
+	@Test
+	public void testSign() {
+				
+		try {
+			String fileName = "teste_assinatura.xml";
+	        ClassLoader classLoader = getClass().getClassLoader();
+	        URL fileUri = classLoader.getResource(fileName);
+	        File newFile=new File(fileUri.toURI());
+	        
+//	        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+//	        BufferedReader reader = new BufferedReader(streamReader); 
+	        			
+			XMLSigner xades = new XMLSigner();
+					
+		} catch (Throwable e) {
+		  e.printStackTrace();
+		}		
+
+	}
+	
+	
+	
+	
 
 }

@@ -34,15 +34,31 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.policy.impl.xades;
+
+package org.demoiselle.signer.policy.impl.xades.util;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * 
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
+ * @author Emerson Saito <emerson.saito@serpro.gov.br>
  *
  */
-public enum SignaturePack{
+public class DocumentUtils {
+	
+	public static String getString(Document parmDocument, String parmTagName) {
+		
+		Element rootElement = parmDocument.getDocumentElement();
+        NodeList list = rootElement.getElementsByTagName(parmTagName);
+        if (list != null && list.getLength() > 0) {
+            NodeList subList = list.item(0).getChildNodes();
 
-	ENVELOPED, DETACHED
-
+            if (subList != null && subList.getLength() > 0) {
+                return subList.item(0).getNodeValue();
+            }
+        }
+        return null;
+    }
 }

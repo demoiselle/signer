@@ -1,3 +1,40 @@
+/*
+ * Demoiselle Framework
+ * Copyright (C) 2021 SERPRO
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
+ *
+ * Demoiselle Framework is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License version 3
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License version 3
+ * along with this program; if not,  see <http://www.gnu.org/licenses/>
+ * or write to the Free Software Foundation, Inc., 51 Franklin Street,
+ * Fifth Floor, Boston, MA  02110-1301, USA.
+ * ----------------------------------------------------------------------------
+ * Este arquivo é parte do Framework Demoiselle.
+ *
+ * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
+ * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
+ * do Software Livre (FSF).
+ *
+ * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
+ * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
+ * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
+ * para maiores detalhes.
+ *
+ * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
+ * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
+ * ou escreva para a Fundação do Software Livre (FSF) Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
+ */
+
 package org.demoiselle.signer.policy.impl.xades.xml;
 
 import java.io.File;
@@ -27,6 +64,43 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
+/*
+ * Demoiselle Framework
+ * Copyright (C) 2021 SERPRO
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
+ *
+ * Demoiselle Framework is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License version 3
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License version 3
+ * along with this program; if not,  see <http://www.gnu.org/licenses/>
+ * or write to the Free Software Foundation, Inc., 51 Franklin Street,
+ * Fifth Floor, Boston, MA  02110-1301, USA.
+ * ----------------------------------------------------------------------------
+ * Este arquivo é parte do Framework Demoiselle.
+ *
+ * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
+ * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
+ * do Software Livre (FSF).
+ *
+ * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
+ * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
+ * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
+ * para maiores detalhes.
+ *
+ * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
+ * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
+ * ou escreva para a Fundação do Software Livre (FSF) Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
+ */
+
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.xml.security.Init;
@@ -36,6 +110,7 @@ import org.apache.xml.security.c14n.InvalidCanonicalizerException;
 import org.bouncycastle.util.encoders.Base64;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.xades.SignaturePack;
+import org.demoiselle.signer.policy.impl.xades.util.PolicyUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -43,14 +118,27 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
+/**
+ * 
+ * 
+ * This implementation is based in XAdEs standard, available in https://www.w3.org/TR/XAdES/ and 
+ * Brazilian digital signature standards presented 
+ * in https://www.gov.br/iti/pt-br/centrais-de-conteudo/doc-icp-15-03-versao-7-4-req-das-pol-de-assin-dig-na-icp-brasil-pdf  
+ * 
+ * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
+ * @author Emerson Saito <emerson.saito@serpro.gov.br>
+ *
+ */
+
 public class XMLSigner{
 	
 	private KeyStore keyStore;
 	private String alias;
 	private Document signedDocument;
-	private String policyId = "";
+	private String policyOID = "";
 	private String id = "id-"+System.currentTimeMillis();
 	private SignaturePack sigPack;
+	private PolicyFactory.Policies policy; 
 	public static final String XMLNS = "http://www.w3.org/2000/09/xmldsig#";
 	public static final String XMLNS_DS = "xmlns:ds";
 	public static final String XMLNS_XADES = "xmlns:xades";
@@ -67,8 +155,9 @@ public class XMLSigner{
 		this.keyStore = keyStore;
 	}
 	
-	public void setPolicyId(String policyId) {
-		this.policyId = policyId;
+	public void setPolicyId(String policyOID) {		
+		this.policyOID = policyOID;
+		this.policy= PolicyUtils.getPolicyByOid(policyOID);
 	}	
 	
 	public Element getDocumentData(Document doc) throws IOException, SAXException, ParserConfigurationException {
@@ -88,7 +177,9 @@ public class XMLSigner{
 		
 	}
 	
-	public byte[] getShaCanonizedValue(String alg, Node xml, String canonical) throws InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException, ParserConfigurationException, IOException, SAXException {
+	public byte[] getShaCanonizedValue(String alg, Node xml, String canonical) 
+			throws InvalidCanonicalizerException, NoSuchAlgorithmException, 
+				CanonicalizationException, ParserConfigurationException, IOException, SAXException {
 		Init.init();
 		Canonicalizer c14n = Canonicalizer.getInstance(canonical);
 		MessageDigest messageDigest = MessageDigest.getInstance(alg);
@@ -132,7 +223,8 @@ public class XMLSigner{
 		sigPolicyId .appendChild(sigPId);
 		
 		Element identifier = doc.createElementNS(XAdESv1_3_2, "xades:Identifier");
-		identifier.setTextContent(policyId);
+		identifier.setAttribute("Qualifier", "OIDAsURN");
+		identifier.setTextContent("urn:oid:"+policyOID);
 		sigPId.appendChild(identifier);
 		
 		Element sigTransforms = doc.createElementNS(XMLNS, "ds:Transforms");
@@ -153,7 +245,7 @@ public class XMLSigner{
 		
 		Document policyDoc = null;
 		try {
-			policyDoc = PolicyFactory.getInstance().loadXMLPolicy(new XMLChecker().getPolicyByOid(this.policyId)); // "2.16.76.1.7.1.6.2.3"));
+			policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy); 
 			NodeList listHash = policyDoc.getElementsByTagName("pa:SignPolicyDigest");
 			if(listHash.getLength() > 0) {
 				hash = listHash.item(0).getTextContent();
@@ -164,7 +256,7 @@ public class XMLSigner{
 		
 		
 		Element sigDigestValue = doc.createElementNS(XMLNS, "ds:DigestValue");
-		sigDigestValue.setTextContent(hash); //"gh8ZgWP10SSwGxsW1N6d5LpYv3uTt1IAVYU4hj4y0RA=");
+		sigDigestValue.setTextContent(hash); 
 		sigPolicyHash.appendChild(sigDigestValue);
 		
 
@@ -175,7 +267,7 @@ public class XMLSigner{
 		sigPolicyQualifiers.appendChild(sigPolicyQualifier);
 		
 		Element sigSPURI = doc.createElementNS(XAdESv1_3_2, "xades:SPURI");
-		sigSPURI.setTextContent("http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.xml");
+		sigSPURI.setTextContent(policy.getUrl());
 		sigPolicyQualifier.appendChild(sigSPURI);
 		
 		return sigPolicyIdentifier;	
@@ -243,7 +335,7 @@ public class XMLSigner{
 		sigIssuerNumber.setTextContent(serialId);
 		sigIssuerSerial.appendChild(sigIssuerNumber);
 		
-		if(!policyId.isEmpty()) {
+		if(!policyOID.isEmpty()) {
 			sigSignedProp.appendChild(addPolicy(doc));
 		}
 		
@@ -344,7 +436,9 @@ public class XMLSigner{
 		}
 			
 		Element signatureTag = bodyDoc.createElementNS(XMLNS, "ds:Signature");
-		signatureTag.setAttribute(XMLNS_DS, XMLNS);
+		//signatureTag.setAttribute(XMLNS_DS, XMLNS);
+		signatureTag.setAttributeNS("http://www.w3.org/2000/xmlns/",XMLNS_DS, XMLNS);
+		signatureTag.setAttributeNS("http://www.w3.org/2000/xmlns/",XMLNS_XADES, XAdESv1_3_2);
 		signatureTag.setAttribute("Id", id);
 		
 		Element sigInfTag = bodyDoc.createElementNS(XMLNS, "ds:SignedInfo");
@@ -466,6 +560,10 @@ public class XMLSigner{
 		Element x509 = doc.createElementNS(XMLNS, "ds:X509Data");
 		keyInfo.appendChild(x509);
 				
+		Element X509SubjectName = doc.createElementNS(XMLNS, "ds:X509SubjectName");
+		X509SubjectName.setTextContent(cert.getSubjectDN().getName());
+		x509.appendChild(X509SubjectName);
+		
 		Element x509Certificate = doc.createElementNS(XMLNS, "ds:X509Certificate");
 		x509Certificate.setTextContent(Base64.toBase64String(cert.getEncoded()));
 		x509.appendChild(x509Certificate );
