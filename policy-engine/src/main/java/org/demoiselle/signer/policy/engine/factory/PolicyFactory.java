@@ -42,8 +42,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -54,6 +52,8 @@ import org.demoiselle.signer.policy.engine.asn1.icpb.LPA;
 import org.demoiselle.signer.policy.engine.repository.LPARepository;
 import org.demoiselle.signer.policy.engine.repository.PolicyEngineConfig;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.demoiselle.signer.policy.engine.util.XMLUtil;
+import org.demoiselle.signer.policy.engine.xml.icpb.LPAXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -89,17 +89,12 @@ public class PolicyFactory {
     }
     
     public Document loadXMLPolicy(Policies policy) throws ParserConfigurationException, SAXException, IOException {
-    	
+    	SignaturePolicy signaturePolicy = new SignaturePolicy();
         InputStream is = this.getClass().getResourceAsStream(policy.getFile());
-        
-        DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder;
-		
-		dBuilder = dbFactory.newDocumentBuilder();
-		Document doc = dBuilder.parse(is);
-        
-        
-        return doc;
+        Document policyXML = XMLUtil.loadXMLDocument(is);
+        //signaturePolicy.parse(policyXML);
+        signaturePolicy.setSignPolicyURI(policy.getUrl());
+        return policyXML;
     }
 
     
@@ -163,8 +158,11 @@ public class PolicyFactory {
      */
     		
     // TODO - Implementar
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAXAdES() {
-        return new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();    
+    public LPAXML loadLPAXAdES() {
+    	LPAXML varLPAXML = new LPAXML();
+         InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.XAdES.getFile());
+         Document localLPAXML = XMLUtil.loadXMLDocument(is);
+         return varLPAXML;    
     }
     
     
@@ -231,8 +229,29 @@ public class PolicyFactory {
      */
     		
     // TODO - Implementar
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAXAdESLocal() {
-        return new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();    
+    public Document loadLPAXAdESLocal() {
+    	
+    	InputStream is= null;
+    	Document localLPAXML = null;
+		try {
+			ConfigurationRepo config = ConfigurationRepo.getInstance();
+			Path pathLPA = Paths.get(config.getLpaPath(), "LPA_XAdES.xml");
+			LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
+			is = new FileInputStream(pathLPA.toString());
+			localLPAXML = XMLUtil.loadXMLDocument(is);
+	        return localLPAXML;
+		} catch (FileNotFoundException e) {
+			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
+			localLPAXML = loadLPAXAdESUrl();			
+		}
+		if (localLPAXML != null){
+			return localLPAXML;
+		}else{
+			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
+			
+		}
+   
     }
     
       
@@ -361,9 +380,33 @@ public class PolicyFactory {
      */
     		
     // TODO - Implementar
-    public void loadLPAXAdESUrl() {
-        String conURL = ListOfSubscriptionPolicies.XADES_ITI_URL.getUrl();
-        LOGGER.info(conURL);
+    public Document loadLPAXAdESUrl() {
+        
+        Document localLPAXML = null;
+        String conURL = ListOfSubscriptionPolicies.XAdES_ITI_URL.getUrl();
+        
+        try{        	
+        	InputStream is = Downloads.getInputStreamFromURL(conURL);
+        	localLPAXML = XMLUtil.loadXMLDocument(is);
+            is.close();
+            if (!LPARepository.saveLocalLPA(conURL, "LPA_XAdES.xml")){
+            	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
+            	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+            }            
+        }catch(RuntimeException ex){
+        	LOGGER.error(ex.getMessage());
+        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+        	localLPAXML = loadLocalLPAXAdESUrl();
+        	return localLPAXML;
+        	
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
+			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+			localLPAXML = loadLocalLPAXAdESUrl();
+			return localLPAXML;
+		}
+        
+        return localLPAXML;
             
     }
     
@@ -371,10 +414,28 @@ public class PolicyFactory {
      *  Load signature policy for XAdES (XML) standard from local url
      */
     		
-    // TODO - Implementar
-    public void loadLocalLPAXAdESUrl() {
-    	String conURL = ListOfSubscriptionPolicies.XADES_LOCAL_URL.getUrl();
-    	LOGGER.info(conURL);
+    // TODO - Implementar listaPoliticaAssinatura LPA_XML 
+    public Document loadLocalLPAXAdESUrl() {
+   	
+        InputStream is;
+        Document localLPAXML = null;
+        String conURL = ListOfSubscriptionPolicies.XAdES_LOCAL_URL.getUrl();
+		try {			
+			is = Downloads.getInputStreamFromURL(conURL);
+			localLPAXML = XMLUtil.loadXMLDocument(is);
+			is.close();
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_XAdES.xml")){
+	        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
+	        	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+	        	}	        
+		} catch (RuntimeException e) {		
+			LOGGER.error(e.getMessage());
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+		} catch (IOException e) {
+			LOGGER.error(e.getMessage());
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+		}
+		 return localLPAXML;
             
     }
     
@@ -479,6 +540,9 @@ public class PolicyFactory {
 
 // TODO - Carregar politica em formato XML, necessário??? 
        // FORMATO XAdES
+        
+        AD_RB_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_1.xml",
+        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_1.xml"),        
         AD_RB_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.xml",
                 		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.xml"),
         AD_RB_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.xml",
@@ -486,11 +550,18 @@ public class PolicyFactory {
         AD_RB_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_4.xml",
                                 		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_4.xml"),
                                 		
+        AD_RT_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_1.xml",
+        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_1.xml"),
+        
+        AD_RT_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_2.xml",
+        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.xml"),
         AD_RT_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.xml",
                 		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.xml"),
         AD_RT_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_4.xml",
                         		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_4.xml"),
                 		
+        AD_RV_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_2.xml",
+           		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_2.xml"),
    		AD_RV_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_3.xml",
                    		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.xml"),                   		
         AD_RV_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_4.xml",
@@ -564,7 +635,7 @@ public class PolicyFactory {
         LPAV1("/org/demoiselle/signer/policy/engine/artifacts/LPA.der"),
         LPAV2("/org/demoiselle/signer/policy/engine/artifacts/LPAv2.der"),
         CAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_CAdES.der"),
-        XADES("/org/demoiselle/signer/policy/engine/artifacts/LPA_XAdES.xml"),
+        XAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_XAdES.xml"),
         PAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_PAdES.der"),
 
         // deprecated
@@ -574,14 +645,14 @@ public class PolicyFactory {
         
         CAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades()),
         CAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades_sha()),
-        XADES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades()),
-        XADES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades_sha()),
+        XAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades()),
+        XAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades_sha()),
         PAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_pades()),
         PAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_pades_sha()),
         CAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_cades()),
         CAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_cades_sha()),
-        XADES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades()),
-        XADES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades_sha()),
+        XAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades()),
+        XAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades_sha()),
         PAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades()),
         PAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades_sha());
         
@@ -608,6 +679,7 @@ public class PolicyFactory {
             return file;
         }        
     }
+    
     
     
 }

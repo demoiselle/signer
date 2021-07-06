@@ -46,6 +46,7 @@ import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.w3c.dom.Document;
 
 /**
  * V2 definition on:
@@ -135,5 +136,6 @@ public class LPA extends ASN1Object {
         }
         return builder.toString();
     }
+
 
 }
