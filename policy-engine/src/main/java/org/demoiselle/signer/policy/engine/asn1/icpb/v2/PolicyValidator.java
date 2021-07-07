@@ -39,13 +39,13 @@ package org.demoiselle.signer.policy.engine.asn1.icpb.v2;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.exception.PolicyException;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
-import org.demoiselle.signer.policy.engine.xml.icpb.LPAXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +58,6 @@ public class PolicyValidator {
 	private SignaturePolicy sp;
 	private String policyName;
 	private LPA listOfPolicies;
-	private LPAXML listOfXMLPolicies;
 	
 	public PolicyValidator(SignaturePolicy sp, String policyName) {
 		super();
@@ -185,8 +184,9 @@ public class PolicyValidator {
 					}
 				} else{
 					if (policyName.contains("XADES")){
-						// TODO verificar como é procesado em XML
-						listOfXMLPolicies = factory.loadLPAXAdES();
+						policyMessagesBundle.getString(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
+						throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
+					
 					}else{
 						policyMessagesBundle.getString(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 						throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized", policyName));

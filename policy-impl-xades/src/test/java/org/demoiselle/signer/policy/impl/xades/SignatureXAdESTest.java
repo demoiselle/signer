@@ -48,6 +48,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.security.KeyStore.Builder;
 import java.security.Provider;
 import java.security.Security;
@@ -75,9 +76,17 @@ public class SignatureXAdESTest {
 	public void testSign() {
 				
 		try {
-			KeyStore keyStore = null;
+			KeyStore ks = null;
 			
-			keyStore = getKeyStoreTokenBySigner();
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
+			
+			// arquivo
+			//ks = getKeyStoreFileBySigner();
+			
+			// token 
+			//ks = getKeyStoreToken();
+			
 			String fileName = "teste_assinatura.xml";
 
 	        ClassLoader classLoader = getClass().getClassLoader();
@@ -87,13 +96,21 @@ public class SignatureXAdESTest {
 //	        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 //	        BufferedReader reader = new BufferedReader(streamReader); 
 	        			
-			String alias = getAlias(keyStore);
-			XMLSigner xades = new XMLSigner();
-			xades.setAlias(alias);
-			xades.setKeyStore(keyStore);
-			xades.setPolicyId(XMLPoliciesOID.AD_RB_XADES_2_4.getOID());
-			Document doc = xades.sign(newFile.getPath());					
-			String signedFile = fileName.replaceFirst(".xml$", "_signed.xml");
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+			
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			//	quando certificado em arquivo, precisa informar a senha
+			//char[] senha = "teste".toCharArray();
+			//xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+	
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			Document doc = xmlSigner.sign(newFile.getPath());					
+			String signedFile = fileName.replaceFirst(".xml$", "_rt_signed.xml");
 			OutputStream os = new FileOutputStream("src/test/resources/"+signedFile);
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer trans = tf.newTransformer();

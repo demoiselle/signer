@@ -186,7 +186,7 @@ public class CAManager {
 
 			return true;
 		} catch (SignatureException | InvalidKeyException error) {
-			LOGGER.error(coreMessagesBundle.getString("error.ca.verify.certificate.signature", error.getMessage()));
+			LOGGER.debug(coreMessagesBundle.getString("error.ca.verify.certificate.signature", error.getMessage()));
 			if (isCached) {
 				managerCache.setIsCAofCertificate(ca, certificate, false);
 			}
