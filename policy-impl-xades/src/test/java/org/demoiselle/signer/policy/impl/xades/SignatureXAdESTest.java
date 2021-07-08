@@ -37,6 +37,8 @@
 
 package org.demoiselle.signer.policy.impl.xades;
 
+import static org.junit.Assert.assertFalse;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -108,20 +110,22 @@ public class SignatureXAdESTest {
 			//xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 	
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
 			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 			Document doc = xmlSigner.sign(newFile.getPath());					
+			
 			String signedFile = fileName.replaceFirst(".xml$", "_rt_signed.xml");
 			OutputStream os = new FileOutputStream("src/test/resources/"+signedFile);
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer trans = tf.newTransformer();
 			trans.transform(new DOMSource(doc), new StreamResult(os));
 					
-		} catch (ParserConfigurationException e) {
-			e.printStackTrace();
 		} catch (TransformerException e) {
 		  e.printStackTrace();
+		  	assertFalse(true);
 		} catch (Throwable e) {
 		  e.printStackTrace();
+		  assertFalse(true);
 		}		
 
 	}

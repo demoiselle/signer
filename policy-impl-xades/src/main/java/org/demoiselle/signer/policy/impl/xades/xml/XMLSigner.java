@@ -46,11 +46,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Paths;
+import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.Signature;
+import java.security.SignatureException;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -120,6 +123,7 @@ import org.demoiselle.signer.policy.impl.xades.XMLSignerException;
 import org.demoiselle.signer.policy.impl.xades.util.PolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -143,9 +147,11 @@ import org.xml.sax.SAXException;
 public class XMLSigner {
 
 	private PrivateKey privateKey = null;
+	private PrivateKey privateKeyToTimestamp = null;
 	private byte[] docSignature = null;
 	private X509Certificate certificate;
 	private Certificate certificateChain[] = null;
+	private Certificate certificateChainToTimestamp[] = null;	
 	private Document signedDocument = null;
 	private String policyOID = "";
 	private String id = "id-" + System.currentTimeMillis();
@@ -164,43 +170,69 @@ public class XMLSigner {
 		this.policy = PolicyUtils.getPolicyByOid(policyOID);
 	}
 
+	/**
+	 * To set another policy @see PolicyUtils
+	 * @param policyOID
+	 */
 	public void setPolicyId(String policyOID) {
 		this.policyOID = policyOID;
 		this.policy = PolicyUtils.getPolicyByOid(policyOID);
 	}
 
-	public Element getDocumentData(Document doc) throws IOException, SAXException, ParserConfigurationException {
+	public Element getDocumentData(Document doc) throws XMLSignerException{
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = dbf.newDocumentBuilder();
-		dbf.setNamespaceAware(true);
-		Document bodyDoc = builder.newDocument();
-		Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
-		bodyDoc.appendChild(body);
-		NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
-		for (int i = 0; i < signatures.getLength(); i++)
-			signatures.item(i).getParentNode().removeChild(signatures.item(i));
-
-		return bodyDoc.getDocumentElement();
-
+		DocumentBuilder builder;
+		Document bodyDoc = null;
+		try {
+			builder = dbf.newDocumentBuilder();
+			dbf.setNamespaceAware(true);
+			bodyDoc = builder.newDocument();
+			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
+			bodyDoc.appendChild(body);
+			NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
+			for (int i = 0; i < signatures.getLength(); i++)
+				signatures.item(i).getParentNode().removeChild(signatures.item(i));
+		} catch (ParserConfigurationException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+		}		
+		return bodyDoc.getDocumentElement();	
 	}
 
-	public byte[] getShaCanonizedValue(String alg, Node xml, String canonical)
-			throws InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException,
-			ParserConfigurationException, IOException, SAXException {
+	public byte[] getShaCanonizedValue(String alg, Node xml, String canonical) throws XMLSignerException{
 		Init.init();
-		Canonicalizer c14n = Canonicalizer.getInstance(canonical);
-		MessageDigest messageDigest = MessageDigest.getInstance(alg);
-		return messageDigest.digest(c14n.canonicalizeSubtree(xml));
+		Canonicalizer c14n;
+		try {
+			c14n = Canonicalizer.getInstance(canonical);
+		} catch (InvalidCanonicalizerException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
+		MessageDigest messageDigest;
+		try {
+			messageDigest = MessageDigest.getInstance(alg);
+		} catch (NoSuchAlgorithmException e) {
+			logger.error(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+		}
+		try {
+			return messageDigest.digest(c14n.canonicalizeSubtree(xml));
+		} catch (CanonicalizationException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
 	}
 
-	private String getCertificateDigest(X509Certificate cert, String algorithm) throws Exception {
+	private String getCertificateDigest(X509Certificate cert, String algorithm) throws XMLSignerException {
 		try {
 			MessageDigest md = MessageDigest.getInstance(algorithm);
 			byte[] digestValue = md.digest(cert.getEncoded());
 			return Base64.toBase64String(digestValue);
 		} catch (Exception e) {
-			throw new Exception("Erro ao gerar resumo do certificado");
+			logger.error(xadesMessagesBundle.getString("error.cert.digest"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.cert.digest"));
+			
 		}
 	}
 
@@ -220,7 +252,7 @@ public class XMLSigner {
 	 * DER)); }
 	 */
 
-	private Element addPolicy(Document doc) {
+	private Element addPolicy(Document doc) throws XMLSignerException{
 
 		String hash = "";
 
@@ -235,7 +267,8 @@ public class XMLSigner {
 			policyIdentifier = (Element) policyDoc.getElementsByTagName("XAdES:Identifier").item(0);
 
 		} catch (ParserConfigurationException | SAXException | IOException e) {
-			e.printStackTrace();
+			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 		}
 
 		Element sigPolicyIdentifier = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyIdentifier");
@@ -283,7 +316,7 @@ public class XMLSigner {
 		return sigPolicyIdentifier;
 	}
 
-	private Element signedObject(X509Certificate cert, Document doc) throws Exception {
+	private Element signedObject(X509Certificate cert, Document doc) {
 
 		Element sigObject = doc.createElementNS(XMLNS, "ds:Object");
 
@@ -367,7 +400,7 @@ public class XMLSigner {
 
 	}
 
-	public Element createSignatureHashReference(Document doc, byte[] signedTagData) {
+	public Element createSignatureHashReference(Document doc, byte[] signedTagData) throws XMLSignerException {
 
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put("type", Constants.SignedProperties);
@@ -381,7 +414,8 @@ public class XMLSigner {
 		try {
 			md = MessageDigest.getInstance("SHA-256");
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			logger.error(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
 		}
 
 		byte[] digestValue = md.digest(signedTagData);
@@ -435,19 +469,27 @@ public class XMLSigner {
 		return referenceTag;
 	}
 
-	private Document buildXML(String fileName)
-			throws FileNotFoundException, SAXException, IOException, ParserConfigurationException,
-			InvalidCanonicalizerException, NoSuchAlgorithmException, CanonicalizationException {
+	private Document buildXML(String fileName) throws XMLSignerException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		dbf.setNamespaceAware(true);
 		Document bodyDoc = null;
 
 		if (sigPack == SignaturePack.DETACHED) {
-			bodyDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			try {
+				bodyDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+			} catch (ParserConfigurationException e) {
+				logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+				throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			}
 		} else {
-			bodyDoc = dbf.newDocumentBuilder()
-					.parse(new InputSource(new InputStreamReader(new FileInputStream(fileName), "UTF-8")));
+			try {
+				bodyDoc = dbf.newDocumentBuilder()
+						.parse(new InputSource(new InputStreamReader(new FileInputStream(fileName), "UTF-8")));
+			} catch (SAXException | IOException | ParserConfigurationException e) {
+				logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+				throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			}
 		}
 
 		Element signatureTag = bodyDoc.createElementNS(XMLNS, "ds:Signature");
@@ -480,15 +522,34 @@ public class XMLSigner {
 		byte[] docHash = null;
 
 		if (sigPack == SignaturePack.DETACHED) {
-			InputStream inputStream = new FileInputStream(fileName);
+			InputStream inputStream;
+			try {
+				inputStream = new FileInputStream(fileName);
+			} catch (FileNotFoundException e) {	
+				logger.error(xadesMessagesBundle.getString("error.file.not.found", fileName));
+				throw new XMLSignerException(xadesMessagesBundle.getString("error.file.not.found", fileName));
+				
+			}
 			long fileSize = new File(fileName).length();
-			docHash = new byte[(int) fileSize];
-			inputStream.read(docHash);
-			inputStream.close();
+			docHash = new byte[(int) fileSize];			
+			try {
+				inputStream.read(docHash);
+				inputStream.close();
+			} catch (IOException e) {
+				logger.error(xadesMessagesBundle.getString("error.io", e.getMessage()));
+				throw new XMLSignerException(xadesMessagesBundle.getString("error.io", e.getMessage()));
+				
+			}
 			param.put("no_transforms", "true");
 			param.put("type", "");
 			param.put("uri", Paths.get(fileName).getFileName().toString());
-			MessageDigest messageDigest = MessageDigest.getInstance("SHA-256");
+			MessageDigest messageDigest= null;
+			try {
+				messageDigest = MessageDigest.getInstance("SHA-256");
+			} catch (NoSuchAlgorithmException e) {
+				logger.error(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+				throw new XMLSignerException(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+			}
 			param.put("digVal", Base64.toBase64String(messageDigest.digest(docHash)));
 
 			Element referenceTag = createReferenceTag(bodyDoc, param);
@@ -519,7 +580,7 @@ public class XMLSigner {
 		return bodyDoc;
 	}
 
-	private Element createUnsignedProperties(Document doc, List<String> parmProperties) {
+	private Element createUnsignedProperties(Document doc, List<String> parmProperties) throws XMLSignerException{
 
 		Element unsignedProperties = doc.createElementNS(XAdESv1_3_2, "xades:UnsignedProperties");
 		Element unsignedSignatureProperties = doc.createElementNS(XAdESv1_3_2, "xades:UnsignedSignatureProperties");
@@ -580,14 +641,25 @@ public class XMLSigner {
 		signatureTimeStamp.appendChild(canonicalizationMethodTag);
 		Element encapsulatedTimeStamp = doc.createElement("xades:EncapsulatedTimeStamp");
 		encapsulatedTimeStamp.setAttribute("Id", "TimeStamp" + id);
-		XMLTimeStampToken varXMLTimeStampToken = new XMLTimeStampToken(privateKey, certificateChain,docSignature, null);
+		XMLTimeStampToken varXMLTimeStampToken = new XMLTimeStampToken(getPrivateKeyToTimestamp(), getCertificateChainToTimestamp(), docSignature, null);
 		String timeStampContent = Base64.toBase64String(varXMLTimeStampToken.getTimeStampToken());
 		encapsulatedTimeStamp.setTextContent(timeStampContent);
 		signatureTimeStamp.appendChild(encapsulatedTimeStamp);
 		return signatureTimeStamp;
 	}
 
-	public Document sign(String fileNameSource) throws Throwable {
+	/**
+	 * Sign a XML file, from String with File Name and location. (ex: .sign("/tmp/file.xml");
+	 * @param fileNameSource
+	 * @return Document 
+	 * @throws XMLSignerException
+	 */
+	public Document sign(String fileNameSource) throws XMLSignerException {
+		
+		if (fileNameSource == null || fileNameSource.isEmpty()) {
+			logger.error(xadesMessagesBundle.getString("error.xml.file.null"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.file.null"));
+		}
 		// TODO validate policy before sign
 		Init.init();
 
@@ -611,6 +683,7 @@ public class XMLSigner {
 		this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 
 		if (this.certificateChain.length < 3) {
+			logger.error(xadesMessagesBundle.getString("error.no.ca", this.certificate.getIssuerDN()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.ca", this.certificate.getIssuerDN()));
 		}
 
@@ -624,22 +697,61 @@ public class XMLSigner {
 		Element objectTag = signedObject(certificate, doc);
 
 		Init.init();
-		Canonicalizer c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
+		Canonicalizer c14n;
+		try {
+			c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
+		} catch (InvalidCanonicalizerException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
 
 		byte[] canonicalized = null;
 
-		canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0));
+		try {
+			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0));
+		} catch (CanonicalizationException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
 
 		Element sigRefTag = createSignatureHashReference(doc, canonicalized);
 		doc.getElementsByTagName("ds:SignedInfo").item(numSignatures).appendChild(sigRefTag);
 
-		c14n = Canonicalizer.getInstance(CanonicalizationMethod.INCLUSIVE);
-		byte[] dh = c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(numSignatures));
+		try {
+			c14n = Canonicalizer.getInstance(CanonicalizationMethod.INCLUSIVE);
+		} catch (InvalidCanonicalizerException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
+		byte[] dh;
+		try {
+			dh = c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(numSignatures));
+		} catch (CanonicalizationException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
 
-		Signature sig = Signature.getInstance("SHA256withRSA");
-		sig.initSign(privateKey);
-		sig.update(dh);
-		docSignature = sig.sign();
+		Signature sig;
+		try {
+			sig = Signature.getInstance("SHA256withRSA");
+		} catch (NoSuchAlgorithmException e) {
+			logger.error(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+		}
+		try {
+			sig.initSign(privateKey);
+		} catch (InvalidKeyException e) {
+			logger.error(xadesMessagesBundle.getString("error.private.key.invalid"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.private.key.invalid"));
+		}
+		try {
+			sig.update(dh);
+			docSignature = sig.sign();
+		} catch (SignatureException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
+			
+		}
 
 		Element signValueTag = doc.createElementNS(XMLNS, "ds:SignatureValue");
 		signValueTag.setAttribute("Id", "value-" + id);
@@ -660,12 +772,29 @@ public class XMLSigner {
 		x509.appendChild(X509SubjectName);
 
 		Element x509Certificate = doc.createElementNS(XMLNS, "ds:X509Certificate");
-		x509Certificate.setTextContent(Base64.toBase64String(certificate.getEncoded()));
+		try {
+			x509Certificate.setTextContent(Base64.toBase64String(certificate.getEncoded()));
+		} catch (CertificateEncodingException | DOMException e) {
+			logger.error(xadesMessagesBundle.getString("error.cert.digest"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.cert.digest"));
+		}
 		x509.appendChild(x509Certificate);
 
-		Document policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
+		Document policyDoc;
+		try {
+			policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
+		} catch (ParserConfigurationException | SAXException | IOException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+		}
 		NodeList listMandetedUnsignedProperties = policyDoc.getElementsByTagName("pa:MandatedUnsignedQProperties");
 		if (listMandetedUnsignedProperties.getLength() > 0) {
+			if (getPrivateKeyToTimestamp() == null) {
+				setPrivateKeyToTimestamp(getPrivateKey());
+			}
+			if (getCertificateChainToTimestamp() ==null) {
+				setCertificateChainToTimestamp(getCertificateChain());
+			}
 			List<String> valuesMandetedUnsignedProperties = new ArrayList<String>();
 			for (int i = 0; i < listMandetedUnsignedProperties.getLength(); i++) {
 				Element mandetedUnsignedElement = (Element) listMandetedUnsignedProperties.item(i);
@@ -720,6 +849,22 @@ public class XMLSigner {
 
 	public void setNotAfterSignerCertificate(Date notAfterSignerCertificate) {
 		this.notAfterSignerCertificate = notAfterSignerCertificate;
+	}
+
+	public PrivateKey getPrivateKeyToTimestamp() {
+		return privateKeyToTimestamp;
+	}
+
+	public void setPrivateKeyToTimestamp(PrivateKey privateKeyToTimestamp) {
+		this.privateKeyToTimestamp = privateKeyToTimestamp;
+	}
+
+	public Certificate[] getCertificateChainToTimestamp() {
+		return certificateChainToTimestamp;
+	}
+
+	public void setCertificateChainToTimestamp(Certificate certificateChainToTimestamp[]) {
+		this.certificateChainToTimestamp = certificateChainToTimestamp;
 	}
 
 }
