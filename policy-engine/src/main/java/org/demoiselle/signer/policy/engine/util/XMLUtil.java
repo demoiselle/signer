@@ -14,7 +14,7 @@ public class XMLUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(XMLUtil.class);
     private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 	
-public static Document loadXMLDocument (InputStream parmIS) {
+public static Document loadXMLDocument (InputStream parmIS) throws RuntimeException{
     
     	DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
     	DocumentBuilder dBuilder = null;

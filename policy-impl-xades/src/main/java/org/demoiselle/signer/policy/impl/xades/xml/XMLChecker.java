@@ -381,72 +381,64 @@ public class XMLChecker {
 		if(policyOID == null) {
 			validationWaring.add("Identificação da política nula");
 		}
-		try {
-			Document doc = PolicyFactory.getInstance().loadXMLPolicy(PolicyUtils.getPolicyByOid(policyOID));
-			Element mandatedSignedQProperties = getElement("pa:MandatedSignedQProperties", doc.getDocumentElement());
-			NodeList qPropertyID = mandatedSignedQProperties.getElementsByTagName("pa:QPropertyID");
-			NodeList signingPeriod = doc.getElementsByTagName("pa:SigningPeriod");
-			NodeList algorithmConstraintSet = doc.getElementsByTagName("pa:AlgorithmConstraintSet");
+		Document doc = PolicyFactory.getInstance().loadXMLPolicy(PolicyUtils.getPolicyByOid(policyOID));
+		Element mandatedSignedQProperties = getElement("pa:MandatedSignedQProperties", doc.getDocumentElement());
+		NodeList qPropertyID = mandatedSignedQProperties.getElementsByTagName("pa:QPropertyID");
+		NodeList signingPeriod = doc.getElementsByTagName("pa:SigningPeriod");
+		NodeList algorithmConstraintSet = doc.getElementsByTagName("pa:AlgorithmConstraintSet");
+		
+		for(int i = 0; i < qPropertyID.getLength(); i++) {
+			String tagText = qPropertyID.item(i).getTextContent();
+			if(signature.getElementsByTagNameNS(XMLSigner.XAdESv1_3_2, tagText).getLength() < 1) {
+				validationWaring.add("Elemento "+tagText+" obrigatório para a política não encontrado");
+			}				
+		}
+		if(signingPeriod.getLength() > 0) {
+			DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+			Date dateBefore = null;
+			Date dateAfter = null;
 			
-			for(int i = 0; i < qPropertyID.getLength(); i++) {
-				String tagText = qPropertyID.item(i).getTextContent();
-				if(signature.getElementsByTagNameNS(XMLSigner.XAdESv1_3_2, tagText).getLength() < 1) {
-					validationWaring.add("Elemento "+tagText+" obrigatório para a política não encontrado");
-				}				
-			}
-			if(signingPeriod.getLength() > 0) {
-				DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-				Date dateBefore = null;
-				Date dateAfter = null;
-				
-				Element notBefore = getElement("pa:NotBefore", (Element)signingPeriod.item(0));
-				Element notAfter = getElement("pa:NotAfter", (Element)signingPeriod.item(0));
-				
-				try {
-					dateBefore = (Date)formatter.parse(notBefore.getTextContent());
-					dateAfter = (Date)formatter.parse(notAfter.getTextContent());
-					if(dateBefore.getTime() > today.getTime()) {
-						validationWaring.add("Inicio da politica maior que a data atual");
-					}
-					if(dateAfter.getTime() < today.getTime()) {
-						validationWaring.add("Data de fim da politica maior que a a data atual");
-					}
-				} catch (ParseException e) {
-					validationWaring.add("Formato da data de validade da política inválido");
+			Element notBefore = getElement("pa:NotBefore", (Element)signingPeriod.item(0));
+			Element notAfter = getElement("pa:NotAfter", (Element)signingPeriod.item(0));
+			
+			try {
+				dateBefore = (Date)formatter.parse(notBefore.getTextContent());
+				dateAfter = (Date)formatter.parse(notAfter.getTextContent());
+				if(dateBefore.getTime() > today.getTime()) {
+					validationWaring.add("Inicio da politica maior que a data atual");
 				}
-				//Use local system date
-			}
-			
-			for(int i = 0; i < algorithmConstraintSet.getLength(); i++) {
-				Element algId = getElement("pa:AlgId", (Element)algorithmConstraintSet.item(i));
-				Element minKeyLength = getElement("pa:MinKeyLength", (Element)algorithmConstraintSet.item(i));
-				if(algId != null) {
-					if(algId.getTextContent().equals(signatureMethod)) {
-						if(minKeyLength != null) {
-							if((8 * Base64.decode(signatureValue).length) >= Integer.parseInt(minKeyLength.getTextContent())) {
-								isValidAlgorithm = true;
-							}else {
-								validationWaring.add("Tamanho da chave criptográfica menor que a requisitada pela política");
-							}
-						}
-						break;
-					}
+				if(dateAfter.getTime() < today.getTime()) {
+					validationWaring.add("Data de fim da politica maior que a a data atual");
 				}
+			} catch (ParseException e) {
+				validationWaring.add("Formato da data de validade da política inválido");
 			}
-			if(!isValidAlgorithm) {
-				validationWaring.add("Algoritmo inválido para a política "+policyOID);
-
-			}
-			
-			return doc;
-			
-		} catch (ParserConfigurationException e) {
-			validationWaring.add("Formato errado no arquivo da politica: "+policyOID);
-		}catch (SAXException | IOException e) {
-			validationWaring.add("Erro ao ler arquivo da politica:  "+policyOID);
+			//Use local system date
 		}
 		
-		return null;
+		for(int i = 0; i < algorithmConstraintSet.getLength(); i++) {
+			Element algId = getElement("pa:AlgId", (Element)algorithmConstraintSet.item(i));
+			Element minKeyLength = getElement("pa:MinKeyLength", (Element)algorithmConstraintSet.item(i));
+			if(algId != null) {
+				if(algId.getTextContent().equals(signatureMethod)) {
+					if(minKeyLength != null) {
+						if((8 * Base64.decode(signatureValue).length) >= Integer.parseInt(minKeyLength.getTextContent())) {
+							isValidAlgorithm = true;
+						}else {
+							validationWaring.add("Tamanho da chave criptográfica menor que a requisitada pela política");
+						}
+					}
+					break;
+				}
+			}
+		}
+		if(!isValidAlgorithm) {
+			validationWaring.add("Algoritmo inválido para a política "+policyOID);
+
+		}
+		
+		return doc;
+		
 		
 	}
 	

@@ -117,6 +117,7 @@ import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.demoiselle.signer.policy.engine.xml.icpb.XMLPolicyValidator;
 import org.demoiselle.signer.policy.impl.xades.SignaturePack;
 import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
 import org.demoiselle.signer.policy.impl.xades.XMLSignerException;
@@ -258,18 +259,12 @@ public class XMLSigner {
 
 		Document policyDoc = null;
 		Element policyIdentifier = null;
-		try {
-			policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
-			NodeList listHash = policyDoc.getElementsByTagName("pa:SignPolicyDigest");
-			if (listHash.getLength() > 0) {
-				hash = listHash.item(0).getTextContent();
-			}
-			policyIdentifier = (Element) policyDoc.getElementsByTagName("XAdES:Identifier").item(0);
-
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+		policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
+		NodeList listHash = policyDoc.getElementsByTagName("pa:SignPolicyDigest");
+		if (listHash.getLength() > 0) {
+			hash = listHash.item(0).getTextContent();
 		}
+		policyIdentifier = (Element) policyDoc.getElementsByTagName("XAdES:Identifier").item(0);
 
 		Element sigPolicyIdentifier = doc.createElementNS(XAdESv1_3_2, "xades:SignaturePolicyIdentifier");
 
@@ -660,7 +655,16 @@ public class XMLSigner {
 			logger.error(xadesMessagesBundle.getString("error.xml.file.null"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.file.null"));
 		}
-		// TODO validate policy before sign
+		
+		Document policyDoc;
+		policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
+		
+		XMLPolicyValidator xMLPolicyValidator = new XMLPolicyValidator(policyDoc);
+
+		if (!xMLPolicyValidator.validate()) {
+			logger.error(xadesMessagesBundle.getString("error.policy.not.recognized",policyDoc.getDocumentURI()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.policy.not.recognized",policyDoc.getDocumentURI()));
+		}
 		Init.init();
 
 		Document doc = buildXML(fileNameSource);
@@ -780,13 +784,7 @@ public class XMLSigner {
 		}
 		x509.appendChild(x509Certificate);
 
-		Document policyDoc;
-		try {
-			policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
-		}
+		
 		NodeList listMandetedUnsignedProperties = policyDoc.getElementsByTagName("pa:MandatedUnsignedQProperties");
 		if (listMandetedUnsignedProperties.getLength() > 0) {
 			if (getPrivateKeyToTimestamp() == null) {

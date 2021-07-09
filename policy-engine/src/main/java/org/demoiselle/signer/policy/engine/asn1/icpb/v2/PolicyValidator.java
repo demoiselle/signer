@@ -78,8 +78,9 @@ public class PolicyValidator {
 			Date actualDate = new GregorianCalendar().getTime();
 			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy - hh:mm:ss");
 					
-			if (actualDate.before(dateNotBefore) || actualDate.after(dateNotAfter)) {				
-				throw new PolicyException(policyMessagesBundle.getString("error.policy.valid.period",sdf.format(dateNotBefore), sdf.format(dateNotBefore)));
+			if (actualDate.before(dateNotBefore) || actualDate.after(dateNotAfter)) {
+				LOGGER.error(policyMessagesBundle.getString("error.policy.valid.period",sdf.format(dateNotBefore), sdf.format(dateNotAfter)));
+				throw new PolicyException(policyMessagesBundle.getString("error.policy.valid.period",sdf.format(dateNotBefore), sdf.format(dateNotAfter)));
 			}
 			PolicyFactory factory = PolicyFactory.getInstance();
 			
@@ -180,15 +181,18 @@ public class PolicyValidator {
 								LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 								throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 							}						
+						}else {
+							LOGGER.error(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
+							throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 						}
 					}
 				} else{
 					if (policyName.contains("XADES")){
-						policyMessagesBundle.getString(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
+						LOGGER.error(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 						throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 					
 					}else{
-						policyMessagesBundle.getString(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
+						LOGGER.error(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 						throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 					}
 				}

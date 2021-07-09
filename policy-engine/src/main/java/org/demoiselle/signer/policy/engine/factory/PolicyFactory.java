@@ -53,7 +53,6 @@ import org.demoiselle.signer.policy.engine.repository.LPARepository;
 import org.demoiselle.signer.policy.engine.repository.PolicyEngineConfig;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 import org.demoiselle.signer.policy.engine.util.XMLUtil;
-import org.demoiselle.signer.policy.engine.xml.icpb.LPAXML;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -78,7 +77,11 @@ public class PolicyFactory {
     }
 
 
-    // TODO - Carregar politica em formato XML
+    /**
+     * Load policies on CAdES and PAdES format
+     * @param policy
+     * @return
+     */
     public SignaturePolicy loadPolicy(Policies policy) {
         SignaturePolicy signaturePolicy = new SignaturePolicy();
         InputStream is = this.getClass().getResourceAsStream(policy.getFile());
@@ -87,12 +90,19 @@ public class PolicyFactory {
         signaturePolicy.setSignPolicyURI(policy.getUrl());
         return signaturePolicy;
     }
+    /**
+     * 
+     * 	@param policy
+     * @return
+     * @throws ParserConfigurationException
+     * @throws SAXException
+     * @throws IOException
+     */
     
-    public Document loadXMLPolicy(Policies policy) throws ParserConfigurationException, SAXException, IOException {
+    public Document loadXMLPolicy(Policies policy)  {
     	SignaturePolicy signaturePolicy = new SignaturePolicy();
         InputStream is = this.getClass().getResourceAsStream(policy.getFile());
         Document policyXML = XMLUtil.loadXMLDocument(is);
-        //signaturePolicy.parse(policyXML);
         signaturePolicy.setSignPolicyURI(policy.getUrl());
         return policyXML;
     }
@@ -157,12 +167,9 @@ public class PolicyFactory {
      * @return ICP Brasil signature policy v2
      */
     		
-    // TODO - Implementar
-    public LPAXML loadLPAXAdES() {
-    	LPAXML varLPAXML = new LPAXML();
+    public Document loadLPAXAdES() {
          InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.XAdES.getFile());
-         Document localLPAXML = XMLUtil.loadXMLDocument(is);
-         return varLPAXML;    
+         return XMLUtil.loadXMLDocument(is);    
     }
     
     
@@ -228,7 +235,6 @@ public class PolicyFactory {
      * @return
      */
     		
-    // TODO - Implementar
     public Document loadLPAXAdESLocal() {
     	
     	InputStream is= null;
@@ -379,7 +385,6 @@ public class PolicyFactory {
      * 
      */
     		
-    // TODO - Implementar
     public Document loadLPAXAdESUrl() {
         
         Document localLPAXML = null;
@@ -413,8 +418,7 @@ public class PolicyFactory {
     /**
      *  Load signature policy for XAdES (XML) standard from local url
      */
-    		
-    // TODO - Implementar listaPoliticaAssinatura LPA_XML 
+   		
     public Document loadLocalLPAXAdESUrl() {
    	
         InputStream is;
@@ -537,10 +541,8 @@ public class PolicyFactory {
         AD_RA_CADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.der",
                 		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.der"),        		
         		
-
-// TODO - Carregar politica em formato XML, necessário??? 
        // FORMATO XAdES
-        
+       
         AD_RB_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_1.xml",
         		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_1.xml"),        
         AD_RB_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.xml",

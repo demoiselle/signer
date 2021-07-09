@@ -6,6 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -434,14 +435,18 @@ public class PDFSignerTest {
 	}
 	
 	//@Test
-	public void testGerarBase64FromFile (){
+	public void testGerarBase64FromFile () throws IOException{
 		
-		String fileToVerifyDirName = "/";
-				
+		String fileToConvert = "/home/signer/Documentos/000_NeoSigner/Clean Architecture ( PDFDrive ).pdf";
 		
-		byte[] fileToVerify = readContent(fileToVerifyDirName);
+		byte[] fileToVerify = readContent(fileToConvert);
 		String S = Base64.encodeBase64String(fileToVerify);
-		System.out.println(S);
+		
+		File file = new File("/home/signer/git/neosigner/assinador-api/src/test/resources/arquivoBase64SemGrandeRetrato.txt");
+		FileOutputStream os = new FileOutputStream(file);
+		os.write(S.getBytes());
+		os.flush();
+		os.close();
 	
 	}
 
