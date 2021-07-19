@@ -73,7 +73,7 @@ public class XMLPolicyValidator {
 	}
 
 	public boolean validate() {
-		boolean valid = true;
+		boolean valid = false;
 		String xspNotBefore = xsp.getElementsByTagName("pa:NotBefore").item(0).getTextContent();
 		String xspNotAfter = xsp.getElementsByTagName("pa:NotAfter").item(0).getTextContent();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -84,6 +84,7 @@ public class XMLPolicyValidator {
 			xspNotBeforeDate = sdf.parse(xspNotBefore);
 			xspNotAfterDate = sdf.parse(xspNotAfter);
 		} catch (ParseException e) {
+			
 			LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 			throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 		}
@@ -194,11 +195,8 @@ public class XMLPolicyValidator {
 							LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",sdf.format(policyRevogationDate)));
 							throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",sdf.format(policyRevogationDate)));
 						}
-						
-					}else {
-						LOGGER.error(policyMessagesBundle.getString("error.policy.not.recognized",textPolicyIdentifier));
-						throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized",textPolicyIdentifier));
-					}					
+						valid=true;
+					}
 				}
 			}
 		}
