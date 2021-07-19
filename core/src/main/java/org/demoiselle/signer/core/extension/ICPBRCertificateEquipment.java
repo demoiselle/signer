@@ -44,6 +44,7 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_2;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_3;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_4;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_8;
+import org.demoiselle.signer.core.oid.OID_2_5_29_17;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,6 +80,8 @@ public class ICPBRCertificateEquipment {
     private OID_2_16_76_1_3_3 oID_2_16_76_1_3_3 = null;
     private OID_2_16_76_1_3_4 oID_2_16_76_1_3_4 = null;
     private OID_2_16_76_1_3_8 oID_2_16_76_1_3_8 = null;
+    private OID_2_5_29_17 oID_2_5_29_17= null;
+    private String serialNumber = null;
     
     private static final Logger logger = LoggerFactory.getLogger(ICPBRCertificateEquipment.class);
 
@@ -103,19 +106,23 @@ public class ICPBRCertificateEquipment {
      * if its is an equipment certificate
      *
      */
-    public ICPBRCertificateEquipment(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_8 oid4) {
+    public ICPBRCertificateEquipment(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_8 oid4, 
+    		OID_2_5_29_17 oid5, String serialNumber) {
         this.oID_2_16_76_1_3_2 = oid1;
         this.oID_2_16_76_1_3_3 = oid2;
         this.oID_2_16_76_1_3_4 = oid3;
         this.oID_2_16_76_1_3_8 = oid4;
+        this.oID_2_5_29_17 	= oid5;
+        this.serialNumber 	= serialNumber;
     }
-
+    
     /**
      *
      * @return string Name of the person responsible for the certificate
      */
     public String getResponsibleName() {
-        return oID_2_16_76_1_3_2.getName();
+    	if (oID_2_16_76_1_3_2!= null) return oID_2_16_76_1_3_2.getName();
+    	else return null;
     }
 
     /**
@@ -123,7 +130,8 @@ public class ICPBRCertificateEquipment {
      * @return nome Corporate name in the the Brazilian IRS's Bussiness Company Registry Number 
      */
     public String getCorporateName() {
-        return oID_2_16_76_1_3_8.getName();
+        if (oID_2_16_76_1_3_8 != null) return oID_2_16_76_1_3_8.getName();
+        else return null;
     }
 
     /**
@@ -131,21 +139,31 @@ public class ICPBRCertificateEquipment {
      * @return the Brazilian IRS's Bussiness Company Registry Number called CNPJ 
      */
     public String getCNPJ() {
-        return oID_2_16_76_1_3_3.getCNPJ();
+    	String cnpj = "";
+    	if (oID_2_16_76_1_3_3 != null) {
+    		cnpj= oID_2_16_76_1_3_3.getCNPJ();
+    	}        
+        if (cnpj.isEmpty()) cnpj=getSerialNumber();
+        return cnpj;
     }
 
     /**
      *
      * @return Date of birth of the responsible for the certificate
      */
-    public Date getBirthDate() {
-        try {
-            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
-            return sdf.parse(oID_2_16_76_1_3_4.getBirthDate());
-        } catch (ParseException e) {
-        	logger.error(e.getMessage());
-            return null;
-        }
+    public Date getBirthDate() {    	
+    	if (oID_2_16_76_1_3_4!= null) {
+    		try {
+                SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyy");
+                return sdf.parse(oID_2_16_76_1_3_4.getBirthDate());
+            } catch (ParseException e) {
+            	logger.error(e.getMessage());
+                return null;
+            }
+    	}else {
+    		return null;
+    	}
+        
     }
 
     /**
@@ -153,7 +171,9 @@ public class ICPBRCertificateEquipment {
      * @return Brazilian Social Identification number of the responsible - initials are: NIS
      */
     public String getNis() {
-        return oID_2_16_76_1_3_4.getNIS();
+    	
+        if (oID_2_16_76_1_3_4!= null)return oID_2_16_76_1_3_4.getNIS();
+        else return null;
     }
 
     /**
@@ -161,7 +181,8 @@ public class ICPBRCertificateEquipment {
      * @return the Brazilian ID number (called RG) of the responsible for the certificate
      */
     public String getRg() {
-        return oID_2_16_76_1_3_4.getRg();
+        if (oID_2_16_76_1_3_4!= null)return oID_2_16_76_1_3_4.getRg();
+        else return null;
     }
 
     /**
@@ -169,7 +190,8 @@ public class ICPBRCertificateEquipment {
      * @return the initials of the issuing agency of the Brazilian ID (RG)
      */
     public String getIssuingAgencyRg() {
-        return oID_2_16_76_1_3_4.getIssuingAgencyRg();
+        if (oID_2_16_76_1_3_4!= null)return oID_2_16_76_1_3_4.getIssuingAgencyRg();
+        else return null;
     }
 
     /**
@@ -177,6 +199,17 @@ public class ICPBRCertificateEquipment {
      * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
      */
     public String getUfIssuingAgencyRg() {
-        return oID_2_16_76_1_3_4.getUfIssuingAgencyRg();
+        if (oID_2_16_76_1_3_4!=null)return oID_2_16_76_1_3_4.getUfIssuingAgencyRg();
+        else return null;
     }
+    
+    public String getDNS() {
+    	if (oID_2_5_29_17!= null)return  oID_2_5_29_17.getData();
+    	else return null;
+    }
+
+
+	public String getSerialNumber() {
+		return serialNumber;
+	}
 }

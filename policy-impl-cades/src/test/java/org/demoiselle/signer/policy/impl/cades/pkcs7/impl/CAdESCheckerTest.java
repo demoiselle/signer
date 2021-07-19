@@ -45,6 +45,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.commons.codec.binary.Base64;
@@ -54,11 +55,15 @@ import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.SignerInformation;
+import org.demoiselle.signer.core.CertificateLoader;
+import org.demoiselle.signer.core.CertificateLoaderImpl;
 import org.demoiselle.signer.core.CertificateManager;
+import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.Base64Utils;
+import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -449,6 +454,9 @@ public class CAdESCheckerTest {
 					if (certificate.hasCertificatePJ()) {
 						System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
 					}
+					if (certificate.hasCertificateEquipment()) {
+						System.out.println("CNPJ: "+certificate.getICPBRCertificateEquipment().getCNPJ());
+					}
 				}
 				// Carimbo do tempo
 				if(si.getTimeStampSigner()!= null) {
@@ -475,10 +483,40 @@ public class CAdESCheckerTest {
 		}
 	}
 	
-	
-	
-	
-	
+	//@Test
+	public void testVerifyCertificate() {
+		
+		File fileToVerify = new File("/");
+		
+		CertificateLoader loader = new CertificateLoaderImpl();
+        X509Certificate certificado = loader.load(fileToVerify);
+        BasicCertificate signerCertificate = new BasicCertificate(certificado);
+		System.out.println(signerCertificate.toString());
+		if (!signerCertificate.isCACertificate()) {
+			if (signerCertificate.hasCertificatePF()) System.out.println("PF");
+			if (signerCertificate.hasCertificatePJ()) System.out.println("PJ");
+			if (signerCertificate.hasCertificateEquipment()) {
+				System.out.println("PJ-Equipamento");
+				System.out.println("CNPJ: "+signerCertificate.getICPBRCertificateEquipment().getCNPJ());
+				System.out.println("Nivel:"+signerCertificate.getCertificateLevel());
+			}
+		}
+				
+		try {
+			CertificateManager cm = new CertificateManager(certificado);
+			assertTrue(true);
+		}catch (Exception ex) {
+			assertTrue(false);
+			ex.printStackTrace();
+		}
+		
+		LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(certificado);
+		// menor que 2 = autoAssinado
+		if (varChain.size() < 2){
+			assertTrue(false);
+			System.out.println("Erro");			
+		}					
+	}
 	
 
 	private byte[] readContent(String parmFile) {

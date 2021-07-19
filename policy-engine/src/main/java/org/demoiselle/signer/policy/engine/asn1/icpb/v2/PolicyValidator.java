@@ -68,7 +68,7 @@ public class PolicyValidator {
 	
 	public boolean validate(){
 		try{
-			boolean valid = true;
+			boolean valid = false;
 			
 			Date dateNotBefore = this.sp.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()
 					.getNotBefore().getDate();
@@ -128,6 +128,7 @@ public class PolicyValidator {
 				
 				for (PolicyInfo policyInfo : listOfPolicies.getPolicyInfos()) {
 					if (policyInfo.getPolicyOID().getValue().contentEquals(sp.getSignPolicyInfo().getSignPolicyIdentifier().getValue())){
+						valid = true;
 						GeneralizedTime revocationDate = policyInfo.getRevocationDate();
 						if (revocationDate != null){
 							LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
@@ -176,14 +177,12 @@ public class PolicyValidator {
 					}
 					for (PolicyInfo policyInfo : listOfPolicies.getPolicyInfos()) {
 						if (policyInfo.getPolicyOID().getValue().contentEquals(sp.getSignPolicyInfo().getSignPolicyIdentifier().getValue())){
+							valid= true;
 							GeneralizedTime revocationDate = policyInfo.getRevocationDate();
 							if (revocationDate != null){
 								LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 								throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",sdf.format(revocationDate.getDate())));
 							}						
-						}else {
-							LOGGER.error(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
-							throw new PolicyException(policyMessagesBundle.getString("error.policy.not.recognized", policyName));
 						}
 					}
 				} else{
