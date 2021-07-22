@@ -43,7 +43,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.file.Paths;
 import java.security.InvalidKeyException;
@@ -121,6 +120,7 @@ import org.demoiselle.signer.policy.engine.xml.icpb.XMLPolicyValidator;
 import org.demoiselle.signer.policy.impl.xades.SignaturePack;
 import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
 import org.demoiselle.signer.policy.impl.xades.XMLSignerException;
+import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
 import org.demoiselle.signer.policy.impl.xades.util.PolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,8 +129,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 /**
  * 
@@ -466,8 +464,6 @@ public class XMLSigner {
 
 	private Document buildXML(String fileName) throws XMLSignerException {
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(true);
 		Document bodyDoc = null;
 
 		if (sigPack == SignaturePack.DETACHED) {
@@ -478,13 +474,7 @@ public class XMLSigner {
 				throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			}
 		} else {
-			try {
-				bodyDoc = dbf.newDocumentBuilder()
-						.parse(new InputSource(new InputStreamReader(new FileInputStream(fileName), "UTF-8")));
-			} catch (SAXException | IOException | ParserConfigurationException e) {
-				logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
-				throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
-			}
+			bodyDoc = DocumentUtils.loadXMLDocument(fileName);
 		}
 
 		Element signatureTag = bodyDoc.createElementNS(XMLNS, "ds:Signature");

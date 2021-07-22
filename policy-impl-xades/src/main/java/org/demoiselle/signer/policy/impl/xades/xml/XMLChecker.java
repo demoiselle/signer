@@ -75,6 +75,7 @@ import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
+import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
 import org.demoiselle.signer.policy.impl.xades.util.PolicyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -106,12 +107,26 @@ public class XMLChecker {
 	/**
 	 * XML signature validation using file path. The file must contains both content and signature
 	 *
-	 * @param path to signed XML file. 
+	 * @param path to signed XML file.
+	 * @return 
 	 */
+	public boolean check(String xmlSignedFile) {
+		Document doc = DocumentUtils.loadXMLDocument(xmlSignedFile);
+		return verify(doc);
+	}
+		
 	
-	public void check(byte[] docData) {
+
+/**
+ *  * XML signature validation using byte[] data. The content must contains both content and signature
+ * @param docData
+ * @return
+ */
+
+
+	public boolean check(byte[] docData) {
 		Document doc = makeDocument(docData);
-		verify(doc);
+		return verify(doc);
 	}
 	
 	/**
@@ -120,8 +135,8 @@ public class XMLChecker {
 	 * 
 	 * @param DOM document
 	 */
-	public void check(Document doc) {
-		verify(doc);
+	public boolean check(Document doc) {
+		return verify(doc);
 	}
 	
 	/**
@@ -132,8 +147,8 @@ public class XMLChecker {
 	 * @param XML String in byte[] format
 	 */
 	
-	public void check(byte[] docData, byte[] signature) {
-		check(makeDocument(signature));
+	public boolean check(byte[] docData, byte[] signature) {
+		return check(makeDocument(signature));
 	}
 	
 	/**
@@ -145,8 +160,9 @@ public class XMLChecker {
 	 * @param signature in Document class format
 	 */
 	
-	public void check(byte[] docData, Document signature){
+	public boolean check(byte[] docData, Document signature){
 		isDetached = true;
+		boolean signatureOk = true;
 		verify(signature);
 		
 		try {
@@ -174,6 +190,7 @@ public class XMLChecker {
 			}
 		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add("Algoritmo criptográfico inválido");
+			return false;
 		}
 		
 		if(validationErrors.size() > 0) {
@@ -184,6 +201,7 @@ public class XMLChecker {
 		
 		for(String msg : validationWaring)
 			System.out.println("Waring: "+msg);
+		return signatureOk;
 	}
 	
 	
@@ -517,8 +535,9 @@ public class XMLChecker {
 		return false;
 	}
 	
-	private void verify(Document doc) {
+	private boolean verify(Document doc) {
 		
+		boolean signatureOk = false;
 		NodeList root = doc.getChildNodes();
 		
 		NodeList signatureListTags = doc.getElementsByTagNameNS(XMLSigner.XMLNS, "Signature");
@@ -531,7 +550,7 @@ public class XMLChecker {
 		
 		if(signatureListTags.getLength() < 0) {
 			validationErrors.add("O documento não contém assinatura");
-			return;
+			return signatureOk;
 		}else {
 			for(int i = 0; i < signatureListTags.getLength(); i++) {
 				
@@ -653,6 +672,7 @@ public class XMLChecker {
 				signaturesInfo.add(sigInf);
 			}
 		}
+		return signatureOk;
 	}
 	
 	public List<XMLSignatureInformations> getSignaturesInfo() {

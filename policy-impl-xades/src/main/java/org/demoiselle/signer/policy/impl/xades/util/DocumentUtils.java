@@ -37,9 +37,23 @@
 
 package org.demoiselle.signer.policy.impl.xades.util;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import org.demoiselle.signer.core.util.MessagesBundle;
+import org.demoiselle.signer.policy.impl.xades.XMLSignerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * 
@@ -47,6 +61,9 @@ import org.w3c.dom.NodeList;
  *
  */
 public class DocumentUtils {
+	
+	private static final Logger logger = LoggerFactory.getLogger(DocumentUtils.class);
+	private static MessagesBundle xadesMessagesBundle = new MessagesBundle();
 	
 	public static String getString(Document parmDocument, String parmTagName) {
 		
@@ -61,4 +78,36 @@ public class DocumentUtils {
         }
         return null;
     }
+	
+	/**
+	 * 
+	 * @param xmlFile
+	 * @return
+	 */
+	public static Document loadXMLDocument(String xmlFile) {
+		Document docReturn= null;
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
+		try {
+			docReturn = dbf.newDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8")));
+		} catch (UnsupportedEncodingException e) {
+			logger.error(xadesMessagesBundle.getString("erro.unsupported.encoding.exception", "UTF-8"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("erro.unsupported.encoding.exception", "UTF-8"));
+		} catch (FileNotFoundException e) {
+			logger.error(xadesMessagesBundle.getString("error.file.not.found", xmlFile));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.file.not.found", xmlFile));
+		} catch (SAXException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+		} catch (IOException e) {
+			
+			logger.error(xadesMessagesBundle.getString("error.io", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.io", e.getMessage()));
+		} catch (ParserConfigurationException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+		}
+		return docReturn;
+	}
+	
 }
