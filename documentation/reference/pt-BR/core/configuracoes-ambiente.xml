@@ -37,10 +37,18 @@
                     </para>
                     <para>
                         <segmentedlist>
-                            <seglistitem>http.proxyHost</seglistitem>
-                            <seglistitem>http.proxyPort</seglistitem>
-                            <seglistitem>http.proxyUser</seglistitem>
-                            <seglistitem>http.proxyPassword</seglistitem>
+                            <seglistitem>signer.proxy.host</seglistitem>
+                            <seglistitem>signer.proxy.port</seglistitem>
+                            <seglistitem>signer.proxy.user</seglistitem>
+                            <seglistitem>signer.proxy.password</seglistitem>
+                        </segmentedlist>
+                    </para>
+                    <para> OU
+		                <segmentedlist>
+                            <seglistitem>SIGNER_PROXY_HOST</seglistitem>
+                            <seglistitem>SIGNER_PROXY_PORT</seglistitem>
+                            <seglistitem>SIGNER_PROXY_USER</seglistitem>
+                            <seglistitem>SIGNER_PROXY_PASSWORD</seglistitem>
                         </segmentedlist>
                     </para>
                 </listitem>
@@ -86,6 +94,48 @@
                         <seglistitem>signer.repository.lpa.path</seglistitem>
                     </segmentedlist>
                 </para>
+                <para>OU
+                    <segmentedlist>
+                        <seglistitem>SIGNER_REPOSITORY_LPA_PATH</seglistitem>
+                    </segmentedlist>
+                </para>
+            </listitem>
+        </itemizedlist>
+    </section>
+    
+    <section>
+        <title>Modo de recuparação das LPAs (Lista de Politicas de Assinatura)</title>
+
+        <para>
+            O mecanismo acima permite fazer um armazenamento local das LPAs, na maioria dos casos isso é a melhor estratégia.
+            Mas caso haja algum motivo para que sejam recuparadas cada vez que fizer a Assinatura isso também é possível      </para>
+         <para>Por padrão esta opção vem desativada. Existem duas formas de ativá-la:</para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <emphasis>Programaticamente</emphasis>
+                </para>
+                    <programlisting role="JAVA"><![CDATA[...
+                        ...
+                        org.demoiselle.signer.core.repository.Configuration config = org.demoiselle.signer.core.repository.Configuration.getInstance();
+                        config.setOnlineLPA(false);
+                        ...]]></programlisting>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>Setando variável de ambiente</emphasis>
+                </para>
+                <para>
+                    <segmentedlist>
+                        <seglistitem>signer.repository.lpa.online</seglistitem>
+                    </segmentedlist>
+                </para>
+                <para> OU
+                    <segmentedlist>
+                        <seglistitem>SIGNER_REPOSITORY_LPA_ONLINE</seglistitem>
+                    </segmentedlist>
+                </para>                
             </listitem>
         </itemizedlist>
     </section>
@@ -128,6 +178,11 @@
                         <seglistitem>signer.camanager.cached</seglistitem>
                     </segmentedlist>
                 </para>
+                <para> OU
+                    <segmentedlist>
+                        <seglistitem>SIGNER_CAMANAGER_CACHED</seglistitem>
+                    </segmentedlist>
+                </para>                
             </listitem>
         </itemizedlist>
         <para>O cache pode ser invalidado a qualquer momento através do método invalidate:</para>
@@ -137,4 +192,7 @@
                         cacheManager.invalidate();
                         ...]]></programlisting>
     </section>
+    
+    
+    
 </chapter>
