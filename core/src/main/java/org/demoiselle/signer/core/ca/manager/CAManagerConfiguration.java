@@ -43,6 +43,7 @@ public class CAManagerConfiguration {
 	 * System key to set cached or not cached
 	 */
 	public static final String CACHED = "signer.camanager.cached";
+	public static final String ENV_CACHED = "SIGNER_CAMANAGER_CACHED";
 
 	public static CAManagerConfiguration instance = new CAManagerConfiguration();
 	private boolean isCached;
@@ -51,12 +52,17 @@ public class CAManagerConfiguration {
 	 * Check for system variables. If there is, assign in class variables otherwise use default values.
 	 */
 	private CAManagerConfiguration() {
-		String cachedProp = (String) System.getProperties().get(CACHED);
+		String cachedProp = System.getenv(ENV_CACHED);
 		if (cachedProp == null || cachedProp.isEmpty()) {
-			setCached(false);
-		} else {
-			setCached(Boolean.valueOf(cachedProp));
-		}
+			cachedProp = (String) System.getProperties().get(CACHED);
+        	if (cachedProp == null || cachedProp.isEmpty()) {
+                setCached(true);                
+        	}else {
+        		setCached(Boolean.valueOf(cachedProp));
+        	}        	
+        } else {
+            setCached(Boolean.valueOf(cachedProp));
+        }
 	}
 
 	/**

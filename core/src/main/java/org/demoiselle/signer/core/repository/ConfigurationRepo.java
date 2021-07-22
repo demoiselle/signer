@@ -99,7 +99,7 @@ public class ConfigurationRepo {
     /**
      * System environment key to set storage location of path file of LPA 
      */
-    public static final String ENV_LPA_PATH = "SIGNER_REPOSITORY_LPA.PATH";
+    public static final String ENV_LPA_PATH = "SIGNER_REPOSITORY_LPA_PATH";
     
         
     /**

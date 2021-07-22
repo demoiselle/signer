@@ -488,20 +488,32 @@ public class CAdESCheckerTest {
 		
 		File fileToVerify = new File("/");
 		
+
+
+		
 		CertificateLoader loader = new CertificateLoaderImpl();
         X509Certificate certificado = loader.load(fileToVerify);
         BasicCertificate signerCertificate = new BasicCertificate(certificado);
 		System.out.println(signerCertificate.toString());
 		if (!signerCertificate.isCACertificate()) {
-			if (signerCertificate.hasCertificatePF()) System.out.println("PF");
-			if (signerCertificate.hasCertificatePJ()) System.out.println("PJ");
+			if (signerCertificate.hasCertificatePF()) {
+				System.out.println("PF");
+				System.out.println("CNPJ: "+signerCertificate.getICPBRCertificatePF().getCPF());
+				System.out.println("Nivel:"+signerCertificate.getCertificateLevel());
+
+			}
+			if (signerCertificate.hasCertificatePJ()) {
+				System.out.println("PJ");
+				System.out.println("CNPJ: "+signerCertificate.getICPBRCertificatePJ().getCNPJ());
+				System.out.println("Nivel:"+signerCertificate.getCertificateLevel());
+			}
 			if (signerCertificate.hasCertificateEquipment()) {
 				System.out.println("PJ-Equipamento");
 				System.out.println("CNPJ: "+signerCertificate.getICPBRCertificateEquipment().getCNPJ());
 				System.out.println("Nivel:"+signerCertificate.getCertificateLevel());
 			}
 		}
-				
+		/*		
 		try {
 			CertificateManager cm = new CertificateManager(certificado);
 			assertTrue(true);
@@ -515,7 +527,7 @@ public class CAdESCheckerTest {
 		if (varChain.size() < 2){
 			assertTrue(false);
 			System.out.println("Erro");			
-		}					
+		}*/					
 	}
 	
 
