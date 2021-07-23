@@ -5,7 +5,7 @@
 
     <title id="funcionalidades">Funcionalidades</title>
 
-    <section id="requisicao">
+    <section id="ts-cades">
         <title>Carimbo de tempo com componente <emphasis>policy-impl-cades</emphasis></title>
 
 	<sectioninfo>
@@ -35,7 +35,7 @@
 ]]></programlisting>
 </section>
 
-<section id="requisicao">
+<section id="ts-pades">
         <title>Carimbo de tempo com componente <emphasis>policy-impl-pades</emphasis></title>
 
 	<sectioninfo>
