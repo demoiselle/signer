@@ -35,28 +35,37 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
+
 package org.demoiselle.signer.policy.engine.xml.icpb;
 
-import static org.junit.Assert.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import java.io.IOException;
+/**
+ * Class to represent SignerRules for XML policies
+ * 
+ * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
+ *
+ */
+public class XMLSignerRules {
 
-import javax.xml.parsers.ParserConfigurationException;
+	private List<String> mandatedSignedQProperties = new ArrayList<String>();
+	private List<String> mandatedUnsignedQProperties = new ArrayList<String>();
 
-import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.junit.Test;
-import org.xml.sax.SAXException;
+	public List<String> getMandatedSignedQProperties() {
+		return mandatedSignedQProperties;
+	}
 
-public class XMLPolicyValidatorTest {
+	public void setMandatedSignedQProperties(List<String> mandatedSignedQProperties) {
+		this.mandatedSignedQProperties = mandatedSignedQProperties;
+	}
 
-	@Test
-	public void testXMLPolicyValidator() throws ParserConfigurationException, SAXException, IOException {
-		
-		XMLPolicyValidator xMLPolicyValidator = 
-				new XMLPolicyValidator(PolicyFactory.getInstance().loadXMLPolicy(PolicyFactory.Policies.AD_RA_XADES_2_4));
-		assertTrue(xMLPolicyValidator.validate());
-		System.out.println(xMLPolicyValidator.getXmlSignaturePolicy().toString());
-		
+	public List<String> getMandatedUnsignedQProperties() {
+		return mandatedUnsignedQProperties;
+	}
+
+	public void setMandatedUnsignedQProperties(List<String> mandatedUnsignedQProperties) {
+		this.mandatedUnsignedQProperties = mandatedUnsignedQProperties;
 	}
 
 }
