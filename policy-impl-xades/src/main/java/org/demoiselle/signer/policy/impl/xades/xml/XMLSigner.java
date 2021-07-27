@@ -645,6 +645,12 @@ public class XMLSigner {
 			logger.error(xadesMessagesBundle.getString("error.xml.file.null"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.file.null"));
 		}
+		if (!fileNameSource.substring(fileNameSource.lastIndexOf(".") + 1).equalsIgnoreCase("xml")) {
+			logger.error(xadesMessagesBundle.getString("error.xml.not.valid.file"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.not.valid.file"));
+		}
+		Init.init();
+		Document doc = buildXML(fileNameSource);
 		
 		Document policyDoc;
 		policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
@@ -655,9 +661,6 @@ public class XMLSigner {
 			logger.error(xadesMessagesBundle.getString("error.policy.not.recognized",policyDoc.getDocumentURI()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.policy.not.recognized",policyDoc.getDocumentURI()));
 		}
-		Init.init();
-
-		Document doc = buildXML(fileNameSource);
 
 		if (this.certificateChain == null) {
 			logger.error(xadesMessagesBundle.getString("error.certificate.null"));

@@ -44,7 +44,7 @@
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
         <relativePath>../parent</relativePath>
-        <version>3.7.0-SNAPSHOT</version>
+        <version>4.0.0-SNAPSHOT</version>
     </parent>
 
     <name>Demoiselle Signer XADES</name>
@@ -57,10 +57,12 @@
             <artifactId>xmlsec</artifactId>
             <version>2.0.1</version>
         </dependency>
+        
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
-            <artifactId>core</artifactId>
+            <artifactId>signer-core</artifactId>            
         </dependency>
+        
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-icp-brasil</artifactId>

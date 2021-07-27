@@ -44,8 +44,8 @@ import java.util.LinkedList;
 import java.util.TimeZone;
 
 import org.demoiselle.signer.core.extension.BasicCertificate;
+import org.demoiselle.signer.policy.engine.xml.icpb.XMLSignaturePolicy;
 import org.demoiselle.signer.timestamp.Timestamp;
-import org.w3c.dom.Document;
 
 /**
  * Basic informations about a signature that was validated
@@ -57,7 +57,7 @@ public class XMLSignatureInformations {
 	private LinkedList<X509Certificate> chain;
 	private Date signDate;
     private Timestamp timeStampSigner = null;
-    private Document signaturePolicy;
+    private XMLSignaturePolicy signaturePolicy;
     private Date notAfter;
     private LinkedList<String> validatorWarnins = new LinkedList<String>();
     private LinkedList<String> validatorErrors = new LinkedList<String>();
@@ -131,7 +131,7 @@ public class XMLSignatureInformations {
 	 *  
 	 * @return the Signature Policy used 
 	 */
-	public Document getSignaturePolicy() {
+	public XMLSignaturePolicy getSignaturePolicy() {
 		return signaturePolicy;
 	}
 
@@ -139,7 +139,7 @@ public class XMLSignatureInformations {
 	 * 
 	 * @param signaturePolicy
 	 */
-	public void setSignaturePolicy(Document signaturePolicy) {
+	public void setSignaturePolicy(XMLSignaturePolicy signaturePolicy) {
 		this.signaturePolicy = signaturePolicy;
 	}
 
