@@ -378,7 +378,7 @@ public class CAdESChecker implements PKCS7Checker {
 	}
 	
 	/**
-	 *  validade a timestampo on signature
+	 *  validate a timestamp on signature
 	 * @param attributeTimeStamp
 	 * @param varSignature
 	 * @return

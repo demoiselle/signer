@@ -55,14 +55,12 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.xml.crypto.dsig.CanonicalizationMethod;
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
@@ -127,7 +125,6 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
@@ -178,50 +175,8 @@ public class XMLSigner {
 		this.policy = PolicyUtils.getPolicyByOid(policyOID);
 	}
 
-	public Element getDocumentData(Document doc) throws XMLSignerException{
-
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		Document bodyDoc = null;
-		try {
-			builder = dbf.newDocumentBuilder();
-			dbf.setNamespaceAware(true);
-			bodyDoc = builder.newDocument();
-			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
-			bodyDoc.appendChild(body);
-			NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
-			for (int i = 0; i < signatures.getLength(); i++)
-				signatures.item(i).getParentNode().removeChild(signatures.item(i));
-		} catch (ParserConfigurationException e) {
-			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
-		}		
-		return bodyDoc.getDocumentElement();	
-	}
-
-	public byte[] getShaCanonizedValue(String alg, Node xml, String canonical) throws XMLSignerException{
-		Init.init();
-		Canonicalizer c14n;
-		try {
-			c14n = Canonicalizer.getInstance(canonical);
-		} catch (InvalidCanonicalizerException e) {
-			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
-		}
-		MessageDigest messageDigest;
-		try {
-			messageDigest = MessageDigest.getInstance(alg);
-		} catch (NoSuchAlgorithmException e) {
-			logger.error(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
-		}
-		try {
-			return messageDigest.digest(c14n.canonicalizeSubtree(xml));
-		} catch (CanonicalizationException e) {
-			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
-		}
-	}
+	
+	
 
 	private String getCertificateDigest(X509Certificate cert, String algorithm) throws XMLSignerException {
 		try {
@@ -543,8 +498,8 @@ public class XMLSigner {
 			bodyDoc.appendChild(signatureTag);
 
 		} else {
-			Element docData = getDocumentData(bodyDoc);
-			docHash = getShaCanonizedValue("SHA-256", docData, Canonicalizer.ALGO_ID_C14N_WITH_COMMENTS);
+			Element docData = DocumentUtils.getDocumentData(bodyDoc);
+			docHash = DocumentUtils.getShaCanonizedValue("SHA-256", docData, Canonicalizer.ALGO_ID_C14N_WITH_COMMENTS);
 			param.put("type", "");
 			param.put("uri", "");
 			param.put("id", "r-id-1");
@@ -778,24 +733,16 @@ public class XMLSigner {
 		x509.appendChild(x509Certificate);
 
 		
-		NodeList listMandetedUnsignedProperties = policyDoc.getElementsByTagName("pa:MandatedUnsignedQProperties");
-		if (listMandetedUnsignedProperties.getLength() > 0) {
+		List<String> listMandetedUnsignedProperties = xMLPolicyValidator.getXmlSignaturePolicy().getXmlSignerRules().getMandatedUnsignedQProperties();
+		if (listMandetedUnsignedProperties.size() > 0) {
+		
 			if (getPrivateKeyToTimestamp() == null) {
 				setPrivateKeyToTimestamp(getPrivateKey());
 			}
 			if (getCertificateChainToTimestamp() ==null) {
 				setCertificateChainToTimestamp(getCertificateChain());
 			}
-			List<String> valuesMandetedUnsignedProperties = new ArrayList<String>();
-			for (int i = 0; i < listMandetedUnsignedProperties.getLength(); i++) {
-				Element mandetedUnsignedElement = (Element) listMandetedUnsignedProperties.item(i);
-				NodeList childNodeList = mandetedUnsignedElement.getChildNodes();
-				for (int j = 0; j < childNodeList.getLength(); j++) {
-					Node chileNode = childNodeList.item(j);
-					valuesMandetedUnsignedProperties.add(chileNode.getTextContent());
-				}
-			}
-			Element unsignedProperties = createUnsignedProperties(doc, valuesMandetedUnsignedProperties);
+			Element unsignedProperties = createUnsignedProperties(doc, listMandetedUnsignedProperties);
 			objectTag.getElementsByTagName("xades:QualifyingProperties").item(0).appendChild(unsignedProperties);
 		}
 

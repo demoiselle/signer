@@ -47,7 +47,6 @@ import java.util.List;
 
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
-import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
 import org.junit.Test;
 
@@ -57,30 +56,31 @@ public class XMLCheckerTest {
 	public void test() {
 		
 		try {
-			String fileName = "teste_assinatura_rt_signed.xml";
-			
-	        ClassLoader classLoader = getClass().getClassLoader();
+			String fileName = "teste_assinatura_signed.xml";
+			ClassLoader classLoader = getClass().getClassLoader();
 	        URL fileUri = classLoader.getResource(fileName);
 	        File newFile=new File(fileUri.toURI());
 	        
 //	        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
 //	        BufferedReader reader = new BufferedReader(streamReader); 
-	        			
+
+			// Cache LCR
+			//ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
+			//configlcr.setCrlIndex(".crl_index");
+			//configlcr.setCrlPath("/home/{usuario}/lcr_cache/");
+			//configlcr.setOnline(false);
+
+			/* cache interno
+			CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(buf),contents.getBytes());
+	        SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
+	        X509CertificateHolder certificateHolder = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
+	                .iterator().next();
+	        X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+	        LcrManagerSync.getInstance().update(varCert);*/
+
+	        
 			XMLChecker xadesChecker = new XMLChecker();
 			if (xadesChecker.check(newFile.getPath())) {
-				// Cache LCR
-				ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
-				//configlcr.setCrlIndex(".crl_index");
-				//configlcr.setCrlPath("/home/{usuario}/lcr_cache/");
-				configlcr.setOnline(false);
-
-				/* cache interno
-				CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(buf),contents.getBytes());
-		        SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
-		        X509CertificateHolder certificateHolder = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
-		                .iterator().next();
-		        X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
-		        LcrManagerSync.getInstance().update(varCert);*/
 
 				
 				List<XMLSignatureInformations> results = new ArrayList<XMLSignatureInformations>();

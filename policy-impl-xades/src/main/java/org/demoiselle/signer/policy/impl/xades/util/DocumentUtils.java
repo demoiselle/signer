@@ -42,15 +42,24 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.xml.security.Init;
+import org.apache.xml.security.c14n.CanonicalizationException;
+import org.apache.xml.security.c14n.Canonicalizer;
+import org.apache.xml.security.c14n.InvalidCanonicalizerException;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.policy.impl.xades.XMLSignerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -109,5 +118,52 @@ public class DocumentUtils {
 		}
 		return docReturn;
 	}
+	
+	
+	public static Element getDocumentData(Document doc) throws XMLSignerException{
+
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder;
+		Document bodyDoc = null;
+		try {
+			builder = dbf.newDocumentBuilder();
+			dbf.setNamespaceAware(true);
+			bodyDoc = builder.newDocument();
+			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
+			bodyDoc.appendChild(body);
+			NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
+			for (int i = 0; i < signatures.getLength(); i++)
+				signatures.item(i).getParentNode().removeChild(signatures.item(i));
+		} catch (ParserConfigurationException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
+		}		
+		return bodyDoc.getDocumentElement();	
+	}
+	
+	public static byte[] getShaCanonizedValue(String alg, Node xml, String canonical) throws XMLSignerException{
+		Init.init();
+		Canonicalizer c14n;
+		try {
+			c14n = Canonicalizer.getInstance(canonical);
+		} catch (InvalidCanonicalizerException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
+		MessageDigest messageDigest;
+		try {
+			messageDigest = MessageDigest.getInstance(alg);
+		} catch (NoSuchAlgorithmException e) {
+			logger.error(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
+		}
+		try {
+			return messageDigest.digest(c14n.canonicalizeSubtree(xml));
+		} catch (CanonicalizationException e) {
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+		}
+	}
+
 	
 }
