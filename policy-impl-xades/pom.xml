@@ -1,88 +1,81 @@
-<!--
- Demoiselle Framework
- Copyright (C) 2010 SERPRO
- ============================================================================
- This file is part of Demoiselle Framework.
+<!-- Demoiselle Framework Copyright (C) 2010 SERPRO ============================================================================ 
+	This file is part of Demoiselle Framework. Demoiselle Framework is free software; 
+	you can redistribute it and/or modify it under the terms of the GNU Lesser 
+	General Public License version 3 as published by the Free Software Foundation. 
+	This program is distributed in the hope that it will be useful, but WITHOUT 
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+	FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. 
+	You should have received a copy of the GNU Lesser General Public License 
+	version 3 along with this program; if not, see <http://www.gnu.org/licenses 
+	/> or write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth 
+	Floor, Boston, MA 02110-1301, USA. ============================================================================ 
+	Este arquivo é parte do Framework Demoiselle. O Framework Demoiselle é um 
+	software livre; você pode redistribuí-lo e/ou modificá-lo dentro dos termos 
+	da GNU LGPL versão 3 como publicada pela Fundação do Software Livre (FSF). 
+	Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA 
+	GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou APLICAÇÃO 
+	EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português para maiores 
+	detalhes. Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título 
+	"LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses 
+	/> ou escreva para a Fundação do Software Livre (FSF) Inc., 51 Franklin St, 
+	Fifth Floor, Boston, MA 02111-1301, USA. -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
- Demoiselle Framework is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public License version 3
- as published by the Free Software Foundation.
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>policy-impl-xades</artifactId>
+	<packaging>jar</packaging>
 
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
+	<parent>
+		<groupId>org.demoiselle.signer</groupId>
+		<artifactId>parent</artifactId>
+		<relativePath>../parent</relativePath>
+		<version>4.0.0-SNAPSHOT</version>
+	</parent>
 
- You should have received a copy of the GNU Lesser General Public License version 3
- along with this program; if not,  see <http://www.gnu.org/licenses />
- or write to the Free Software Foundation, Inc., 51 Franklin Street,
- Fifth Floor, Boston, MA  02110-1301, USA.
- ============================================================================
- Este arquivo é parte do Framework Demoiselle.
+	<name>Demoiselle Signer XADES</name>
+	<description>Demoiselle Signer for XAdES (XML Advanced Electronic Signatures)</description>
+	<url>http://www.demoiselle.org</url>
 
- O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
- modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
- do Software Livre (FSF).
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.santuario</groupId>
+			<artifactId>xmlsec</artifactId>
+			<version>2.0.1</version>
+		</dependency>
 
- Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
- GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
- APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
- para maiores detalhes.
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signer-core</artifactId>
+		</dependency>
 
- Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
- "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses />
- ou escreva para a Fundação do Software Livre (FSF) Inc.,
- 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>chain-icp-brasil</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>cryptography</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>policy-engine</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>timestamp</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>policy-impl-cades</artifactId>
+		</dependency>
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>policy-impl-xades</artifactId>
-    <packaging>jar</packaging>
-
-    <parent>
-        <groupId>org.demoiselle.signer</groupId>
-        <artifactId>parent</artifactId>
-        <relativePath>../parent</relativePath>
-        <version>4.0.0-SNAPSHOT</version>
-    </parent>
-
-    <name>Demoiselle Signer XADES</name>
-    <description>Demoiselle Signer for XAdES (XML Advanced Electronic Signatures)</description>
-    <url>http://www.demoiselle.org</url>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.apache.santuario</groupId>
-            <artifactId>xmlsec</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>signer-core</artifactId>            
-        </dependency>
-        
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>chain-icp-brasil</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>cryptography</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>policy-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>timestamp</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>policy-impl-cades</artifactId>
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>2.11.0</version>
+		</dependency>
+	</dependencies>
 
 </project>

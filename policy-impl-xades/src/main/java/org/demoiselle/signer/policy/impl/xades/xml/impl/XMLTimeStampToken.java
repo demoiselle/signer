@@ -36,7 +36,7 @@
  */
 
 
-package org.demoiselle.signer.policy.impl.xades.xml;
+package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;

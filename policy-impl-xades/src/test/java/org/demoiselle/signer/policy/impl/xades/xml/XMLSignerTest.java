@@ -21,16 +21,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.io.IOUtils;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
+import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
+import org.demoiselle.signer.policy.impl.xades.xml.impl.XMLSigner;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 public class XMLSignerTest {
 
-	@Test
-	public void test() {
+	// @Test
+	public void testEnvelopedFromFile() {
 
 		try {
 			KeyStore ks = null;
@@ -50,8 +53,57 @@ public class XMLSignerTest {
 			URL fileUri = classLoader.getResource(fileName);
 			File newFile = new File(fileUri.toURI());
 
-//    InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-//    BufferedReader reader = new BufferedReader(streamReader); 
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "teste".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
+			Document doc = xmlSigner.signEnveloped(true, newFile.getPath());
+
+			String signedFile = fileName.replaceFirst(".xml$", "_rt_signed.xml");
+			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform(new DOMSource(doc), new StreamResult(os));
+
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			assertFalse(true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			assertFalse(true);
+		}
+
+	}
+
+	// @Test
+	public void testEnvelopedFromString() {
+
+		try {
+
+			String xmlAsString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<raiz>\n"
+					+ " <documento>um documento</documento>\n" + " <conteudo>texto para assinar</conteudo>\n"
+					+ "</raiz>";
+			KeyStore ks = null;
+
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
+
+			// arquivo
+			// ks = getKeyStoreFileBySigner();
+
+			// token
+			// ks = getKeyStoreToken();
 
 			String alias = getAlias(ks);
 			XMLSigner xmlSigner = new XMLSigner();
@@ -67,9 +119,222 @@ public class XMLSignerTest {
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica
 			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
-			Document doc = xmlSigner.sign(newFile.getPath());
+			// indicando o local do arquivo XML
+			Document doc = xmlSigner.signEnveloped(xmlAsString);
 
-			String signedFile = fileName.replaceFirst(".xml$", "_rt_signed.xml");
+			String signedFile = "from_string_rt_signed.xml";
+			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform(new DOMSource(doc), new StreamResult(os));
+
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			assertFalse(true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			assertFalse(true);
+		}
+
+	}
+
+	// @Test
+	public void testEnvelopedFromDocument() {
+
+		try {
+			KeyStore ks = null;
+
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
+
+			// arquivo
+			// ks = getKeyStoreFileBySigner();
+
+			// token
+			// ks = getKeyStoreToken();
+
+			String fileName = "teste_assinatura.xml";
+
+			ClassLoader classLoader = getClass().getClassLoader();
+			Document doc = DocumentUtils.loadXMLDocument(classLoader.getResourceAsStream(fileName));
+
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "teste".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
+			Document docSigned = xmlSigner.signEnveloped(doc);
+
+			String signedFile = fileName.replaceFirst(".xml$", "from_doc_rt_signed.xml");
+			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform(new DOMSource(docSigned), new StreamResult(os));
+
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			assertFalse(true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			assertFalse(true);
+		}
+
+	}
+
+	// @Test
+	public void testEnvelopedFromInputStream() {
+
+		try {
+			KeyStore ks = null;
+
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
+
+			// arquivo
+			// ks = getKeyStoreFileBySigner();
+
+			// token
+			// ks = getKeyStoreToken();
+
+			String fileName = "teste_assinatura.xml";
+
+			ClassLoader classLoader = getClass().getClassLoader();
+
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "teste".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
+			Document docSigned = xmlSigner.signEnveloped(classLoader.getResourceAsStream(fileName));
+
+			String signedFile = fileName.replaceFirst(".xml$", "from_inputstream_rt_signed.xml");
+			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform(new DOMSource(docSigned), new StreamResult(os));
+
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			assertFalse(true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			assertFalse(true);
+		}
+	}
+
+	//@Test
+	public void testEnvelopedFromByteArray() {
+
+		try {
+			KeyStore ks = null;
+
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
+
+			// arquivo
+			// ks = getKeyStoreFileBySigner();
+
+			// token
+			// ks = getKeyStoreToken();
+
+			String fileName = "teste_assinatura.xml";
+
+			ClassLoader classLoader = getClass().getClassLoader();
+
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "teste".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
+
+			Document docSigned = xmlSigner
+					.signEnveloped(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)));
+
+			String signedFile = fileName.replaceFirst(".xml$", "from_bytearray_rt_signed.xml");
+			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform(new DOMSource(docSigned), new StreamResult(os));
+
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			assertFalse(true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			assertFalse(true);
+		}
+
+	}
+
+	// @Test
+	public void testDetachedEnvelopedFromFile() {
+
+		try {
+			KeyStore ks = null;
+
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
+
+			// arquivo
+			// ks = getKeyStoreFileBySigner();
+
+			// token
+			// ks = getKeyStoreToken();
+
+			String fileName = "teste_assinatura.xml";
+
+			ClassLoader classLoader = getClass().getClassLoader();
+			URL fileUri = classLoader.getResource(fileName);
+			File newFile = new File(fileUri.toURI());
+
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "teste".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
+			Document doc = xmlSigner.signDetachedEnveloped(newFile.getPath());
+
+			String signedFile = fileName.replaceFirst(".xml$", "_rt_detached_signed.xml");
 			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer trans = tf.newTransformer();

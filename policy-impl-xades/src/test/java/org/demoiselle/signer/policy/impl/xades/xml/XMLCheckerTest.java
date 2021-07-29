@@ -46,14 +46,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.demoiselle.signer.core.extension.BasicCertificate;
-import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
+import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
+import org.demoiselle.signer.policy.impl.xades.xml.impl.XMLChecker;
 import org.junit.Test;
 
 public class XMLCheckerTest {
 
-	@Test
-	public void test() {
+	//@Test
+	public void testWithFile() {
 		
 		try {
 			String fileName = "teste_assinatura_signed.xml";
@@ -80,7 +81,7 @@ public class XMLCheckerTest {
 
 	        
 			XMLChecker xadesChecker = new XMLChecker();
-			if (xadesChecker.check(newFile.getPath())) {
+			if (xadesChecker.check(true, newFile.getPath())) {
 
 				
 				List<XMLSignatureInformations> results = new ArrayList<XMLSignatureInformations>();
@@ -128,6 +129,167 @@ public class XMLCheckerTest {
 		  e.printStackTrace();
 		  assertTrue(false);
 		}		
+	}	
+	
+	
+	//@Test
+		public void testWithByteArray() {
+			
+			try {
+				
+				String fileName = "teste_assinatura_signed.xml";
+				ClassLoader classLoader = getClass().getClassLoader();
+		        URL fileUri = classLoader.getResource(fileName);
+		        File newFile=new File(fileUri.toURI());
+		        
+				byte[] contentXml = DocumentUtils.readContent(newFile.getPath());		        
+		        
+				// Cache LCR
+				//ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
+				//configlcr.setCrlIndex(".crl_index");
+				//configlcr.setCrlPath("/home/{usuario}/lcr_cache/");
+				//configlcr.setOnline(false);
+
+				/* cache interno
+				CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(buf),contents.getBytes());
+		        SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
+		        X509CertificateHolder certificateHolder = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
+		                .iterator().next();
+		        X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+		        LcrManagerSync.getInstance().update(varCert);*/
+
+		        
+				XMLChecker xadesChecker = new XMLChecker();
+				if (xadesChecker.check(contentXml)) {
+
+					
+					List<XMLSignatureInformations> results = new ArrayList<XMLSignatureInformations>();
+					results = xadesChecker.getSignaturesInfo();
+					if (!results.isEmpty()){
+						for (XMLSignatureInformations sis : results){
+							for (String valErr : sis.getValidatorErrors()){
+								System.err.println( "++++++++++++++ ERROS ++++++++++++++++++");
+								System.err.println(valErr);
+							}
+							
+							for (String valWarn : sis.getValidatorWarnins()) {
+								System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+								System.err.println(valWarn);
+							}
+
+							if (sis.getSignaturePolicy() != null){
+								System.out.println("------ Politica ----------------- ");
+								System.out.println(sis.getSignaturePolicy().toString());
+								
+							}
+							
+							BasicCertificate bc = sis.getIcpBrasilcertificate();
+							System.out.println(bc.toString()); 
+								if (bc.hasCertificatePF()){
+									System.out.println(bc.getICPBRCertificatePF().getCPF());
+								}
+								if (bc.hasCertificatePJ()){
+									System.out.println(bc.getICPBRCertificatePJ().getCNPJ());
+									System.out.println(bc.getICPBRCertificatePJ().getResponsibleCPF());
+								}
+								
+							if(sis.getTimeStampSigner()!= null) {
+								System.out.println(sis.getTimeStampSigner().toString());
+							}
+						}			
+						assertTrue(true);
+					}
+				}else {
+					assertTrue(false);
+				}
+				
+						
+			} catch (Throwable e) {			
+			  e.printStackTrace();
+			  assertTrue(false);
+			}		
+		}
+	
+		
+	
+	//@Test
+	public void testDetachedWithFile() {
+		
+		try {
+			
+			String signaturefileName = "teste_assinatura_rt_detached_signed.xml";
+			String fileName = "teste_assinatura.xml";
+			ClassLoader classLoader = getClass().getClassLoader();
+	        URL fileUri = classLoader.getResource(fileName);
+	        File newFile=new File(fileUri.toURI());
+	        fileUri = classLoader.getResource(signaturefileName);
+	        File newSignatureFile=new File(fileUri.toURI());
+	        
+//	        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+//	        BufferedReader reader = new BufferedReader(streamReader); 
+
+			// Cache LCR
+			//ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
+			//configlcr.setCrlIndex(".crl_index");
+			//configlcr.setCrlPath("/home/{usuario}/lcr_cache/");
+			//configlcr.setOnline(false);
+
+			/* cache interno
+			CMSSignedData cms = new CMSSignedData(new CMSProcessableByteArray(buf),contents.getBytes());
+	        SignerInformation signerInfo = (SignerInformation) cms.getSignerInfos().getSigners().iterator().next();
+	        X509CertificateHolder certificateHolder = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
+	                .iterator().next();
+	        X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
+	        LcrManagerSync.getInstance().update(varCert);*/
+
+	        
+			XMLChecker xadesChecker = new XMLChecker();
+			xadesChecker.check(newFile.getPath(), newSignatureFile.getPath());
+				List<XMLSignatureInformations> results = new ArrayList<XMLSignatureInformations>();
+				results = xadesChecker.getSignaturesInfo();
+				if (!results.isEmpty()){
+					for (XMLSignatureInformations sis : results){
+						for (String valErr : sis.getValidatorErrors()){
+							System.err.println( "++++++++++++++ ERROS ++++++++++++++++++");
+							System.err.println(valErr);
+						}
+						
+						for (String valWarn : sis.getValidatorWarnins()) {
+							System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+							System.err.println(valWarn);
+						}
+
+						if (sis.getSignaturePolicy() != null){
+							System.out.println("------ Politica ----------------- ");
+							System.out.println(sis.getSignaturePolicy().toString());
+							
+						}
+						
+						BasicCertificate bc = sis.getIcpBrasilcertificate();
+						System.out.println(bc.toString()); 
+							if (bc.hasCertificatePF()){
+								System.out.println(bc.getICPBRCertificatePF().getCPF());
+							}
+							if (bc.hasCertificatePJ()){
+								System.out.println(bc.getICPBRCertificatePJ().getCNPJ());
+								System.out.println(bc.getICPBRCertificatePJ().getResponsibleCPF());
+							}
+							
+						if(sis.getTimeStampSigner()!= null) {
+							System.out.println(sis.getTimeStampSigner().toString());
+						}
+					}			
+					assertTrue(true);
+				}
+			
+			
+					
+		} catch (Throwable e) {			
+		  e.printStackTrace();
+		  assertTrue(false);
+		}		
 	}
+	
+	
 
 }

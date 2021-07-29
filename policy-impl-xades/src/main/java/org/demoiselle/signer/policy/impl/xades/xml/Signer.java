@@ -34,18 +34,46 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-
 package org.demoiselle.signer.policy.impl.xades.xml;
+
+
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.util.Date;
+
+import org.w3c.dom.Document;
+
 /**
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
+ * 
+ * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
  *
  */
-public class Constants {
-	public static String SignedProperties = "http://uri.etsi.org/01903#SignedProperties";
-	public static final String RSA_SHA256 = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256";
-	public static final String DIGEST_SHA256 = "http://www.w3.org/2001/04/xmlenc#sha256";
-	public static final String RSA_SHA512 = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512";
-	public static final String DIGEST_SHA512 = "http://www.w3.org/2001/04/xmlenc#sha512";
-	public static final String XPATH = "http://www.w3.org/TR/1999/REC-xpath-19991116";
+public interface Signer {
+	
+	abstract public void setPolicyId(String policyOID);
+	
+	abstract public Document signEnveloped(boolean isFileLocation, String fileNameSource);
+	
+	abstract public Document signEnveloped(String xmlAsString);
+
+	abstract public PrivateKey getPrivateKey();
+	
+	abstract public void setPrivateKey(PrivateKey privateKey);
+	
+	abstract public Certificate[] getCertificateChain();
+	
+	abstract public void setCertificateChain(Certificate certificateChain[]);
+	
+	abstract public Date getNotAfterSignerCertificate();
+
+	abstract public void setNotAfterSignerCertificate(Date notAfterSignerCertificate);
+
+	abstract public PrivateKey getPrivateKeyToTimestamp();
+
+	abstract public void setPrivateKeyToTimestamp(PrivateKey privateKeyToTimestamp); 
+
+	abstract public Certificate[] getCertificateChainToTimestamp();
+
+	abstract public void setCertificateChainToTimestamp(Certificate certificateChainToTimestamp[]); 
 
 }

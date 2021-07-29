@@ -35,11 +35,11 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.policy.impl.xades.xml;
+package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -55,9 +55,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.commons.io.IOUtils;
 import org.apache.xml.security.Init;
 import org.apache.xml.security.c14n.CanonicalizationException;
 import org.apache.xml.security.c14n.Canonicalizer;
@@ -85,6 +84,7 @@ import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
 import org.demoiselle.signer.policy.impl.xades.XMLSignerException;
 import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
 import org.demoiselle.signer.policy.impl.xades.util.PolicyUtils;
+import org.demoiselle.signer.policy.impl.xades.xml.Checker;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 import org.slf4j.Logger;
@@ -93,7 +93,6 @@ import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * 
@@ -107,7 +106,7 @@ import org.xml.sax.SAXException;
  *
  */
 
-public class XMLChecker {
+public class XMLChecker implements Checker{
 
 	private static final Logger logger = LoggerFactory.getLogger(XMLChecker.class);
 	private boolean isDetached = false;
@@ -119,19 +118,24 @@ public class XMLChecker {
 	private LinkedList<String> validationErrors = new LinkedList<String>();
 	private LinkedList<String> validationWaring = new LinkedList<String>();
 
-
 	/**
-	 * XML signature validation using file path. The file must contains both content
-	 * and signature
-	 *
-	 * @param path to signed XML file.
+	 * Verify signature from File Name and location. 
+	 * (example: check(true,"/tmp/file.xml");
+	 * 
+	 * @param isFileLocation true if the next parameter is a path and name for XML file
+	 * @param xmlSignedFile path and name for XML file
 	 * @return
 	 */
-	public boolean check(String xmlSignedFile) {
+	public boolean check(boolean isFileLocation, String xmlSignedFile) {
+
+		if (!isFileLocation) {
+			logger.error(xadesMessagesBundle.getString("error.xml.false.to.file"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.false.to.file"));
+		}
 
 		if (xmlSignedFile == null || xmlSignedFile.isEmpty()) {
-			logger.error(xadesMessagesBundle.getString("error.xml.file.null"));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.file.null"));
+			logger.error(xadesMessagesBundle.getString("error.xml.file.null", "xmlSignedFile"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.file.null", "xmlSignedFile"));
 		}
 		if (!xmlSignedFile.substring(xmlSignedFile.lastIndexOf(".") + 1).equalsIgnoreCase("xml")) {
 			logger.error(xadesMessagesBundle.getString("error.xml.not.valid.file"));
@@ -143,55 +147,189 @@ public class XMLChecker {
 	}
 
 	/**
-	 * * XML signature validation using byte[] data. The content must contains both
-	 * content and signature
+	 * * XML signature validation using byte[] data. 
+	 * The content must contains both content and signature
 	 * 
 	 * @param docData
 	 * @return
 	 */
 
 	public boolean check(byte[] docData) {
-		Document doc = makeDocument(docData);
+		if (docData == null || docData.length <= 0) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docData"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docData"));
+		}
+		Document doc = DocumentUtils.loadXMLDocument(docData);
 		return verify(doc);
 	}
 
 	/**
 	 * 
-	 * XML signature validation using document. The file must contains both content
-	 * and signature
+	 * XML signature validation using document. 
+	 * The file must contains both content and signature
 	 * 
 	 * @param DOM document
 	 */
 	public boolean check(Document doc) {
+		if (doc == null || doc.getChildNodes().getLength() <= 0) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "Document doc"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "Document doc"));
+		}
 		return verify(doc);
 	}
 
 	/**
 	 * 
-	 * * XML signature validation with detached file.
+	 * XML signature validation with detached content from path and file names
+	 * example: check("/tmp/signedFile","/tmp/signaturefile.xml")
 	 * 
-	 * @param file contents
-	 * @param XML  String in byte[] format
+	 * @param signedContentFileName
+	 * @param signatureFileName
+	 * @return
+	 */
+	public boolean check(String signedContentFileName, String signatureFileName) {
+
+		if (signedContentFileName == null || signedContentFileName.isEmpty()) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "String signedContentFileName"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "String signedContentFileName"));
+		}
+		if (signatureFileName == null || signatureFileName.isEmpty()) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "String signatureFileName"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "String signatureFileName"));
+		}
+		if (!signatureFileName.substring(signatureFileName.lastIndexOf(".") + 1).equalsIgnoreCase("xml")) {
+			logger.error(xadesMessagesBundle.getString("error.xml.not.valid.file"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.not.valid.file"));
+		}
+
+		return check(DocumentUtils.readContent(signedContentFileName), DocumentUtils.loadXMLDocument(signatureFileName));
+	}
+	
+	
+	
+	/**
+	 * XML signature validation with detached content .
+	 * 
+	 * @param signedContent a signed content in byte[] format
+	 * @param signature     the XML signature in byte[] format
+	 * @return
 	 */
 
-	public boolean check(byte[] docData, byte[] signature) {
-		return check(makeDocument(signature));
+	public boolean check(byte[] signedContent, byte[] signature) {
+		
+		if (signedContent == null || signedContent.length <= 0) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] signedContent"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] signedContent"));
+		}
+		if (signature == null || signature.length <= 0) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] signature"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] signature"));
+		}
+		return check(signedContent, DocumentUtils.loadXMLDocument(signature));
 	}
 
 	/**
-	 * /**
-	 * 
-	 * * XML signature validation with detached file.
-	 * 
-	 * @param file      content
-	 * @param signature in Document class format
+	 *  XML signature validation from InputStream that represents a XML file
+	 * @param isXML
+	 * @return
+	 */
+	public boolean check(InputStream isXMLFile) {
+		if (isXMLFile == null ) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isXMLFile"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isXMLFile"));
+		}
+		return check(DocumentUtils.loadXMLDocument(isXMLFile));		
+	}
+	
+	/**
+	 * XML signature detached validation from InputStream that represents a content and XML Signature 
+	 * @param isContent
+	 * @param isXMLSignature
+	 * @return
+	 */
+	public boolean check(InputStream isContent, InputStream isXMLSignature) {
+		if (isContent == null ) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isContent"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isContent"));
+		}
+		if (isXMLSignature == null ) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isXMLSignature"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isXMLSignature"));
+		}
+		try {
+			return check(IOUtils.toByteArray(isContent), DocumentUtils.loadXMLDocument(isXMLSignature));
+		} catch (IOException e) {
+			logger.error(xadesMessagesBundle.getString("error.io", e.getMessage()));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.io", e.getMessage()));
+		}		
+	}
+	
+	
+	/**
+	 * XML signature validation with detached hash content and signature.
+	 * @param docHash
+	 * @param signature
+	 * @return
+	 */
+	public boolean checkHash(byte[] docHash, byte[] signature) {
+		if (docHash == null || docHash.length <= 0) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docHash"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docHash"));
+		}
+		if (signature == null || signature.length <= 0) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] signature"));
+			throw new XMLSignerException(
+					xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] signature"));
+		}
+		return checkHash(docHash , DocumentUtils.loadXMLDocument(signature));
+		
+	}
+	
+
+	// TODO não está funcionando parser da assinatura
+	/**
+	 * Verify signature from String that represents a XML Document
+	 * The content must contains both content and signature
+	 *  
+	 * @param xmlSigned
+	 * @return
+	
+	public boolean check(String xmlAsString) {
+
+		if (xmlAsString == null || xmlAsString.isEmpty()) {
+			logger.error(xadesMessagesBundle.getString("error.xml.string.file.null", "String xmlAsString"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.file.null", "String xmlAsString"));
+		}
+
+		Document doc = DocumentUtils.loadXMLDocumentFromString(xmlAsString);
+		return verify(doc);
+	}
 	 */
 
-	public boolean check(byte[] docData, Document signature) {
+	
+	
+	/**
+	 * Check detached Signature with signed data content
+	 * 
+	 * @param docData
+	 * @param signature
+	 * @return
+	 */
+	private boolean check(byte[] docData, Document signature) {
 		isDetached = true;
 		boolean signatureOk = true;
 		verify(signature);
-		
 
 		try {
 
@@ -211,6 +349,7 @@ public class XMLChecker {
 
 						if (!value.equals(hashValue)) {
 							validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.invalid"));
+							signatureOk = false;
 						}
 					} else {
 						validationErrors.add(xadesMessagesBundle.getString("error.xml. hash.not.found"));
@@ -224,8 +363,33 @@ public class XMLChecker {
 		return signatureOk;
 	}
 
+	/**
+	 * Check detached Signature with signed hash from signed data
+	 * 
+	 * @param docHash
+	 * @param signature
+	 * @return
+	 */
+	private boolean checkHash(byte[] docHash, Document signature) {
+		isDetached = true;
+		boolean signatureOk = true;
+		verify(signature);
+		Element signatureInfoTag = getSignatureElement("SignedInfo", (Element) signature.getChildNodes().item(0), true);
+		NodeList references = signatureInfoTag.getElementsByTagNameNS(XMLNS, "Reference");
+		for (int i = 0; i < references.getLength(); i++) {
+			if (((Element) references.item(i)).getAttribute("Type").isEmpty()) {
+				Element digestValue = getSignatureElement("DigestValue", ((Element) references.item(i)), true);
+				String value = digestValue.getTextContent();
+				String hashValue = Base64.toBase64String(docHash);
+				if (!value.equals(hashValue)) {
+					validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.invalid"));
+				}
+			}
+		}
+		return signatureOk;
+	}
 
-	public Element getSignatureElement(String tagName, Element parent, boolean mandatory) {
+	private Element getSignatureElement(String tagName, Element parent, boolean mandatory) {
 		NodeList value = parent.getElementsByTagNameNS(XMLNS, tagName);
 		if (value.getLength() == 0) {
 			if (mandatory)
@@ -236,13 +400,13 @@ public class XMLChecker {
 		return (Element) value.item(0);
 	}
 
-	public Element getXadesElement(String tagName, Element parent, boolean mandatory) {
+	private Element getXadesElement(String tagName, Element parent, boolean mandatory) {
 		if (parent == null) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.parent.element.not.found", tagName));
 			return null;
 		}
 		if (tagName == null) {
-			xadesMessagesBundle.getString("error.xml.invalid.name", parent.getTagName());			
+			xadesMessagesBundle.getString("error.xml.invalid.name", parent.getTagName());
 			return null;
 		}
 		NodeList value = parent.getElementsByTagNameNS(XAdESv1_3_2, tagName);
@@ -256,12 +420,12 @@ public class XMLChecker {
 		return (Element) value.item(0);
 	}
 
-	public String getAttribute(Element node, String attr, boolean mandatory) {
+	private String getAttribute(Element node, String attr, boolean mandatory) {
 		String attribute = node.getAttribute(attr);
 		if (attr.isEmpty()) {
 			if (mandatory)
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.element.not.found", attr));
-				else
+			else
 				validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found", attr));
 		}
 		return attribute;
@@ -293,12 +457,12 @@ public class XMLChecker {
 					return false;
 				}
 			} else {
-				validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.digest.method",digestMethod));
-				logger.debug(xadesMessagesBundle.getString("error.xml.invalid.digest.method",digestMethod));
+				validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
+				logger.debug(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
 				return false;
 			}
 		} catch (NoSuchAlgorithmException e) {
-			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.digest.method",digestMethod));
+			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
 			return false;
 		}
 		return true;
@@ -309,8 +473,7 @@ public class XMLChecker {
 		String xPathTransformAlgorithm = "";
 
 		for (int i = 0; i < transformsTags.getLength(); i++) {
-			NodeList transformTag = ((Element) transformsTags.item(i)).getElementsByTagNameNS(XMLNS,
-					"Transform");
+			NodeList transformTag = ((Element) transformsTags.item(i)).getElementsByTagNameNS(XMLNS, "Transform");
 			for (int j = 0; j < transformTag.getLength(); j++) {
 				if (AlgorithmsValues.isCanonicalMethods(((Element) transformTag.item(j)).getAttribute("Algorithm"))) {
 					xPathTransformAlgorithm = ((Element) transformTag.item(j)).getAttribute("Algorithm");
@@ -320,13 +483,13 @@ public class XMLChecker {
 		}
 
 		if (xPathTransformAlgorithm.isEmpty()) {
-			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer",digestMethod));
+			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", digestMethod));
 		}
 
 		try {
 			Element docData = DocumentUtils.getDocumentData(doc);
-			byte[] docHash = DocumentUtils.getShaCanonizedValue(AlgorithmsValues.getSignatureDigest(digestMethod), docData,
-					xPathTransformAlgorithm);
+			byte[] docHash = DocumentUtils.getShaCanonizedValue(AlgorithmsValues.getSignatureDigest(digestMethod),
+					docData, xPathTransformAlgorithm);
 			if (!Base64.toBase64String(docHash).equals(digestValue)) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.digest.invalid"));
 				return false;
@@ -353,8 +516,7 @@ public class XMLChecker {
 		try {
 			Element canonicalizationMethodTag = (Element) signatureTag
 					.getElementsByTagNameNS(XMLNS, "CanonicalizationMethod").item(0);
-			Element signatureMethod = (Element) signatureTag.getElementsByTagNameNS(XMLNS, "SignatureMethod")
-					.item(0);
+			Element signatureMethod = (Element) signatureTag.getElementsByTagNameNS(XMLNS, "SignatureMethod").item(0);
 
 			Init.init();
 			Canonicalizer c14n = Canonicalizer.getInstance(canonicalizationMethodTag.getAttribute("Algorithm"));
@@ -373,17 +535,17 @@ public class XMLChecker {
 
 		} catch (InvalidCanonicalizerException | CanonicalizationException | InvalidKeyException | DOMException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.invalid"));
-		} catch (NoSuchAlgorithmException e) {			
+		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.nosuch.algorithm.exception"));
 		} catch (SignatureException e) {
-			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.exception",e.getMessage()));			
+			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
 		}
 
 		return false;
 
 	}
 
-	public void verifyCertificate(X509Certificate varCert) {
+	private void verifyCertificate(X509Certificate varCert) {
 		CRLValidator cV = new CRLValidator();
 		try {
 			cV.validate(varCert);
@@ -391,7 +553,7 @@ public class XMLChecker {
 			validationErrors.add(cvce.getMessage());
 			logger.error(cvce.getMessage());
 		} catch (CertificateRevocationException cre) {
-			validationErrors.add(xadesMessagesBundle.getString("error.certificate.repelead",cre.getMessage()));
+			validationErrors.add(xadesMessagesBundle.getString("error.certificate.repelead", cre.getMessage()));
 			logger.error("certificado revogado");
 		}
 
@@ -404,7 +566,8 @@ public class XMLChecker {
 
 	}
 
-	private XMLSignaturePolicy verifyPolicy(Element signature, String policyOID, String signatureMethod, String signatureValue) {
+	private XMLSignaturePolicy verifyPolicy(Element signature, String policyOID, String signatureMethod,
+			String signatureValue) {
 		boolean isValidAlgorithm = false;
 		if (policyOID == null) {
 			validationWaring.add(xadesMessagesBundle.getString("error.xml.policy.null"));
@@ -431,48 +594,20 @@ public class XMLChecker {
 					if ((8 * Base64.decode(signatureValue).length) >= Integer
 							.parseInt(xmlSignerAlgConstraint.getMinKeyLength())) {
 						isValidAlgorithm = true;
-					} else {						
+					} else {
 						validationErrors.add(xadesMessagesBundle.getString("error.xml.size.not.allowed"));
 					}
 				}
 				break;
 			}
 
-		if (!isValidAlgorithm) {			
-			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.algorithm",policyOID));
+		if (!isValidAlgorithm) {
+			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.algorithm", policyOID));
 		}
 		return xmlPolicyValidator.getXmlSignaturePolicy();
 	}
 
-	public Document makeDocumentByFile(String fileName) {
-		File fXmlFile = new File(fileName);
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		dbFactory.setNamespaceAware(true);
-		DocumentBuilder dBuilder;
-		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(fXmlFile);
-			return doc;
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			return null;
-		}
-	}
-
-	private Document makeDocument(byte[] signature) {
-
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		dbFactory.setNamespaceAware(true);
-		DocumentBuilder dBuilder;
-		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			Document doc = dBuilder.parse(new ByteArrayInputStream(signature));
-			return doc;
-		} catch (ParserConfigurationException | SAXException | IOException e) {
-			return null;
-		}
-	}
-
-	public void verifySignature(Element signature, X509Certificate cert) {
+	private void verifySignature(Element signature, X509Certificate cert) {
 
 		try {
 
@@ -499,43 +634,37 @@ public class XMLChecker {
 				validationErrors.add("Resumo da assinatura não confere");
 			}
 
-		} catch (InvalidCanonicalizerException e) {			
-			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.canonicalizer", e.getMessage()));			
+		} catch (InvalidCanonicalizerException e) {
+			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.canonicalizer", e.getMessage()));
 		} catch (CanonicalizationException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.canonicalizer", e.getMessage()));
 		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.nosuch.algorithm.exception"));
-		} catch (InvalidKeyException e) {			
+		} catch (InvalidKeyException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.key.exception"));
 		} catch (SignatureException e) {
-			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.exception",e.getMessage()));
+			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
 		}
 
 	}
 
-	public boolean isDetachedFile(Document doc) {
-		NodeList signatureListTags = doc.getElementsByTagNameNS(XMLNS, "Signature");
-		if (doc.getChildNodes().item(0) == signatureListTags.item(0))
-			return true;
-		return false;
-	}
 
 	private boolean verify(Document doc) {
-		boolean signatureOK = true;
+		boolean signatureOK = false;
 		NodeList root = doc.getChildNodes();
 
 		NodeList signatureListTags = doc.getElementsByTagNameNS(XMLNS, "Signature");
 
 		if (root.item(0) == signatureListTags.item(0)) {
-			if (!isDetached) {				
+			if (!isDetached) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.detached.content"));
+				return signatureOK;
 			}
 		}
 
-		if (signatureListTags.getLength() < 0) {			
+		if (signatureListTags.getLength() < 0) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.not.found"));
-			
-			return false;
+			return signatureOK;
 		} else {
 			for (int i = 0; i < signatureListTags.getLength(); i++) {
 
@@ -547,6 +676,7 @@ public class XMLChecker {
 				NodeList referenceTag = doc.getElementsByTagNameNS(XMLNS, "Reference");
 
 				for (int j = 0; j < referenceTag.getLength(); j++) {
+					signatureOK = true;
 					Element actualReferenceTag = (Element) referenceTag.item(j);
 					NodeList transformsTags = actualReferenceTag.getElementsByTagNameNS(XMLNS, "Transforms");
 
@@ -585,14 +715,14 @@ public class XMLChecker {
 				Element signedSignaturePropertiesTag = getXadesElement("SignedSignatureProperties", signedPropertiesTag,
 						true);
 				Element signedTime = getXadesElement("SigningTime", signedSignaturePropertiesTag, true);
-				if (signedTime == null) {					
+				if (signedTime == null) {
 					validationWaring.add(xadesMessagesBundle.getString("error.xml.signing.time.not.found"));
 				} else {
 					DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
 					try {
 						sigInf.setSignDate(formatter.parse(signedTime.getTextContent()));
 					} catch (DOMException | ParseException e) {
-						validationWaring.add(xadesMessagesBundle.getString("error.date.parser",e.getMessage()));
+						validationWaring.add(xadesMessagesBundle.getString("error.date.parser", e.getMessage()));
 					}
 				}
 
@@ -605,24 +735,28 @@ public class XMLChecker {
 				Element certDigestTag = getXadesElement("CertDigest", certTag, true);
 
 				if (getSignatureElement("DigestMethod", certDigestTag, true) == null) {
-					signatureOK = false;					
-					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature","DigestMethod", "Cert"));
+					signatureOK = false;
+					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature",
+							"DigestMethod", "Cert"));
 				}
 
 				if (getSignatureElement("DigestValue", certDigestTag, true) == null) {
 					signatureOK = false;
-					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature","IssuerSerial", "Cert"));
+					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature",
+							"IssuerSerial", "Cert"));
 				}
 
 				if (getXadesElement("IssuerSerial", certTag, true) == null) {
 					signatureOK = false;
-					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature","DigestValue", "Cert"));
+					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature",
+							"DigestValue", "Cert"));
 				}
 				Element signedDataObjectPropertiesTag = getXadesElement("SignedDataObjectProperties",
 						signedPropertiesTag, true);
 				if (signedDataObjectPropertiesTag == null) {
 					signatureOK = false;
-					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature","SignedDataObjectProperties", "Cert"));
+					validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found.signature",
+							"SignedDataObjectProperties", "Cert"));
 
 				}
 
@@ -642,7 +776,7 @@ public class XMLChecker {
 				try {
 					cert = getCertificate(x509Certificate);
 				} catch (CertificateException e) {
-					signatureOK = false;					
+					signatureOK = false;
 					validationErrors.add(xadesMessagesBundle.getString("error.invalid.certificate"));
 				}
 
@@ -662,7 +796,7 @@ public class XMLChecker {
 						Element signatureMethodTag = getSignatureElement("SignatureMethod", signatureTag, true);
 						if (signatureMethodTag != null) {
 							signatureMethod = getAttribute(signatureMethodTag, "Algorithm", true);
-						} else {							
+						} else {
 							validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.method.not.found"));
 							signatureOK = false;
 						}
@@ -670,11 +804,14 @@ public class XMLChecker {
 						Element sigPolicyIdIdentifier = getXadesElement("Identifier", sigPolicyId, true);
 						if (sigPolicyIdIdentifier != null) {
 							String strIdentifier = sigPolicyIdIdentifier.getTextContent();
-							XMLSignaturePolicy xmlSignaturePolicy = verifyPolicy(signatureTag, strIdentifier, signatureMethod,signatureValue);
+							XMLSignaturePolicy xmlSignaturePolicy = verifyPolicy(signatureTag, strIdentifier,
+									signatureMethod, signatureValue);
 							sigInf.setSignaturePolicy(xmlSignaturePolicy);
-							List<String> listMandetedUnsignedProperties = xmlSignaturePolicy.getXmlSignerRules().getMandatedUnsignedQProperties();
+							List<String> listMandetedUnsignedProperties = xmlSignaturePolicy.getXmlSignerRules()
+									.getMandatedUnsignedQProperties();
 							if (!listMandetedUnsignedProperties.isEmpty()) {
-								VerifyMandatedUnsignedQProperties(listMandetedUnsignedProperties, signatureTag, signatureValue);
+								VerifyMandatedUnsignedQProperties(listMandetedUnsignedProperties, signatureTag,
+										signatureValue);
 								sigInf.setTimeStampSigner(getVarTimestampToSignature());
 								setVarTimestampToSignature(null);
 							}
@@ -688,13 +825,14 @@ public class XMLChecker {
 				sigInf.setValidatorErrors(validationErrors);
 				sigInf.setValidatorWarnins(validationWaring);
 				signaturesInfo.add(sigInf);
+				
 			}
 		}
 		return signatureOK;
 	}
-	
 
-	private void VerifyMandatedUnsignedQProperties(List<String> listMandetedUnsignedProperties, Element signatureTag, String signatureValue) {
+	private void VerifyMandatedUnsignedQProperties(List<String> listMandetedUnsignedProperties, Element signatureTag,
+			String signatureValue) {
 		for (String propertie : listMandetedUnsignedProperties) {
 			switch (propertie) {
 			case "SignatureTimeStamp":
@@ -727,29 +865,31 @@ public class XMLChecker {
 			default:
 				validationErrors.add(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
 				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-			
+
 			}
-			
+
 		}
 
 	}
 
 	private void checkSignatureTimeStampPropertie(Element signatureTag, String signatureValue) {
-			
+
 		try {
 			Security.addProvider(new BouncyCastleProvider());
-			String timeStampForSignature = signatureTag.getElementsByTagName("xades:EncapsulatedTimeStamp").item(0).getTextContent();
+			String timeStampForSignature = signatureTag.getElementsByTagName("xades:EncapsulatedTimeStamp").item(0)
+					.getTextContent();
 			TimeStampOperator timeStampOperator = new TimeStampOperator();
-			byte [] varTimeStamp = Base64.decode(timeStampForSignature);
-			byte [] varSignature = Base64.decode(signatureValue);
+			byte[] varTimeStamp = Base64.decode(timeStampForSignature);
+			byte[] varSignature = Base64.decode(signatureValue);
 			TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
 			Timestamp timeStampSigner = new Timestamp(timeStampToken);
-			timeStampOperator.validate(varSignature,varTimeStamp , null);
+			timeStampOperator.validate(varSignature, varTimeStamp, null);
 			setVarTimestampToSignature(timeStampSigner);
 		} catch (CertificateCoreException | IOException | TSPException | CMSException e) {
 			setVarTimestampToSignature(null);
-			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.signature.timestamp", e.getMessage()));
-		}		
+			validationErrors
+					.add(xadesMessagesBundle.getString("error.xml.invalid.signature.timestamp", e.getMessage()));
+		}
 	}
 
 	public List<XMLSignatureInformations> getSignaturesInfo() {
@@ -760,7 +900,7 @@ public class XMLChecker {
 		return varTimestampToSignature;
 	}
 
-	public void setVarTimestampToSignature(Timestamp varTimestampToSignature) {
+	private void setVarTimestampToSignature(Timestamp varTimestampToSignature) {
 		this.varTimestampToSignature = varTimestampToSignature;
 	}
 
