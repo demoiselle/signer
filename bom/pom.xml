@@ -76,7 +76,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
-				<artifactId>cryptography</artifactId>
+				<artifactId>signer-cryptography</artifactId>
 				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>
@@ -101,7 +101,7 @@
 			</dependency>
 			<dependency>
 				<groupId>org.demoiselle.signer</groupId>
-				<artifactId>timestamp</artifactId>
+				<artifactId>signer-timestamp</artifactId>
 				<version>${demoiselle.signer.version}</version>
 			</dependency>
 			<dependency>

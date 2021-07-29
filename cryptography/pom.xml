@@ -21,7 +21,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 
-	<artifactId>cryptography</artifactId>
+	<artifactId>signer-cryptography</artifactId>
 	<packaging>jar</packaging>
 
 	<parent>
