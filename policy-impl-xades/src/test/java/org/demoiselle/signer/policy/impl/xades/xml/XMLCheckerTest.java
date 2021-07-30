@@ -51,7 +51,7 @@ import org.junit.Test;
 
 public class XMLCheckerTest {
 
-	@Test
+	//@Test
 	public void testWithFile() {
 
 		try {
@@ -131,7 +131,7 @@ public class XMLCheckerTest {
 		}
 	}
 
-	// @Test
+	@Test
 	public void testWithByteArray() {
 
 		try {

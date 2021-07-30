@@ -98,26 +98,26 @@ public class AlgorithmsValues {
 		//signatureAlgorithms.put("HmacRIPEMD160","http://www.w3.org/2001/04/xmldsig-more#hmac-ripemd160");
 		
 		algorithmsOnSignature = new HashMap<String, String>();
-		//AlgorithmsOnSignature.put("http://www.w3.org/2000/09/xmldsig#dsa-sha1", "SHA1withDSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2009/xmldsig11#dsa-sha256", "SHA256withDSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-md5", "MD5withRSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2000/09/xmldsig#dsa-sha1", "SHA1withDSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2009/xmldsig11#dsa-sha256", "SHA256withDSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-md5", "MD5withRSA");
 		algorithmsOnSignature.put("http://www.w3.org/2000/09/xmldsig#rsa-sha1", "SHA1withRSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224", "SHA224withRSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha224", "SHA224withRSA");
 		algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", "SHA256withRSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha384", "SHA384withRSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512", "SHA512withRSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-ripemd160", "RIPEMD160withRSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha1", "SHA1withECDSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha224", "SHA244withECDSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256", "SHA256withECDSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384", "SHA348withECDSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512", "SHA512withECDSA");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2000/09/xmldsig#hmac-sha1", "HmacSHA1");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha224", "HmacSHA224");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha256", "HmacSHA256");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha384", "HmacSHA384");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha512", "HmacSHA512");
-		//AlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-ripemd160", "HmacRIPEMD160");		
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha384", "SHA384withRSA");
+		algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha512", "SHA512withRSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-ripemd160", "RIPEMD160withRSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha1", "SHA1withECDSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha224", "SHA244withECDSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha256", "SHA256withECDSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha384", "SHA348withECDSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#ecdsa-sha512", "SHA512withECDSA");
+		//algorithmsOnSignature.put("http://www.w3.org/2000/09/xmldsig#hmac-sha1", "HmacSHA1");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha224", "HmacSHA224");
+		//algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha256", "HmacSHA256");
+		//aAlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha384", "HmacSHA384");
+		//aAlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-sha512", "HmacSHA512");
+		//aAlgorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#hmac-ripemd160", "HmacRIPEMD160");		
 		
 		
 	}

@@ -607,22 +607,26 @@ public class XMLChecker implements Checker{
 
 			byte[] dh = c14n.canonicalizeSubtree(signatureInfoTag);
 
-			Signature verify = Signature
-					.getInstance(AlgorithmsValues.getAlgorithmsOnSignature(signatureMethod.getAttribute("Algorithm")));
+			String aos = AlgorithmsValues.getAlgorithmsOnSignature(signatureMethod.getAttribute("Algorithm"));
+			Signature verify = Signature.getInstance(aos);
 			verify.initVerify(cert);
 			verify.update(dh);
 			if (!verify.verify(Base64.decode(signatureValue))) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.invalid"));
+				logger.error(xadesMessagesBundle.getString("error.xml.signature.invalid"));
 			} else {
 				return true;
 			}
 
 		} catch (InvalidCanonicalizerException | CanonicalizationException | InvalidKeyException | DOMException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.invalid"));
+			logger.error(xadesMessagesBundle.getString("error.xml.signature.invalid"));
 		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.nosuch.algorithm.exception"));
+			logger.error(xadesMessagesBundle.getString("error.xml.nosuch.algorithm.exception"));
 		} catch (SignatureException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
+			logger.error(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
 		}
 
 		return false;
@@ -720,14 +724,19 @@ public class XMLChecker implements Checker{
 
 		} catch (InvalidCanonicalizerException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.canonicalizer", e.getMessage()));
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.canonicalizer", e.getMessage()));
 		} catch (CanonicalizationException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.canonicalizer", e.getMessage()));
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.canonicalizer", e.getMessage()));
 		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.nosuch.algorithm.exception"));
+			logger.error(xadesMessagesBundle.getString("error.xml.nosuch.algorithm.exception"));
 		} catch (InvalidKeyException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.key.exception"));
+			logger.error(xadesMessagesBundle.getString("error.xml.invalid.key.exception"));
 		} catch (SignatureException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
+			logger.error(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
 		}
 
 	}
@@ -742,6 +751,7 @@ public class XMLChecker implements Checker{
 		if (root.item(0) == signatureListTags.item(0)) {
 			if (!isDetached) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.detached.content"));
+				logger.error(xadesMessagesBundle.getString("error.xml.detached.content"));
 				return signatureOK;
 			}
 		}

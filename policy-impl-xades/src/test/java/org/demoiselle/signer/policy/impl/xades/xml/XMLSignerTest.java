@@ -33,7 +33,7 @@ import org.w3c.dom.Document;
 
 public class XMLSignerTest {
 
-	@Test
+	//@Test
 	public void testEnvelopedFromFile() {
 
 		try {
@@ -69,11 +69,12 @@ public class XMLSignerTest {
 			// para mudar a politica de Assinatura
 			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 			
+			/*
 			xmlSigner.setSignatureAlgorithm(Constants.SHA512withRSA);
 			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
 				xmlSigner.setSignatureAlgorithm(Constants.SHA256withRSA);
 				
-			}	
+			}*/	
 			
 			// indicando o local do arquivo XML
 			Document doc = xmlSigner.signEnveloped(true, newFile.getPath());
