@@ -50,24 +50,38 @@ import org.w3c.dom.Document;
  */
 public interface Checker {
 	
-	public boolean check(boolean isFileLocation, String xmlSignedFile); 
 	
-	// TODO não está funcionando parser da assinatura como texto puro
-	//abstract public boolean check(String xmlAsString);
-
-	abstract public boolean check(byte[] docData);
-
 	abstract public boolean check(Document doc);
 	
+	abstract public boolean check(String xmlAsString);
+	
+	abstract public boolean check(boolean isFileLocation, String xmlSignedFile); 
+	
+	abstract public boolean check(byte[] docData);
+	
+	abstract public boolean check(InputStream isXMLFile);
+
 	abstract public boolean check(String signedContentFileName, String signatureFileName);
 	
 	abstract public boolean check(byte[] signedContent, byte[] signature);
 	
-	abstract public boolean check(InputStream isXMLFile);
-	
 	abstract public boolean check(InputStream isContent, InputStream isXMLSignature);
 	
-	abstract public boolean checkHash(byte[] docHash, byte[] signature);	
+	
+	abstract public boolean checkHash(byte[] contentcHash, Document xmlSignature);
+	
+	abstract public boolean checkHash(byte[] contentcHash, byte[] xmlSignature);
+	
+	abstract public boolean checkHash(byte[] contentHash, String xmlSignature);
+	
+	abstract public boolean checkHash(InputStream isContent, Document xmlSignature);
+	
+	abstract public boolean checkHash(InputStream isContent, InputStream isXMLSignature);
+	
+	abstract public boolean checkHash(InputStream isContent, String xmlSignature);
+	
+	
+	
 	
 	abstract public List<XMLSignatureInformations> getSignaturesInfo(); 
 	

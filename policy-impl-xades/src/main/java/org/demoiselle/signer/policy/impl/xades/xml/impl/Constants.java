@@ -47,5 +47,7 @@ public class Constants {
 	public static final String RSA_SHA512 = "http://www.w3.org/2001/04/xmldsig-more#rsa-sha512";
 	public static final String DIGEST_SHA512 = "http://www.w3.org/2001/04/xmlenc#sha512";
 	public static final String XPATH = "http://www.w3.org/TR/1999/REC-xpath-19991116";
+	public static final String SHA256withRSA = "SHA256withRSA";
+	public static final String SHA512withRSA = "SHA512withRSA";
 
 }

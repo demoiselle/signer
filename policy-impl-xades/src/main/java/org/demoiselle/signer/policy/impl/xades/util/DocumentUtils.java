@@ -138,13 +138,10 @@ public class DocumentUtils {
 	 * @return
 	 */
 	public static Document loadXMLDocument(byte[] xmlContent) throws XMLSignerException {
-
-		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-		dbFactory.setNamespaceAware(true);
-		DocumentBuilder dBuilder;
 		try {
-			dBuilder = dbFactory.newDocumentBuilder();
-			return dBuilder.parse(new ByteArrayInputStream(xmlContent));
+			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+			dbFactory.setNamespaceAware(true);
+			return dbFactory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlContent));
 		} catch (SAXException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
@@ -168,13 +165,9 @@ public class DocumentUtils {
 	public static Document loadXMLDocument(InputStream is) throws XMLSignerException {
 
 		try {
-
-			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-			Document doc = docBuilder.parse(is);
-			doc.getDocumentElement().normalize();
-			return doc;
-
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setNamespaceAware(true);
+			return dbf.newDocumentBuilder().parse(new InputSource(is));
 		} catch (SAXException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
@@ -188,7 +181,6 @@ public class DocumentUtils {
 
 	}
 
-	
 	
 	/**
 	 * Load XML Document from String that represents a XML file
@@ -197,14 +189,11 @@ public class DocumentUtils {
 	 * @return
 	 */
 	public static Document loadXMLDocumentFromString(String xmlString) throws XMLSignerException {
-
+		//return loadXMLDocument(xmlString.getBytes());
 		try {
-			DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-			DocumentBuilder builder = null;
-			builder = factory.newDocumentBuilder();
-			Document doc = builder.parse(new InputSource(new StringReader(xmlString)));
-			doc.getDocumentElement().normalize();
-			return doc;
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setNamespaceAware(true);
+			return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xmlString)));
 		} catch (SAXException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
@@ -215,10 +204,7 @@ public class DocumentUtils {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 		}
-
 	}
-
-
 		
 	
 	/**
