@@ -6,12 +6,12 @@
 
 
 <revision>
-    <revnumber>3.7.0</revnumber>
+    <revnumber>3.7.1-SNAPSHOT</revnumber>
         <date>22/07/2021</date>
         <authorinitials>ess</authorinitials>
         <revremark>
             <itemizedlist>
-            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/36?closed=1">Milestone 3.7.0</ulink></listitem>
+            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/36?closed=1">Milestone 3.7.1-SNAPSHOT</ulink></listitem>
             </itemizedlist>
         </revremark>
     </revision>

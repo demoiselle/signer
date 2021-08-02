@@ -249,7 +249,7 @@ public class CAManager {
 
 		Collection<ProviderCA> providers = ProviderCAFactory.getInstance().factory();
 
-		boolean ok = false;
+		
 		for (ProviderCA provider : providers) {
 			try {
 				String varNameProvider = provider.getName();
@@ -260,6 +260,7 @@ public class CAManager {
 
 				// Variable to control if go to next Provider is necessery
 				// Iterate this provider to create a Cert Chain
+				boolean ok = false;
 				for (X509Certificate ac : acs) {
 					// If is CA issuer of certificate
 					X500Principal issuer = certificate.getIssuerX500Principal(); 
@@ -315,15 +316,15 @@ public class CAManager {
 				} else {
 					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
 				}
+				
 			} catch (Exception error) {
 				LOGGER.warn(coreMessagesBundle.getString("error.no.ca", provider.getName()));				
 			}
+
 		}
 		
-		if (!ok) {
-			LOGGER.error(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
-		}
-		if (config.isCached() && !result.isEmpty()) {
+		
+				if (config.isCached() && !result.isEmpty()) {
 			CAManagerCache.getInstance().addCertificate(certificate, result);
 		}
 

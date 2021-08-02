@@ -60,9 +60,9 @@ import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file (ACcompactado.zip) stored on user home folder,
- * that was previous downloaded by ICPBrasilOnLineSerproProviderCA or ICPBrasilOnLineITIProviderCA.  
- *  *
+ * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file
+ * (ACcompactado.zip) stored on user home folder, that was previous downloaded
+ * by ICPBrasilOnLineSerproProviderCA or ICPBrasilOnLineITIProviderCA. *
  */
 
 public class ICPBrasilUserHomeProviderCA implements ProviderCA {
@@ -82,7 +82,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	/**
 	 * Main method for read trusted Certificate Authorities Chain
 	 */
-	
+
 	@Override
 	public Collection<X509Certificate> getCAs() {
 
@@ -97,7 +97,8 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	}
 
 	/**
-	 * Load file from file system and read Certificate Authorities Chain 
+	 * Load file from file system and read Certificate Authorities Chain
+	 * 
 	 * @param fileZip file to read from
 	 * @return Collection&lt;X509Certificate&gt;
 	 */
@@ -120,14 +121,14 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				result = this.getFromZip(inputStream);
 
 			} else {
-				LOGGER.error(chainMessagesBundle.getString("error.filenotfound.userhome",fileZip.toString()));
-				throw new Exception(chainMessagesBundle.getString("error.filenotfound.userhome",fileZip.toString()));
+				LOGGER.error(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
+				throw new Exception(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
 			}
 
 			timeAfter = System.currentTimeMillis();
 		} catch (Throwable error) {
 			timeAfter = System.currentTimeMillis();
-			LOGGER.warn(chainMessagesBundle.getString("error.throwable")+error.getMessage());
+			LOGGER.warn(chainMessagesBundle.getString("error.throwable") + error.getMessage());
 		} finally {
 			LOGGER.debug(chainMessagesBundle.getString("info.time.file.userhome", timeAfter - timeBefore));
 		}
@@ -135,7 +136,8 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	}
 
 	/**
-	 *  Verify if folder exists, otherwise will create it
+	 * Verify if folder exists, otherwise will create it
+	 * 
 	 * @return Path
 	 * @throws IOException exception
 	 */
@@ -152,8 +154,9 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	}
 
 	/**
-	 * get all Certificate Authorities stored on file 
-	 * @param zip input stream to read from 
+	 * get all Certificate Authorities stored on file
+	 * 
+	 * @param zip input stream to read from
 	 * @return Collection&lt;X509Certificate&gt;
 	 * @throws RuntimeException exception
 	 */
@@ -164,26 +167,30 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 		ZipEntry arquivoInterno = null;
 		try {
 			while ((arquivoInterno = zin.getNextEntry()) != null) {
-				if (!arquivoInterno.isDirectory()) {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] b = new byte[512];
-					int len = 0;
-					while ((len = zin.read(b)) != -1)
-						out.write(b, 0, len);
-					ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
-					out.close();
-					X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X509")
-							.generateCertificate(is);
-					is.close();
-					result.add(certificate);
+				try {
+					if (!arquivoInterno.isDirectory()) {
+						ByteArrayOutputStream out = new ByteArrayOutputStream();
+						byte[] b = new byte[512];
+						int len = 0;
+						while ((len = zin.read(b)) != -1)
+							out.write(b, 0, len);
+						ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
+						out.close();
+						X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X509")
+								.generateCertificate(is);
+						is.close();
+						result.add(certificate);
+					}
+				} catch (CertificateException error) {
+					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate"));
+					// throw new
+					// RuntimeException(chainMessagesBundle.getString("error.invalid.certificate"),
+					// error);
 				}
 			}
-		} catch (CertificateException error) {
-			LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate"));
-			throw new RuntimeException(chainMessagesBundle.getString("error.invalid.certificate"), error);
 		} catch (IOException error) {
 			LOGGER.error(chainMessagesBundle.getString("error.stream"));
-			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
+			 throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
 		return result;
 	}

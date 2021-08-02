@@ -41,6 +41,7 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -48,6 +49,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
@@ -86,6 +88,7 @@ public class ICPBrasilProviderCA implements ProviderCA {
      * Load from file icpbrasil.jks 
      */
     private KeyStore getKeyStore() {
+        Security.addProvider(new BouncyCastleProvider());
         KeyStore keyStore = null;
         try {
             InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");

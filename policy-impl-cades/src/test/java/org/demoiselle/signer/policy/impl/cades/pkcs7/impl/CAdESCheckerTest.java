@@ -86,9 +86,13 @@ public class CAdESCheckerTest {
 	 */
 	//@Test
 	public void testVerifyDetachedSignature() {
-		String fileToVerifyDirName = "/";
-		String fileSignatureDirName = "/";
+
 		
+		//String fileToVerifyDirName = "/";
+		//String fileSignatureDirName = "/";
+		
+
+
 		
 		byte[] fileToVerify;
 		byte[] signatureFile;
@@ -101,7 +105,7 @@ public class CAdESCheckerTest {
 		
         //Configura cache do demoseille signer:
         CAManagerConfiguration config = CAManagerConfiguration.getInstance();
-        config.setCached(true);
+        config.setCached(false);
 
         // Cache LCR
         ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
