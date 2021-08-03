@@ -27,7 +27,7 @@
 		<groupId>org.demoiselle.signer</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath>../parent</relativePath>
-		<version>3.7.1-SNAPSHOT</version>
+		<version>3.7.1</version>
 	</parent>
 
 	<name>Demoiselle Signer PADES</name>
