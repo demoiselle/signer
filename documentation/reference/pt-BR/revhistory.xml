@@ -4,14 +4,25 @@
 
 <revhistory>
 
+<revision>
+    <revnumber>3.7.1</revnumber>
+        <date>03/08/2021</date>
+        <authorinitials>ess</authorinitials>
+        <revremark>
+            <itemizedlist>
+            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/38?closed=1">Milestone 3.7.1</ulink></listitem>
+            </itemizedlist>
+        </revremark>
+    </revision>
+
 
 <revision>
-    <revnumber>3.7.1-SNAPSHOT</revnumber>
+    <revnumber>3.7.0</revnumber>
         <date>22/07/2021</date>
         <authorinitials>ess</authorinitials>
         <revremark>
             <itemizedlist>
-            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/36?closed=1">Milestone 3.7.1-SNAPSHOT</ulink></listitem>
+            	<listitem><ulink url="https://github.com/demoiselle/signer/milestone/36?closed=1">Milestone 3.7.1</ulink></listitem>
             </itemizedlist>
         </revremark>
     </revision>
