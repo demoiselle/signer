@@ -391,8 +391,14 @@ public class CAManager {
 	}
 
 	private String getCN(String x500) {
-		int indexCN = x500.indexOf(CN);
-		int indexFirstComa = x500.indexOf(',',indexCN);
-		return x500.substring(indexCN, indexFirstComa);
+        int indexCN = x500.indexOf(CN);
+        if (indexCN >= 0) {
+            int indexComa = x500.indexOf(',', indexCN);
+            if (indexComa < 0) {
+                return x500.substring(indexCN);
+            }
+            return x500.substring(indexCN, indexComa);
+        }
+        return x500;
 	}
 }
