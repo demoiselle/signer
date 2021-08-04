@@ -115,7 +115,7 @@
 byte[] content = /* implementar metodo de leitura do PDF para extrair o conteúdo assinado */
 byte[] signature = /* implementar metodo de leitura do PDF para extrair a assinatura */
 PAdESChecker checker = new PAdESChecker();
-List<SignatureInformations> signaturesInfo = checker.checkDetattachedSignature(content, signature);
+List<SignatureInformations> signaturesInfo = checker.checkDetachedSignature(content, signature);
 ]]></programlisting>
 
 	<para>

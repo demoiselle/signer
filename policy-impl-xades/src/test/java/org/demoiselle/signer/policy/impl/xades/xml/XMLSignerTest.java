@@ -95,7 +95,7 @@ public class XMLSignerTest {
 
 	}
 
-	// @Test
+	@Test
 	public void testEnvelopedFromString() {
 
 		try {
@@ -127,11 +127,11 @@ public class XMLSignerTest {
 
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica
-			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 			// indicando o local do arquivo XML
 			Document doc = xmlSigner.signEnveloped(xmlAsString);
 
-			String signedFile = "from_string_rt_signed.xml";
+			String signedFile = "from_string_signed.xml";
 			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer trans = tf.newTransformer();

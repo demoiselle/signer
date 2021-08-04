@@ -230,10 +230,6 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 		return false;
 	}
 
-	public boolean checkDetattached(byte[] content, byte[] signedData) {
-		//TODO não implementado
-		return false;
-	}
 
 	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithm, byte[] calculatedHashContent, byte[] signedData){
 		//TODO não implementado
@@ -245,11 +241,6 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 		return null;
 	}
 
-	public List<SignatureInformations> checkDetattachedSignature(
-			byte[] content, byte[] signedData) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	@Override
 	public void setPrivateKeyForTimeStamp(PrivateKey privateKeyToTimeStamp) {

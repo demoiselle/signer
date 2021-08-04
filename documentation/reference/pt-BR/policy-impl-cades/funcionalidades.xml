@@ -289,7 +289,7 @@ portanto somente os resumos com este algoritimo é que serão gerados e validado
 byte[] content = readContent("texto.txt"); /* implementar metodo de leitura de arquivo */
 byte[] signature = readContent("texto.pkcs7"); /* implementar metodo de leitura de arquivo */
 CAdESChecker checker = new CAdESChecker();
-List<SignatureInformations> signaturesInfo = checker.checkDetattachedSignature(content, signature);
+List<SignatureInformations> signaturesInfo = checker.checkDetachedSignature(content, signature);
 ]]></programlisting>
 
 	<para>
