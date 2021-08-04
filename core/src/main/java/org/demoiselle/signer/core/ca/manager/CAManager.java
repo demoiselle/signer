@@ -47,18 +47,13 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
-
 import javax.security.auth.x500.X500Principal;
-
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
-import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCA;
-import org.demoiselle.signer.core.ca.provider.ProviderSignaturePolicyRootCAFactory;
 import org.demoiselle.signer.core.util.MessagesBundle;
-import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -76,24 +71,6 @@ public class CAManager {
 
 	public static CAManager getInstance() {
 		return CAManager.instance;
-	}
-
-	public Collection<X509Certificate> getSignaturePolicyRootCAs(String policyOID) {
-		Collection<ProviderSignaturePolicyRootCA> providers = ProviderSignaturePolicyRootCAFactory.getInstance()
-			.factory(policyOID);
-		Collection<X509Certificate> result = new HashSet<>();
-
-		for (ProviderSignaturePolicyRootCA provider : providers) {
-			try {
-				result.addAll(provider.getCAs());
-			} catch (Exception error) {
-				// TODO: Nao foi possivel resgatar as raizes confiaveis
-				// de uma determinada politica
-				LOGGER.error(error.getMessage());
-			}
-		}
-
-		return result;
 	}
 
 	public boolean validateRootCAs(Collection<X509Certificate> cas, X509Certificate certificate) {

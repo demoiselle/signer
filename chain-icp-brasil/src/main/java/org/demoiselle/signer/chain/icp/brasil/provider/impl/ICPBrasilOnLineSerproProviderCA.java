@@ -239,23 +239,24 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 		ZipEntry localFile = null;
 		try {
 			while ((localFile = zin.getNextEntry()) != null) {
-				if (!localFile.isDirectory()) {
-					ByteArrayOutputStream out = new ByteArrayOutputStream();
-					byte[] b = new byte[512];
-					int len = 0;
-					while ((len = zin.read(b)) != -1)
-						out.write(b, 0, len);
-					ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
-					out.close();
-					X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X509")
-							.generateCertificate(is);
-					is.close();
-					result.add(certificate);
-				}
+				try {
+					if (!localFile.isDirectory()) {
+						ByteArrayOutputStream out = new ByteArrayOutputStream();
+						byte[] b = new byte[512];
+						int len = 0;
+						while ((len = zin.read(b)) != -1)
+							out.write(b, 0, len);
+						ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
+						out.close();
+						X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X509")
+								.generateCertificate(is);
+						is.close();
+						result.add(certificate);
+					}
+				} catch (CertificateException error) {
+					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate")+error.getMessage());
+				}				
 			}
-		} catch (CertificateException error) {
-			LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate")+error.getMessage());
-			throw new RuntimeException(chainMessagesBundle.getString("error.invalid.certificate"), error);
 		} catch (IOException error) {
 			LOGGER.error(chainMessagesBundle.getString("error.stream")+error.getMessage());
 			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
