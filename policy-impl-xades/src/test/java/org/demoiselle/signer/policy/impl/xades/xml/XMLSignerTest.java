@@ -22,6 +22,7 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.Base64;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
@@ -180,7 +181,7 @@ public class XMLSignerTest {
 
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica
-			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 			// indicando o local do arquivo XML
 			Document docSigned = xmlSigner.signEnveloped(doc);
 
@@ -232,7 +233,7 @@ public class XMLSignerTest {
 
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica
-			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 			// indicando o local do arquivo XML
 			Document docSigned = xmlSigner.signEnveloped(classLoader.getResourceAsStream(fileName));
 
@@ -283,7 +284,7 @@ public class XMLSignerTest {
 
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica
-			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 			// indicando o local do arquivo XML
 
 			Document docSigned = xmlSigner
@@ -339,7 +340,7 @@ public class XMLSignerTest {
 
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica
-			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 			// indicando o local do arquivo XML
 			Document doc = xmlSigner.signDetachedEnveloped(newFile.getPath());
 
@@ -359,23 +360,133 @@ public class XMLSignerTest {
 
 	}
 
-// Usa o Signer para leitura, funciona para windows e NeoID
-	private KeyStore getKeyStoreTokenBySigner() {
+	// @Test
+	public void testDetachedEnvelopedFromContent() {
 
 		try {
+			KeyStore ks = null;
 
-			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-			KeyStore keyStore = keyStoreLoader.getKeyStore();
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
 
-			return keyStore;
+			// arquivo
+			// ks = getKeyStoreFileBySigner();
 
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return null;
-		} finally {
+			// token
+			// ks = getKeyStoreToken();
+
+			String fileName = "teste_assinatura.xml";
+
+			ClassLoader classLoader = getClass().getClassLoader();
+			URL fileUri = classLoader.getResource(fileName);
+			File newFile = new File(fileUri.toURI());
+
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "teste".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
+			//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
+			Document doc = xmlSigner.signDetachedEnveloped(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)), fileName);
+			String signedFile = fileName.replaceFirst(".xml$", "_rt_detached_fromcontent_signed.xml");
+			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform(new DOMSource(doc), new StreamResult(os));
+
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			assertFalse(true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			assertFalse(true);
 		}
 
 	}
+	
+	 //@Test
+		public void testDetachedEnvelopedFromHash() {
+
+			try {
+				KeyStore ks = null;
+
+				// window ou NeoID
+				ks = getKeyStoreTokenBySigner();
+
+				// arquivo
+				// ks = getKeyStoreFileBySigner();
+
+				// token
+				// ks = getKeyStoreToken();
+
+				String fileName = "teste_assinatura.xml";
+
+				ClassLoader classLoader = getClass().getClassLoader();
+								
+				String alias = getAlias(ks);
+				XMLSigner xmlSigner = new XMLSigner();
+
+				// para token
+				xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+				// para arquivo
+				// quando certificado em arquivo, precisa informar a senha
+				// char[] senha = "teste".toCharArray();
+				// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+				xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+				// para mudar a politica
+				//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+				// indicando o local do arquivo XML
+				
+				java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+				byte[] hash = md.digest(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)));
+				System.out.println(Base64.toBase64String(hash));
+				Document doc = xmlSigner.signDetachedEnveloped(hash);
+				String signedFile = fileName.replaceFirst(".xml$", "_rt_detached_fromhash_signed.xml");
+				OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+				TransformerFactory tf = TransformerFactory.newInstance();
+				Transformer trans = tf.newTransformer();
+				trans.transform(new DOMSource(doc), new StreamResult(os));
+
+			} catch (TransformerException e) {
+				e.printStackTrace();
+				assertFalse(true);
+			} catch (Throwable e) {
+				e.printStackTrace();
+				assertFalse(true);
+			}
+
+	
+		}
+		
+	// Usa o Signer para leitura, funciona para windows e NeoID
+		private KeyStore getKeyStoreTokenBySigner() {
+
+			try {
+
+				KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+				KeyStore keyStore = keyStoreLoader.getKeyStore();
+
+				return keyStore;
+
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				return null;
+			} finally {
+			}
+
+		}
+
 
 	/**
 	 * 

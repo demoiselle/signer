@@ -438,10 +438,11 @@ public class PDFSignerTest {
 	public void testGerarBase64FromFile () throws IOException{
 		
 		String fileToConvert = "/";
-		
+				
 		byte[] fileConverted = readContent(fileToConvert);
 		String S = Base64.encodeBase64String(fileConverted);
-		
+
+
 		File file = new File("/");
 		FileOutputStream os = new FileOutputStream(file);
 		os.write(S.getBytes());

@@ -342,6 +342,24 @@ public class XMLSigner implements Signer {
 		}
 
 	}
+	
+	/**
+	 * Generates a destached XML signature from hash byte array
+	 * @param content 
+	 * @param fileName
+	 * @return
+	 * @throws XMLSignerException
+	 */
+	public Document signDetachedEnveloped(byte[] hash) throws XMLSignerException {
+		
+		if (hash == null || hash.length <= 0) {
+			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] hash"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] hash"));
+		}
+			this.detachedSignaturePack = true;
+			return this.signEnveloped(null, hash);
+	}
+	
 
 	/**
 	 * 
