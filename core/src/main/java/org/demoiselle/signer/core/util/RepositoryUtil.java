@@ -50,6 +50,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -97,10 +98,10 @@ public class RepositoryUtil {
         URLConnection uCon = null;
         InputStream is = null;
         try {
-        	logger.debug(coreMessagesBundle.getString("info.file.destination",destinationFile));
+        	logger.info(coreMessagesBundle.getString("info.file.destination",destinationFile));
         	url = new URL(sUrl);
             uCon = url.openConnection();
-            uCon.setConnectTimeout(10000);
+            uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
             is = uCon.getInputStream();
             outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
             buf = new byte[1024];
@@ -122,6 +123,7 @@ public class RepositoryUtil {
             throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found",sUrl), e);
         } catch (IOException e) {
             logger.error(coreMessagesBundle.getString("error.crl.open.connection",sUrl) + e.getMessage());
+            throw new CertificateValidatorException(coreMessagesBundle.getString("error.io", e.getMessage()), e);
         } finally {
             try {
                 if (is != null) {
@@ -163,7 +165,7 @@ public class RepositoryUtil {
         try {
             url = new URL(sUrl);
             uCon = url.openConnection();
-            uCon.setConnectTimeout(5000);
+            uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
             is = uCon.getInputStream();
             buf = new byte[1024];
             while ((ByteRead = is.read(buf)) != -1) {

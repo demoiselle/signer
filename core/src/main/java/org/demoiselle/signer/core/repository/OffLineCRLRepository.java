@@ -142,7 +142,7 @@ public class OffLineCRLRepository implements CRLRepository {
                 crl = new ICPBR_CRL(new FileInputStream(fileCRL));
                 if (crl.getCRL().getNextUpdate().before(new Date())) {
                     // Se estiver expirado, atualiza com a CRL mais nova
-                    logger.debug(coreMessagesBundle.getString("info.update.crl"));
+                    logger.info(coreMessagesBundle.getString("info.update.crl"));
                     RepositoryUtil.saveURL(uRLCRL, fileCRL);
                 }
             }else{

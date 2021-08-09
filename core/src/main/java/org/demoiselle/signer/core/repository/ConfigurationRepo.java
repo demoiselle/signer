@@ -165,6 +165,19 @@ public class ConfigurationRepo {
     public static final String ENV_PROXY_TYPE = "SIGNER_PROXY_TYPE";
     
     
+	/**
+     * System key to set timeout for CRL url connection
+     */
+    public static final String CRL_CONNECTION_TIMEOUT = "signer.crl.connection.timeout";
+
+    
+    /**
+     * System environment key set timeout for CRL url connection
+     */
+    public static final String ENV_CRL_CONNECTION_TIMEOUT = "SIGNER_CRL_CONNECTION_TIMEOUT";
+
+    
+    
     public static ConfigurationRepo instance = new ConfigurationRepo();
 
     
@@ -185,6 +198,8 @@ public class ConfigurationRepo {
     private Proxy.Type type = Proxy.Type.HTTP;
     private boolean isOnlineLPA = false;
     private boolean validateLCR = true;
+    // Default is 10 seconds
+    private int crlTimeOut = 10000;
 
     /**
      * Check for system variables. If there is, assign in class variables otherwise use default values.
@@ -274,6 +289,27 @@ public class ConfigurationRepo {
         } else {
             setOnlineLPA(Boolean.valueOf(lpa_online));
         }
+        
+        try {
+    		String varCrlTimeOut =  System.getenv(ENV_CRL_CONNECTION_TIMEOUT);    		
+            if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
+            	varCrlTimeOut = (String) System.getProperties().get(CRL_CONNECTION_TIMEOUT);
+            	if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
+            		LOGGER.debug("DEFAULT");
+            		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout",getCrlTimeOut()));
+            	}else {
+            		LOGGER.debug("KEY");
+            		setCrlTimeOut(Integer.valueOf(varCrlTimeOut));
+            	}
+            } else {
+            	LOGGER.debug("ENV");
+            	setCrlTimeOut(Integer.valueOf(varCrlTimeOut));
+            }            
+    	}catch (Exception e) {
+    		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout",getCrlTimeOut()));
+
+		}
+        
     }
 
     /**
@@ -427,5 +463,15 @@ public class ConfigurationRepo {
 
 	public void setValidateLCR(boolean validateLCR) {
 		this.validateLCR = validateLCR;
+		LOGGER.debug(coreMessagesBundle.getString("info.crl.validate",isValidateLCR()));
+	}
+
+	public int getCrlTimeOut() {
+		return crlTimeOut;
+	}
+
+	public void setCrlTimeOut(int crlTimeOut) {
+		this.crlTimeOut = crlTimeOut;
+		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout",getCrlTimeOut()));
 	}
 }
