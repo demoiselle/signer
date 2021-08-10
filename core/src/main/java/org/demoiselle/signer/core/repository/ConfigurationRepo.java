@@ -429,17 +429,21 @@ public class ConfigurationRepo {
 			InetAddress inetAddress = InetAddress.getByName(hostName);
 			SocketAddress socketAddress = new InetSocketAddress(inetAddress, Integer.parseInt(port));
 			this.proxy = new Proxy(type, socketAddress);
-			if (userName == null || userName.isEmpty()) {
-				Authenticator authenticator = new Authenticator() {
-					public PasswordAuthentication getPasswordAuthentication() {
-						return (new PasswordAuthentication(userName, password.toCharArray()));
-					}
-				};
-				Authenticator.setDefault(authenticator);
-				LOGGER.debug(coreMessagesBundle.getString("info.proxy.running",hostName,port, userName));
+			if (userName != null && !userName.isEmpty()) {
+				if (password != null && !password.isEmpty()) {
+					Authenticator authenticator = new Authenticator() {
+						public PasswordAuthentication getPasswordAuthentication() {
+							return (new PasswordAuthentication(userName, password.toCharArray()));
+						}
+					};
+					Authenticator.setDefault(authenticator);
+					LOGGER.debug(coreMessagesBundle.getString("info.proxy.running",hostName,port));
+				}else {
+					LOGGER.error(coreMessagesBundle.getString("error.proxy.password.null"));
+				}	
 	        }
 		} catch(UnknownHostException uhe) {
-			LOGGER.error("Error setting:"+hostName+port +"\n"+uhe.getMessage());
+			LOGGER.error(coreMessagesBundle.getString("error.proxy.host",hostName, port, uhe.getMessage()));
 			setProxy(Proxy.NO_PROXY);
 		}
 	}
