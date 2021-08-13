@@ -70,9 +70,9 @@ public class LPARepository {
 	 */
 	
 	public static boolean saveLocalLPA(final String urlConLPA, final String lpaName) {
-		
+		ConfigurationRepo config = ConfigurationRepo.getInstance();
 		try {
-			ConfigurationRepo config = ConfigurationRepo.getInstance();
+			
 			if (config.isOnlineLPA()) {
 				return true;
 			}
@@ -91,11 +91,13 @@ public class LPARepository {
 			is.close();
 			return true;
 		} catch (FileNotFoundException e) {
-			LOGGER.error(e.getMessage());
-			return false;
+			LOGGER.error(policyMessagesBundle.getString("error.lpa.local.exception", e.getMessage()));
+			config.setOnlineLPA(true);
+			return true;
 		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			return false;
+			LOGGER.error(policyMessagesBundle.getString("error.lpa.local.exception", e.getMessage()));
+			config.setOnlineLPA(true);
+			return true;
 		}		
 	}	
 	

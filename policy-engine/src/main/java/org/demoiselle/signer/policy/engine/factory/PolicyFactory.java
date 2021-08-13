@@ -37,12 +37,13 @@
 package org.demoiselle.signer.policy.engine.factory;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
 import javax.xml.parsers.ParserConfigurationException;
+
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
@@ -189,7 +190,7 @@ public class PolicyFactory {
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 	        listaPoliticaAssinatura.parse(primitive);
 	        return listaPoliticaAssinatura;
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
 			listaPoliticaAssinatura = loadLPACAdESUrl();			
 		}
@@ -212,11 +213,12 @@ public class PolicyFactory {
         try {
         	ConfigurationRepo config = ConfigurationRepo.getInstance();
         	Path pathLPA = Paths.get(config.getLpaPath(), "LPA_PAdES.der");
+        	LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
         	is = new FileInputStream(pathLPA.toString());
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 	        listaPoliticaAssinatura.parse(primitive);
 	        return listaPoliticaAssinatura;
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 			listaPoliticaAssinatura = loadLPAPAdESUrl();
 		}
@@ -246,7 +248,7 @@ public class PolicyFactory {
 			is = new FileInputStream(pathLPA.toString());
 			localLPAXML = XMLUtil.loadXMLDocument(is);
 	        return localLPAXML;
-		} catch (FileNotFoundException e) {
+		} catch (Exception e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
 			localLPAXML = loadLPAXAdESUrl();			
 		}
@@ -269,7 +271,9 @@ public class PolicyFactory {
     public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESUrl() {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
         String conURL = ListOfSubscriptionPolicies.CAdES_ITI_URL.getUrl();
-        try{        	
+        try{
+        	
+        	LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
         	InputStream is = Downloads.getInputStreamFromURL(conURL);
         	ASN1Primitive primitive = this.readANS1FromStream(is);
             listaPoliticaAssinatura.parse(primitive);      
@@ -302,7 +306,8 @@ public class PolicyFactory {
     private org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLocalLPACAdESUrl(){
     	org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
     	String conURL = ListOfSubscriptionPolicies.CAdES_LOCAL_URL.getUrl();
-        try{        	
+        try{        
+        	LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
         	InputStream is = Downloads.getInputStreamFromURL(conURL);
         	ASN1Primitive primitive = this.readANS1FromStream(is);
             listaPoliticaAssinatura.parse(primitive);      
@@ -329,7 +334,8 @@ public class PolicyFactory {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
         InputStream is;
         String conURL = ListOfSubscriptionPolicies.PAdES_ITI_URL.getUrl();
-		try {			
+		try {
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
 			is = Downloads.getInputStreamFromURL(conURL);
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 			is.close();
@@ -360,7 +366,8 @@ public class PolicyFactory {
         org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
         InputStream is;
         String conURL = ListOfSubscriptionPolicies.PAdES_LOCAL_URL.getUrl();
-		try {			
+		try {
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
 			is = Downloads.getInputStreamFromURL(conURL);
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 			is.close();
@@ -391,6 +398,7 @@ public class PolicyFactory {
         String conURL = ListOfSubscriptionPolicies.XAdES_ITI_URL.getUrl();
         
         try{        	
+        	LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
         	InputStream is = Downloads.getInputStreamFromURL(conURL);
         	localLPAXML = XMLUtil.loadXMLDocument(is);
             is.close();
@@ -424,7 +432,8 @@ public class PolicyFactory {
         InputStream is;
         Document localLPAXML = null;
         String conURL = ListOfSubscriptionPolicies.XAdES_LOCAL_URL.getUrl();
-		try {			
+		try {		
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
 			is = Downloads.getInputStreamFromURL(conURL);
 			localLPAXML = XMLUtil.loadXMLDocument(is);
 			is.close();
