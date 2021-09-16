@@ -37,13 +37,14 @@
 
 package org.demoiselle.signer.policy.impl.xades.util;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
@@ -107,11 +108,16 @@ public class DocumentUtils {
 	 * @return
 	 */
 	public static Document loadXMLDocument(String xmlFile) throws XMLSignerException {
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(true);
+		
+		
 		try {
-			return dbf.newDocumentBuilder()
-					.parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8")));
+			BufferedReader in = new BufferedReader(new FileReader(xmlFile));
+		    InputSource source = new InputSource(in);
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setNamespaceAware(true);
+			//return dbf.newDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8")));
+			Document docRet = dbf.newDocumentBuilder().parse(source);
+			return docRet;
 		} catch (UnsupportedEncodingException e) {
 			logger.error(xadesMessagesBundle.getString("erro.unsupported.encoding.exception", "UTF-8"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("erro.unsupported.encoding.exception", "UTF-8"));
@@ -216,11 +222,11 @@ public class DocumentUtils {
 	public static Element getDocumentData(Document doc) throws XMLSignerException {
 
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(true);
 		DocumentBuilder builder;
 		Document bodyDoc = null;
 		try {
-			builder = dbf.newDocumentBuilder();
-			dbf.setNamespaceAware(true);
+			builder = dbf.newDocumentBuilder();			
 			bodyDoc = builder.newDocument();
 			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
 			bodyDoc.appendChild(body);

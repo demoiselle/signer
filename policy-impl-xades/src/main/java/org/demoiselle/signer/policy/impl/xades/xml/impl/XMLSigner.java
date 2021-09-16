@@ -105,7 +105,7 @@ import org.w3c.dom.NodeList;
  */
 
 public class XMLSigner implements Signer {
-
+	
 	public static final String XMLNS = "http://www.w3.org/2000/09/xmldsig#";
 	public static final String XMLNS_DS = "xmlns:ds";
 	public static final String XMLNS_XADES = "xmlns:xades";
@@ -342,24 +342,6 @@ public class XMLSigner implements Signer {
 		}
 
 	}
-	
-	/**
-	 * Generates a destached XML signature from hash byte array
-	 * @param content 
-	 * @param fileName
-	 * @return
-	 * @throws XMLSignerException
-	 */
-	public Document signDetachedEnveloped(byte[] hash) throws XMLSignerException {
-		
-		if (hash == null || hash.length <= 0) {
-			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] hash"));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] hash"));
-		}
-			this.detachedSignaturePack = true;
-			return this.signEnveloped(null, hash);
-	}
-	
 
 	/**
 	 * 
@@ -416,9 +398,9 @@ public class XMLSigner implements Signer {
 		Element objectTag = signedObject(certificate, doc);
 
 		Init.init();
-		Canonicalizer c14n;
+		Canonicalizer c14n =null;
 		try {
-			c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE);
+			c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS);
 		} catch (InvalidCanonicalizerException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
@@ -439,7 +421,7 @@ public class XMLSigner implements Signer {
 		doc.getElementsByTagName("ds:SignedInfo").item(numSignatures).appendChild(sigRefTag);
 
 		try {
-			c14n = Canonicalizer.getInstance(CanonicalizationMethod.INCLUSIVE);
+			c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS);
 		} catch (InvalidCanonicalizerException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
@@ -540,7 +522,7 @@ public class XMLSigner implements Signer {
 			return Base64.toBase64String(digestValue);
 		} catch (Exception e) {
 			logger.error(xadesMessagesBundle.getString("error.cert.digest"));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.cert.digest"));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.cert.digest",e.getMessage()));
 
 		}
 	}
@@ -650,10 +632,12 @@ public class XMLSigner implements Signer {
 
 		Element sigDigMet = doc.createElementNS(XMLNS, "ds:DigestMethod");
 		sigDigMet.setAttribute("Algorithm", "http://www.w3.org/2000/09/xmldsig#sha1");
+		//sigDigMet.setAttribute("Algorithm", "http://www.w3.org/2000/09/xmldsig#sha256");
 		sigCertDig.appendChild(sigDigMet);
 
 		Element sigDigValue = doc.createElementNS(XMLNS, "ds:DigestValue");
 		sigDigValue.setTextContent(getCertificateDigest(cert, "SHA1"));
+		//sigDigValue.setTextContent(getCertificateDigest(cert, "SHA-256"));
 		sigCertDig.appendChild(sigDigValue);
 
 		Element sigIssuerSerial = doc.createElementNS(XAdESv1_3_2, "xades:IssuerSerial");
@@ -678,7 +662,7 @@ public class XMLSigner implements Signer {
 		sigProp.appendChild(sigSigDataObjeProp);
 
 		Element sigDataObjFormat = doc.createElementNS(XAdESv1_3_2, "xades:DataObjectFormat");
-		sigDataObjFormat.setAttribute("ObjectReference", "#r-id-1");
+		sigDataObjFormat.setAttribute("ObjectReference", "#r"+id);
 		sigSigDataObjeProp.appendChild(sigDataObjFormat);
 
 		/*
@@ -739,8 +723,8 @@ public class XMLSigner implements Signer {
 		if (params.containsKey("id")) {
 			referenceTag.setAttribute("Id", params.get("id"));
 		}
-		referenceTag.setAttribute("Type", params.get("type"));
-		referenceTag.setAttribute("URI", params.get("uri"));
+		if (params.containsKey("type")) referenceTag.setAttribute("Type", params.get("type"));
+		if (params.containsKey("uri")) referenceTag.setAttribute("URI", params.get("uri"));
 		// sigInfTag.appendChild(referenceTag );
 
 		if (!params.containsKey("no_transforms")) {
@@ -811,7 +795,8 @@ public class XMLSigner implements Signer {
 		signatureTag.appendChild(sigInfTag);
 
 		Element canonicalizationMethodTag = bodyDoc.createElementNS(XMLNS, "ds:CanonicalizationMethod");
-		canonicalizationMethodTag.setAttribute("Algorithm", "http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
+		//canonicalizationMethodTag.setAttribute("Algorithm", "http://www.w3.org/TR/2001/REC-xml-c14n-20010315");
+		canonicalizationMethodTag.setAttribute("Algorithm", "http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
 
 		sigInfTag.appendChild(canonicalizationMethodTag);
 
@@ -822,7 +807,7 @@ public class XMLSigner implements Signer {
 		HashMap<String, String> param = new HashMap<String, String>();
 		param.put("type", "");
 		param.put("uri", "");
-		param.put("id", "r-id-1");
+		param.put("id", "r-"+id);
 		param.put("text", "not(ancestor-or-self::ds:Signature)");
 		param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
 		param.put("digAlg", AlgorithmsValues.getSignatureDigest(getSignatureDigest()));
@@ -842,7 +827,7 @@ public class XMLSigner implements Signer {
 					Canonicalizer.ALGO_ID_C14N_WITH_COMMENTS);
 			param.put("type", "");
 			param.put("uri", "");
-			param.put("id", "r-id-1");
+			param.put("id", "r"+id);
 			param.put("text", "not(ancestor-or-self::ds:Signature)");
 			param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
 			param.put("digAlg", AlgorithmsValues.getSignatureDigest(getSignatureDigest()));
@@ -985,5 +970,4 @@ public class XMLSigner implements Signer {
 	public void setCertificateChainToTimestamp(Certificate certificateChainToTimestamp[]) {
 		this.certificateChainToTimestamp = certificateChainToTimestamp;
 	}
-
 }
