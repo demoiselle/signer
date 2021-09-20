@@ -690,6 +690,7 @@ public class XMLSigner implements Signer {
 	private Element createSignatureHashReference(Document doc, byte[] signedTagData) throws XMLSignerException {
 
 		HashMap<String, String> param = new HashMap<String, String>();
+		param.put("id", "sigref"+id);
 		param.put("type", Constants.SignedProperties);
 		param.put("uri", "#xades-" + id);
 		param.put("alg", "http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
@@ -741,10 +742,14 @@ public class XMLSigner implements Signer {
 					transformTag.appendChild(xPathTag);
 				}
 			}
-
-			if (params.containsKey("transAlg")) {
+			if (params.containsKey("transAlg1")) {
 				Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
-				transAlg.setAttribute("Algorithm", "http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
+				transAlg.setAttribute("Algorithm", params.get("transAlg1"));
+				transformsTag.appendChild(transAlg);
+			}
+			if (params.containsKey("transAlg2")) {
+				Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
+				transAlg.setAttribute("Algorithm", params.get("transAlg2"));
 				transformsTag.appendChild(transAlg);
 			}
 		}
@@ -805,7 +810,7 @@ public class XMLSigner implements Signer {
 		sigInfTag.appendChild(signatureMethodTag);
 
 		HashMap<String, String> param = new HashMap<String, String>();
-		param.put("type", "");
+		//param.put("type", "");
 		param.put("uri", "");
 		param.put("id", "r-"+id);
 		param.put("text", "not(ancestor-or-self::ds:Signature)");
@@ -814,7 +819,7 @@ public class XMLSigner implements Signer {
 
 		if (detachedSignaturePack) {
 			param.put("no_transforms", "true");
-			param.put("type", "");
+			//param.put("type", "");
 			param.put("uri", detachedFileName);
 			param.put("digVal", Base64.toBase64String(detachedHashToSign));
 			Element referenceTag = createReferenceTag(bodyDoc, param);
@@ -825,13 +830,14 @@ public class XMLSigner implements Signer {
 			Element docData = DocumentUtils.getDocumentData(bodyDoc);
 			byte[] docHash = DocumentUtils.getShaCanonizedValue(getSignatureDigest(), docData,
 					Canonicalizer.ALGO_ID_C14N_WITH_COMMENTS);
-			param.put("type", "");
+			//param.put("type", "");
 			param.put("uri", "");
 			param.put("id", "r"+id);
 			param.put("text", "not(ancestor-or-self::ds:Signature)");
 			param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
 			param.put("digAlg", AlgorithmsValues.getSignatureDigest(getSignatureDigest()));
-			param.put("transAlg", "http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
+			param.put("transAlg1", "http://www.w3.org/2000/09/xmldsig#enveloped-signature");
+			param.put("transAlg2", "http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
 			param.put("digVal", Base64.toBase64String(docHash));
 			docHash = new byte[0];
 			Element referenceTag = createReferenceTag(bodyDoc, param);

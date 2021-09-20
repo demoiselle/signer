@@ -53,6 +53,16 @@
 			<artifactId>commons-io</artifactId>
 			<version>2.6</version>
 		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>chain-icp-brasil</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>chain-icp-brasil-homolog</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 </project>
