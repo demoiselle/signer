@@ -413,7 +413,7 @@ public class XMLSignerTest {
 
 	}
 	
-	 //@Test
+	 /* @Test
 		public void testDetachedEnvelopedFromHash() {
 
 			try {
@@ -468,7 +468,7 @@ public class XMLSignerTest {
 
 	
 		}
-		
+	*/	
 	// Usa o Signer para leitura, funciona para windows e NeoID
 		private KeyStore getKeyStoreTokenBySigner() {
 
