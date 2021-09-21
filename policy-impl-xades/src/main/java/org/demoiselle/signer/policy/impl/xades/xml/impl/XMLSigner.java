@@ -732,6 +732,12 @@ public class XMLSigner implements Signer {
 			Element transformsTag = doc.createElementNS(XMLNS, "ds:Transforms");
 			referenceTag.appendChild(transformsTag);
 
+			if (params.containsKey("transAlg1")) {
+				Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
+				transAlg.setAttribute("Algorithm", params.get("transAlg1"));
+				transformsTag.appendChild(transAlg);
+			}
+			
 			if (params.containsKey("alg")) {
 				Element transformTag = doc.createElementNS(XMLNS, "ds:Transform");
 				transformTag.setAttribute("Algorithm", params.get("alg"));
@@ -742,11 +748,7 @@ public class XMLSigner implements Signer {
 					transformTag.appendChild(xPathTag);
 				}
 			}
-			if (params.containsKey("transAlg1")) {
-				Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
-				transAlg.setAttribute("Algorithm", params.get("transAlg1"));
-				transformsTag.appendChild(transAlg);
-			}
+			
 			if (params.containsKey("transAlg2")) {
 				Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
 				transAlg.setAttribute("Algorithm", params.get("transAlg2"));
@@ -829,7 +831,7 @@ public class XMLSigner implements Signer {
 		} else {
 			Element docData = DocumentUtils.getDocumentData(bodyDoc);
 			byte[] docHash = DocumentUtils.getShaCanonizedValue(getSignatureDigest(), docData,
-					Canonicalizer.ALGO_ID_C14N_WITH_COMMENTS);
+					"http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
 			//param.put("type", "");
 			param.put("uri", "");
 			param.put("id", "r"+id);

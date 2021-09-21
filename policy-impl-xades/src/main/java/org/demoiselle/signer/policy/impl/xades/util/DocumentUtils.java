@@ -117,6 +117,7 @@ public class DocumentUtils {
 			dbf.setNamespaceAware(true);
 			//return dbf.newDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8")));
 			Document docRet = dbf.newDocumentBuilder().parse(source);
+			docRet.setXmlStandalone(true);
 			return docRet;
 		} catch (UnsupportedEncodingException e) {
 			logger.error(xadesMessagesBundle.getString("erro.unsupported.encoding.exception", "UTF-8"));
@@ -147,7 +148,9 @@ public class DocumentUtils {
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			dbFactory.setNamespaceAware(true);
-			return dbFactory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlContent));
+			Document retDoc = dbFactory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlContent));
+			retDoc.setXmlStandalone(true);
+			return retDoc;
 		} catch (SAXException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
@@ -173,7 +176,9 @@ public class DocumentUtils {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
-			return dbf.newDocumentBuilder().parse(new InputSource(is));
+			Document retDoc = dbf.newDocumentBuilder().parse(new InputSource(is));
+			retDoc.setXmlStandalone(true);
+			return retDoc;
 		} catch (SAXException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
@@ -199,7 +204,9 @@ public class DocumentUtils {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
-			return dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xmlString)));
+			Document retDoc = dbf.newDocumentBuilder().parse(new InputSource(new StringReader(xmlString)));
+			retDoc.setXmlStandalone(true);
+			return retDoc;
 		} catch (SAXException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
@@ -220,24 +227,27 @@ public class DocumentUtils {
 	 * @throws XMLSignerException
 	 */
 	public static Element getDocumentData(Document doc) throws XMLSignerException {
-
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		dbf.setNamespaceAware(true);
-		DocumentBuilder builder;
-		Document bodyDoc = null;
+		
 		try {
+			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			dbf.setNamespaceAware(true);
+			DocumentBuilder builder;
+			Document bodyDoc = null;
 			builder = dbf.newDocumentBuilder();			
 			bodyDoc = builder.newDocument();
+			bodyDoc.setXmlStandalone(true);
 			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
 			bodyDoc.appendChild(body);
 			NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
-			for (int i = 0; i < signatures.getLength(); i++)
+			for (int i = 0; i < signatures.getLength(); i++) {
 				signatures.item(i).getParentNode().removeChild(signatures.item(i));
+			}			
+			return bodyDoc.getDocumentElement();
 		} catch (ParserConfigurationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 		}
-		return bodyDoc.getDocumentElement();
+		
 	}
 
 	/**
@@ -250,8 +260,9 @@ public class DocumentUtils {
 	 */
 	public static byte[] getShaCanonizedValue(String alg, Node xml, String canonical) throws XMLSignerException {
 		Init.init();
-		Canonicalizer c14n;
+		Canonicalizer c14n = null;
 		try {
+			
 			c14n = Canonicalizer.getInstance(canonical);
 		} catch (InvalidCanonicalizerException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
