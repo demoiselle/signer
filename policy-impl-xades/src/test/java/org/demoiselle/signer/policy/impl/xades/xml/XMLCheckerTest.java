@@ -55,14 +55,13 @@ public class XMLCheckerTest {
 	public void testWithFile() {
 
 		try {
-			String fileName = "teste_assinatura_rt_signed.xml";
-			
+			String fileName = "502420025_rb_signed.xml";
+
+			//String fileName = "502420025_rb_signed_rb_signed.xml";
 			ClassLoader classLoader = getClass().getClassLoader();
 			URL fileUri = classLoader.getResource(fileName);
 			File newFile = new File(fileUri.toURI());
 
-//	        InputStreamReader streamReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
-//	        BufferedReader reader = new BufferedReader(streamReader); 
 
 			// Cache LCR
 			// ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
@@ -70,17 +69,6 @@ public class XMLCheckerTest {
 			// configlcr.setCrlPath("/home/{usuario}/lcr_cache/");
 			// configlcr.setOnline(false);
 
-			/*
-			 * cache interno CMSSignedData cms = new CMSSignedData(new
-			 * CMSProcessableByteArray(buf),contents.getBytes()); SignerInformation
-			 * signerInfo = (SignerInformation)
-			 * cms.getSignerInfos().getSigners().iterator().next(); X509CertificateHolder
-			 * certificateHolder = (X509CertificateHolder)
-			 * cms.getCertificates().getMatches(signerInfo.getSID()) .iterator().next();
-			 * X509Certificate varCert = new
-			 * JcaX509CertificateConverter().getCertificate(certificateHolder);
-			 * LcrManagerSync.getInstance().update(varCert);
-			 */
 
 			XMLChecker xadesChecker = new XMLChecker();
 			if (xadesChecker.check(true, newFile.getPath())) {
@@ -122,6 +110,17 @@ public class XMLCheckerTest {
 					assertTrue(true);
 				}
 			} else {
+				List<XMLSignatureInformations> results = new ArrayList<XMLSignatureInformations>();
+				results = xadesChecker.getSignaturesInfo();
+				if (!results.isEmpty()) {
+					for (XMLSignatureInformations sis : results) {
+						for (String valErr : sis.getValidatorErrors()) {
+							System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
+							System.err.println(valErr);
+						}
+					}
+				}
+
 				assertTrue(false);
 			}
 

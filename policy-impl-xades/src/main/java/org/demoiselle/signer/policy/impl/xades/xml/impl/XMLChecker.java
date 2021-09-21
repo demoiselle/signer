@@ -433,15 +433,18 @@ public class XMLChecker implements Checker{
 
 						if (!value.equals(hashValue)) {
 							validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.invalid"));
+							logger.error(xadesMessagesBundle.getString("error.xml.hash.invalid"));
 							signatureOk = false;
 						}
 					} else {
+						logger.error(xadesMessagesBundle.getString("error.xml. hash.not.found"));
 						validationErrors.add(xadesMessagesBundle.getString("error.xml. hash.not.found"));
 					}
 				}
 			}
 		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml. hash.not.found"));
+			logger.error(xadesMessagesBundle.getString("error.xml. hash.not.found"));
 			return false;
 		}
 		return signatureOk;
@@ -467,6 +470,7 @@ public class XMLChecker implements Checker{
 				String hashValue = Base64.toBase64String(docHash);
 				if (!value.equals(hashValue)) {
 					validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.invalid"));
+					logger.error(xadesMessagesBundle.getString("error.xml.hash.invalid"));
 				}
 			}
 		}
@@ -476,10 +480,15 @@ public class XMLChecker implements Checker{
 	private Element getSignatureElement(String tagName, Element parent, boolean mandatory) {
 		NodeList value = parent.getElementsByTagNameNS(XMLNS, tagName);
 		if (value.getLength() == 0) {
-			if (mandatory)
+			if (mandatory) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
-			else
+				logger.error(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
+			}				
+			else {
 				validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
+				logger.warn(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
+			}	
+				
 		}
 		return (Element) value.item(0);
 	}
@@ -487,18 +496,26 @@ public class XMLChecker implements Checker{
 	private Element getXadesElement(String tagName, Element parent, boolean mandatory) {
 		if (parent == null) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.parent.element.not.found", tagName));
+			logger.error(xadesMessagesBundle.getString("error.xml.parent.element.not.found", tagName));
 			return null;
 		}
 		if (tagName == null) {
-			xadesMessagesBundle.getString("error.xml.invalid.name", parent.getTagName());
+			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.name", parent.getTagName()));
+			logger.error(xadesMessagesBundle.getString("error.xml.invalid.name", parent.getTagName()));
 			return null;
 		}
 		NodeList value = parent.getElementsByTagNameNS(XAdESv1_3_2, tagName);
 		if (value.getLength() == 0) {
-			if (mandatory)
+			if (mandatory) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
-			else
+				logger.error(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
+			}
+				
+			else {
 				validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
+				logger.warn(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
+			}
+				
 			return null;
 		}
 		return (Element) value.item(0);
@@ -507,10 +524,16 @@ public class XMLChecker implements Checker{
 	private String getAttribute(Element node, String attr, boolean mandatory) {
 		String attribute = node.getAttribute(attr);
 		if (attr.isEmpty()) {
-			if (mandatory)
+			if (mandatory) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.element.not.found", attr));
-			else
+				logger.error(xadesMessagesBundle.getString("error.xml.element.not.found", attr));
+			}
+				
+			else {
 				validationWaring.add(xadesMessagesBundle.getString("error.xml.element.not.found", attr));
+				logger.warn(xadesMessagesBundle.getString("error.xml.element.not.found", attr));
+			}
+				
 		}
 		return attribute;
 	}
@@ -526,7 +549,7 @@ public class XMLChecker implements Checker{
 			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0));
 		} catch (InvalidCanonicalizerException | CanonicalizationException e1) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.data.invalid", digestMethod));
-			logger.debug(xadesMessagesBundle.getString("error.xml.hash.data.invalid", digestMethod));
+			logger.error(xadesMessagesBundle.getString("error.xml.hash.data.invalid", digestMethod));
 			return false;
 		}
 		MessageDigest md = null;
@@ -538,15 +561,17 @@ public class XMLChecker implements Checker{
 				byte[] signatureDigestValue = md.digest(canonicalized);
 				if (!Base64.toBase64String(signatureDigestValue).equals(digestValue)) {
 					validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.invalid"));
+					logger.error(xadesMessagesBundle.getString("error.xml.hash.invalid"));
 					return false;
 				}
 			} else {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
-				logger.debug(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
+				logger.error(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
 				return false;
 			}
 		} catch (NoSuchAlgorithmException e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
+			logger.error(xadesMessagesBundle.getString("error.xml.invalid.digest.method", digestMethod));
 			return false;
 		}
 		return true;
@@ -568,6 +593,7 @@ public class XMLChecker implements Checker{
 
 		if (xPathTransformAlgorithm.isEmpty()) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", digestMethod));
+			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", digestMethod));
 		}
 
 		try {
@@ -576,11 +602,12 @@ public class XMLChecker implements Checker{
 					docData, xPathTransformAlgorithm);
 			if (!Base64.toBase64String(docHash).equals(digestValue)) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.digest.invalid"));
+				logger.error(xadesMessagesBundle.getString("error.xml.digest.invalid"));
 				return false;
 			}
 		} catch (Exception e) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.digest.invalid"));
-			logger.debug(xadesMessagesBundle.getString("error.xml.digest.invalid"));
+			logger.error(xadesMessagesBundle.getString("error.xml.digest.invalid"));
 			return false;
 		}
 
@@ -596,7 +623,6 @@ public class XMLChecker implements Checker{
 
 	private boolean verifyHash(Element signatureTag, Element signatureInfoTag, String signatureValue,
 			X509Certificate cert) {
-
 		try {
 			Element canonicalizationMethodTag = (Element) signatureTag
 					.getElementsByTagNameNS(XMLNS, "CanonicalizationMethod").item(0);
@@ -650,6 +676,7 @@ public class XMLChecker implements Checker{
 			pV.valDate(varCert);
 		} catch (CertificateValidatorException cve) {
 			validationWaring.add(cve.getMessage());
+			logger.warn(cve.getMessage());
 		}
 
 	}
@@ -659,6 +686,7 @@ public class XMLChecker implements Checker{
 		boolean isValidAlgorithm = false;
 		if (policyOID == null) {
 			validationWaring.add(xadesMessagesBundle.getString("error.xml.policy.null"));
+			logger.warn(xadesMessagesBundle.getString("error.xml.policy.null"));
 		}
 		if (policyOID.contains("urn:oid:")) {
 			policyOID = policyOID.substring(policyOID.lastIndexOf(":") + 1, policyOID.length());
@@ -668,7 +696,7 @@ public class XMLChecker implements Checker{
 		XMLPolicyValidator xmlPolicyValidator = new XMLPolicyValidator(policyDoc);
 
 		if (!xmlPolicyValidator.validate()) {
-			logger.error(xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
+			logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
 			validationWaring
 					.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
 		}
@@ -684,6 +712,7 @@ public class XMLChecker implements Checker{
 						isValidAlgorithm = true;
 					} else {
 						validationErrors.add(xadesMessagesBundle.getString("error.xml.size.not.allowed"));
+						logger.error(xadesMessagesBundle.getString("error.xml.size.not.allowed"));
 					}
 				}
 				break;
@@ -691,6 +720,7 @@ public class XMLChecker implements Checker{
 
 		if (!isValidAlgorithm) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.invalid.algorithm", policyOID));
+			logger.error(xadesMessagesBundle.getString("error.xml.invalid.algorithm", policyOID));
 		}
 		return xmlPolicyValidator.getXmlSignaturePolicy();
 	}
@@ -713,13 +743,15 @@ public class XMLChecker implements Checker{
 
 			if (!AlgorithmsValues.isCanonicalMethods(canonicalizationMethod)) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.canonicalizer.not.allowed"));
+				logger.error(xadesMessagesBundle.getString("error.xml.canonicalizer.not.allowed"));
 			}
 
 			Signature sig = Signature.getInstance(signatureMethod);
 			sig.initVerify(cert);
 			sig.update(dh);
 			if (!sig.verify(sigValue)) {
-				validationErrors.add("Resumo da assinatura não confere");
+				validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.hash"));
+				logger.error(xadesMessagesBundle.getString("error.xml.signature.hash"));
 			}
 
 		} catch (InvalidCanonicalizerException e) {
@@ -745,19 +777,25 @@ public class XMLChecker implements Checker{
 	private boolean verify(Document doc) {
 		boolean signatureOK = false;
 		NodeList root = doc.getChildNodes();
-
 		NodeList signatureListTags = doc.getElementsByTagNameNS(XMLNS, "Signature");
 
 		if (root.item(0) == signatureListTags.item(0)) {
 			if (!isDetached) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.detached.content"));
 				logger.error(xadesMessagesBundle.getString("error.xml.detached.content"));
+				XMLSignatureInformations sigInf = new XMLSignatureInformations();
+				sigInf.setValidatorErrors(validationErrors);
+				signaturesInfo.add(sigInf);
 				return signatureOK;
 			}
 		}
 
 		if (signatureListTags.getLength() < 1) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.not.found"));
+			logger.error(xadesMessagesBundle.getString("error.xml.signature.not.found"));
+			XMLSignatureInformations sigInf = new XMLSignatureInformations();
+			sigInf.setValidatorErrors(validationErrors);
+			signaturesInfo.add(sigInf);
 			return signatureOK;
 		} else {
 			int sizesigList = signatureListTags.getLength();

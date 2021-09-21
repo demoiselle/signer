@@ -41,16 +41,16 @@ public class XMLSignerTest {
 			KeyStore ks = null;
 
 			// window ou NeoID
-			ks = getKeyStoreTokenBySigner();
+			//ks = getKeyStoreTokenBySigner();
 
 			// arquivo
-			// ks = getKeyStoreFileBySigner();
+			 ks = getKeyStoreFileBySigner();
 
 			// token
 			// ks = getKeyStoreToken();
 
 			String fileName = "teste_assinatura.xml";
-
+			
 			ClassLoader classLoader = getClass().getClassLoader();
 			URL fileUri = classLoader.getResource(fileName);
 			File newFile = new File(fileUri.toURI());
@@ -63,24 +63,24 @@ public class XMLSignerTest {
 
 			// para arquivo
 			// quando certificado em arquivo, precisa informar a senha
-			// char[] senha = "teste".toCharArray();
+			// char[] senha = "123456".toCharArray();
 			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica de Assinatura
-			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RB_XADES_2_4.getOID());
 			
-			/*
+			
 			xmlSigner.setSignatureAlgorithm(Constants.SHA512withRSA);
 			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
 				xmlSigner.setSignatureAlgorithm(Constants.SHA256withRSA);
 				
-			}*/	
+			}	
 			
 			// indicando o local do arquivo XML
 			Document doc = xmlSigner.signEnveloped(true, newFile.getPath());
-
-			String signedFile = fileName.replaceFirst(".xml$", "_rt_signed.xml");
+			doc.setXmlStandalone(true);
+			String signedFile = fileName.replaceFirst(".xml$", "_rb_signed.xml");
 			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
 			TransformerFactory tf = TransformerFactory.newInstance();
 			Transformer trans = tf.newTransformer();
@@ -413,7 +413,7 @@ public class XMLSignerTest {
 
 	}
 	
-	 /* @Test
+	 //@Test
 		public void testDetachedEnvelopedFromHash() {
 
 			try {
@@ -468,7 +468,7 @@ public class XMLSignerTest {
 
 	
 		}
-	*/	
+	
 	// Usa o Signer para leitura, funciona para windows e NeoID
 		private KeyStore getKeyStoreTokenBySigner() {
 
@@ -532,7 +532,7 @@ public class XMLSignerTest {
 		try {
 			// informar o caminho e nome do arquivo
 			File filep12 = new File("/");
-
+			
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
 			// Informar a senha
 			KeyStore keystore = loader.getKeyStore("senha");
@@ -555,9 +555,9 @@ public class XMLSignerTest {
 			e = ks.aliases();
 			while (e.hasMoreElements()) {
 				alias = e.nextElement();
-				System.out.println("alias..............: " + alias);
-				System.out.println("iskeyEntry" + ks.isKeyEntry(alias));
-				System.out.println("containsAlias" + ks.containsAlias(alias));
+				//System.out.println("alias..............: " + alias);
+			//	System.out.println("iskeyEntry" + ks.isKeyEntry(alias));
+			//	System.out.println("containsAlias" + ks.containsAlias(alias));
 				// System.out.println(""+ks.getKey(alias, null));
 				certificates = ks.getCertificateChain(alias);
 			}
