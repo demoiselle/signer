@@ -239,11 +239,10 @@ public class DocumentUtils {
 			bodyDoc.setXmlStandalone(true);
 			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
 			bodyDoc.appendChild(body);
-			//NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
-			//NodeList signatureListTags = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
 			NodeList signatures = bodyDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
-			for (int i = 0; i < signatures.getLength(); i++) {
-				signatures.item(i).getParentNode().removeChild(signatures.item(i));
+			int qtSig = signatures.getLength();
+			for (int i = 0; i < qtSig; i++) {
+				signatures.item(0).getParentNode().removeChild(signatures.item(0));
 			}			
 			return bodyDoc.getDocumentElement();
 		} catch (ParserConfigurationException e) {
