@@ -50,6 +50,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import javax.xml.crypto.dsig.XMLSignature;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -238,7 +239,9 @@ public class DocumentUtils {
 			bodyDoc.setXmlStandalone(true);
 			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
 			bodyDoc.appendChild(body);
-			NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
+			//NodeList signatures = bodyDoc.getElementsByTagName("ds:Signature");
+			//NodeList signatureListTags = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
+			NodeList signatures = bodyDoc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
 			for (int i = 0; i < signatures.getLength(); i++) {
 				signatures.item(i).getParentNode().removeChild(signatures.item(i));
 			}			

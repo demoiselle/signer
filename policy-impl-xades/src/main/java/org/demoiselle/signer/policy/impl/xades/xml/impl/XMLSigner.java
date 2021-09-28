@@ -184,7 +184,7 @@ public class XMLSigner implements Signer {
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.not.valid.file"));
 		}
 		Document varDocToSing = DocumentUtils.loadXMLDocument(fileNameSource);
-
+		
 		return this.signEnveloped(varDocToSing, null);
 	}
 
@@ -416,6 +416,8 @@ public class XMLSigner implements Signer {
 		Element sigTag = (Element) doc.getElementsByTagName("ds:Signature").item(numSignatures);
 
 		Element objectTag = signedObject(certificate, doc);
+		
+		
 
 		Init.init();
 		Canonicalizer c14n =null;
@@ -481,6 +483,7 @@ public class XMLSigner implements Signer {
 
 		Element signValueTag = doc.createElementNS(XMLNS, "ds:SignatureValue");
 		signValueTag.setAttribute("Id", "value-" + id);
+		signValueTag.setIdAttribute("Id", true);
 		String hash = Base64.toBase64String(docSignature);
 		String result = hash;
 
@@ -630,6 +633,7 @@ public class XMLSigner implements Signer {
 
 		Element sigProp = doc.createElementNS(XAdESv1_3_2, "xades:SignedProperties");
 		sigProp.setAttribute("Id", "xades-" + id);
+		sigProp.setIdAttribute("Id", true);
 		sigQualify.appendChild(sigProp);
 
 		Element sigSignedProp = doc.createElementNS(XAdESv1_3_2, "xades:SignedSignatureProperties");
@@ -743,6 +747,7 @@ public class XMLSigner implements Signer {
 		Element referenceTag = doc.createElementNS(XMLNS, "ds:Reference");
 		if (params.containsKey("id")) {
 			referenceTag.setAttribute("Id", params.get("id"));
+			referenceTag.setIdAttribute("Id", true);
 		}
 		if (params.containsKey("type")) referenceTag.setAttribute("Type", params.get("type"));
 		if (params.containsKey("uri")) referenceTag.setAttribute("URI", params.get("uri"));
@@ -817,6 +822,7 @@ public class XMLSigner implements Signer {
 		signatureTag.setAttributeNS("http://www.w3.org/2000/xmlns/", XMLNS_DS, XMLNS);
 		signatureTag.setAttributeNS("http://www.w3.org/2000/xmlns/", XMLNS_XADES, XAdESv1_3_2);
 		signatureTag.setAttribute("Id", id);
+		signatureTag.setIdAttribute("Id",true);
 
 		Element sigInfTag = bodyDoc.createElementNS(XMLNS, "ds:SignedInfo");
 		signatureTag.appendChild(sigInfTag);

@@ -56,6 +56,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.xml.crypto.dsig.XMLSignature;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.xml.security.Init;
 import org.apache.xml.security.c14n.CanonicalizationException;
@@ -112,7 +114,6 @@ public class XMLChecker implements Checker{
 	private boolean isDetached = false;
 	private List<XMLSignatureInformations> signaturesInfo = new ArrayList<XMLSignatureInformations>();
 	private static MessagesBundle xadesMessagesBundle = new MessagesBundle();
-	public static final String XMLNS = "http://www.w3.org/2000/09/xmldsig#";
 	public static final String XAdESv1_3_2 = "http://uri.etsi.org/01903/v1.3.2#";
 	private Timestamp varTimestampToSignature = null;
 	private LinkedList<String> validationErrors = new LinkedList<String>();
@@ -419,7 +420,7 @@ public class XMLChecker implements Checker{
 
 			Element signatureInfoTag = getSignatureElement("SignedInfo", (Element) signature.getChildNodes().item(0),
 					true);
-			NodeList references = signatureInfoTag.getElementsByTagNameNS(XMLNS, "Reference");
+			NodeList references = signatureInfoTag.getElementsByTagNameNS(XMLSignature.XMLNS, "Reference");
 			for (int i = 0; i < references.getLength(); i++) {
 				if (((Element) references.item(i)).getAttribute("Type").isEmpty()) {
 					Element digestMethod = getSignatureElement("DigestMethod", ((Element) references.item(i)), true);
@@ -462,7 +463,7 @@ public class XMLChecker implements Checker{
 		boolean signatureOk = true;
 		verify(signature);
 		Element signatureInfoTag = getSignatureElement("SignedInfo", (Element) signature.getChildNodes().item(0), true);
-		NodeList references = signatureInfoTag.getElementsByTagNameNS(XMLNS, "Reference");
+		NodeList references = signatureInfoTag.getElementsByTagNameNS(XMLSignature.XMLNS, "Reference");
 		for (int i = 0; i < references.getLength(); i++) {
 			if (((Element) references.item(i)).getAttribute("Type").isEmpty()) {
 				Element digestValue = getSignatureElement("DigestValue", ((Element) references.item(i)), true);
@@ -478,7 +479,7 @@ public class XMLChecker implements Checker{
 	}
 
 	private Element getSignatureElement(String tagName, Element parent, boolean mandatory) {
-		NodeList value = parent.getElementsByTagNameNS(XMLNS, tagName);
+		NodeList value = parent.getElementsByTagNameNS(XMLSignature.XMLNS, tagName);
 		if (value.getLength() == 0) {
 			if (mandatory) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
@@ -540,7 +541,7 @@ public class XMLChecker implements Checker{
 
 	private boolean verifyDigest(Element signatureTag, String digestMethod, String digestValue,
 			String canonicalString) {
-		Element objectTag = (Element) signatureTag.getElementsByTagNameNS(XMLNS, "Object").item(0);
+		Element objectTag = (Element) signatureTag.getElementsByTagNameNS(XMLSignature.XMLNS, "Object").item(0);
 		byte[] canonicalized = null;
 		Init.init();
 		Canonicalizer c14n;
@@ -582,7 +583,7 @@ public class XMLChecker implements Checker{
 		String xPathTransformAlgorithm = "";
 
 		for (int i = 0; i < transformsTags.getLength(); i++) {
-			NodeList transformTag = ((Element) transformsTags.item(i)).getElementsByTagNameNS(XMLNS, "Transform");
+			NodeList transformTag = ((Element) transformsTags.item(i)).getElementsByTagNameNS(XMLSignature.XMLNS, "Transform");
 			for (int j = 0; j < transformTag.getLength(); j++) {
 				if (AlgorithmsValues.isCanonicalMethods(((Element) transformTag.item(j)).getAttribute("Algorithm"))) {
 					xPathTransformAlgorithm = ((Element) transformTag.item(j)).getAttribute("Algorithm");
@@ -625,8 +626,8 @@ public class XMLChecker implements Checker{
 			X509Certificate cert) {
 		try {
 			Element canonicalizationMethodTag = (Element) signatureTag
-					.getElementsByTagNameNS(XMLNS, "CanonicalizationMethod").item(0);
-			Element signatureMethod = (Element) signatureTag.getElementsByTagNameNS(XMLNS, "SignatureMethod").item(0);
+					.getElementsByTagNameNS(XMLSignature.XMLNS, "CanonicalizationMethod").item(0);
+			Element signatureMethod = (Element) signatureTag.getElementsByTagNameNS(XMLSignature.XMLNS, "SignatureMethod").item(0);
 
 			Init.init();
 			Canonicalizer c14n = Canonicalizer.getInstance(canonicalizationMethodTag.getAttribute("Algorithm"));
@@ -777,7 +778,7 @@ public class XMLChecker implements Checker{
 	private boolean verify(Document doc) {
 		boolean signatureOK = false;
 		NodeList root = doc.getChildNodes();
-		NodeList signatureListTags = doc.getElementsByTagNameNS(XMLNS, "Signature");
+		NodeList signatureListTags = doc.getElementsByTagNameNS(XMLSignature.XMLNS, "Signature");
 
 		if (root.item(0) == signatureListTags.item(0)) {
 			if (!isDetached) {
@@ -790,35 +791,36 @@ public class XMLChecker implements Checker{
 			}
 		}
 
-		if (signatureListTags.getLength() < 1) {
+		int sizeSigList = signatureListTags.getLength();
+		
+		if (sizeSigList < 1) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.signature.not.found"));
 			logger.error(xadesMessagesBundle.getString("error.xml.signature.not.found"));
 			XMLSignatureInformations sigInf = new XMLSignatureInformations();
 			sigInf.setValidatorErrors(validationErrors);
 			signaturesInfo.add(sigInf);
 			return signatureOK;
-		} else {
-			int sizesigList = signatureListTags.getLength();
-			for (int i = 0; i < sizesigList; i++) {
+		} else {			
+			for (int i = 0; i < sizeSigList; i++) {
 
 				XMLSignatureInformations sigInf = new XMLSignatureInformations();
 
 				Element signatureTag = (Element) signatureListTags.item(i);
 				Element signatureInfoTag = getSignatureElement("SignedInfo", signatureTag, true);
 
-				NodeList referenceTag = doc.getElementsByTagNameNS(XMLNS, "Reference");
+				NodeList referenceTag = signatureTag.getElementsByTagNameNS(XMLSignature.XMLNS, "Reference");
 
 				for (int j = 0; j < referenceTag.getLength(); j++) {
 					signatureOK = true;
 					Element actualReferenceTag = (Element) referenceTag.item(j);
-					NodeList transformsTags = actualReferenceTag.getElementsByTagNameNS(XMLNS, "Transforms");
+					NodeList transformsTags = actualReferenceTag.getElementsByTagNameNS(XMLSignature.XMLNS, "Transforms");
 
 					Element digestMethodTag = getSignatureElement("DigestMethod", (Element) referenceTag.item(j), true);
 					String digestMethod = getAttribute(digestMethodTag, "Algorithm", true);
 					Element digestValueTag = getSignatureElement("DigestValue", (Element) referenceTag.item(j), true);
 					String digestValue = digestValueTag.getTextContent();
 
-					if (actualReferenceTag.getElementsByTagNameNS(XMLNS, "XPath").getLength() > 0) {
+					if (actualReferenceTag.getElementsByTagNameNS(XMLSignature.XMLNS, "XPath").getLength() > 0) {
 						if (!verifyXPath(doc, digestMethod, digestValue, transformsTags)) {
 							validationErrors.add(xadesMessagesBundle.getString("error.xml.document.fail"));
 							signatureOK = false;
@@ -826,7 +828,7 @@ public class XMLChecker implements Checker{
 					} else if (((Element) referenceTag.item(j)).hasAttribute("Type")) {
 						if (((Element) referenceTag.item(j)).getAttribute("Type").endsWith("#SignedProperties")) {
 							Element transformTag = (Element) ((Element) referenceTag.item(j))
-									.getElementsByTagNameNS(XMLNS, "Transform").item(0);
+									.getElementsByTagNameNS(XMLSignature.XMLNS, "Transform").item(0);
 							String canonString = transformTag.getAttribute("Algorithm");
 							if (!verifyDigest((Element) signatureListTags.item(i), digestMethod, digestValue,
 									canonString)) {
