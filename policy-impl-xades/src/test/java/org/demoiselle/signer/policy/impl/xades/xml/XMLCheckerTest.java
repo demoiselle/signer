@@ -55,7 +55,9 @@ public class XMLCheckerTest {
 	public void testWithFile() {
 
 		try {
-			String fileName = "502420025_rb_signed.xml";
+					
+			String fileName = "teste_assinatura_rt_signed.xml";
+			
 
 			//String fileName = "502420025_rb_signed_rb_signed.xml";
 			ClassLoader classLoader = getClass().getClassLoader();

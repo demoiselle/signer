@@ -41,10 +41,10 @@ public class XMLSignerTest {
 			KeyStore ks = null;
 
 			// window ou NeoID
-			//ks = getKeyStoreTokenBySigner();
+			ks = getKeyStoreTokenBySigner();
 
 			// arquivo
-			 ks = getKeyStoreFileBySigner();
+			// ks = getKeyStoreFileBySigner();
 
 			// token
 			// ks = getKeyStoreToken();
