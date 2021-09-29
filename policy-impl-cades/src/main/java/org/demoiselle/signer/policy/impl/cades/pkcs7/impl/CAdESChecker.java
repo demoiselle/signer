@@ -65,6 +65,7 @@ import org.bouncycastle.cms.CMSProcessable;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignerDigestMismatchException;
+import org.bouncycastle.cms.CMSVerifierCertificateNotValidException;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoVerifierBuilder;
@@ -199,12 +200,22 @@ public class CAdESChecker implements PKCS7Checker {
 					signatureInfo.setNotAfter(pV.valDate(varCert));			
 				}catch (CertificateValidatorException cve) {
 					signatureInfo.getValidatorWarnins().add(cve.getMessage());
+					logger.error(cve.getMessage());
+				}
+				try {
+					if (signerInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
+						verified++;
+						logger.info(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
+						
+					}else {
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature","Erro de verificação!" ));
+					signatureInfo.setInvalidSignature(true);
+					}
+				}catch (CMSVerifierCertificateNotValidException e) {
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature",e.getMessage()));
+					signatureInfo.setInvalidSignature(true);
 				}
 				
-				if (signerInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
-					verified++;
-					logger.debug(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
-				}				
 			
 				
 				

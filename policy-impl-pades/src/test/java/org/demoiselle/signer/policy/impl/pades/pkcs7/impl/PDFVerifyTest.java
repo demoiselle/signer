@@ -88,7 +88,11 @@ public class PDFVerifyTest {
 				}
 			
 			if (!results.isEmpty()){
+				
 				for (SignatureInformations sis : results){
+					if (sis.isInvalidSignature()) {
+						System.err.println("Assinatura inválida");
+					}
 					for (String valErr : sis.getValidatorErrors()){
 						System.err.println( "++++++++++++++ ERROS ++++++++++++++++++");
 						System.err.println(valErr);
