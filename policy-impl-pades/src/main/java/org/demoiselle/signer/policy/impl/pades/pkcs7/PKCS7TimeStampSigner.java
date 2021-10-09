@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.pades.pkcs7;
 
 import org.demoiselle.signer.policy.impl.pades.TimeStampPAdESSigner;
@@ -42,9 +43,4 @@ import org.demoiselle.signer.policy.impl.pades.TimeStampPAdESSigner;
  * Basic specification for implementing Time Stamp in PKCS7 Format.
  */
 public interface PKCS7TimeStampSigner extends TimeStampPAdESSigner {
-	
-	
-		
-	
-    
- }
+}

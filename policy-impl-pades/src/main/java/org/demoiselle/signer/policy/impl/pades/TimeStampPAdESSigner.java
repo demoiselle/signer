@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.pades;
 
 import org.demoiselle.signer.timestamp.Timestamp;
@@ -42,7 +43,7 @@ import org.demoiselle.signer.timestamp.Timestamp;
  * Basic specification for implementation of Time Stamp on PADES format.
  */
 public interface TimeStampPAdESSigner {
-	
+
 	abstract public Timestamp checkTimeStampPDFWithContent(byte[] timeStamp, byte[] content);
 
 
@@ -50,6 +51,6 @@ public interface TimeStampPAdESSigner {
 
 
 
-    
-    
+
+
 }

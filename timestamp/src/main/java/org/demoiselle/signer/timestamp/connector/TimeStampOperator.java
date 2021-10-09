@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.connector;
 
 import java.io.FileInputStream;
@@ -84,9 +85,9 @@ import org.slf4j.LoggerFactory;
 /**
  *
  * Performs all time stamp operations: from the connection with the time stamp authority to the stamp validation.
- * 
+ *
  * @author 07721825741
- * 
+ *
  */
 // TODO verificar os valores de algoritmos que estão sendo setados manualmente, provavelmente deve buscado do que foi setado ou no que estiver na política.
 public class TimeStampOperator {
@@ -112,7 +113,7 @@ public class TimeStampOperator {
     public byte[] createRequest(PrivateKey privateKey, Certificate[] certificates, byte[] content, byte[] hash) throws CertificateCoreException {
         try {
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.digest"));
-            Digest digest = DigestFactory.getInstance().factoryDefault();            
+            Digest digest = DigestFactory.getInstance().factoryDefault();
             String varAlgoOid = null;
             String varAlgo = null;
             if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
@@ -126,17 +127,17 @@ public class TimeStampOperator {
             	varAlgo = "SHA512withRSA";
             	digest.setAlgorithm(DigestAlgorithmEnum.SHA_512);
             }
-            
-            
+
+
             byte[] hashedMessage = null;
             if (content != null){
-            	hashedMessage = digest.digest(content);                
-                //logger.info(Base64.toBase64String(hashedMessage));	
+            	hashedMessage = digest.digest(content);
+                //logger.info(Base64.toBase64String(hashedMessage));
             }else{
             	hashedMessage = hash;
-            }            
+            }
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.prepare.request"));
-            TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();                        
+            TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();
             timeStampRequestGenerator.setReqPolicy(new ASN1ObjectIdentifier(TimeStampConfig.getInstance().getTSPOid()));
             timeStampRequestGenerator.setCertReq(true);
             BigInteger nonce = BigInteger.valueOf(100);
@@ -146,16 +147,16 @@ public class TimeStampOperator {
             RequestSigner requestSigner = new RequestSigner();
             byte[] signedRequest = requestSigner.signRequest(privateKey, certificates, request, varAlgo);
             return signedRequest;
-        } catch (IOException ex) {         
+        } catch (IOException ex) {
         	logger.error("createRequest :"+ex.getMessage());
             throw new CertificateCoreException(ex.getMessage());
         }
     }
 
     /**
-     * 
+     *
      * Creates a time stamp request using a certificate of type PKCS12
-     * 
+     *
      * @param keystoreLocation key store location
      * @param pin personal identification number
      * @param alias alias
@@ -191,7 +192,7 @@ public class TimeStampOperator {
             connector.setPort(TimeStampConfig.getInstance().getTSPPort());
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.response"));
             inputStream = connector.connect(request);
-            
+
 
             long tempo;
             // Valor do timeout da verificacao de dados disponiveis para leitura
@@ -270,8 +271,8 @@ public class TimeStampOperator {
                     logger.error(timeStampMessagesBundle.getString("error.pkistatus.unknown"));
                     throw new CertificateCoreException(timeStampMessagesBundle.getString("error.pkistatus.unknown"));
                 }
-            }          
-            		
+            }
+
 
             // ok
             int failInfo = -1;
@@ -307,8 +308,8 @@ public class TimeStampOperator {
                 case 25:
                     logger.error(timeStampMessagesBundle.getString("error.pkifailureinfo.systemFailure"));
                     break;
-            }           
-            		
+            }
+
 
             timeStampResponse.validate(timeStampRequest);
             TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
@@ -346,7 +347,7 @@ public class TimeStampOperator {
             TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(timeStamp));
             CMSSignedData s = timeStampToken.toCMSSignedData();
 
-            
+
             int verified = 0;
 
             Store<?> certStore = s.getCertificates();
@@ -380,7 +381,7 @@ public class TimeStampOperator {
             }else{
             	calculatedHash = hash;
             }
-            
+
 
             if (Arrays.equals(calculatedHash, timeStampToken.getTimeStampInfo().getMessageImprintDigest())) {
                 logger.debug(timeStampMessagesBundle.getString("info.timestamp.hash.ok"));

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.connector;
 
 import java.io.IOException;
@@ -49,21 +50,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * The following simple TCP-based protocol is to be used for transport of TSA messages.  
+ * The following simple TCP-based protocol is to be used for transport of TSA messages.
  * This protocol is suitable for cases where an entity
  * initiates a transaction and can poll to pick up the results.
- * 
+ *
  * The protocol basically assumes a listener process on a TSA that can
  * accept TSA messages on a well-defined port (IP port number 318).
- * 
- * Typically an initiator binds to this port and submits the initial TSA message.  
- * The responder replies with a TSA message and/or with a reference number 
+ *
+ * Typically an initiator binds to this port and submits the initial TSA message.
+ * The responder replies with a TSA message and/or with a reference number
  * to be used later when polling for the actual TSA  message response.
- * 
+ *
  * If a number of TSA response messages are to be produced for a given
  * request (say if a receipt must be sent before the actual token can be
  * produced) then a new polling reference is also returned.
- * 
+ *
  *  When the final TSA response message has been picked up by the
  *  initiator then no new polling reference is supplied.
  *
@@ -100,7 +101,7 @@ public class SocketConnector implements Connector {
             logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
             return socket.getInputStream();
         } catch (IOException e) {
-        	logger.error(e.getMessage());        		
+        	logger.error(e.getMessage());
         	throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.socket", e.getMessage()));
         }
     }

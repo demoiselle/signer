@@ -34,13 +34,13 @@ public class Signer {
 
 		LOGGER.log(Level.INFO, "============= Iniciando aplicação =============");
 
-		Path p7sFilePath = Paths.get(homeUser, "textoAssinado." + Policies.AD_RB_CADES_2_0.toString() + ".p7s");
+		Path p7sFilePath = Paths.get(homeUser, "textoAssinado." + Policies.AD_RB_CADES_2_0 + ".p7s");
 		sign(textToSign, p7sFilePath, Policies.AD_RB_CADES_2_0, SignerAlgorithmEnum.SHA256withRSA);
 
-		p7sFilePath = Paths.get(homeUser, "textoAssinado." + Policies.AD_RB_CADES_2_1.toString() + ".p7s");
+		p7sFilePath = Paths.get(homeUser, "textoAssinado." + Policies.AD_RB_CADES_2_1 + ".p7s");
 		sign(textToSign, p7sFilePath, Policies.AD_RB_CADES_2_1, SignerAlgorithmEnum.SHA256withRSA);
 
-		p7sFilePath = Paths.get(homeUser, "textoAssinado." + Policies.AD_RB_CADES_2_2.toString() + ".p7s");
+		p7sFilePath = Paths.get(homeUser, "textoAssinado." + Policies.AD_RB_CADES_2_2 + ".p7s");
 		sign(textToSign, p7sFilePath, Policies.AD_RB_CADES_2_2, SignerAlgorithmEnum.SHA512withRSA);
 
 		LOGGER.log(Level.INFO, "============= Finalizando aplicação =============");

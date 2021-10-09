@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7;
 
 import java.util.List;
@@ -47,41 +48,38 @@ import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
  */
 public interface PKCS7Checker extends Checker {
 
-	    /**
-     * 
-     * Extracts the signed content from the digital signature structure, 
+	/**
+	 * Extracts the signed content from the digital signature structure,
 	 * if it is a signature with attached content.
-     * 
-     * @param signed signed content 
-     * @param validate TRUE (to execute validation) or FALSE (not execute validation)
-     * @return signed content
-     */
-    abstract public AttachedContentValidation getAttached(byte[] signed, boolean validate);
-    
-        
-    /**
-     * Check a digital signature with attached content, informed by parameter signedData
-     * @param signedData attached signature to be checked
-     * @return List&lt;SignatureInformations&gt; list of signature informations
-     */
-    abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
-    
-    
-    /**
-     * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
-     * 
-     * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
-     * @param calculatedHashContent calculated hash
-     * @param signedData detached signature
-     * @return List&lt;SignatureInformations&gt; list of signature informations
-     */
-    abstract public  List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
+	 *
+	 * @param signed   signed content
+	 * @param validate TRUE (to execute validation) or FALSE (not execute validation)
+	 * @return signed content
+	 */
+	AttachedContentValidation getAttached(byte[] signed, boolean validate);
 
-    /**
-     * get Signature Information for a checked signature
-     * @return List&lt;SignatureInformations&gt;
-     */
-    abstract public List<SignatureInformations> getSignaturesInfo();
+	/**
+	 * Check a digital signature with attached content, informed by parameter signedData
+	 *
+	 * @param signedData attached signature to be checked
+	 * @return List&lt;SignatureInformations&gt; list of signature informations
+	 */
+	List<SignatureInformations> checkAttachedSignature(byte[] signedData);
 
-    
- }
+	/**
+	 * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
+	 *
+	 * @param digestAlgorithmOID    OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
+	 * @param calculatedHashContent calculated hash
+	 * @param signedData            detached signature
+	 * @return List&lt;SignatureInformations&gt; list of signature informations
+	 */
+	List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
+
+	/**
+	 * get Signature Information for a checked signature
+	 *
+	 * @return List&lt;SignatureInformations&gt;
+	 */
+	List<SignatureInformations> getSignaturesInfo();
+}

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades;
 
 import java.util.List;
@@ -48,30 +49,25 @@ public interface Checker {
      * @param signedData attached signature to be checked
      * @return List&lt;SignatureInformations&gt; list of signature information
      */
-    abstract public  List<SignatureInformations> checkAttachedSignature(byte[] signedData);
-    
-  
+	List<SignatureInformations> checkAttachedSignature(byte[] signedData);
+
     /**
      * Check an digital detached signature, informed by parameter signedData and it's content
-     * 
+     *
      * @param content content to be checked
      * @param signedData detached signature
      * @return List&lt;SignatureInformations&gt; list of signature information
      */
-    
-    abstract public  List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData);
-    
-    
-    
+
+	List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData);
+
     /**
      * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
-     * 
+     *
      * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
      * @param calculatedHashContent calculated hash
      * @param signedData detached signature
      * @return List&lt;SignatureInformation&gt; list of signature information
     */
-   abstract public List<SignatureInformations> checkSignatureByHash( String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
-   
-    
+	List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
 }

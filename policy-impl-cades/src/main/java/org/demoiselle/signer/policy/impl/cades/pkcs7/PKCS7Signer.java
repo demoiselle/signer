@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7;
 
 import java.security.cert.Certificate;
@@ -50,69 +51,62 @@ public interface PKCS7Signer extends Signer {
 	 *  Assign a Certificate for validate or generate a signature
 	 * @param certificate certificate to be used
 	 */
-    abstract public void setCertificates(Certificate certificate[]);
+	void setCertificates(Certificate[] certificate);
 
     /**
-     * Assign a Policy for validate or generate a signature 
+     * Assign a Policy for validate or generate a signature
      * @param signaturePolicy Signature policy to be used
      */
-    abstract public void setSignaturePolicy(Policies signaturePolicy);
-    
+	void setSignaturePolicy(Policies signaturePolicy);
+
     /**
-     * 
-     * Generates a digital co-signature from a content, 
+     *
+     * Generates a digital co-signature from a content,
      * the result file does not contains the content that was signed
      * @param content content to be signed
      * @param previewSigned CMS content from preview signed
      * @return detached signature
      */
-    abstract public byte[] doDetachedSign (byte[] content, byte[] previewSigned);
-    
+	byte[] doDetachedSign(byte[] content, byte[] previewSigned);
+
     /**
      * Generates a digital co-signature from a content and attaches this content on result file
      * @param content content to be signed
      * @param previewSigned CMS content from preview signed
      * @return attached signature
      */
-    abstract public byte[] doAttachedSign(byte[] content, byte[] previewSigned);
-    
+	byte[] doAttachedSign(byte[] content, byte[] previewSigned);
+
     /**
      * Generates a digital couter-signature
      * @param previewCMSSignature CMS content from preview signed
      * @return new CMS Signature bytes
      */
-    abstract public byte[] doCounterSign(byte[] previewCMSSignature);
-    
-    
+	byte[] doCounterSign(byte[] previewCMSSignature);
+
     /**
-     * 
-     * Generates a digital signature from a previous calculated hash for a content, 
+     *
+     * Generates a digital signature from a previous calculated hash for a content,
      * the result file does not contains the original content that was signed
      * @param hash hash to be signed
      * @return detached PCKS7 signature
      */
-    abstract public byte[] doHashSign (byte[] hash);
-    
-    
+	byte[] doHashSign(byte[] hash);
+
     /**
-     * 
+     *
      * Generates a digital co-signature from a previous calculated hash for a content,
-     * and its previous signatures 
+     * and its previous signatures
      * the result file does not contains the original content that was signed
      * @param hash hash to be signed
      * @param previewSigned previous signature
      * @return detached PCKS7 signature
      */
-    abstract public byte[] doHashCoSign (byte[] hash, byte[] previewSigned);
-    
-    
+	byte[] doHashCoSign(byte[] hash, byte[] previewSigned);
+
     /**
 	 *  Assign a Certificate for get timeStamp
-	 * @param certificate certificate to be used
+	 * @param certificates certificate to be used
 	 */
-    abstract public void setCertificatesForTimeStamp(Certificate certificates[]);
-    
-    
-    
-    
+	void setCertificatesForTimeStamp(Certificate[] certificates);
  }

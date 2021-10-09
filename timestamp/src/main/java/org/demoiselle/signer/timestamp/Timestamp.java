@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp;
 
 import java.io.IOException;
@@ -52,11 +53,11 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 /**
  *
  *  It is defined as a ContentInfo([CMS]) and SHALL encapsulate a signed data content type.
- *   
+ *
  *   	TimeStampToken ::= ContentInfo
  *        -- contentType is id-signedData ([CMS])
- *        -- content is SignedData ([CMS])        
- *        
+ *        -- content is SignedData ([CMS])
+ *
  *       id-aa-timeStampToken OBJECT IDENTIFIER ::= { iso(1) member-body(2)
  *          us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) aa(2) 14 }
  *
@@ -66,7 +67,7 @@ public class Timestamp {
 
     private final static Logger logger = Logger.getLogger(Timestamp.class.getName());
     private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
-    
+
 
     private TimeStampToken timeStampToken = null;
 
@@ -88,12 +89,12 @@ public class Timestamp {
         return null;
     }
 
-    
+
     public String getPolicy() {
         return timeStampToken.getTimeStampInfo().getPolicy().toString();
     }
 
-    
+
     public String getSerialNumber() {
         return timeStampToken.getTimeStampInfo().getSerialNumber().toString();
     }
@@ -131,7 +132,7 @@ public class Timestamp {
     }
 
     /**
-     * 
+     *
      * The attributes of the Time Stamp Authority's certificate.
      * @return Authority information
      */
@@ -166,6 +167,6 @@ public class Timestamp {
         builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.hex")).append(this.getMessageImprintDigestHex()).append("\n");
         builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.base64")).append(this.getMessageImprintDigestBase64()).append("\n");
         builder.append(timeStampMessagesBundle.getString("text.timestamp.mid")).append(this.getMessageImprintDigest()).append("\n");
-        return builder.toString();        
+        return builder.toString();
        }
     }
