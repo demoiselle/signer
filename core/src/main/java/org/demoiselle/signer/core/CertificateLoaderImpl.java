@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
@@ -50,7 +51,7 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 /**
- * 
+ *
  * Impelments the basic methods for loading a certificate depending on the storage format
  *
  */
@@ -61,10 +62,10 @@ public class CertificateLoaderImpl implements CertificateLoader {
     /**
      *Returns the KeyStore used by {@link CertificateLoader}.
      *
-     * @return java.security.keystore 
-     * 
-     */    
-    
+     * @return java.security.keystore
+     *
+     */
+
     @Override
     public KeyStore getKeyStore() {
         return keyStore;
@@ -73,8 +74,8 @@ public class CertificateLoaderImpl implements CertificateLoader {
     /**
      * Associate a previously existing keystore
      *
-     * @param keyStore java.security.keystore  
-     * 
+     * @param keyStore java.security.keystore
+     *
      */
 
     @Override
@@ -87,9 +88,9 @@ public class CertificateLoaderImpl implements CertificateLoader {
      *
      * @param file The file that contains the certificate
      * @return the certificate information in X509Certificate format
-     * 
+     *
      */
-   
+
     @Override
     public X509Certificate load(File file) {
         try {
@@ -113,14 +114,14 @@ public class CertificateLoaderImpl implements CertificateLoader {
     }
 
     /**
-     * When a PIN(Personal Identification Number) was informed, 
+     * When a PIN(Personal Identification Number) was informed,
      * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
      *
      * @param pinNumber personal id number
      * @return the certificate information in X509Certificate format
-     * 
+     *
      */
-   
+
     @Override
     public X509Certificate loadFromToken(String pinNumber) {
         if (this.keyStore == null) {
@@ -137,13 +138,13 @@ public class CertificateLoaderImpl implements CertificateLoader {
 
     }
     /**
-     * When a PIN(Personal Identification Number) and Alias was informed, 
+     * When a PIN(Personal Identification Number) and Alias was informed,
      * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
      *
      * @param pinNumber a PIN(Personal Identification Number)
      * @param alias desired alias
      * @return  the certificate information in X509Certificate format
-     * 
+     *
      */
      @Override
     public X509Certificate loadFromToken(String pinNumber, String alias) {

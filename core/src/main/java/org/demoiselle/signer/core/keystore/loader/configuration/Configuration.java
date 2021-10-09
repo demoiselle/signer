@@ -35,6 +35,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.keystore.loader.configuration;
 
 import java.io.File;
@@ -55,7 +56,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * Class responsible for retrieving system information, such as operating system
  * version and JVM version. It also manipulates PKCS # 11 driver information to
  * be used by the component. You can add a PKCS # 11 Driver at run time, not
@@ -78,7 +79,7 @@ public class Configuration {
 	protected static final String CONFIG_FILE_DIR = ".signer";
 	protected static final String CONFIG_FILE_PATH = "drivers.properties";
 	protected static boolean MSCAPI_ON = true;
-	
+
 	private static final Configuration instance = new Configuration();
 
 	public static Configuration getInstance() {
@@ -126,11 +127,11 @@ public class Configuration {
 		map.put("TokenOuSmartCard_23_Gemalto_x64", winRoot.concat("/Program Files/Gemalto/IDGo 800 PKCS11/IDPrimePKCS1164.dll"));
 		map.put("TokenOuSmartCard_24_Certsing_desktopID_Provider", winRoot.concat("/system32/desktopID_Provider.dll"));
 		map.put("TokenOuSmartCard_25_birdID", winRoot.concat("/Program Files/Assistente Desktop birdID/resources/extraResources/windows/x64/vault-pkcs11.dll"));
-		// Certificado em Nuvem SERPRO NEOID - Windows		
+		// Certificado em Nuvem SERPRO NEOID - Windows
 		map.put("TokenOuSmartCard_26_neoid", winRoot.concat("/system32/SerproPkcs11.dll"));
 
-		
-						
+
+
 		// ------------ Linux ------------
 		map.put("TokenOuSmartCard_27_safesign_ou_gd", "/usr/lib/libaetpkss.so");
 		map.put("TokenOuSmartCard_28_alladin", "/usr/lib/libgpkcs11.so");
@@ -150,29 +151,29 @@ public class Configuration {
 		map.put("TokenOuSmartCard_38_watchdata_ICP", "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so");
 		map.put("TokenOuSmartCard_39_watchdata", "/usr/lib/watchdata/lib/libwdpkcs.so");
 		map.put("TokenOuSmartCard_40_watchdata_opt", "/opt/watchdata/lib64/libwdpkcs.so");
-		
-		map.put("TokenOuSmartCard_41_opensc", "/usr/lib/opensc-pkcs11.so");		
+
+		map.put("TokenOuSmartCard_41_opensc", "/usr/lib/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_42_opensc", "/usr/lib/pkcs11/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_43_pronova", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
 		map.put("TokenOuSmartCard_44_Oberthur", "/usr/local/AWP/lib/libOcsCryptoki.so");
 		map.put("TokenOuSmartCard_45_safenet", "/usr/lib/libscmccid.so");
-		// Certificado em Nuvem SERPRO NEOID - Linux		
+		// Certificado em Nuvem SERPRO NEOID - Linux
 		map.put("TokenOuSmartCard_46_neoid", "/usr/lib/libneoidp11.so");
 		// Token Azul do Serpro
 		map.put("TokenOuSmartCard_47_safenet_64", "/usr/lib64/libeToken.so");
-		map.put("TokenOuSmartCard_48_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0"); 
+		map.put("TokenOuSmartCard_48_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0");
 		map.put("TokenOuSmartCard_49_opensc64", "/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_50_opensc64", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_51_opensc", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_52_opensc", "/usr/lib/opensc/opensc­pkcs11.so");
 		map.put("TokenOuSmartCard_53_birdid", "/opt/Assistente Desktop birdID/resources/extraResources/linux/x64/vault-pkcs11.so");
-		
-		// ------------ Mac ------------		
+
+		// ------------ Mac ------------
 		// Token Branco do Serpro
-		map.put("TokenOuSmartCard_54_watchdata", "//usr//lib//libwdpkcs.dylib"); 
+		map.put("TokenOuSmartCard_54_watchdata", "//usr//lib//libwdpkcs.dylib");
 		map.put("TokenOuSmartCard_55_watchdata", "//usr//local//lib//libwdpkcs.dylib");
 		map.put("TokenOuSmartCard_56_watchdataBB",	"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
-		
+
 		map.put("TokenOuSmartCard_57_safenet", "//usr//local//lib//libetpkcs11.dylib");
 		map.put("TokenOuSmartCard_58_safenet",	"//usr//local//lib//libaetpkss.dylib");
 		map.put("TokenOuSmartCard_59_GD",	"//Applications/tokenadmin.app/Contents/Frameworks/libaetpkss.dylib");
@@ -181,12 +182,12 @@ public class Configuration {
 		map.put("TokenOuSmartCard_62_gdBurty_Mac",	"//Applications//tokenadmin.app//Contents//Frameworks//libaetpkss.dylib");
 		// Certificado em Nuvem SERPRO NEOID - MacOS
 		map.put("TokenOuSmartCard_63_neoid",	"//Applications//NeoID Desktop.app//Contents//Java//tools//macos//libneoidp11.dylib");
-		
+
 		map.put("TokenOuSmartCard_64_certisign_desktopid",	"//usr/local//lib//libdesktopID_Provider.dylib");
 		map.put("TokenOuSmartCard_65_birdID",	"//Applications//Assistente Desktop birdID.app//Contents//resources/extraResources//osx//x64//vault-pkcs11.dylib");
-		
-				
-		
+
+
+
 		boolean successLoad = false;
 		for (String driver : map.keySet()) {
 			try {
@@ -221,7 +222,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return true if Microsoft CryptoAPI is DISABLE
 	 */
 	public boolean isMSCapiDisabled() {
@@ -238,37 +239,37 @@ public class Configuration {
 	public String getSO() {
 		return System.getProperty(Configuration.KEY_OS_NAME);
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * Method that returns the version of the operating system. Look for this
 	 * information in the system properties.
-	 * 
+	 *
 	 * @return version of the operating system
 	 */
-		
-	
+
+
 	public Integer getSoVersion(){
-		
+
 		Pattern p = Pattern.compile("[^0-9]");
 		String varVersion = System.getProperty(Configuration.KEY_OS_VERSION);
 		int pos = varVersion.indexOf("-");
-		varVersion = varVersion.substring(0, pos);		
+		varVersion = varVersion.substring(0, pos);
 		String numericVersion = p.matcher(varVersion).replaceAll("");
 		Integer integerVersion = Integer.valueOf(numericVersion);
-		
+
 		return integerVersion;
-		
+
 	}
 	public Integer getSoVersionRelease(){
-		
+
 		Pattern p = Pattern.compile("[^0-9]");
 		String varVersion = System.getProperty(Configuration.KEY_OS_VERSION);
 		String numericVersion = p.matcher(varVersion).replaceAll("");
 		Integer integerVersion = Integer.valueOf(numericVersion);
-		
+
 		return integerVersion;
-		
+
 	}
 
 	/**
@@ -344,7 +345,7 @@ public class Configuration {
 	 * Retrieve the path of the configuration file for SunPKCS11 according to
 	 * the links below. To use the configuration file, simply enter your path in
 	 * an environment variable or as a JVM parameter
-	 * 
+	 *
 	 * Java 1.5 -
 	 * http://java.sun.com/j2se/1.5.0/docs/guide/security/p11guide.html Java
 	 * Java 1.6 -
@@ -364,12 +365,12 @@ public class Configuration {
 	/**
 	 * Retrieve the driver and its path from the environment variable or JVM
 	 * variable.
-	 * 
+	 *
 	 * Example of definition:
-	 * 
+	 *
 	 * JVM: -DPKCS11_DRIVER=Pronova::/usr/lib/libepsng_p11.so or
 	 * -DPKCS11_DRIVER=/usr/lib/libepsng_p11.so
-	 * 
+	 *
 	 * Environment variable in Linux export
 	 * PKCS11_DRIVER=Pronova::/usr/lib/libepsng_p11.so ou export
 	 * PKCS11_DRIVER=/usr/lib/libepsng_p11.so Environment variable in window$
@@ -436,9 +437,9 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 *
 	 * load configuration drivers from a file storaged on user machine
-	 * 
+	 *
 	 * @param map
 	 */
 	private void loadFromHomeFile(Map<String, String> map) {
@@ -469,7 +470,7 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return File path acording to SO
 	 */
 	public static String getConfigFilePath() {
@@ -478,9 +479,9 @@ public class Configuration {
 	}
 
 	/**
-	 * 
+	 *
 	 * default is true
-	 * 
+	 *
 	 * @return if MSCAPI is ON (true) or OFF (false)
 	 */
 	public static boolean isMSCAPI_ON() {
@@ -494,5 +495,5 @@ public class Configuration {
 	public static void setMSCAPI_ON(boolean mSCAPI_ON) {
 		MSCAPI_ON = mSCAPI_ON;
 	}
-	
+
 }

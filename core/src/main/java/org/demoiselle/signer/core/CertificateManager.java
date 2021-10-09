@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
@@ -52,7 +53,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * 
+ *
  * Methods to build, initialize and validate a java.security.cert.X509Certificate
  *
  */
@@ -60,20 +61,20 @@ public class CertificateManager {
 
     private X509Certificate x509;
     private Collection<IValidator> validators;
-    
+
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     /**
-     * 
+     *
      * @param x509 java.security.cert.X509Certificate
      * @throws CertificateValidatorException exception
      */
     public CertificateManager(X509Certificate x509) throws CertificateValidatorException {
         this(x509, true);
     }
-    
+
     /**
-     * 
+     *
      * @param x509 java.security.cert.X509Certificate
      * @param validators Array of {@link IValidator}
      * @throws CertificateValidatorException exception
@@ -83,7 +84,7 @@ public class CertificateManager {
     }
 
     /**
-     * 
+     *
      * @param pinNumber personal id number
      * @param validators Array of {@link IValidator}
      * @throws CertificateValidatorException exception
@@ -93,7 +94,7 @@ public class CertificateManager {
     }
 
     /**
-     * 
+     *
      * @param fileX509 a file that contains a java.security.cert.X509Certificate
      * @param validators Array of {@link IValidator}
      * @throws CertificateValidatorException exception
@@ -103,7 +104,7 @@ public class CertificateManager {
     }
 
     /**
-     * 
+     *
      * @param x509 java.security.cert.X509Certificate
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
@@ -114,7 +115,7 @@ public class CertificateManager {
     }
 
     /**
-     * 
+     *
      * @param pinNumber personal id number
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
@@ -127,7 +128,7 @@ public class CertificateManager {
     }
 
     /**
-     * 
+     *
      * @param fileX509 a file that contains a java.security.cert.X509Certificate
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
@@ -140,7 +141,7 @@ public class CertificateManager {
     }
 
     /**
-     * 
+     *
      * @param x509 java.security.cert.X509Certificate
      * @param loadDefaultValidators TRUE or FALSE to call this method
      * @param validators Array of {@link IValidator}
@@ -210,6 +211,6 @@ public class CertificateManager {
         validators.add(new PeriodValidator());
         if (ConfigurationRepo.getInstance().isValidateLCR()) {
         	validators.add(new CRLValidator());
-        }        
+        }
     }
 }

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.keystore.loader.implementation;
 
 import java.io.IOException;
@@ -86,7 +87,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 			if (!this.verifyKeyEntry(result)) {
 				DriverKeyStoreLoader driverKeyStoreLoader = new DriverKeyStoreLoader();
 				result = driverKeyStoreLoader.getKeyStore();
-			}			
+			}
 			return result;
 		} catch (KeyStoreException | NoSuchProviderException | IOException
 				| NoSuchAlgorithmException | CertificateException ex) {
@@ -101,7 +102,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 	}
 
 	private boolean verifyKeyEntry(KeyStore ks) {
-	
+
 		boolean isKeyEntry = false;
 		String alias = "";
 		Enumeration<String> e;
@@ -112,7 +113,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 				if(ks.isKeyEntry(alias)) {
 					isKeyEntry = true;
 				}
-				
+
 			}
 
 		} catch (Exception ex) {

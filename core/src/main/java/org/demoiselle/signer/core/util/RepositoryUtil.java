@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.util;
 
 import java.io.BufferedOutputStream;
@@ -55,7 +56,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  *  connections utilities for CRL (Certificate Revocation list)
  *
  */
@@ -85,7 +86,7 @@ public class RepositoryUtil {
     }
 
     /**
-     * 
+     *
      * @param sUrl source url
      * @param destinationFile destination file
      */
@@ -109,7 +110,7 @@ public class RepositoryUtil {
                 outStream.write(buf, 0, ByteRead);
                 setByteWritten(getByteWritten() + ByteRead);
             }
-            outStream.flush();            
+            outStream.flush();
             if (destinationFile.length() <= 0){
             	if (!destinationFile.delete()) {
                     logger.warn(coreMessagesBundle.getString("error.file.remove", destinationFile));
@@ -140,7 +141,7 @@ public class RepositoryUtil {
     }
 
     /**
-     * 
+     *
      * @param listURL url list
      * @return valid url list
      */

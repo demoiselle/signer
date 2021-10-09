@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.extension;
 
 import java.io.ByteArrayInputStream;
@@ -41,7 +42,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * 
+ *
  * ICP-BRASIL's definitions of distinguished name (DN)
  *
  */
@@ -51,7 +52,7 @@ public class ICPBR_DN extends Properties {
     private String dn = null;
 
     /**
-     * 
+     *
      * @param dn distinguished name (DN)
      * @throws IOException exception
      */

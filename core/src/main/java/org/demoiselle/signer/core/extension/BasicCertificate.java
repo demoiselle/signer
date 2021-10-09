@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.extension;
 
 import java.io.ByteArrayInputStream;
@@ -70,14 +71,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
- * Basic Certificate information based on ICP-BRASIL (PKI) definitions 
+ *
+ * Basic Certificate information based on ICP-BRASIL (PKI) definitions
  *
  */
 public class BasicCertificate {
 
     private static final Logger logger = LoggerFactory.getLogger(BasicCertificate.class);
-    
+
     public static final String OID_A1_CERTIFICATE = "2.16.76.1.2.1";
     public static final String OID_A2_CERTIFICATE = "2.16.76.1.2.2";
     public static final String OID_A3_CERTIFICATE = "2.16.76.1.2.3";
@@ -87,8 +88,8 @@ public class BasicCertificate {
     public static final String OID_S3_CERTIFICATE = "2.16.76.1.2.103";
     public static final String OID_S4_CERTIFICATE = "2.16.76.1.2.104";
 
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-    
+    private static final MessagesBundle coreMessagesBundle = new MessagesBundle();
+
     private X509Certificate certificate = null;
     private ICPBRSubjectAlternativeNames subjectAlternativeNames = null;
     private ICPBRKeyUsage keyUsage = null;
@@ -220,7 +221,7 @@ public class BasicCertificate {
     }
 
     /**
-     * Returns the SubjectDN (Subject Distinguished Name) of a Certificate 
+     * Returns the SubjectDN (Subject Distinguished Name) of a Certificate
      *
      * @return {@link ICPBR_DN} SubjectDN of a certificate
      * @throws IOException exception
@@ -233,7 +234,7 @@ public class BasicCertificate {
     }
 
     /**
-     *  
+     *
      * Returns the name that was defined on CN for CertificateSubjectDN.<br>
      * Its similar to CertificateSubjectDN.getProperty("CN"), but ignoring<br>
      * the information after ":".<br>
@@ -256,7 +257,7 @@ public class BasicCertificate {
         }
         return null;
     }
-    
+
     /**
      * Returns the name that was defined on CN for CertificateSubjectDN.<br>
      * Its similar to CertificateSubjectDN.getProperty("CN"), but ignoring<br>
@@ -278,11 +279,11 @@ public class BasicCertificate {
         	logger.info(e.getMessage());
             return null;
         }
-        
+
     }
 
     /**
-     * 
+     *
      *
      * @return Date the certificate's initial date of validity
      */
@@ -291,7 +292,7 @@ public class BasicCertificate {
     }
 
     /**
-     * 
+     *
      *
      * @return Date The expiration date of the certificate
      */
@@ -507,8 +508,8 @@ public class BasicCertificate {
             return null;
         }
     }
-    
-    
+
+
     /**
      * Returns the AuthorityInfoAccess extension value on list format.<br>
      * Otherwise, returns <b>list empty</b>.<br>
@@ -536,7 +537,7 @@ public class BasicCertificate {
     /**
      *     *
      * @return the authority key identifier of a certificate
-     * 
+     *
      */
     public String getAuthorityKeyIdentifier() {
         // TODO - Precisa validar este metodo com a RFC
@@ -552,13 +553,13 @@ public class BasicCertificate {
     		logger.error(error.getMessage());
     		return null;
     	}
-    		
+
     }
 
     /**
-     * 
      *
-     * @return The subject key identifier of a certificate 
+     *
+     * @return The subject key identifier of a certificate
      * @throws IOException exception
      */
     public String getSubjectKeyIdentifier() throws IOException {
@@ -574,11 +575,11 @@ public class BasicCertificate {
     		logger.error(error.getMessage());
     		return null;
     	}
-        
+
     }
 
     /**
-     * 
+     *
      * @return A list of ulrs that inform the location of the certificate revocation lists
      * @throws IOException exception
      */
@@ -614,7 +615,7 @@ public class BasicCertificate {
     /**
      * Gets the contents of a given OID
      *
-     * @param oid Object Identifier (OID) 
+     * @param oid Object Identifier (OID)
      *
      * @return org.bouncycastle.asn1.ASN1Primitive Content related to the reported OID
      */
@@ -623,7 +624,7 @@ public class BasicCertificate {
     		byte[] extensionValue = certificate.getExtensionValue(oid);
     		if (extensionValue == null) {
     			return null;
-    		}        
+    		}
         	varASN1InputStream = new ASN1InputStream(extensionValue);
             DEROctetString oct = (DEROctetString) varASN1InputStream.readObject();
             varASN1InputStream = new ASN1InputStream(oct.getOctets());
@@ -631,7 +632,7 @@ public class BasicCertificate {
         } catch (Exception e) {
         	logger.error(e.getMessage());
             return null;
-        }        
+        }
     }
 
     @Override
@@ -642,13 +643,13 @@ public class BasicCertificate {
 
             sb.append("*********************************\n");
             sb.append(coreMessagesBundle.getString("text.certicate.IssuerDN")).append(this.getCertificateIssuerDN()).append("\n");
-            
+
             sb.append(coreMessagesBundle.getString("text.certicate.serialNumber")).append(this.getSerialNumber()).append("\n");
             sb.append(coreMessagesBundle.getString("text.certicate.subjectDN")).append(this.getCertificateSubjectDN()).append("\n");
             sb.append(coreMessagesBundle.getString("text.certicate.name")).append(this.getName()).append("\n");
             sb.append(coreMessagesBundle.getString("text.certicate.valid.from")).append(dtValidade.format(this.getBeforeDate())).append("ate").append(dtValidade.format(this.getAfterDate())).append("\n");
             sb.append("*********************************\n");
-     //       sb.append("*********************************\n");            
+     //       sb.append("*********************************\n");
             if (this.hasCertificatePF()) {
                 ICPBRCertificatePF tdPF = this.getICPBRCertificatePF();
                 sb.append(coreMessagesBundle.getString("text.certicate.email")).append(this.getEmail()).append("\n");

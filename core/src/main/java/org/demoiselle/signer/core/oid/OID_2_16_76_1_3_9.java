@@ -34,11 +34,11 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.oid;
 
-
 /**
- * OID = 2.16.76.1.3.9 And content = in the first 11 (eleven) positions, 
+ * OID = 2.16.76.1.3.9 And content = in the first 11 (eleven) positions,
  * the Brazilian Civil Identity Registration number.
  *
  * @author Humberto Pacheco - SERVICO FEDERAL DE PROCESSAMENTO DE DADOS

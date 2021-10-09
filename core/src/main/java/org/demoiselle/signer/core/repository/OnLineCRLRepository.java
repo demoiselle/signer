@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.repository;
 
 import java.io.DataInputStream;
@@ -66,7 +67,7 @@ public class OnLineCRLRepository implements CRLRepository {
     private final Logger logger = LoggerFactory.getLogger(OnLineCRLRepository.class);
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
     private Proxy proxy;
-    
+
     public OnLineCRLRepository() {
     	this.proxy = Proxy.NO_PROXY;
     }

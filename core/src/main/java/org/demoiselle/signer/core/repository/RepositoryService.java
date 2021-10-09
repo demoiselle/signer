@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.repository;
 
 import java.io.File;
@@ -53,8 +54,8 @@ public class RepositoryService {
     private static final String ADD = "add-crl";
     private static String rt = "";
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-    
-    
+
+
     public static void main(String[] args) {
         if (args == null || args.length < 2) {
             println(coreMessagesBundle.getString("error.repository.service.args"));
@@ -79,7 +80,7 @@ public class RepositoryService {
                 ConfigurationRepo.getInstance().setCrlIndex(file_index);
 
                 if (!fileIndex.exists()) {
-                	
+
                     println(coreMessagesBundle.getString("error.file.not.found",file_index));
 
                 } else {

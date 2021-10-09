@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.keystore.loader.factory;
 
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
@@ -50,18 +51,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * factory fo an instance of KeyStoreLoader
  * @see org.demoiselle.signer.core.keystore.loader.KeyStoreLoader
  */
 public class KeyStoreLoaderFactory {
 
     private static final Logger logger = LoggerFactory.getLogger(KeyStoreLoaderFactory.class);
-    
+
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     /**
-    * 
+    *
     * Method responsible for fabricating an instance of KeyStoreLoader based on PKCS#11.
     * Usually this method builds chargers based on the environment settings.
     * You can manufacture instances oriented to windows or linux environment, or else based on the JVM version. <br>
@@ -95,8 +96,8 @@ public class KeyStoreLoaderFactory {
     public static KeyStoreLoader factoryKeyStoreLoader(File file) {
         return new FileSystemKeyStoreLoader(file);
     }
-    
-    
+
+
     /**
      * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
      *
@@ -106,16 +107,16 @@ public class KeyStoreLoaderFactory {
     public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream) {
         return new FileSystemKeyStoreLoader(inputStream);
     }
-    
+
     /**
-     * 
      *
-     * 
+     *
+     *
      */
-    
+
     /**
      * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
-     * 
+     *
      * @param InputStrean containing keystore
      * @param type type of keystore (maybe PKCS12 or JKS
      * @return {@link KeyStoreLoader}
@@ -125,7 +126,7 @@ public class KeyStoreLoaderFactory {
     }
 
     /**
-     * Method responsible for fabricating an instance of AbstractKeyStoreLoader based on a class passed as parameter. 
+     * Method responsible for fabricating an instance of AbstractKeyStoreLoader based on a class passed as parameter.
      * Represents an extension point of the component, which allows the application to implement its own KeyStore loading method.
      *
      * @param clazz class to instantiate from

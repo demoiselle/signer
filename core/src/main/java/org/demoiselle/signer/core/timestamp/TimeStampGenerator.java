@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.timestamp;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
@@ -42,14 +43,14 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
 /**
- * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service 
- * RFC 3161 
+ * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service
+ * RFC 3161
  * @author 07721825741
  */
 public interface TimeStampGenerator {
 
 	/**
-	 * 
+	 *
 	 * @param content to be sign, if it is the parameter hash must to be null
 	 * @param privateKey authorized to use a TSA service
 	 * @param certificates trusted chain
@@ -59,14 +60,14 @@ public interface TimeStampGenerator {
     void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates, byte[] hash) throws CertificateCoreException;
 
     /**
-     * 
+     *
      * @return timestamp
      * @throws CertificateCoreException exception
      */
     byte[] generateTimeStamp() throws CertificateCoreException;
 
     /**
-     * 
+     *
      * @param content to be sign, if it is the parameter hash must to be null
      * @param response signed timestamp from TSA
      *  @param hash to be sign, if it is assigned the parameter content must to be null
