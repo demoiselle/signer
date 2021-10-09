@@ -34,14 +34,15 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.engine.exception;
+
 /**
- * custom unchecked exceptions for package   
+ * custom unchecked exceptions for package
  */
 public class PolicyException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
-	
 
 	public PolicyException() {
 		super();
@@ -64,6 +65,6 @@ public class PolicyException extends RuntimeException {
 		super(cause);
 	}
 
-	
+
 
 }

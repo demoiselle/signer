@@ -59,8 +59,7 @@ import org.slf4j.LoggerFactory;
 public class TimestampGeneratorImpl implements TimeStampGenerator {
 
 	private static final Logger logger = LoggerFactory.getLogger(TimestampGeneratorImpl.class);
-	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
-
+	private static final MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
     private byte[] content = null;
     private PrivateKey privateKey;

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.engine.repository;
 
 import java.io.FileNotFoundException;
@@ -51,42 +52,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * Class to persist LPA file on local directory
  *
  */
 public class LPARepository {
-	
+
 	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 	private static final Logger LOGGER = LoggerFactory.getLogger(LPARepository.class);
-	
+
 	/**
-	 * 
-	 * to save file on user local directory 
-	 * 
-	 * @param urlConLPA Url for get the LPA file 
+	 *
+	 * to save file on user local directory
+	 *
+	 * @param urlConLPA Url for get the LPA file
 	 * @param lpaName the name of file to be saved
 	 * @return true if file was saved
 	 */
-	
+
 	public static boolean saveLocalLPA(final String urlConLPA, final String lpaName) {
 		ConfigurationRepo config = ConfigurationRepo.getInstance();
 		try {
-			
+
 			if (config.isOnlineLPA()) {
 				return true;
 			}
 			Path pathLPA = Paths.get(config.getLpaPath());
 			Path pathLPAFile = Paths.get(config.getLpaPath(), lpaName);
 			LOGGER.info(policyMessagesBundle.getString("info.lpa.url.download", urlConLPA));
-			
+
 			if (!Files.isDirectory(pathLPA)) {
-				LOGGER.info(policyMessagesBundle.getString("warn.lpa.dir.not.found", pathLPA));				
+				LOGGER.info(policyMessagesBundle.getString("warn.lpa.dir.not.found", pathLPA));
 				Files.createDirectories(pathLPA);
 			}
 			LOGGER.info(policyMessagesBundle.getString("info.lpa.url.download", urlConLPA));
-			
-			InputStream is = Downloads.getInputStreamFromURL(urlConLPA);	
+
+			InputStream is = Downloads.getInputStreamFromURL(urlConLPA);
 			Files.copy(is, pathLPAFile, StandardCopyOption.REPLACE_EXISTING);
 			is.close();
 			return true;
@@ -98,9 +99,9 @@ public class LPARepository {
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.local.exception", e.getMessage()));
 			config.setOnlineLPA(true);
 			return true;
-		}		
-	}	
-	
+		}
+	}
+
 }
 
 
