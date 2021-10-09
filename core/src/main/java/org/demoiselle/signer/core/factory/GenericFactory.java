@@ -42,10 +42,8 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 
 
 /**
- * Abstract factory that concentrates the reading of the configurations for 
+ * Abstract factory that concentrates the reading of the configurations for
  * all the other specialized factories as well as the class reflection functionalities.
- *
- * @see org.demoiselle.signer.policy.impl.cades.factory.PKCS1Factory org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory
  *
  */
 abstract public class GenericFactory<F> {
@@ -55,10 +53,10 @@ abstract public class GenericFactory<F> {
 
 
     /**
-     * Main method of the factory. 
-     * This method makes classes from the names of classes defined in environment variables. 
+     * Main method of the factory.
+     * This method makes classes from the names of classes defined in environment variables.
      * Such variables are defined by each concrete factory that implements the abstract factory through the getVariableName () method.
-     *  Once the environment variable is read, the value of the variable is stored in the "className" property. 
+     *  Once the environment variable is read, the value of the variable is stored in the "className" property.
      *  If the environment variable is not set, a default object is built through the abstract factoryDefault () method.
 	 * @return Instance of factory
      */
@@ -105,7 +103,7 @@ abstract public class GenericFactory<F> {
     }
 
     /**
-     * Search the environment variables or JVM variables for a certain value. 
+     * Search the environment variables or JVM variables for a certain value.
      * The priority is for the environment variables.
      *
      * @param key Variable location key
