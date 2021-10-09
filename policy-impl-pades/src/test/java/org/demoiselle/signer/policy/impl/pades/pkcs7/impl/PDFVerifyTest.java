@@ -39,15 +39,12 @@ public class PDFVerifyTest {
 			for (PDSignature sig : document.getSignatureDictionaries()) {
 					COSDictionary sigDict = sig.getCOSObject();
 					COSString contents = (COSString) sigDict.getDictionaryObject(COSName.CONTENTS);
-					FileInputStream fis = new FileInputStream(filePath);
+
 					byte[] buf = null;
 
-					try {
+					try (FileInputStream fis = new FileInputStream(filePath)) {
 						buf = sig.getSignedContent(fis);
-					} finally {
-						fis.close();
 					}
-
 
 					// Cache LCR
 					ConfigurationRepo configlcr = ConfigurationRepo.getInstance();
@@ -188,13 +185,10 @@ public class PDFVerifyTest {
 			for (PDSignature sig : document.getSignatureDictionaries()) {
 					COSDictionary sigDict = sig.getCOSObject();
 					COSString contents = (COSString) sigDict.getDictionaryObject(COSName.CONTENTS);
-					FileInputStream fis = new FileInputStream(filePath);
 					byte[] buf = null;
 
-					try {
+					try (FileInputStream fis = new FileInputStream(filePath)) {
 						buf = sig.getSignedContent(fis);
-					} finally {
-						fis.close();
 					}
 
 					PAdESTimeStampSigner varPAdESTimeStampSigner = new PAdESTimeStampSigner();
