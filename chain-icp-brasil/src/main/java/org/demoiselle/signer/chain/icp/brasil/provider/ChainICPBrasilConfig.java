@@ -1,4 +1,3 @@
-
 /*
  * Demoiselle Framework
  * Copyright (C) 2019 SERPRO
@@ -35,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.chain.icp.brasil.provider;
 
 import java.util.MissingResourceException;
@@ -57,17 +57,16 @@ public class ChainICPBrasilConfig {
 
     private static ChainICPBrasilConfig instance = null;
     private static ResourceBundle bundle = null;
-    private static MessagesBundle ChainICPBrasilMessagesBundle = new MessagesBundle();
-    
+    private static final MessagesBundle ChainICPBrasilMessagesBundle = new MessagesBundle();
+
     private String url_local_ac_list;
     private String url_local_ac_list_sha512;
     private String url_iti_ac_list;
     private String url_iti_ac_list_sha512;
     private String local_dir = "/tmp";
 
-    
     /**
-     * 
+     *
      * @return  Returns an instance of ChainICPBrasilConfig
      */
     public static ChainICPBrasilConfig getInstance() {
@@ -79,7 +78,7 @@ public class ChainICPBrasilConfig {
 
     public ResourceBundle getBundle(String bundleName) {
         return ResourceBundle.getBundle(bundleName);
-    }    
+    }
 
     protected ChainICPBrasilConfig() {
         if (bundle == null){
@@ -120,7 +119,7 @@ public class ChainICPBrasilConfig {
 		try {
 			setUrl_local_ac_list_sha512(bundle.getString("url_local_ac_list_sha512"));
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list_sha512"));	
+			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list_sha512"));
 		}
 		return url_local_ac_list_sha512;
 	}
@@ -158,7 +157,7 @@ public class ChainICPBrasilConfig {
 		try {
 			setUrl_iti_ac_list_sha512(bundle.getString("url_iti_ac_list_sha512"));
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list_sha512"));		
+			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list_sha512"));
 		}
 		return url_iti_ac_list_sha512;
 	}
