@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import org.apache.commons.codec.binary.Base64;
@@ -47,6 +48,7 @@ import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
+import org.junit.Ignore;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -63,6 +65,7 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  */
+@Ignore
 @SuppressWarnings("unused")
 public class CAdESCheckerTest {
 

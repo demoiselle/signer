@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import org.apache.commons.codec.binary.Base64;
