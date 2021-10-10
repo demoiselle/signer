@@ -46,10 +46,10 @@ import java.security.cert.X509Certificate;
 public interface IOIDExtensionLoader {
 
 	/**
-	 * @param object object to store
-	 * @param field  field to store
-	 * @param x509   java.security.cert.X509Certificate certificate to get extension from
+	 * @param object object to store.
+	 * @param field  field to store.
+	 * @param x509   {@link X509Certificate} certificate to get extension from.
 	 */
-	public void load(Object object, Field field, X509Certificate x509);
+	void load(Object object, Field field, X509Certificate x509);
 
 }

@@ -105,18 +105,16 @@ public final class TimeStampGeneratorSelector implements Serializable {
 	 * @return
 	 */
 	private static int getPriority(TimeStampGenerator clazz) {
-		int result = Priority.MAX_PRIORITY;
 		Priority priority = clazz.getClass().getAnnotation(Priority.class);
 
-		if (priority != null) {
-			result = priority.value();
-		}
-
+		// FIXME Seria throw new ...?
 		if (priority == null) {
 			new CertificateCoreException(coreMessagesBundle.getString("error.priority.null", clazz.getClass().getName()));
 		}
 
-		return result;
+		return priority != null
+			? priority.value()
+			: Priority.MAX_PRIORITY;
 	}
 
 	/**
