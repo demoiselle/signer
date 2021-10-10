@@ -42,30 +42,27 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *
  * The CommitmentRule for given commitment types are defined in terms
  * of trust conditions for certificates, timestamps and attributes,
  * along with any constraints on attributes that may be included in the electronic signature
- *
  */
 public class CommitmentRule extends CommonRules {
 
-    private SelectedCommitmentTypes selCommitmentTypes;
+	private SelectedCommitmentTypes selCommitmentTypes;
 
-    public SelectedCommitmentTypes getSelCommitmentTypes() {
-        return selCommitmentTypes;
-    }
+	public SelectedCommitmentTypes getSelCommitmentTypes() {
+		return selCommitmentTypes;
+	}
 
-    public void setSelCommitmentTypes(SelectedCommitmentTypes selCommitmentTypes) {
-        this.selCommitmentTypes = selCommitmentTypes;
-    }
+	public void setSelCommitmentTypes(SelectedCommitmentTypes selCommitmentTypes) {
+		this.selCommitmentTypes = selCommitmentTypes;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        super.parse(derObject);
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        this.selCommitmentTypes = new SelectedCommitmentTypes();
-        this.selCommitmentTypes.parse(derSequence.getObjectAt(0).toASN1Primitive());
-    }
-
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		super.parse(derObject);
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		this.selCommitmentTypes = new SelectedCommitmentTypes();
+		this.selCommitmentTypes.parse(derSequence.getObjectAt(0).toASN1Primitive());
+	}
 }

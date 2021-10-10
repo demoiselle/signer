@@ -44,102 +44,97 @@ import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509CRL;
+
 import org.demoiselle.signer.core.util.Base64Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- *  ICP-BRASIL's definitions of Certificate revocation list (CRL) on java.security.cert.X509CRL format
- *
+ * ICP-BRASIL's definitions of Certificate revocation list (CRL) on java.security.cert.X509CRL format
  */
 public class ICPBR_CRL {
 
-    private X509CRL x509crl = null;
-    private final Logger logger = LoggerFactory.getLogger(ICPBR_CRL.class);
+	private X509CRL x509crl = null;
+	private final Logger logger = LoggerFactory.getLogger(ICPBR_CRL.class);
 
-    /**
-     *
-     * @param is InputStream
-     * @throws CRLException exception
-     * @throws CertificateException exception
-     */
-    public ICPBR_CRL(InputStream is) throws CRLException, CertificateException {
-        this.x509crl = getInstance(is);
-    }
+	/**
+	 * @param is InputStream
+	 * @throws CRLException         exception
+	 * @throws CertificateException exception
+	 */
+	public ICPBR_CRL(InputStream is) throws CRLException, CertificateException {
+		this.x509crl = getInstance(is);
+	}
 
-    /**
-     *
-     * @param data byte array
-     * @throws CRLException exception
-     * @throws CertificateException exception
-     * @throws IOException exception
-     */
-    public ICPBR_CRL(byte[] data) throws CRLException, CertificateException, IOException {
-        this.x509crl = getInstance(data);
-    }
+	/**
+	 * @param data byte array
+	 * @throws CRLException         exception
+	 * @throws CertificateException exception
+	 * @throws IOException          exception
+	 */
+	public ICPBR_CRL(byte[] data) throws CRLException, CertificateException, IOException {
+		this.x509crl = getInstance(data);
+	}
 
-    /**
-     *
-     * @param data byte array
-     * @return Object X509CRL
-     * @see java.security.cert.X509CRL
-     * @throws CRLException exception
-     * @throws IOException exception
-     * @throws CertificateException exception
-     */
-    private X509CRL getInstance(byte[] data) throws CRLException, IOException, CertificateException {
-        X509CRL crl = null;
+	/**
+	 * @param data byte array
+	 * @return Object X509CRL
+	 * @throws CRLException         exception
+	 * @throws IOException          exception
+	 * @throws CertificateException exception
+	 * @see java.security.cert.X509CRL
+	 */
+	private X509CRL getInstance(byte[] data) throws CRLException, IOException, CertificateException {
+		X509CRL crl = null;
 
-        try {
-            // Tenta carregar a CRL como se fosse um arquivo binario!
-            ByteArrayInputStream bis = new ByteArrayInputStream(data);
-            crl = getInstance(bis);
-            bis.close();
-            bis = null;
-        } catch (CRLException e) {
-            // Nao conseguiu carregar o arquivo. Verifica se ele esta codificado
-            // em Base64
-        	logger.error(e.getMessage());
-            byte[] data2 = null;
-            try {
-                data2 = Base64Utils.base64Decode(new String(data));
-            } catch (Exception e2) {
-                // Nao foi possivel decodificar o arquivo em Base64
-            	logger.error(e.getMessage());
-                throw e;
-            }
+		try {
+			// Tenta carregar a CRL como se fosse um arquivo binario!
+			ByteArrayInputStream bis = new ByteArrayInputStream(data);
+			crl = getInstance(bis);
+			bis.close();
+			bis = null;
+		} catch (CRLException e) {
+			// Nao conseguiu carregar o arquivo. Verifica se ele esta codificado
+			// em Base64
+			logger.error(e.getMessage());
+			byte[] data2 = null;
+			try {
+				data2 = Base64Utils.base64Decode(new String(data));
+			} catch (Exception e2) {
+				// Nao foi possivel decodificar o arquivo em Base64
+				logger.error(e.getMessage());
+				throw e;
+			}
 
-            ByteArrayInputStream bis = new ByteArrayInputStream(data2);
-            crl = getInstance(bis);
-            bis.close();
-            bis = null;
-        }
+			ByteArrayInputStream bis = new ByteArrayInputStream(data2);
+			crl = getInstance(bis);
+			bis.close();
+			bis = null;
+		}
 
-        return crl;
-    }
+		return crl;
+	}
 
-    /**
-     *
-     * @param is source for creating instance
-     * @return X509CRL
-     * @throws CRLException exception
-     * @throws CertificateException exception
-     */
-    private X509CRL getInstance(InputStream is) throws CRLException, CertificateException {
-        CertificateFactory cf = CertificateFactory.getInstance("X509");
-        X509CRL crl = (X509CRL) cf.generateCRL(is);
-        return crl;
-    }
+	/**
+	 * @param is source for creating instance
+	 * @return X509CRL
+	 * @throws CRLException         exception
+	 * @throws CertificateException exception
+	 */
+	private X509CRL getInstance(InputStream is) throws CRLException, CertificateException {
+		CertificateFactory cf = CertificateFactory.getInstance("X509");
+		X509CRL crl = (X509CRL) cf.generateCRL(is);
+		return crl;
+	}
 
-    /**
-     * returns the CRL
-     *
-     * @return Object X509CRL
-     * @see java.security.cert.X509CRL
-     */
-    public X509CRL getCRL() {
-        return x509crl;
-    }
+	/**
+	 * returns the CRL
+	 *
+	 * @return Object X509CRL
+	 * @see java.security.cert.X509CRL
+	 */
+	public X509CRL getCRL() {
+		return x509crl;
+	}
 
 }

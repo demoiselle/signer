@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import java.io.IOException;
@@ -97,15 +98,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
  * Basic Implementation for digital signatures in PKCS7 Format.
- * 
  */
 public class CAdESChecker implements PKCS7Checker {
 
 	private static final Logger logger = LoggerFactory.getLogger(CAdESChecker.class);
 
-	
 	private SignaturePolicy signaturePolicy = null;
 	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 	private byte[] hash = null;
@@ -114,7 +112,6 @@ public class CAdESChecker implements PKCS7Checker {
 	private List<SignatureInformations> signaturesInfo = new ArrayList<SignatureInformations>();
 	private String policyName;
 	private CertificateManager certificateManager;
-
 
 	public CAdESChecker() {
 		super();
@@ -125,36 +122,36 @@ public class CAdESChecker implements PKCS7Checker {
 	 * only with content of type DATA.: OID ContentType 1.2.840.113549.1.9.3 =
 	 * OID Data 1.2.840.113549.1.7.1
 	 *
-	 * @param content Is only necessary to inform if the PKCS7 package is NOT
-	 *        ATTACHED type. If it is of type attached, this parameter will be
-	 *        replaced by the contents of the PKCS7 package.
+	 * @param content    Is only necessary to inform if the PKCS7 package is NOT
+	 *                   ATTACHED type. If it is of type attached, this parameter will be
+	 *                   replaced by the contents of the PKCS7 package.
 	 * @param signedData Value in bytes of the PKCS7 package, such as the
-	 *        contents of a ".p7s" file. It is not only signature as in the
-	 *        case of PKCS1.
+	 *                   contents of a ".p7s" file. It is not only signature as in the
+	 *                   case of PKCS1.
 	 */
 
-	private boolean check(byte[] content, byte[] signedData) throws SignerException{
+	private boolean check(byte[] content, byte[] signedData) throws SignerException {
 		Security.addProvider(new BouncyCastleProvider());
 		CMSSignedData cmsSignedData = null;
 		try {
 			if (content == null) {
-				if (this.checkHash){
+				if (this.checkHash) {
 					cmsSignedData = new CMSSignedData(this.hashes, signedData);
 					this.checkHash = false;
-				}else{
+				} else {
 					cmsSignedData = new CMSSignedData(signedData);
 				}
-				
+
 			} else {
-				if (this.getAttached(signedData, false).getExtractedContent() != null){
+				if (this.getAttached(signedData, false).getExtractedContent() != null) {
 					cmsSignedData = new CMSSignedData(signedData);
-				}else{
+				} else {
 					cmsSignedData = new CMSSignedData(new CMSProcessableByteArray(content), signedData);
 				}
-				
+
 			}
 		} catch (CMSException ex) {
-			logger.error(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7")+ex.getMessage());
+			logger.error(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7") + ex.getMessage());
 			throw new SignerException(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"), ex);
 		}
 
@@ -171,7 +168,7 @@ public class CAdESChecker implements PKCS7Checker {
 			try {
 				SignerInformation signerInfo = (SignerInformation) it.next();
 				SignerInformationStore signerInfoStore = signerInfo.getCounterSignatures();
-				
+
 				if (signerInfoStore.size() > 0) {
 					logger.info("Foi(ram) encontrada(s) " + signerInfoStore.size() + " contra-assinatura(s).");
 				}
@@ -181,24 +178,24 @@ public class CAdESChecker implements PKCS7Checker {
 
 				Iterator<?> certIt = certCollection.iterator();
 				X509CertificateHolder certificateHolder = (X509CertificateHolder) certIt.next();
-				
+
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
-					
-				CRLValidator cV = new CRLValidator();				
+
+				CRLValidator cV = new CRLValidator();
 				try {
-					cV.validate(varCert);	
-				}catch (CertificateValidatorCRLException cvce) {
+					cV.validate(varCert);
+				} catch (CertificateValidatorCRLException cvce) {
 					signatureInfo.getValidatorErrors().add(cvce.getMessage());
 					logger.debug(cvce.getMessage());
-				}catch (CertificateRevocationException cre) {
+				} catch (CertificateRevocationException cre) {
 					signatureInfo.getValidatorErrors().add(cre.getMessage());
 					logger.debug(cre.getMessage());
 				}
-				
-				PeriodValidator pV = new PeriodValidator();				
-				try{
-					signatureInfo.setNotAfter(pV.valDate(varCert));			
-				}catch (CertificateValidatorException cve) {
+
+				PeriodValidator pV = new PeriodValidator();
+				try {
+					signatureInfo.setNotAfter(pV.valDate(varCert));
+				} catch (CertificateValidatorException cve) {
 					signatureInfo.getValidatorWarnins().add(cve.getMessage());
 					logger.error(cve.getMessage());
 				}
@@ -206,19 +203,16 @@ public class CAdESChecker implements PKCS7Checker {
 					if (signerInfo.verify(new JcaSimpleSignerInfoVerifierBuilder().setProvider("BC").build(certificateHolder))) {
 						verified++;
 						logger.info(cadesMessagesBundle.getString("info.signature.valid.seq", verified));
-						
-					}else {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature","Erro de verificação!" ));
-					signatureInfo.setInvalidSignature(true);
+
+					} else {
+						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature", "Erro de verificação!"));
+						signatureInfo.setInvalidSignature(true);
 					}
-				}catch (CMSVerifierCertificateNotValidException e) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature",e.getMessage()));
+				} catch (CMSVerifierCertificateNotValidException e) {
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature", e.getMessage()));
 					signatureInfo.setInvalidSignature(true);
 				}
-				
-			
-				
-				
+
 				// recupera atributos assinados
 				logger.debug(cadesMessagesBundle.getString("info.signed.attribute"));
 				String varOIDPolicy = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId.getId();
@@ -227,22 +221,22 @@ public class CAdESChecker implements PKCS7Checker {
 					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					logger.warn(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
 					//throw new SignerException(cadesMessagesBundle.getString("error.signed.attribute.table.not.found"));
-				}else{
+				} else {
 					//Validando atributos assinados de acordo com a politica
-					Attribute idSigningPolicy = null;					
+					Attribute idSigningPolicy = null;
 					idSigningPolicy = signedAttributes.get(new ASN1ObjectIdentifier(varOIDPolicy));
-					if (idSigningPolicy == null) {							
-							signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found",varOIDPolicy));
-					}else{
-						for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements();){
+					if (idSigningPolicy == null) {
+						signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", varOIDPolicy));
+					} else {
+						for (Enumeration<?> p = idSigningPolicy.getAttrValues().getObjects(); p.hasMoreElements(); ) {
 							String policyOnSignature = p.nextElement().toString();
-							for (PolicyFactory.Policies pv : PolicyFactory.Policies.values()){
-								if (policyOnSignature.contains(pv.getUrl())){
+							for (PolicyFactory.Policies pv : PolicyFactory.Policies.values()) {
+								if (policyOnSignature.contains(pv.getUrl())) {
 									setSignaturePolicy(pv);
 									break;
-								}							
+								}
 							}
-						}						
+						}
 					}
 				}
 				Date dataHora = null;
@@ -266,44 +260,42 @@ public class CAdESChecker implements PKCS7Checker {
 					if (attributeMessageDigest == null) {
 						logger.info(cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 						throw new SignerException(
-								cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
+							cadesMessagesBundle.getString("error.pcks7.attribute.not.found", "MessageDigest"));
 					}
 					// Mostra data e  hora da assinatura, não é carimbo de tempo
 					Attribute timeAttribute = signedAttributes.get(CMSAttributes.signingTime);
-					
+
 					if (timeAttribute != null) {
 						TimeZone.setDefault(null);
 						dataHora = (((ASN1UTCTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
-						logger.debug(cadesMessagesBundle.getString("info.date.utc",dataHora));																
+						logger.debug(cadesMessagesBundle.getString("info.date.utc", dataHora));
 					} else {
-						logger.debug(cadesMessagesBundle.getString("info.date.utc","N/D"));
+						logger.debug(cadesMessagesBundle.getString("info.date.utc", "N/D"));
 					}
 
 				}
-								
-				if (signaturePolicy == null){
+
+				if (signaturePolicy == null) {
 					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
 					logger.debug(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
-				}else{					
+				} else {
 					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-							.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-							.getObjectIdentifiers() != null) {
+						.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
+						.getObjectIdentifiers() != null) {
 						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-								.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-								.getMandatedSignedAttr().getObjectIdentifiers()) {
-								String oi = objectIdentifier.getValue();
-								Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
-								logger.debug(oi);
-								if (signedAtt == null){
-									logger.debug(cadesMessagesBundle.getString("error.signed.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-									signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-								}										
+							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+							.getMandatedSignedAttr().getObjectIdentifiers()) {
+							String oi = objectIdentifier.getValue();
+							Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
+							logger.debug(oi);
+							if (signedAtt == null) {
+								logger.debug(cadesMessagesBundle.getString("error.signed.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
+								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
+							}
 						}
 					}
 				}
-				
-			
-				
+
 				// recupera os atributos NÃO assinados
 				logger.debug(cadesMessagesBundle.getString("info.unsigned.attribute"));
 				AttributeTable unsignedAttributes = signerInfo.getUnsignedAttributes();
@@ -311,46 +303,46 @@ public class CAdESChecker implements PKCS7Checker {
 					// Apenas info pois a RB não tem atributos não assinados
 					logger.debug(cadesMessagesBundle.getString("error.unsigned.attribute.table.not.found"));
 				}
-				if (signaturePolicy != null){
+				if (signaturePolicy != null) {
 					// Validando atributos NÃO assinados de acordo com a politica
 					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-							.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-							.getObjectIdentifiers() != null) {
-							for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-								.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-								.getMandatedUnsignedAttr().getObjectIdentifiers()) {
-								String oi = objectIdentifier.getValue();
-								Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
-								logger.debug(oi);
-								if (unSignedAtt == null){
-									logger.debug(cadesMessagesBundle.getString("error.signed.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-									signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.unsigned.attribute.not.found",oi,signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue() ));
-								}
-								if (oi.equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())){
-									//Verificando timeStamp
-									try{
-											byte[] varSignature = signerInfo.getSignature();
-											Timestamp varTimeStampSigner = validateTimestamp(unSignedAtt, varSignature); 
-											signatureInfo.setTimeStampSigner(varTimeStampSigner);
-									}catch (Exception ex) {
-										logger.info(ex.getMessage());
-										signatureInfo.getValidatorErrors().add(ex.getMessage());
-										// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.						
-									}
-								}
-								if (oi.equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")){
-									logger.info("++++++++++  EscTimeStamp ++++++++++++");
+						.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
+						.getObjectIdentifiers() != null) {
+						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
+							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+							.getMandatedUnsignedAttr().getObjectIdentifiers()) {
+							String oi = objectIdentifier.getValue();
+							Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
+							logger.debug(oi);
+							if (unSignedAtt == null) {
+								logger.debug(cadesMessagesBundle.getString("error.signed.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
+								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.unsigned.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
+							}
+							if (oi.equalsIgnoreCase(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId())) {
+								//Verificando timeStamp
+								try {
+									byte[] varSignature = signerInfo.getSignature();
+									Timestamp varTimeStampSigner = validateTimestamp(unSignedAtt, varSignature);
+									signatureInfo.setTimeStampSigner(varTimeStampSigner);
+								} catch (Exception ex) {
+									logger.info(ex.getMessage());
+									signatureInfo.getValidatorErrors().add(ex.getMessage());
+									// nas assinaturas feitas na applet o unsignedAttributes.get gera exceção.
 								}
 							}
-						}						
+							if (oi.equalsIgnoreCase("1.2.840.113549.1.9.16.2.25")) {
+								logger.info("++++++++++  EscTimeStamp ++++++++++++");
+							}
+						}
+					}
 				}
-				
+
 				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
 				// menor que 2 = autoAssinado
-				if (varChain.size() < 2){ 
+				if (varChain.size() < 2) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
 					logger.info(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
-					
+
 				}
 				for (X509Certificate cert : varChain) {
 					BasicCertificate signerCertificate = new BasicCertificate(cert);
@@ -362,18 +354,17 @@ public class CAdESChecker implements PKCS7Checker {
 				signatureInfo.setChain(varChain);
 				signatureInfo.setSignaturePolicy(signaturePolicy);
 				this.getSignaturesInfo().add(signatureInfo);
-				
+
 			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
 				signatureInfo.getValidatorErrors().add(ex.getMessage());
 				logger.info(ex.getMessage());
-			} catch (CMSException ex) {				
+			} catch (CMSException ex) {
 				// When file is mismatch with sign
-				if (ex instanceof CMSSignerDigestMismatchException){
+				if (ex instanceof CMSSignerDigestMismatchException) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
 					logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
 					throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
-				}					
-				else{
+				} else {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
 					logger.info(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
 					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()), ex);
@@ -381,37 +372,37 @@ public class CAdESChecker implements PKCS7Checker {
 			} catch (ParseException e) {
 				signatureInfo.getValidatorErrors().add(e.getMessage());
 				logger.info(e.getMessage());
-			} 
+			}
 		}
 		logger.debug(cadesMessagesBundle.getString("info.signature.verified", verified));
 		// TODO Efetuar o parsing da estrutura CMS
 		return true;
 	}
-	
+
 	/**
-	 *  validate a timestamp on signature
+	 * validate a timestamp on signature
+	 *
 	 * @param attributeTimeStamp
 	 * @param varSignature
 	 * @return
 	 */
-	private Timestamp validateTimestamp(Attribute attributeTimeStamp, byte[] varSignature){
+	private Timestamp validateTimestamp(Attribute attributeTimeStamp, byte[] varSignature) {
 		try {
 			TimeStampOperator timeStampOperator = new TimeStampOperator();
-			byte [] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
+			byte[] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
 			TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
 			Timestamp timeStampSigner = new Timestamp(timeStampToken);
-			timeStampOperator.validate(varSignature,varTimeStamp , null);
+			timeStampOperator.validate(varSignature, varTimeStamp, null);
 			return timeStampSigner;
 		} catch (CertificateCoreException | IOException | TSPException | CMSException e) {
 			throw new SignerException(e);
-		}		
+		}
 	}
-	
+
 	/**
 	 * Return the signed file content attached to the signature.
 	 *
-	 * @param signed
-	 *            Signature and signed content.
+	 * @param signed Signature and signed content.
 	 * @return content for attached signature
 	 * @deprecated it not return validation data, use: AttachedContentValidation getAttached(byte[] signed, boolean validateOnExtract)
 	 */
@@ -419,17 +410,13 @@ public class CAdESChecker implements PKCS7Checker {
 		AttachedContentValidation varAttachedContentValidation = this.getAttached(signed, true);
 		return varAttachedContentValidation.getExtractedContent();
 	}
-	
 
 	/**
 	 * Extracts the signed content from the digital signature structure, if it
 	 * is a signature with attached content.
 	 *
-	 * @param signed
-	 *            Signature and signed content.
-	 * @param validateOnExtract
-	 *            TRUE (to execute validation) or FALSE (not execute validation)
-	 * 
+	 * @param signed            Signature and signed content.
+	 * @param validateOnExtract TRUE (to execute validation) or FALSE (not execute validation)
 	 * @return content for attached signature
 	 */
 	@Override
@@ -440,14 +427,14 @@ public class CAdESChecker implements PKCS7Checker {
 		if (validateOnExtract) {
 			if (this.check(null, signed)) {
 				varAttachedContentValidation.setSignaturesInfo(getSignaturesInfo());
-			}			
+			}
 		}
 
 		CMSSignedData signedData = null;
 		try {
 			signedData = new CMSSignedData(signed);
 		} catch (CMSException exception) {
-			logger.error(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7")+ exception.getMessage());
+			logger.error(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7") + exception.getMessage());
 			throw new SignerException(cadesMessagesBundle.getString("error.invalid.bytes.pkcs7"), exception);
 		}
 
@@ -455,48 +442,46 @@ public class CAdESChecker implements PKCS7Checker {
 			CMSProcessable contentProcessable = signedData.getSignedContent();
 			if (contentProcessable != null) {
 				varAttachedContentValidation.setExtractedContent((byte[]) contentProcessable.getContent());
-			}
-			else{
+			} else {
 				logger.debug(cadesMessagesBundle.getString("error.get.content.empty"));
 			}
 		} catch (Exception exception) {
-			logger.error(cadesMessagesBundle.getString("error.get.content.pkcs7")+exception.getMessage());
+			logger.error(cadesMessagesBundle.getString("error.get.content.pkcs7") + exception.getMessage());
 			throw new SignerException(cadesMessagesBundle.getString("error.get.content.pkcs7"), exception);
 		}
 
 		return varAttachedContentValidation;
 
-	}		
-		
-	@Override
-	public  List<SignatureInformations> checkAttachedSignature(byte[] signedData){
-		if (this.check(null, signedData)){
-			return this.getSignaturesInfo();
-		}else{
-			return null;
-		}
 	}
-    		
-	@Override
-	public  List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData){
-		if (this.check(content, signedData)){
-			return this.getSignaturesInfo();
-		}else{
-			return null;
-		}
-	}
-	
 
 	@Override
-	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException{
+	public List<SignatureInformations> checkAttachedSignature(byte[] signedData) {
+		if (this.check(null, signedData)) {
+			return this.getSignaturesInfo();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData) {
+		if (this.check(content, signedData)) {
+			return this.getSignaturesInfo();
+		} else {
+			return null;
+		}
+	}
+
+	@Override
+	public List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData) throws SignerException {
 		this.checkHash = true;
 		this.hashes.put(digestAlgorithmOID, calculatedHashContent);
 		this.setHash(calculatedHashContent);
-		if (this.check(null, signedData)){
+		if (this.check(null, signedData)) {
 			return this.getSignaturesInfo();
-		}else{
+		} else {
 			return null;
-		}		
+		}
 	}
 
 	private void setSignaturePolicy(PolicyFactory.Policies signaturePolicy) {
@@ -506,8 +491,6 @@ public class CAdESChecker implements PKCS7Checker {
 		this.signaturePolicy = sp;
 	}
 
-	
-	
 	@Override
 	public List<SignatureInformations> getSignaturesInfo() {
 		return signaturesInfo;
@@ -540,8 +523,4 @@ public class CAdESChecker implements PKCS7Checker {
 	public void setHash(byte[] hash) {
 		this.hash = hash;
 	}
-
-	
-	
-	
 }

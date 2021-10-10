@@ -34,12 +34,14 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
+
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -64,81 +66,80 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute
 
 /**
  * Complete Certificate Refs Attribute Definition
- * 
- * The Complete Certificate Refs attribute is an unsigned attribute.  
+ * <p>
+ * The Complete Certificate Refs attribute is an unsigned attribute.
  * It references the full set of CA certificates that have been used to
  * validate a ES with Complete validation data (ES-C) up to (but not
  * including) the signer's certificate.  Only a single instance of this
  * attribute must occur with an electronic signature.
- * 
+ * <p>
  * Note: The signer's certified is referenced in the signing certificate
  * attribute (see clause 3.1 https://www.ietf.org/rfc/rfc3126.txt)
- * 
- *  id-aa-ets-certificateRefs OBJECT IDENTIFIER ::= { iso(1) member-body(2)
- *  	  us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-aa(2) 21}
- *  
- *  The complete certificate refs attribute value has the ASN.1 syntax  CompleteCertificateRefs.
- *  
- *  CompleteCertificateRefs ::=  SEQUENCE OF OTHERCertID
- *  
- *  OTHERCertID is defined in clause 3.8.2.
- *  
- *  OtherCertID ::= SEQUENCE {
-       otherCertHash            OtherHash,
-       issuerSerial             IssuerSerial OPTIONAL }
- *  
- *  The IssuerSerial that must be present in OTHERCertID.  
- *  The certHash  must match the hash of the certificate referenced.
- * 
+ * <p>
+ * id-aa-ets-certificateRefs OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ * us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-aa(2) 21}
+ * <p>
+ * The complete certificate refs attribute value has the ASN.1 syntax  CompleteCertificateRefs.
+ * <p>
+ * CompleteCertificateRefs ::=  SEQUENCE OF OTHERCertID
+ * <p>
+ * OTHERCertID is defined in clause 3.8.2.
+ * <p>
+ * OtherCertID ::= SEQUENCE {
+ * otherCertHash            OtherHash,
+ * issuerSerial             IssuerSerial OPTIONAL }
+ * <p>
+ * The IssuerSerial that must be present in OTHERCertID.
+ * The certHash  must match the hash of the certificate referenced.
  */
 public class CertificateRefs implements UnsignedAttribute {
 
-    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_certificateRefs;
-        
-    private Certificate[] certificates = null;
+	private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_certificateRefs;
+
+	private Certificate[] certificates = null;
 
 	@Override
 	public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content,
-			SignaturePolicy signaturePolicy, byte[] hash) {
+						   SignaturePolicy signaturePolicy, byte[] hash) {
 		this.certificates = certificates;
 	}
 
-    @Override
-    public String getOID() {
-        return identifier.getId();
-    }
+	@Override
+	public String getOID() {
+		return identifier.getId();
+	}
 
-    @Override
-    public Attribute getValue() throws SignerException {
-    	
-    	try {
-    		int chainSize = certificates.length -1;
-    		OtherCertID[] arrayOtherCertID = new OtherCertID[chainSize];	
-    		  for (int i = 1; i <= chainSize; i++ ){
-    			  	X509Certificate issuerCert = null;
-    		  	    X509Certificate cert = (X509Certificate) certificates[i];
-    		  	    if (i < chainSize){  
-    		  	    	issuerCert = (X509Certificate) certificates[i+1];
-    		  	    }else{ // raiz
-    		  	    	issuerCert = (X509Certificate) certificates[i];
-    		  	    }
-    	    		Digest digest = DigestFactory.getInstance().factoryDefault();
-    	    		digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
-    				byte[] certHash = digest.digest(cert.getEncoded());
-    				//X500Name dirName = new X500Name(issuerCert.getSubjectX500Principal().getName());
-    				X500Name dirName = new JcaX509CertificateHolder(issuerCert).getSubject();
-    				GeneralName name = new GeneralName(dirName);
-    				GeneralNames issuer = new GeneralNames(name);
-    				ASN1Integer serialNumber = new ASN1Integer(cert.getSerialNumber());
-    				IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
-    				AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);
-    				OtherCertID otherCertID = new OtherCertID(algId, certHash, issuerSerial);
-    				arrayOtherCertID[i -1] = otherCertID; 
-    		 }	 
-    		
-			return new Attribute(identifier, new DERSet(new ASN1Encodable[] { new DERSequence(arrayOtherCertID) }));
-    	} catch (CertificateEncodingException e) {
-    		throw new SignerException(e.getMessage());
-		}        
-    }
+	@Override
+	public Attribute getValue() throws SignerException {
+
+		try {
+			int chainSize = certificates.length - 1;
+			OtherCertID[] arrayOtherCertID = new OtherCertID[chainSize];
+			for (int i = 1; i <= chainSize; i++) {
+				X509Certificate issuerCert = null;
+				X509Certificate cert = (X509Certificate) certificates[i];
+				if (i < chainSize) {
+					issuerCert = (X509Certificate) certificates[i + 1];
+				} else { // raiz
+					issuerCert = (X509Certificate) certificates[i];
+				}
+				Digest digest = DigestFactory.getInstance().factoryDefault();
+				digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+				byte[] certHash = digest.digest(cert.getEncoded());
+				//X500Name dirName = new X500Name(issuerCert.getSubjectX500Principal().getName());
+				X500Name dirName = new JcaX509CertificateHolder(issuerCert).getSubject();
+				GeneralName name = new GeneralName(dirName);
+				GeneralNames issuer = new GeneralNames(name);
+				ASN1Integer serialNumber = new ASN1Integer(cert.getSerialNumber());
+				IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
+				AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);
+				OtherCertID otherCertID = new OtherCertID(algId, certHash, issuerSerial);
+				arrayOtherCertID[i - 1] = otherCertID;
+			}
+
+			return new Attribute(identifier, new DERSet(new ASN1Encodable[]{new DERSequence(arrayOtherCertID)}));
+		} catch (CertificateEncodingException e) {
+			throw new SignerException(e.getMessage());
+		}
+	}
 }

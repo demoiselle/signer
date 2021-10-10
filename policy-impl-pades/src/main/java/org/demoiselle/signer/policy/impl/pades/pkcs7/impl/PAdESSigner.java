@@ -35,7 +35,6 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-
 package org.demoiselle.signer.policy.impl.pades.pkcs7.impl;
 
 import java.security.PrivateKey;
@@ -49,22 +48,22 @@ import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.impl.CAdESSigner;
 import org.demoiselle.signer.policy.impl.pades.pkcs7.PCKS7Signer;
 
-public class PAdESSigner implements PCKS7Signer{
+public class PAdESSigner implements PCKS7Signer {
 
 	private CAdESSigner cAdESSigner;
-	
-	
+
 	public PAdESSigner() {
 		cAdESSigner = new CAdESSigner(null, Policies.AD_RB_PADES_1_1, true);
 	}
 
 	public PAdESSigner(Policies police) {
-		cAdESSigner = new CAdESSigner(null, police , true);
+		cAdESSigner = new CAdESSigner(null, police, true);
 	}
+
 	public PAdESSigner(String algorithm, Policies police) {
-		cAdESSigner = new CAdESSigner(algorithm, police , true);
+		cAdESSigner = new CAdESSigner(algorithm, police, true);
 	}
-	
+
 	@Override
 	public void setProvider(Provider provider) {
 		cAdESSigner.setProvider(provider);
@@ -92,7 +91,7 @@ public class PAdESSigner implements PCKS7Signer{
 
 	@Override
 	/**
-	 * Not for PAdES
+	 * Not for PAdES.
 	 * @param content
 	 * @return null
 	 */
@@ -143,13 +142,11 @@ public class PAdESSigner implements PCKS7Signer{
 	@Override
 	public void setCertificatesForTimeStamp(Certificate[] certificates) {
 		cAdESSigner.setCertificatesForTimeStamp(certificates);
-		
 	}
 
 	@Override
 	public void setPrivateKeyForTimeStamp(PrivateKey privateKeyForTimeStamp) {
-		cAdESSigner.setPrivateKeyForTimeStamp(privateKeyForTimeStamp);		
-		
+		cAdESSigner.setPrivateKeyForTimeStamp(privateKeyForTimeStamp);
 	}
 
 	@Override

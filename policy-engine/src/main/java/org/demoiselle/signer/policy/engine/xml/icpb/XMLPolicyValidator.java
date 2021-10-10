@@ -268,5 +268,4 @@ public class XMLPolicyValidator {
 	public XMLSignaturePolicy getXmlSignaturePolicy() {
 		return xmlSignaturePolicy;
 	}
-
 }

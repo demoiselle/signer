@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
@@ -54,60 +55,53 @@ import org.bouncycastle.asn1.esf.SigPolicyQualifiers;
 import org.bouncycastle.asn1.esf.SignaturePolicyId;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
+
 /**
- * 
- * Identifier Of Policy Of Signing 
- * 
- *
- *	
- *  
- *
+ * Identifier Of Policy Of Signing.
  */
 public class IdSigningPolicy implements SignedAttribute {
 
-    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId;
-    private SignaturePolicy signaturePolicy = null;
+	private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_ets_sigPolicyId;
+	private SignaturePolicy signaturePolicy = null;
 
-    @Override
-    public String getOID() {
-        return identifier.getId();
-    }
+	@Override
+	public String getOID() {
+		return identifier.getId();
+	}
 
-    /**
-     * org.bouncycastle.asn1.ASN1ObjectIdentifier sigPolicyId
-     * org.bouncycastle.asn1.esf.OtherHashAlgAndValue sigPolicyHash
-     * List&lt;org.bouncycastle.asn1.esf.SigPolicyQualifierInfo&gt; sigPolicyQualifierInfos
-     */
-    @Override
-    public Attribute getValue() {
+	/**
+	 * org.bouncycastle.asn1.ASN1ObjectIdentifier sigPolicyId
+	 * org.bouncycastle.asn1.esf.OtherHashAlgAndValue sigPolicyHash
+	 * List&lt;org.bouncycastle.asn1.esf.SigPolicyQualifierInfo&gt; sigPolicyQualifierInfos
+	 */
+	@Override
+	public Attribute getValue() {
 
-      //Atributo 1
-        ASN1ObjectIdentifier sigPolicyId = new ASN1ObjectIdentifier(signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue());
+		//Atributo 1
+		ASN1ObjectIdentifier sigPolicyId = new ASN1ObjectIdentifier(signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue());
 
-        //Atributo 2
-        OtherHashAlgAndValue sigPolicyHash = new OtherHashAlgAndValue(new AlgorithmIdentifier(
-        		new ASN1ObjectIdentifier(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue())), 
-        		signaturePolicy.getSignPolicyHash().getDerOctetString());
+		//Atributo 2
+		OtherHashAlgAndValue sigPolicyHash = new OtherHashAlgAndValue(new AlgorithmIdentifier(
+			new ASN1ObjectIdentifier(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue())),
+			signaturePolicy.getSignPolicyHash().getDerOctetString());
 
-        //Atributo 3
-        List<SigPolicyQualifierInfo> sigPolicyQualifierInfos = new ArrayList<SigPolicyQualifierInfo>();
+		//Atributo 3
+		List<SigPolicyQualifierInfo> sigPolicyQualifierInfos = new ArrayList<SigPolicyQualifierInfo>();
 
-        ASN1ObjectIdentifier sigPolicyQualifierId = new ASN1ObjectIdentifier("1.2.840.113549.1.9.16.5.1");
-        DERIA5String sigQualifier = new DERIA5String(signaturePolicy.getSignPolicyURI());
-        SigPolicyQualifierInfo bcSigPolicyQualifierInfo = new SigPolicyQualifierInfo(sigPolicyQualifierId, sigQualifier);
-        sigPolicyQualifierInfos.add(bcSigPolicyQualifierInfo);
+		ASN1ObjectIdentifier sigPolicyQualifierId = new ASN1ObjectIdentifier("1.2.840.113549.1.9.16.5.1");
+		DERIA5String sigQualifier = new DERIA5String(signaturePolicy.getSignPolicyURI());
+		SigPolicyQualifierInfo bcSigPolicyQualifierInfo = new SigPolicyQualifierInfo(sigPolicyQualifierId, sigQualifier);
+		sigPolicyQualifierInfos.add(bcSigPolicyQualifierInfo);
 
-        SigPolicyQualifiers sigPolicyQualifiers = new SigPolicyQualifiers(sigPolicyQualifierInfos.toArray(new SigPolicyQualifierInfo[]{}));
+		SigPolicyQualifiers sigPolicyQualifiers = new SigPolicyQualifiers(sigPolicyQualifierInfos.toArray(new SigPolicyQualifierInfo[]{}));
 
-        SignaturePolicyId signaturePolicyId = new SignaturePolicyId(sigPolicyId, sigPolicyHash, sigPolicyQualifiers);
-        return new Attribute(identifier, new DERSet(signaturePolicyId));
-        
-        
-    }
+		SignaturePolicyId signaturePolicyId = new SignaturePolicyId(sigPolicyId, sigPolicyHash, sigPolicyQualifiers);
+		return new Attribute(identifier, new DERSet(signaturePolicyId));
+	}
 
-    @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
-        this.signaturePolicy = signaturePolicy;
-    }
+	@Override
+	public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
+		this.signaturePolicy = signaturePolicy;
+	}
 
 }

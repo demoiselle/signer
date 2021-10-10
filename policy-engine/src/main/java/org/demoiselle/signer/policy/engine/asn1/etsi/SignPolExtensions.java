@@ -46,49 +46,50 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  * ETSI TR 102 272 V1.1.1 (2003-12)
- *
+ * <p>
  * Additional signature policy rules may be added to:
- *
- *
- * • the overall signature policy structure, as defined in clause 6.1;
- * • the signature validation policy structure, as defined in clause 6.2;
- * • the common rules, as defined in clause 6.3;
- * • the commitment rules, as defined in clause 6.4;
- * • the signer rules, as defined in clause 6.5.1;
- * • the verifier rules, as defined in clause 6.5.2;
- * • the revocation requirements in clause 6.6.2;
- * • the algorithm constraints in clause 6.10.
- *
+ * <p>
+ * <ul>
+ * <li>the overall signature policy structure, as defined in clause 6.1;</li>
+ * <li>the signature validation policy structure, as defined in clause 6.2;</li>
+ * <li>the common rules, as defined in clause 6.3;</li>
+ * <li>the commitment rules, as defined in clause 6.4;</li>
+ * <li>the signer rules, as defined in clause 6.5.1;</li>
+ * <li>the verifier rules, as defined in clause 6.5.2;</li>
+ * <li>the revocation requirements in clause 6.6.2;</li>
+ * <li>the algorithm constraints in clause 6.10.</li>
+ * </ul>
  * These extensions to the signature policy rules shall be defined using
- *  an ASN.1 syntax with an associated object identifier carried in the SignPolExtn as defined below:
- *
- *  SignPolExtensions ::= SEQUENCE OF {@link SignPolExtn}
- *
+ * an ASN.1 syntax with an associated object identifier carried in the
+ * SignPolExtn as defined below:
+ * <pre>
+ * SignPolExtensions ::= SEQUENCE OF {@link SignPolExtn}
+ * </pre>
  */
 public class SignPolExtensions extends ASN1Object {
 
-    private Collection<SignPolExtn> extensions;
+	private Collection<SignPolExtn> extensions;
 
-    public Collection<SignPolExtn> getExtensions() {
-        return extensions;
-    }
+	public Collection<SignPolExtn> getExtensions() {
+		return extensions;
+	}
 
-    public void setExtensions(Collection<SignPolExtn> extensions) {
-        this.extensions = extensions;
-    }
+	public void setExtensions(Collection<SignPolExtn> extensions) {
+		this.extensions = extensions;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        int total = derSequence.size();
-        for (int i = 0; i < total; i++) {
-            SignPolExtn signPolExtn = new SignPolExtn();
-            signPolExtn.parse(derSequence.getObjectAt(i).toASN1Primitive());
-            if (this.extensions == null) {
-                this.extensions = new ArrayList<>();
-            }
-            this.extensions.add(signPolExtn);
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		int total = derSequence.size();
+		for (int i = 0; i < total; i++) {
+			SignPolExtn signPolExtn = new SignPolExtn();
+			signPolExtn.parse(derSequence.getObjectAt(i).toASN1Primitive());
+			if (this.extensions == null) {
+				this.extensions = new ArrayList<>();
+			}
+			this.extensions.add(signPolExtn);
+		}
+	}
 
 }

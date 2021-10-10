@@ -58,7 +58,7 @@ public enum CertInfoReq {
 
     private int value;
 
-    private CertInfoReq(int value) {
+    CertInfoReq(int value) {
         this.value = value;
     }
 

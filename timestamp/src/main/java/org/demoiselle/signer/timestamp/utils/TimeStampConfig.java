@@ -45,80 +45,76 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- *	Generates the required settings for time stamp request.
- *	Depending on the files: timestamp-config.properties or timestamp-config-default.properties
- *
- * @author 07721825741
+ * Generates the required settings for time stamp request.
+ * Depending on the files: timestamp-config.properties or timestamp-config-default.properties.
  */
 public class TimeStampConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(TimeStampConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(TimeStampConfig.class);
 
-    private static TimeStampConfig instance = null;
-    private static ResourceBundle bundle = null;
-    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
+	private static TimeStampConfig instance = null;
+	private static ResourceBundle bundle = null;
+	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
-    private String tspHostname;
-    private int tspPort;
-    private String tspOid;
+	private String tspHostname;
+	private int tspPort;
+	private String tspOid;
 
-    /**
-     *
-     * @return  Returns an instance of TimeStampConfig
-     */
-    public static TimeStampConfig getInstance() {
-        if (instance == null) {
-            instance = new TimeStampConfig();
-        }
-        return instance;
-    }
+	/**
+	 * @return Returns an instance of TimeStampConfig
+	 */
+	public static TimeStampConfig getInstance() {
+		if (instance == null) {
+			instance = new TimeStampConfig();
+		}
+		return instance;
+	}
 
-    public ResourceBundle getBundle(String bundleName) {
-        return ResourceBundle.getBundle(bundleName);
-    }
+	public ResourceBundle getBundle(String bundleName) {
+		return ResourceBundle.getBundle(bundleName);
+	}
 
-    protected TimeStampConfig() {
-        if (bundle == null){
-	    	try {
-	        	bundle = getBundle("timestamp-config");
-	        } catch (MissingResourceException mre) {
-	            try {
-	            	bundle = getBundle("timestamp-config-default");
-	            } catch (MissingResourceException e) {
-	            	 logger.error(e.getMessage());
-	            }
-	        }
-        }
-    }
+	protected TimeStampConfig() {
+		if (bundle == null) {
+			try {
+				bundle = getBundle("timestamp-config");
+			} catch (MissingResourceException mre) {
+				try {
+					bundle = getBundle("timestamp-config-default");
+				} catch (MissingResourceException e) {
+					logger.error(e.getMessage());
+				}
+			}
+		}
+	}
 
-    public String getTspHostname() {
-    	try {
-    		tspHostname = bundle.getString("tsp_hostname");
+	public String getTspHostname() {
+		try {
+			tspHostname = bundle.getString("tsp_hostname");
 		} catch (MissingResourceException e) {
 			logger.error(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));
 			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));
 		}
-    	return tspHostname;
-    }
+		return tspHostname;
+	}
 
-    public int getTSPPort() {
-    	try {
+	public int getTSPPort() {
+		try {
 			tspPort = Integer.parseInt(bundle.getString("tsp_port"));
 		} catch (MissingResourceException e) {
-			logger.error(timeStampMessagesBundle.getString("error.timestamp.config","tspPort"));
-			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config","tspPort"));
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.config", "tspPort"));
+			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspPort"));
 		}
-    	return tspPort;
-    }
+		return tspPort;
+	}
 
-    public String getTSPOid() {
-    	try {
-    		tspOid =  bundle.getString("tsp_oid");
+	public String getTSPOid() {
+		try {
+			tspOid = bundle.getString("tsp_oid");
 		} catch (MissingResourceException e) {
-			logger.error(timeStampMessagesBundle.getString("error.timestamp.config","tspOid"));
-			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config","tspOid"));
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.config", "tspOid"));
+			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspOid"));
 		}
-    	return tspOid;
-    }
+		return tspOid;
+	}
 }

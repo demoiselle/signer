@@ -48,65 +48,70 @@ import org.demoiselle.signer.policy.impl.cades.Signer;
 public interface PKCS7Signer extends Signer {
 
 	/**
-	 *  Assign a Certificate for validate or generate a signature
+	 * Assign a Certificate for validate or generate a signature
+	 *
 	 * @param certificate certificate to be used
 	 */
 	void setCertificates(Certificate[] certificate);
 
-    /**
-     * Assign a Policy for validate or generate a signature
-     * @param signaturePolicy Signature policy to be used
-     */
+	/**
+	 * Assign a Policy for validate or generate a signature
+	 *
+	 * @param signaturePolicy Signature policy to be used
+	 */
 	void setSignaturePolicy(Policies signaturePolicy);
 
-    /**
-     *
-     * Generates a digital co-signature from a content,
-     * the result file does not contains the content that was signed
-     * @param content content to be signed
-     * @param previewSigned CMS content from preview signed
-     * @return detached signature
-     */
+	/**
+	 * Generates a digital co-signature from a content,
+	 * the result file does not contains the content that was signed
+	 *
+	 * @param content       content to be signed
+	 * @param previewSigned CMS content from preview signed
+	 * @return detached signature
+	 */
 	byte[] doDetachedSign(byte[] content, byte[] previewSigned);
 
-    /**
-     * Generates a digital co-signature from a content and attaches this content on result file
-     * @param content content to be signed
-     * @param previewSigned CMS content from preview signed
-     * @return attached signature
-     */
+	/**
+	 * Generates a digital co-signature from a content and attaches this content on result file
+	 *
+	 * @param content       content to be signed
+	 * @param previewSigned CMS content from preview signed
+	 * @return attached signature
+	 */
 	byte[] doAttachedSign(byte[] content, byte[] previewSigned);
 
-    /**
-     * Generates a digital couter-signature
-     * @param previewCMSSignature CMS content from preview signed
-     * @return new CMS Signature bytes
-     */
+	/**
+	 * Generates a digital couter-signature
+	 *
+	 * @param previewCMSSignature CMS content from preview signed
+	 * @return new CMS Signature bytes
+	 */
 	byte[] doCounterSign(byte[] previewCMSSignature);
 
-    /**
-     *
-     * Generates a digital signature from a previous calculated hash for a content,
-     * the result file does not contains the original content that was signed
-     * @param hash hash to be signed
-     * @return detached PCKS7 signature
-     */
+	/**
+	 * Generates a digital signature from a previous calculated hash for a content,
+	 * the result file does not contains the original content that was signed
+	 *
+	 * @param hash hash to be signed
+	 * @return detached PCKS7 signature
+	 */
 	byte[] doHashSign(byte[] hash);
 
-    /**
-     *
-     * Generates a digital co-signature from a previous calculated hash for a content,
-     * and its previous signatures
-     * the result file does not contains the original content that was signed
-     * @param hash hash to be signed
-     * @param previewSigned previous signature
-     * @return detached PCKS7 signature
-     */
+	/**
+	 * Generates a digital co-signature from a previous calculated hash for a content,
+	 * and its previous signatures
+	 * the result file does not contains the original content that was signed
+	 *
+	 * @param hash          hash to be signed
+	 * @param previewSigned previous signature
+	 * @return detached PCKS7 signature
+	 */
 	byte[] doHashCoSign(byte[] hash, byte[] previewSigned);
 
-    /**
-	 *  Assign a Certificate for get timeStamp
+	/**
+	 * Assign a Certificate for get timeStamp
+	 *
 	 * @param certificates certificate to be used
 	 */
 	void setCertificatesForTimeStamp(Certificate[] certificates);
- }
+}

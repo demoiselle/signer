@@ -61,21 +61,19 @@ import java.util.Map;
 /**
  * Class Certificate Extra <br>
  * <br>
- *
+ * <p>
  * Extra Informations for ICP-BRASIL (DOC-ICP-04) Certificates. Abstracts the
  * rules to "PESSOA FISICA", "PESSOA JURIDICA" and "EQUIPAMENTO/APLICAÇÃO"
- *
  */
 public class CertificateExtra {
 
 	private String email = "";
-	private String dns= "";
+	private String dns = "";
 	private final Map<String, OIDGeneric> extras = new HashMap<>();
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 	private static final Logger logger = LoggerFactory.getLogger(CertificateExtra.class);
 
 	/**
-	 *
 	 * @param certificate The certificate to be analyzed
 	 */
 	public CertificateExtra(X509Certificate certificate) {
@@ -102,22 +100,22 @@ public class CertificateExtra {
 				Integer tipo = (Integer) e1;
 
 				switch (tipo) {
-				case 0:
-					byte[] data = (byte[]) e2;
-					OIDGeneric oid = OIDGeneric.getInstance(data);
-					extras.put(oid.getOid(), oid);
-					break;
-				case 1:
-					email = (String) e2;
-					break;
-				case 2:
-					dns = (String) e2;
-					break;
-				default:
-					logger.debug(coreMessagesBundle.getString("error.unknow.subject.alternative.name"));
+					case 0:
+						byte[] data = (byte[]) e2;
+						OIDGeneric oid = OIDGeneric.getInstance(data);
+						extras.put(oid.getOid(), oid);
+						break;
+					case 1:
+						email = (String) e2;
+						break;
+					case 2:
+						dns = (String) e2;
+						break;
+					default:
+						logger.debug(coreMessagesBundle.getString("error.unknow.subject.alternative.name"));
 				}
 
-							}
+			}
 		} catch (CertificateParsingException e) {
 			logger.debug(e.getMessage());
 		} catch (Exception e) {
@@ -281,7 +279,6 @@ public class CertificateExtra {
 	 * Corporate name in the the Brazilian IRS's Bussiness Company Registry Number
 	 * called CNPJ without abbreviations,
 	 *
-	 *
 	 * @return OID_2_16_76_1_3_8
 	 */
 	public OID_2_16_76_1_3_8 getOID_2_16_76_1_3_8() {
@@ -289,7 +286,6 @@ public class CertificateExtra {
 	}
 
 	/**
-	 *
 	 * @return the e-mail for certificate.
 	 */
 	public String getEmail() {
@@ -298,7 +294,6 @@ public class CertificateExtra {
 
 
 	/**
-	 *
 	 * @return the DNS for certificate.
 	 */
 	public String getDNS() {
@@ -306,7 +301,6 @@ public class CertificateExtra {
 	}
 
 	/**
-	 *
 	 * @return
 	 */
 	public OID_1_3_6_1_4_1_311_60_2_1_3 getOID_1_3_6_1_4_1_311_60_2_1_3() {

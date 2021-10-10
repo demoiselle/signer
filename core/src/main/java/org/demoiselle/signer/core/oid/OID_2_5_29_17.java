@@ -51,7 +51,6 @@ public class OID_2_5_29_17 extends OIDGeneric {
 
     public static final String OID = "2.5.29.17";
 
-
 	public OID_2_5_29_17() {
 	}
 

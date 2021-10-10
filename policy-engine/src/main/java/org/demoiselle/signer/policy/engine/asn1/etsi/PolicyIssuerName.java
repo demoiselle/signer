@@ -54,90 +54,87 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
  * The policyIssuerName field identifies the policy issuer in one or more of the general name forms.
- *
+ * <p>
  * PolicyIssuerName ::= GeneralNames
- *
- *
  */
 public class PolicyIssuerName extends ASN1Object {
 
-    private Map<ObjectIdentifier, String> issuerNames;
-    private String issuerName;
-    private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private Map<ObjectIdentifier, String> issuerNames;
+	private String issuerName;
+	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
-    @Override
-    public void parse(ASN1Primitive primitive) {
-        if (primitive instanceof DLSequence) {
-            DLSequence sequence = (DLSequence) primitive;
-            ASN1Encodable asn1Encodable = sequence.getObjectAt(0);
-            if (asn1Encodable instanceof DERTaggedObject) {
-                DERTaggedObject derTaggedObject = (DERTaggedObject) asn1Encodable;
-                ASN1Primitive object = derTaggedObject.getObject();
-                if (object instanceof DEROctetString) {
-                    OctetString octetString = new OctetString();
-                    octetString.parse(object);
-                    this.issuerName = octetString.getValueUTF8();
-                } else if (object instanceof DERSequence) {
-                    DERSequence sequence2 = (DERSequence) object;
-                    for (int i = 0; i < sequence2.size(); i++) {
-                        ASN1Encodable obj = sequence2.getObjectAt(i);
-                        if (obj instanceof DERSet) {
-                            DERSet set = (DERSet) obj;
-                            ASN1Encodable object2 = set.getObjectAt(0);
-                            if (object2 instanceof DERSequence) {
-                                DERSequence sequence3 = (DERSequence) object2;
-                                ObjectIdentifier objectIdendifier = new ObjectIdentifier();
-                                objectIdendifier.parse(sequence3.getObjectAt(0).toASN1Primitive());
-                                String name = null;
-                                ASN1Encodable object3 = sequence3.getObjectAt(1);
-                                if (object3 instanceof DERPrintableString) {
-                                    name = ((DERPrintableString) object3).getString();
-                                } else if (object3 instanceof DERUTF8String) {
-                                    name = ((DERUTF8String) object3).getString();
-                                } else {
-                                    System.out.println(policyMessagesBundle.getString("error.not.recognized.object",object3.getClass(),object3.toString()));
-                                }
-                                if (this.issuerNames == null) {
-                                    this.issuerNames = new HashMap<ObjectIdentifier, String>();
-                                }
-                                this.issuerNames.put(objectIdendifier, name);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive primitive) {
+		if (primitive instanceof DLSequence) {
+			DLSequence sequence = (DLSequence) primitive;
+			ASN1Encodable asn1Encodable = sequence.getObjectAt(0);
+			if (asn1Encodable instanceof DERTaggedObject) {
+				DERTaggedObject derTaggedObject = (DERTaggedObject) asn1Encodable;
+				ASN1Primitive object = derTaggedObject.getObject();
+				if (object instanceof DEROctetString) {
+					OctetString octetString = new OctetString();
+					octetString.parse(object);
+					this.issuerName = octetString.getValueUTF8();
+				} else if (object instanceof DERSequence) {
+					DERSequence sequence2 = (DERSequence) object;
+					for (int i = 0; i < sequence2.size(); i++) {
+						ASN1Encodable obj = sequence2.getObjectAt(i);
+						if (obj instanceof DERSet) {
+							DERSet set = (DERSet) obj;
+							ASN1Encodable object2 = set.getObjectAt(0);
+							if (object2 instanceof DERSequence) {
+								DERSequence sequence3 = (DERSequence) object2;
+								ObjectIdentifier objectIdendifier = new ObjectIdentifier();
+								objectIdendifier.parse(sequence3.getObjectAt(0).toASN1Primitive());
+								String name = null;
+								ASN1Encodable object3 = sequence3.getObjectAt(1);
+								if (object3 instanceof DERPrintableString) {
+									name = ((DERPrintableString) object3).getString();
+								} else if (object3 instanceof DERUTF8String) {
+									name = ((DERUTF8String) object3).getString();
+								} else {
+									System.out.println(policyMessagesBundle.getString("error.not.recognized.object", object3.getClass(), object3.toString()));
+								}
+								if (this.issuerNames == null) {
+									this.issuerNames = new HashMap<ObjectIdentifier, String>();
+								}
+								this.issuerNames.put(objectIdendifier, name);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 
-    public Map<ObjectIdentifier, String> getIssuerNames() {
-        return issuerNames;
-    }
+	public Map<ObjectIdentifier, String> getIssuerNames() {
+		return issuerNames;
+	}
 
-    public void setIssuerNames(Map<ObjectIdentifier, String> issuerNames) {
-        this.issuerNames = issuerNames;
-    }
+	public void setIssuerNames(Map<ObjectIdentifier, String> issuerNames) {
+		this.issuerNames = issuerNames;
+	}
 
-    public String getIssuerName() {
-        return issuerName;
-    }
+	public String getIssuerName() {
+		return issuerName;
+	}
 
-    public void setIssuerName(String issuerName) {
-        this.issuerName = issuerName;
-    }
+	public void setIssuerName(String issuerName) {
+		this.issuerName = issuerName;
+	}
 
-    @Override
-    public String toString() {
-        if (this.issuerName != null) {
-            return this.issuerName;
-        }
-        String result = "";
-        if (this.issuerNames != null && !this.issuerNames.isEmpty()) {
-            for (ObjectIdentifier oid : this.issuerNames.keySet()) {
-                result = result + oid.getValue() + "=" + this.issuerNames.get(oid) + ",";
-            }
-            return result.substring(0, result.length() - 1);
-        }
-        return null;
-    }
-
+	@Override
+	public String toString() {
+		if (this.issuerName != null) {
+			return this.issuerName;
+		}
+		String result = "";
+		if (this.issuerNames != null && !this.issuerNames.isEmpty()) {
+			for (ObjectIdentifier oid : this.issuerNames.keySet()) {
+				result = result + oid.getValue() + "=" + this.issuerNames.get(oid) + ",";
+			}
+			return result.substring(0, result.length() - 1);
+		}
+		return null;
+	}
 }

@@ -72,9 +72,8 @@ import org.xml.sax.SAXException;
 
 /**
  * Class for commons XML methods
- * 
- * @author Emerson Saito <emerson.saito@serpro.gov.br>
  *
+ * @author Emerson Saito <emerson.saito@serpro.gov.br>
  */
 public class DocumentUtils {
 
@@ -83,7 +82,7 @@ public class DocumentUtils {
 
 	/**
 	 * Get String form tagName
-	 * 
+	 *
 	 * @param parmDocument
 	 * @param parmTagName
 	 * @return
@@ -104,16 +103,16 @@ public class DocumentUtils {
 
 	/**
 	 * Load XML Document from File name and Location
-	 * 
+	 *
 	 * @param xmlFile
 	 * @return
 	 */
 	public static Document loadXMLDocument(String xmlFile) throws XMLSignerException {
-		
-		
+
+
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(xmlFile));
-		    InputSource source = new InputSource(in);
+			InputSource source = new InputSource(in);
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
 			//return dbf.newDocumentBuilder().parse(new InputSource(new InputStreamReader(new FileInputStream(xmlFile), "UTF-8")));
@@ -138,10 +137,9 @@ public class DocumentUtils {
 		}
 	}
 
-
 	/**
 	 * Load XML Document from byte[] that represents a XML file
-	 * 
+	 *
 	 * @param xmlContent
 	 * @return
 	 */
@@ -163,11 +161,10 @@ public class DocumentUtils {
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 		}
 	}
-	
-	
+
 	/**
 	 * Load XML Document from InputStream that represents a XML file
-	 * 
+	 *
 	 * @param is
 	 * @return
 	 * @throws XMLSignerException
@@ -190,13 +187,11 @@ public class DocumentUtils {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 		}
-
 	}
 
-	
 	/**
 	 * Load XML Document from String that represents a XML file
-	 * 
+	 *
 	 * @param xmlString
 	 * @return
 	 */
@@ -219,22 +214,20 @@ public class DocumentUtils {
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 		}
 	}
-		
-	
+
 	/**
-	 * 
 	 * @param doc
 	 * @return
 	 * @throws XMLSignerException
 	 */
 	public static Element getDocumentData(Document doc) throws XMLSignerException {
-		
+
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
 			DocumentBuilder builder;
 			Document bodyDoc = null;
-			builder = dbf.newDocumentBuilder();			
+			builder = dbf.newDocumentBuilder();
 			bodyDoc = builder.newDocument();
 			bodyDoc.setXmlStandalone(true);
 			Node body = bodyDoc.importNode(doc.getDocumentElement(), true);
@@ -243,17 +236,15 @@ public class DocumentUtils {
 			int qtSig = signatures.getLength();
 			for (int i = 0; i < qtSig; i++) {
 				signatures.item(0).getParentNode().removeChild(signatures.item(0));
-			}			
+			}
 			return bodyDoc.getDocumentElement();
 		} catch (ParserConfigurationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parser", e.getMessage()));
 		}
-		
 	}
 
 	/**
-	 * 
 	 * @param alg
 	 * @param xml
 	 * @param canonical
@@ -264,12 +255,12 @@ public class DocumentUtils {
 		Init.init();
 		Canonicalizer c14n = null;
 		try {
-			
+
 			c14n = Canonicalizer.getInstance(canonical);
 		} catch (InvalidCanonicalizerException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+				xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 		}
 		MessageDigest messageDigest;
 		try {
@@ -283,14 +274,13 @@ public class DocumentUtils {
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+				xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 		}
 	}
 
-
 	/**
 	 * Reade content from file
-	 * 
+	 *
 	 * @param parmFile
 	 * @return
 	 */
@@ -308,7 +298,4 @@ public class DocumentUtils {
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.io", e.getMessage()));
 		}
 	}
-	
-	
-	
 }

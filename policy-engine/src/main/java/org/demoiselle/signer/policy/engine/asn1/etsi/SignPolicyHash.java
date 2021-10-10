@@ -40,9 +40,7 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 import org.bouncycastle.asn1.DEROctetString;
 
 /**
- *
  * OID for SignPolicyHash defined on policy
- *
  */
 public class SignPolicyHash extends OctetString {
 

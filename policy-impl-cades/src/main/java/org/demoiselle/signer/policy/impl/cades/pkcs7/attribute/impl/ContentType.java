@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
@@ -47,28 +48,28 @@ import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 
 /**
- * 
+ *
  * The content-type attribute type specifies the content type of the ContentInfo
  * value being signed in signed-data. The content-type attribute type is
  * required if there are any authenticated attributes present.
- * 
+ *
  * The content-type attribute must be a signed attribute or an authenticated
  * attribute; it cannot be an unsigned attribute, an unauthenticated attribute,
  * or an unprotectedAttribute.
  *
  * The following object identifier identifies the content-type attribute:
- * 
+ *
  * id-contentType OBJECT IDENTIFIER ::= { iso(1) member-body(2) us(840)
  * rsadsi(113549) pkcs(1) pkcs9(9) 3 }
- * 
+ *
  * Content-type attribute values have ASN.1 type ContentType:
- * 
+ *
  * ContentType ::= OBJECT IDENTIFIER
- * 
+ *
  * A content-type attribute must have a single attribute value, even though the
  * syntax is defined as a SET OF AttributeValue. There must not be zero or
  * multiple instances of AttributeValue present.
- * 
+ *
  * The SignedAttributes and AuthAttributes syntaxes are each defined as a SET OF
  * Attributes. The SignedAttributes in a signerInfo must not include multiple
  * instances of the content-type attribute. Similarly,the AuthAttributes in an

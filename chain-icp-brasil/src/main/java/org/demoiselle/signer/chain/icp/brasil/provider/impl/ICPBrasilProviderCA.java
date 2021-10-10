@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.chain.icp.brasil.provider.impl;
 
 import java.io.IOException;
@@ -53,61 +54,60 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
  * Provides trusted Certificate Authority chain of the ICP-BRAZIL's digital signature policies
- * from Keystore (icpbrasil.jks) stored in resources library   
+ * from Keystore (icpbrasil.jks) stored in resources library
  */
 public class ICPBrasilProviderCA implements ProviderCA {
-	
-	
+
 	private static MessagesBundle chainMessagesBundle = new MessagesBundle();
-	
+
 	/**
 	 * read Certificate Authority chain from loaded keystore
 	 */
-    @Override
-    public Collection<X509Certificate> getCAs() {
-    	
-    	    	
-        KeyStore keyStore = this.getKeyStore();
-        List<X509Certificate> result = new ArrayList<X509Certificate>();
-        try {
-            for (Enumeration<String> e = keyStore.aliases(); e.hasMoreElements();) {
-                String alias = e.nextElement();
-                X509Certificate root = (X509Certificate) keyStore.getCertificate(alias);
-                result.add(root);
+	@Override
+	public Collection<X509Certificate> getCAs() {
 
-            }
-        } catch (KeyStoreException ex) {
-            throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
-        }
-        return result;
-    }
 
-    /**
-     * Load from file icpbrasil.jks 
-     */
-    private KeyStore getKeyStore() {
-        KeyStore keyStore = null;
-        try {
-            InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
-            keyStore = KeyStore.getInstance("JKS");
-            keyStore.load(is, "changeit".toCharArray());
-        } catch (KeyStoreException ex) {
-            throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
-        } catch (NoSuchAlgorithmException ex) {
-        	throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.no.algorithm"), ex);
+		KeyStore keyStore = this.getKeyStore();
+		List<X509Certificate> result = new ArrayList<X509Certificate>();
+		try {
+			for (Enumeration<String> e = keyStore.aliases(); e.hasMoreElements(); ) {
+				String alias = e.nextElement();
+				X509Certificate root = (X509Certificate) keyStore.getCertificate(alias);
+				result.add(root);
+
+			}
+		} catch (KeyStoreException ex) {
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
+		}
+		return result;
+	}
+
+	/**
+	 * Load from file icpbrasil.jks
+	 */
+	private KeyStore getKeyStore() {
+		KeyStore keyStore = null;
+		try {
+			InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
+			keyStore = KeyStore.getInstance("JKS");
+			keyStore.load(is, "changeit".toCharArray());
+		} catch (KeyStoreException ex) {
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
+		} catch (NoSuchAlgorithmException ex) {
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.no.algorithm"), ex);
 		} catch (CertificateException ex) {
 			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.jks.certificate"), ex);
 		} catch (IOException ex) {
 			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.io"), ex);
 		}
-        return keyStore;
-    }
+		return keyStore;
+	}
 
-    /**
+	/**
 	 * This provider Name
 	 */
 	@Override
-	public String getName() {		
+	public String getName() {
 		return chainMessagesBundle.getString("info.provider.name.demoiselle");
 	}
 }

@@ -43,34 +43,32 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  * The howCertAttribute field specifies whether attributes uncertified attributes "claimed" by the signer,
- *  or certified in an attribute certificate or either using the signer attributes attribute defined in TS 101 733.
- *  HowCertAttribute ::= ENUMERATED {
- *  			claimedAttribute (0),
- *  			certifiedAttribtes (1),
- *  			either (2) }
- *
+ * or certified in an attribute certificate or either using the signer attributes attribute defined in TS 101 733.
+ * HowCertAttribute ::= ENUMERATED {
+ * claimedAttribute (0),
+ * certifiedAttribtes (1),
+ * either (2) }
  */
 public enum HowCertAttribute {
 
-    claimedAttribute(0),
-    certifiedAttribtes(1),
-    either(2);
+	claimedAttribute(0),
+	certifiedAttribtes(1),
+	either(2);
 
-    private int value;
+	private int value;
 
-    private HowCertAttribute(int value) {
-        this.value = value;
-    }
+	private HowCertAttribute(int value) {
+		this.value = value;
+	}
 
-    public static HowCertAttribute parse(ASN1Primitive derObject) {
-        ASN1Enumerated derEnumerated = ASN1Object.getDEREnumerated(derObject);
-        int value = derEnumerated.getValue().intValue();
-        for (HowCertAttribute howCertAttribute : HowCertAttribute.values()) {
-            if (howCertAttribute.value == value) {
-                return howCertAttribute;
-            }
-        }
-        return null;
-    }
-
+	public static HowCertAttribute parse(ASN1Primitive derObject) {
+		ASN1Enumerated derEnumerated = ASN1Object.getDEREnumerated(derObject);
+		int value = derEnumerated.getValue().intValue();
+		for (HowCertAttribute howCertAttribute : HowCertAttribute.values()) {
+			if (howCertAttribute.value == value) {
+				return howCertAttribute;
+			}
+		}
+		return null;
+	}
 }

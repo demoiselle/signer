@@ -43,125 +43,127 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * The TimeStampTrustCondition field identifies trust conditions for certificate path processing
- * used to authenticate the timstamping authority and constraints on the name of the timestamping authority.
- *  This applies to the timestamp that shall be present in every ES-T.
+ * The TimeStampTrustCondition field identifies trust conditions for
+ * certificate path processing used to authenticate the timstamping
+ * authority and constraints on the name of the timestamping authority.
+ * This applies to the timestamp that shall be present in every ES-T.
  *
- *  TimestampTrustCondition ::= SEQUENCE {
- *  		ttsCertificateTrustTrees [0] {@link CertificateTrustTrees} OPTIONAL,
- *  		ttsRevReq [1] {@link CertRevReq} OPTIONAL,
- *  		ttsNameConstraints [2] {@link NameConstraints} OPTIONAL,
- *  		cautionPeriod [3] {@link DeltaTime} OPTIONAL,
- *  		signatureTimestampDelay [4] {@link DeltaTime} OPTIONAL
- *  	 }
- *
+ * <pre>
+ *     TimestampTrustCondition ::= SEQUENCE {
+ *     ttsCertificateTrustTrees [0] {@link CertificateTrustTrees} OPTIONAL,
+ *     ttsRevReq [1] {@link CertRevReq} OPTIONAL,
+ *     ttsNameConstraints [2] {@link NameConstraints} OPTIONAL,
+ *     cautionPeriod [3] {@link DeltaTime} OPTIONAL,
+ *     signatureTimestampDelay [4] {@link DeltaTime} OPTIONAL
+ *     }
+ * </pre>
  */
 public class TimestampTrustCondition extends ASN1Object {
 
-    enum TAG {
+	enum TAG {
 
-        ttsCertificateTrustTrees(0), ttsRevReq(1), ttsNameConstraints(2),
-        cautionPeriod(3), signatureTimestampDelay(4);
-        int value;
+		ttsCertificateTrustTrees(0), ttsRevReq(1), ttsNameConstraints(2),
+		cautionPeriod(3), signatureTimestampDelay(4);
+		int value;
 
-        private TAG(int value) {
-            this.value = value;
-        }
+		private TAG(int value) {
+			this.value = value;
+		}
 
-        public static TAG getTag(int value) {
-            for (TAG tag : TAG.values()) {
-                if (tag.value == value) {
-                    return tag;
-                }
-            }
-            return null;
-        }
-    }
+		public static TAG getTag(int value) {
+			for (TAG tag : TAG.values()) {
+				if (tag.value == value) {
+					return tag;
+				}
+			}
+			return null;
+		}
+	}
 
-    private CertificateTrustTrees ttsCertificateTrustTrees;
-    private CertRevReq ttsRevReq;
-    private NameConstraints ttsNameConstraints;
-    private DeltaTime cautionPeriod;
-    private DeltaTime signatureTimestampDelay;
+	private CertificateTrustTrees ttsCertificateTrustTrees;
+	private CertRevReq ttsRevReq;
+	private NameConstraints ttsNameConstraints;
+	private DeltaTime cautionPeriod;
+	private DeltaTime signatureTimestampDelay;
 
-    public CertificateTrustTrees getTtsCertificateTrustTrees() {
-        return ttsCertificateTrustTrees;
-    }
+	public CertificateTrustTrees getTtsCertificateTrustTrees() {
+		return ttsCertificateTrustTrees;
+	}
 
-    public void setTtsCertificateTrustTrees(
-            CertificateTrustTrees ttsCertificateTrustTrees) {
-        this.ttsCertificateTrustTrees = ttsCertificateTrustTrees;
-    }
+	public void setTtsCertificateTrustTrees(
+		CertificateTrustTrees ttsCertificateTrustTrees) {
+		this.ttsCertificateTrustTrees = ttsCertificateTrustTrees;
+	}
 
-    public CertRevReq getTtsRevReq() {
-        return ttsRevReq;
-    }
+	public CertRevReq getTtsRevReq() {
+		return ttsRevReq;
+	}
 
-    public void setTtsRevReq(CertRevReq ttsRevReq) {
-        this.ttsRevReq = ttsRevReq;
-    }
+	public void setTtsRevReq(CertRevReq ttsRevReq) {
+		this.ttsRevReq = ttsRevReq;
+	}
 
-    public NameConstraints getTtsNameConstraints() {
-        return ttsNameConstraints;
-    }
+	public NameConstraints getTtsNameConstraints() {
+		return ttsNameConstraints;
+	}
 
-    public void setTtsNameConstraints(NameConstraints ttsNameConstraints) {
-        this.ttsNameConstraints = ttsNameConstraints;
-    }
+	public void setTtsNameConstraints(NameConstraints ttsNameConstraints) {
+		this.ttsNameConstraints = ttsNameConstraints;
+	}
 
-    public DeltaTime getCautionPeriod() {
-        return cautionPeriod;
-    }
+	public DeltaTime getCautionPeriod() {
+		return cautionPeriod;
+	}
 
-    public void setCautionPeriod(DeltaTime cautionPeriod) {
-        this.cautionPeriod = cautionPeriod;
-    }
+	public void setCautionPeriod(DeltaTime cautionPeriod) {
+		this.cautionPeriod = cautionPeriod;
+	}
 
-    public DeltaTime getSignatureTimestampDelay() {
-        return signatureTimestampDelay;
-    }
+	public DeltaTime getSignatureTimestampDelay() {
+		return signatureTimestampDelay;
+	}
 
-    public void setSignatureTimestampDelay(DeltaTime signatureTimestampDelay) {
-        this.signatureTimestampDelay = signatureTimestampDelay;
-    }
+	public void setSignatureTimestampDelay(DeltaTime signatureTimestampDelay) {
+		this.signatureTimestampDelay = signatureTimestampDelay;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        int total = derSequence.size();
-        if (total > 0) {
-            for (int i = 0; i < total; i++) {
-                ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
-                if (object instanceof DERTaggedObject) {
-                    DERTaggedObject derTaggedObject = (DERTaggedObject) object;
-                    TAG tag = TAG.getTag(derTaggedObject.getTagNo());
-                    switch (tag) {
-                        case ttsCertificateTrustTrees:
-                            this.ttsCertificateTrustTrees = new CertificateTrustTrees();
-                            this.ttsCertificateTrustTrees.parse(object);
-                            break;
-                        case ttsRevReq:
-                            this.ttsRevReq = new CertRevReq();
-                            this.ttsRevReq.parse(object);
-                            break;
-                        case ttsNameConstraints:
-                            this.ttsNameConstraints = new NameConstraints();
-                            this.ttsNameConstraints.parse(object);
-                            break;
-                        case cautionPeriod:
-                            this.cautionPeriod = new DeltaTime();
-                            this.cautionPeriod.parse(object);
-                            break;
-                        case signatureTimestampDelay:
-                            this.signatureTimestampDelay = new DeltaTime();
-                            this.signatureTimestampDelay.parse(object);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		int total = derSequence.size();
+		if (total > 0) {
+			for (int i = 0; i < total; i++) {
+				ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
+				if (object instanceof DERTaggedObject) {
+					DERTaggedObject derTaggedObject = (DERTaggedObject) object;
+					TAG tag = TAG.getTag(derTaggedObject.getTagNo());
+					switch (tag) {
+						case ttsCertificateTrustTrees:
+							this.ttsCertificateTrustTrees = new CertificateTrustTrees();
+							this.ttsCertificateTrustTrees.parse(object);
+							break;
+						case ttsRevReq:
+							this.ttsRevReq = new CertRevReq();
+							this.ttsRevReq.parse(object);
+							break;
+						case ttsNameConstraints:
+							this.ttsNameConstraints = new NameConstraints();
+							this.ttsNameConstraints.parse(object);
+							break;
+						case cautionPeriod:
+							this.cautionPeriod = new DeltaTime();
+							this.cautionPeriod.parse(object);
+							break;
+						case signatureTimestampDelay:
+							this.signatureTimestampDelay = new DeltaTime();
+							this.signatureTimestampDelay.parse(object);
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
 
 }

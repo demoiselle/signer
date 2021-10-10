@@ -45,253 +45,251 @@ import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
 
 /**
- *
  * Load X.509 Extension OIDs for
  */
 public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
 
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
+	@Override
+	public void load(Object object, Field field, X509Certificate x509) {
+		if (field.isAnnotationPresent(ICPBrasilExtension.class)) {
+			ICPBrasilExtension annotation = field.getAnnotation(ICPBrasilExtension.class);
 
-    @Override
-    public void load(Object object, Field field, X509Certificate x509) {
-        if (field.isAnnotationPresent(ICPBrasilExtension.class)) {
-            ICPBrasilExtension annotation = field.getAnnotation(ICPBrasilExtension.class);
+			Object keyValue;
+			try {
 
-            Object keyValue;
-            try {
+				BasicCertificate cert = new BasicCertificate(x509);
 
-                BasicCertificate cert = new BasicCertificate(x509);
+				switch (annotation.type()) {
+					case CPF:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getCPF();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case CNPJ:
+						if (cert.hasCertificatePJ()) {
+							keyValue = cert.getICPBRCertificatePJ().getCNPJ();
+						} else {
+							if (cert.hasCertificateEquipment()) {
+								keyValue = cert.getICPBRCertificateEquipment().getCNPJ();
+							} else {
+								keyValue = "";
+							}
+						}
+						break;
+					case PIS_PASEP:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getNis();
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = cert.getICPBRCertificatePJ().getNis();
+							} else {
+								if (cert.hasCertificateEquipment()) {
+									keyValue = cert.getICPBRCertificateEquipment().getNis();
+								} else {
+									keyValue = "";
+								}
+							}
+						}
+						break;
+					case NIS:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getNis();
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = cert.getICPBRCertificatePJ().getNis();
+							} else {
+								if (cert.hasCertificateEquipment()) {
+									keyValue = cert.getICPBRCertificateEquipment().getNis();
+								} else {
+									keyValue = "";
+								}
+							}
+						}
+						break;
+					case CEI:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getCEI();
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = cert.getICPBRCertificatePJ().getCEI();
+							} else {
+								keyValue = "";
+							}
+						}
+						break;
+					case CEI_PESSOA_FISICA:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getCEI();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case CEI_PESSOA_JURIDICA:
+						if (cert.hasCertificatePJ()) {
+							keyValue = cert.getICPBRCertificatePJ().getCEI();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case NAME:
+						keyValue = cert.getName();
+						break;
+					case NAME_RESPONSIBLE_PESSOA_JURIDICA:
+						if (cert.hasCertificatePJ()) {
+							keyValue = cert.getICPBRCertificatePJ().getResponsibleName();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case CPF_RESPONSIBLE_PESSOA_JURIDICA:
+						if (cert.hasCertificatePJ()) {
+							keyValue = cert.getICPBRCertificatePJ().getResponsibleCPF();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case EMAIL:
+						keyValue = cert.getEmail();
+						break;
+					case BIRTH_DATE:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getBirthDate();
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = cert.getICPBRCertificatePJ().getBirthDate();
+							} else {
+								if (cert.hasCertificateEquipment()) {
+									keyValue = cert.getICPBRCertificateEquipment().getBirthDate().toString();
+								} else {
+									keyValue = "";
+								}
+							}
+						}
+						break;
+					case ID_NUMBER:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getRg();
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = cert.getICPBRCertificatePJ().getRg();
+							} else {
+								if (cert.hasCertificateEquipment()) {
+									keyValue = cert.getICPBRCertificateEquipment().getRg();
+								} else {
+									keyValue = "";
+								}
+							}
+						}
+						break;
+					case IDENTITY_DISPATCHER:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getIssuingAgencyRg();
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = cert.getICPBRCertificatePJ().getIssuingAgencyRg();
+							} else {
+								if (cert.hasCertificateEquipment()) {
+									keyValue = cert.getICPBRCertificateEquipment().getIssuingAgencyRg();
+								} else {
+									keyValue = "";
+								}
+							}
+						}
+						break;
+					case UF_IDENTITY_DISPATCHER:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getUfIssuingAgencyRg();
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = cert.getICPBRCertificatePJ().getUfIssuingAgencyRg();
+							} else {
+								if (cert.hasCertificateEquipment()) {
+									keyValue = cert.getICPBRCertificateEquipment().getUfIssuingAgencyRg();
+								} else {
+									keyValue = "";
+								}
+							}
+						}
+						break;
+					case NUMBER_ELECTORAL_DOCUMENT:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getElectoralDocument();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case ZONE_ELECTORAL_DOCUMENT:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getZoneElectoralDocument();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case SECTION_ELECTORAL_DOCUMENT:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getSectionElectoralDocument();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case CITY_ELECTORAL_DOCUMENT:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getCityElectoralDocument();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case UF_ELECTORAL_DOCUMENT:
+						if (cert.hasCertificatePF()) {
+							keyValue = cert.getICPBRCertificatePF().getUFElectoralDocument();
+						} else {
+							keyValue = "";
+						}
+						break;
 
-                switch (annotation.type()) {
-                    case CPF:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getCPF();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case CNPJ:
-                        if (cert.hasCertificatePJ()) {
-                            keyValue = cert.getICPBRCertificatePJ().getCNPJ();
-                        } else {
-                            if (cert.hasCertificateEquipment()) {
-                                keyValue = cert.getICPBRCertificateEquipment().getCNPJ();
-                            } else {
-                                keyValue = "";
-                            }
-                        }
-                        break;
-                    case PIS_PASEP:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getNis();
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getNis();
-                            } else {
-                                if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getNis();
-                                } else {
-                                    keyValue = "";
-                                }
-                            }
-                        }
-                        break;
-                    case NIS:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getNis();
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getNis();
-                            } else {
-                                if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getNis();
-                                } else {
-                                    keyValue = "";
-                                }
-                            }
-                        }
-                        break;
-                    case CEI:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getCEI();
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getCEI();
-                            } else {
-                                keyValue = "";
-                            }
-                        }
-                        break;
-                    case CEI_PESSOA_FISICA:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getCEI();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case CEI_PESSOA_JURIDICA:
-                        if (cert.hasCertificatePJ()) {
-                            keyValue = cert.getICPBRCertificatePJ().getCEI();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case NAME:
-                        keyValue = cert.getName();
-                        break;
-                    case NAME_RESPONSIBLE_PESSOA_JURIDICA:
-                        if (cert.hasCertificatePJ()) {
-                            keyValue = cert.getICPBRCertificatePJ().getResponsibleName();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case CPF_RESPONSIBLE_PESSOA_JURIDICA:
-                        if (cert.hasCertificatePJ()) {
-                            keyValue = cert.getICPBRCertificatePJ().getResponsibleCPF();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case EMAIL:
-                        keyValue = cert.getEmail();
-                        break;
-                    case BIRTH_DATE:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getBirthDate();
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getBirthDate();
-                            } else {
-                                if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getBirthDate().toString();
-                                } else {
-                                    keyValue = "";
-                                }
-                            }
-                        }
-                        break;
-                    case ID_NUMBER:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getRg();
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getRg();
-                            } else {
-                                if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getRg();
-                                } else {
-                                    keyValue = "";
-                                }
-                            }
-                        }
-                        break;
-                    case IDENTITY_DISPATCHER:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getIssuingAgencyRg();
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getIssuingAgencyRg();
-                            } else {
-                                if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getIssuingAgencyRg();
-                                } else {
-                                    keyValue = "";
-                                }
-                            }
-                        }
-                        break;
-                    case UF_IDENTITY_DISPATCHER:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getUfIssuingAgencyRg();
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = cert.getICPBRCertificatePJ().getUfIssuingAgencyRg();
-                            } else {
-                                if (cert.hasCertificateEquipment()) {
-                                    keyValue = cert.getICPBRCertificateEquipment().getUfIssuingAgencyRg();
-                                } else {
-                                    keyValue = "";
-                                }
-                            }
-                        }
-                        break;
-                    case NUMBER_ELECTORAL_DOCUMENT:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getElectoralDocument();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case ZONE_ELECTORAL_DOCUMENT:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getZoneElectoralDocument();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case SECTION_ELECTORAL_DOCUMENT:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getSectionElectoralDocument();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case CITY_ELECTORAL_DOCUMENT:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getCityElectoralDocument();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case UF_ELECTORAL_DOCUMENT:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = cert.getICPBRCertificatePF().getUFElectoralDocument();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
+					case BUSINESS_NAME:
+						if (cert.hasCertificateEquipment()) {
+							keyValue = cert.getICPBRCertificateEquipment().getCorporateName();
+						} else {
+							keyValue = "";
+						}
+						break;
+					case CERTIFICATE_TYPE:
+						if (cert.hasCertificatePF()) {
+							keyValue = "PF";
+						} else {
+							if (cert.hasCertificatePJ()) {
+								keyValue = "PJ";
+							} else {
+								if (cert.hasCertificateEquipment()) {
+									keyValue = "EA";
+								} else {
+									keyValue = "";
+								}
+							}
+						}
+						break;
+					case CERTIFICATE_LEVEL:
+						keyValue = cert.getCertificateLevel();
+						break;
 
-                    case BUSINESS_NAME:
-                        if (cert.hasCertificateEquipment()) {
-                            keyValue = cert.getICPBRCertificateEquipment().getCorporateName();
-                        } else {
-                            keyValue = "";
-                        }
-                        break;
-                    case CERTIFICATE_TYPE:
-                        if (cert.hasCertificatePF()) {
-                            keyValue = "PF";
-                        } else {
-                            if (cert.hasCertificatePJ()) {
-                                keyValue = "PJ";
-                            } else {
-                                if (cert.hasCertificateEquipment()) {
-                                    keyValue = "EA";
-                                } else {
-                                    keyValue = "";
-                                }
-                            }
-                        }
-                        break;
-                    case  CERTIFICATE_LEVEL:
-                        keyValue = cert.getCertificateLevel();
-                        break;
+					default:
+						throw new CertificateCoreException(coreMessagesBundle.getString("error.field.not.implemented", annotation.type()));
+				}
 
-                    default:
-                        throw new CertificateCoreException(coreMessagesBundle.getString("error.field.not.implemented",annotation.type()));
-                }
-
-                try {
-                    field.setAccessible(true);
-                    field.set(object, keyValue);
-                } catch (Exception e) {
-                    throw new CertificateCoreException(coreMessagesBundle.getString("error.load.value.field", field.getName()), e);
-                }
-            } catch (Exception e) {
-                throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e);
-            }
-        }
-    }
+				try {
+					field.setAccessible(true);
+					field.set(object, keyValue);
+				} catch (Exception e) {
+					throw new CertificateCoreException(coreMessagesBundle.getString("error.load.value.field", field.getName()), e);
+				}
+			} catch (Exception e) {
+				throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e);
+			}
+		}
+	}
 }

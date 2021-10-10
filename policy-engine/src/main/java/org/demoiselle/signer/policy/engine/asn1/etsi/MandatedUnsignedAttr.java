@@ -38,15 +38,11 @@
 package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 /**
- *
  * The mandatedUnsignedAttr field shall include the object identifier for all those unsigned attributes
- *  required by the present document as well as additional attributes required this policy.
- *  For example, if a signature timestamp (see clause 1.1) is required by the signer the object identifier
- *  for this attribute shall be included
- *
- *
+ * required by the present document as well as additional attributes required this policy.
+ * For example, if a signature timestamp (see clause 1.1) is required by the signer the object identifier
+ * for this attribute shall be included
  */
 
 public class MandatedUnsignedAttr extends CMSAttrs {
-
 }

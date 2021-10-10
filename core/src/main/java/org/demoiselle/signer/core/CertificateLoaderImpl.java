@@ -51,112 +51,106 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 /**
- *
- * Impelments the basic methods for loading a certificate depending on the storage format
- *
+ * Implements the basic methods for loading a certificate depending on the storage format
  */
 public class CertificateLoaderImpl implements CertificateLoader {
 
-    private KeyStore keyStore;
+	private KeyStore keyStore;
 
-    /**
-     *Returns the KeyStore used by {@link CertificateLoader}.
-     *
-     * @return java.security.keystore
-     *
-     */
+	/**
+	 * Returns the KeyStore used by {@link CertificateLoader}.
+	 *
+	 * @return java.security.keystore
+	 */
 
-    @Override
-    public KeyStore getKeyStore() {
-        return keyStore;
-    }
+	@Override
+	public KeyStore getKeyStore() {
+		return keyStore;
+	}
 
-    /**
-     * Associate a previously existing keystore
-     *
-     * @param keyStore java.security.keystore
-     *
-     */
+	/**
+	 * Associate a previously existing keystore
+	 *
+	 * @param keyStore java.security.keystore
+	 */
 
-    @Override
-    public void setKeyStore(KeyStore keyStore) {
-        this.keyStore = keyStore;
-    }
+	@Override
+	public void setKeyStore(KeyStore keyStore) {
+		this.keyStore = keyStore;
+	}
 
-    /**
-     * Obtains the certificate from a file, defined by ICP-BRASIL with the name A1.
-     *
-     * @param file The file that contains the certificate
-     * @return the certificate information in X509Certificate format
-     *
-     */
+	/**
+	 * Obtains the certificate from a file, defined by ICP-BRASIL with the name A1.
+	 *
+	 * @param file The file that contains the certificate
+	 * @return the certificate information in X509Certificate format
+	 */
 
-    @Override
-    public X509Certificate load(File file) {
-        try {
-            FileInputStream fileInput = new FileInputStream(file);
-            return (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(fileInput);
-        } catch (FileNotFoundException e) {
-            throw new CertificateCoreException("FileNotFoundException", e);
-        } catch (CertificateException e) {
-            throw new CertificateCoreException("CertificateException", e);
-        }
-    }
+	@Override
+	public X509Certificate load(File file) {
+		try {
+			FileInputStream fileInput = new FileInputStream(file);
+			return (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(fileInput);
+		} catch (FileNotFoundException e) {
+			throw new CertificateCoreException("FileNotFoundException", e);
+		} catch (CertificateException e) {
+			throw new CertificateCoreException("CertificateException", e);
+		}
+	}
 
-    /**
-     * Obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
-     *
-     * @return the certificate information in X509Certificate format
-     */
-    @Override
-    public X509Certificate loadFromToken() {
-        return loadFromToken(null);
-    }
+	/**
+	 * Obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 *
+	 * @return the certificate information in X509Certificate format
+	 */
+	@Override
+	public X509Certificate loadFromToken() {
+		return loadFromToken(null);
+	}
 
-    /**
-     * When a PIN(Personal Identification Number) was informed,
-     * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
-     *
-     * @param pinNumber personal id number
-     * @return the certificate information in X509Certificate format
-     *
-     */
+	/**
+	 * When a PIN(Personal Identification Number) was informed,
+	 * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 *
+	 * @param pinNumber personal id number
+	 * @return the certificate information in X509Certificate format
+	 */
 
-    @Override
-    public X509Certificate loadFromToken(String pinNumber) {
-        if (this.keyStore == null) {
-            KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-            this.keyStore = keyStoreLoader.getKeyStore();
-        }
-        String alias;
-        try {
-            alias = this.keyStore.aliases().nextElement();
-            return (X509Certificate) this.keyStore.getCertificateChain(alias)[0];
-        } catch (KeyStoreException e) {
-            throw new CertificateCoreException("", e);
-        }
+	@Override
+	public X509Certificate loadFromToken(String pinNumber) {
+		if (this.keyStore == null) {
+			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+			this.keyStore = keyStoreLoader.getKeyStore();
+		}
+		String alias;
+		try {
+			alias = this.keyStore.aliases().nextElement();
+			return (X509Certificate) this.keyStore.getCertificateChain(alias)[0];
+		} catch (KeyStoreException e) {
+			throw new CertificateCoreException("", e);
+		}
 
-    }
-    /**
-     * When a PIN(Personal Identification Number) and Alias was informed,
-     * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
-     *
-     * @param pinNumber a PIN(Personal Identification Number)
-     * @param alias desired alias
-     * @return  the certificate information in X509Certificate format
-     *
-     */
-     @Override
-    public X509Certificate loadFromToken(String pinNumber, String alias) {
-        if (this.keyStore == null) {
-            KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-            this.keyStore = keyStoreLoader.getKeyStore();
-        }
-        try {
-            return (X509Certificate) this.keyStore.getCertificateChain(alias)[0];
-        } catch (KeyStoreException e) {
-            throw new CertificateCoreException("", e);
-        }
-    }
+	}
+
+	/**
+	 * When a PIN(Personal Identification Number) and Alias was informed,
+	 * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 *
+	 * @param pinNumber a PIN(Personal Identification Number)
+	 * @param alias     desired alias
+	 * @return the certificate information in X509Certificate format
+	 */
+	@Override
+	public X509Certificate loadFromToken(String pinNumber, String alias) {
+		if (this.keyStore == null) {
+			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+			this.keyStore = keyStoreLoader.getKeyStore();
+		}
+		try {
+			return (X509Certificate) this.keyStore.getCertificateChain(alias)[0];
+		} catch (KeyStoreException e) {
+			throw new CertificateCoreException("", e);
+		}
+	}
 
 }

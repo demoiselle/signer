@@ -34,8 +34,8 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.policy.impl.xades.xml;
 
+package org.demoiselle.signer.policy.impl.xades.xml;
 
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
@@ -44,36 +44,33 @@ import java.util.Date;
 import org.w3c.dom.Document;
 
 /**
- * 
  * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
- *
  */
 public interface Signer {
-	
-	abstract public void setPolicyId(String policyOID);
-	
-	abstract public Document signEnveloped(boolean isFileLocation, String fileNameSource);
-	
-	abstract public Document signEnveloped(String xmlAsString);
 
-	abstract public PrivateKey getPrivateKey();
-	
-	abstract public void setPrivateKey(PrivateKey privateKey);
-	
-	abstract public Certificate[] getCertificateChain();
-	
-	abstract public void setCertificateChain(Certificate certificateChain[]);
-	
-	abstract public Date getNotAfterSignerCertificate();
+	void setPolicyId(String policyOID);
 
-	abstract public void setNotAfterSignerCertificate(Date notAfterSignerCertificate);
+	Document signEnveloped(boolean isFileLocation, String fileNameSource);
 
-	abstract public PrivateKey getPrivateKeyToTimestamp();
+	Document signEnveloped(String xmlAsString);
 
-	abstract public void setPrivateKeyToTimestamp(PrivateKey privateKeyToTimestamp); 
+	PrivateKey getPrivateKey();
 
-	abstract public Certificate[] getCertificateChainToTimestamp();
+	void setPrivateKey(PrivateKey privateKey);
 
-	abstract public void setCertificateChainToTimestamp(Certificate certificateChainToTimestamp[]); 
+	Certificate[] getCertificateChain();
 
+	void setCertificateChain(Certificate certificateChain[]);
+
+	Date getNotAfterSignerCertificate();
+
+	void setNotAfterSignerCertificate(Date notAfterSignerCertificate);
+
+	PrivateKey getPrivateKeyToTimestamp();
+
+	void setPrivateKeyToTimestamp(PrivateKey privateKeyToTimestamp);
+
+	Certificate[] getCertificateChainToTimestamp();
+
+	void setCertificateChainToTimestamp(Certificate certificateChainToTimestamp[]);
 }

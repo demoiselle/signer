@@ -42,73 +42,76 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * The signature validation policy defines for the signer which data elements shall be present
- * in the electronic signature he provides and for the verifier which data elements
- * shall be present under that signature policy for an electronic signature to be potentially valid.
+ * The signature validation policy defines for the signer
+ * which data elements shall be present in the electronic
+ * signature he provides and for the verifier which data
+ * elements shall be present under that signature policy
+ * for an electronic signature to be potentially valid.
  * The signature validation policy is described as follows:
  *
+ * <pre>
  * SignatureValidationPolicy ::= SEQUENCE {
- * 				signingPeriod {@link SigningPeriod},
- * 				commonRules {@link CommonRules},
- * 				commitmentRules {@link CommitmentRules},
- *				signPolExtensions {@link SignPolExtensions} OPTIONAL
- *				}
- *
+ *     signingPeriod {@link SigningPeriod},
+ *     commonRules {@link CommonRules},
+ *     commitmentRules {@link CommitmentRules},
+ *     signPolExtensions {@link SignPolExtensions} OPTIONAL
+ * }
+ * </pre>
  */
 public class SignatureValidationPolicy extends ASN1Object {
 
-    private SigningPeriod signingPeriod;
-    private CommonRules commonRules;
-    private CommitmentRules commitmentRules;
-    private SignPolExtensions signPolExtensions;
+	private SigningPeriod signingPeriod;
+	private CommonRules commonRules;
+	private CommitmentRules commitmentRules;
+	private SignPolExtensions signPolExtensions;
 
-    public SignPolExtensions getSignPolExtensions() {
-        return signPolExtensions;
-    }
+	public SignPolExtensions getSignPolExtensions() {
+		return signPolExtensions;
+	}
 
-    public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
-        this.signPolExtensions = signPolExtensions;
-    }
+	public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
+		this.signPolExtensions = signPolExtensions;
+	}
 
-    public SigningPeriod getSigningPeriod() {
-        return signingPeriod;
-    }
+	public SigningPeriod getSigningPeriod() {
+		return signingPeriod;
+	}
 
-    public void setSigningPeriod(SigningPeriod signingPeriod) {
-        this.signingPeriod = signingPeriod;
-    }
+	public void setSigningPeriod(SigningPeriod signingPeriod) {
+		this.signingPeriod = signingPeriod;
+	}
 
-    public CommonRules getCommonRules() {
-        return commonRules;
-    }
+	public CommonRules getCommonRules() {
+		return commonRules;
+	}
 
-    public void setCommonRules(CommonRules commonRules) {
-        this.commonRules = commonRules;
-    }
+	public void setCommonRules(CommonRules commonRules) {
+		this.commonRules = commonRules;
+	}
 
-    public CommitmentRules getCommitmentRules() {
-        return commitmentRules;
-    }
+	public CommitmentRules getCommitmentRules() {
+		return commitmentRules;
+	}
 
-    public void setCommitmentRules(CommitmentRules commitmentRules) {
-        this.commitmentRules = commitmentRules;
-    }
+	public void setCommitmentRules(CommitmentRules commitmentRules) {
+		this.commitmentRules = commitmentRules;
+	}
 
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
 
-        this.signingPeriod = new SigningPeriod();
-        this.signingPeriod.parse(derSequence.getObjectAt(0).toASN1Primitive());
+		this.signingPeriod = new SigningPeriod();
+		this.signingPeriod.parse(derSequence.getObjectAt(0).toASN1Primitive());
 
-        this.commonRules = new CommonRules();
-        this.commonRules.parse(derSequence.getObjectAt(1).toASN1Primitive());
+		this.commonRules = new CommonRules();
+		this.commonRules.parse(derSequence.getObjectAt(1).toASN1Primitive());
 
-        this.commitmentRules = new CommitmentRules();
-        this.commitmentRules.parse(derSequence.getObjectAt(2).toASN1Primitive());
+		this.commitmentRules = new CommitmentRules();
+		this.commitmentRules.parse(derSequence.getObjectAt(2).toASN1Primitive());
 
-        if (derSequence.size() == 4) {
-            this.signPolExtensions = new SignPolExtensions();
-            this.signPolExtensions.parse(derSequence.getObjectAt(3).toASN1Primitive());
-        }
-    }
+		if (derSequence.size() == 4) {
+			this.signPolExtensions = new SignPolExtensions();
+			this.signPolExtensions.parse(derSequence.getObjectAt(3).toASN1Primitive());
+		}
+	}
 }

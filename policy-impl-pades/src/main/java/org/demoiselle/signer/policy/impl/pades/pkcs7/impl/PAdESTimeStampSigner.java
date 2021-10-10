@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.pades.pkcs7.impl;
 
 import java.io.IOException;
@@ -50,55 +51,45 @@ import org.demoiselle.signer.policy.impl.pades.pkcs7.PKCS7TimeStampSigner;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 
-
 /**
- * 
  * Basic implementation of Time Stamp on PADES format.
- * 
- *
  */
 public class PAdESTimeStampSigner implements PKCS7TimeStampSigner {
 
-	
-
-	
-	
 	@Override
 	public Timestamp checkTimeStampPDFWithContent(byte[] timeStamp, byte[] content) {
 		try {
-			return this.checkTimeStampPDF(timeStamp,content,null);
-			} catch (CertificateCoreException e) {
+			return this.checkTimeStampPDF(timeStamp, content, null);
+		} catch (CertificateCoreException e) {
 			throw new SignerException(e);
-		}	
+		}
 	}
 
 	@Override
 	public Timestamp checkTimeStampPDFWithHash(byte[] timeStamp, byte[] hash) {
 		try {
-			return this.checkTimeStampPDF(timeStamp,null,hash);
-			} catch (CertificateCoreException e) {
+			return this.checkTimeStampPDF(timeStamp, null, hash);
+		} catch (CertificateCoreException e) {
 			throw new SignerException(e);
 		}
 	}
-	
-	
-	
-	private Timestamp checkTimeStampPDF(byte[] timeStamp, byte[] content,  byte[] hash){
+
+	private Timestamp checkTimeStampPDF(byte[] timeStamp, byte[] content, byte[] hash) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
 			byte[] varTimeStamp = timeStamp;
 			TimeStampOperator timeStampOperator = new TimeStampOperator();
-			if (content != null){
-				timeStampOperator.validate(content, varTimeStamp,null);
-			}else{
-				timeStampOperator.validate(null, varTimeStamp,hash);
-			}			
+			if (content != null) {
+				timeStampOperator.validate(content, varTimeStamp, null);
+			} else {
+				timeStampOperator.validate(null, varTimeStamp, hash);
+			}
 			TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
 			Timestamp timeStampSigner = new Timestamp(timeStampToken);
 			return timeStampSigner;
 		} catch (CertificateCoreException | IOException | TSPException
 			| CMSException e) {
 			throw new SignerException(e);
-		}		
-	}	
+		}
+	}
 }

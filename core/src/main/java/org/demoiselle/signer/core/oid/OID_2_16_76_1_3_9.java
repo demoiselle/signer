@@ -45,21 +45,21 @@ package org.demoiselle.signer.core.oid;
  */
 public class OID_2_16_76_1_3_9 extends OIDGeneric {
 
-    public static final String OID = "2.16.76.1.3.9";
+	public static final String OID = "2.16.76.1.3.9";
 
-    protected static final Object FIELDS[] = {"RIC", 11};
+	protected static final Object FIELDS[] = {"RIC", 11};
 
-    @Override
-    public void initialize() {
-        super.initialize(FIELDS);
-    }
+	@Override
+	public void initialize() {
+		super.initialize(FIELDS);
+	}
 
-    /**
-     *  the Brazilian Civil Identity Registration number (called RIC - Registro de Identidade Civil).
-     *
-     * @return number with size=11.
-     */
-    public String getRegistroDeIdentidadeCivil() {
-        return properties.get("RIC");
-    }
+	/**
+	 * the Brazilian Civil Identity Registration number (called RIC - Registro de Identidade Civil).
+	 *
+	 * @return number with size=11.
+	 */
+	public String getRegistroDeIdentidadeCivil() {
+		return properties.get("RIC");
+	}
 }

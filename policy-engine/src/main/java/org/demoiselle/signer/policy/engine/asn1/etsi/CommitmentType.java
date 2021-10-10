@@ -44,94 +44,92 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  * A specific commitment type identifier shall not appear in more than one commitment rule.
- *
+ * <p>
  * CommitmentType ::= SEQUENCE {
- * 			identifier  {@link CommitmentTypeIdentifier},
- * 			fieldOfApplication [0]  {@link FieldOfApplication} OPTIONAL,
- * 			semantics [1] DirectoryString OPTIONAL }
- *
+ * identifier  {@link CommitmentTypeIdentifier},
+ * fieldOfApplication [0]  {@link FieldOfApplication} OPTIONAL,
+ * semantics [1] DirectoryString OPTIONAL }
+ * <p>
  * The fieldOfApplication and semantics fields define the specific use
  * and meaning of the commitment within the overall field of application defined for the policy.
- *
- *
  */
 public class CommitmentType extends ASN1Object {
 
-    enum TAG {
+	enum TAG {
 
-        fieldOfApplication(0), semantics(1);
-        int value;
+		fieldOfApplication(0), semantics(1);
+		int value;
 
-        private TAG(int value) {
-            this.value = value;
-        }
+		TAG(int value) {
+			this.value = value;
+		}
 
-        public static TAG getTag(int value) {
-            for (TAG tag : TAG.values()) {
-                if (tag.value == value) {
-                    return tag;
-                }
-            }
-            return null;
-        }
-    }
+		public static TAG getTag(int value) {
+			for (TAG tag : TAG.values()) {
+				if (tag.value == value) {
+					return tag;
+				}
+			}
+			return null;
+		}
+	}
 
-    private CommitmentTypeIdentifier identifier;
-    private FieldOfApplication fieldOfApplication;
-    private String semantics;
+	private CommitmentTypeIdentifier identifier;
+	private FieldOfApplication fieldOfApplication;
+	private String semantics;
 
-    public CommitmentTypeIdentifier getIdentifier() {
-        return identifier;
-    }
+	public CommitmentTypeIdentifier getIdentifier() {
+		return identifier;
+	}
 
-    public void setIdentifier(CommitmentTypeIdentifier identifier) {
-        this.identifier = identifier;
-    }
+	public void setIdentifier(CommitmentTypeIdentifier identifier) {
+		this.identifier = identifier;
+	}
 
-    public FieldOfApplication getFieldOfApplication() {
-        return fieldOfApplication;
-    }
+	public FieldOfApplication getFieldOfApplication() {
+		return fieldOfApplication;
+	}
 
-    public void setFieldOfApplication(FieldOfApplication fieldOfApplication) {
-        this.fieldOfApplication = fieldOfApplication;
-    }
+	public void setFieldOfApplication(FieldOfApplication fieldOfApplication) {
+		this.fieldOfApplication = fieldOfApplication;
+	}
 
-    public String getSemantics() {
-        return semantics;
-    }
+	public String getSemantics() {
+		return semantics;
+	}
 
-    public void setSemantics(String semantics) {
-        this.semantics = semantics;
-    }
+	public void setSemantics(String semantics) {
+		this.semantics = semantics;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
 
-        this.identifier = new CommitmentTypeIdentifier();
-        this.identifier.parse(derSequence.getObjectAt(0).toASN1Primitive());
+		this.identifier = new CommitmentTypeIdentifier();
+		this.identifier.parse(derSequence.getObjectAt(0).toASN1Primitive());
 
-        int total = derSequence.size();
+		int total = derSequence.size();
 
-        if (total > 0) {
-            for (int i = 0; i < total; i++) {
-                ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
-                if (object instanceof DERTaggedObject) {
-                    DERTaggedObject derTaggedObject = (DERTaggedObject) object;
-                    TAG tag = TAG.getTag(derTaggedObject.getTagNo());
-                    switch (tag) {
-                        case fieldOfApplication:
-                            this.fieldOfApplication = new FieldOfApplication();
-                            this.fieldOfApplication.parse(object);
-                            break;
-                        case semantics:
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-    }
+		if (total > 0) {
+			for (int i = 0; i < total; i++) {
+				ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
+				if (object instanceof DERTaggedObject) {
+					DERTaggedObject derTaggedObject = (DERTaggedObject) object;
+					TAG tag = TAG.getTag(derTaggedObject.getTagNo());
+					switch (tag) {
+						case fieldOfApplication:
+							this.fieldOfApplication = new FieldOfApplication();
+							this.fieldOfApplication.parse(object);
+							break;
+						case semantics:
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
 
 }

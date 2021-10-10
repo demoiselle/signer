@@ -48,64 +48,58 @@ import java.security.cert.X509Certificate;
  */
 public interface CertificateLoader {
 
-    /**
-     * Obtains the certificate from a file, defined by ICP-BRASIL with the name A1.
-     *
-     * @param file The file that contains the certificate
-     * @return the certificate information in X509Certificate format
-     * @throws CertificateCoreException in case of problem in loading
-     *
-     */
-    public X509Certificate load(File file) throws CertificateCoreException;
+	/**
+	 * Obtains the certificate from a file, defined by ICP-BRASIL with the name A1.
+	 *
+	 * @param file The file that contains the certificate
+	 * @return the certificate information in X509Certificate format
+	 * @throws CertificateCoreException in case of problem in loading
+	 */
+	X509Certificate load(File file) throws CertificateCoreException;
 
-    /**
-     * Obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
-     *
-     * @return the certificate information in X509Certificate format
-     * @throws CertificateCoreException in case of problem in loading
-     *
-     */
-    public X509Certificate loadFromToken() throws CertificateCoreException;
+	/**
+	 * Obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 *
+	 * @return the certificate information in X509Certificate format
+	 * @throws CertificateCoreException in case of problem in loading
+	 */
+	X509Certificate loadFromToken() throws CertificateCoreException;
 
-    /**
-     * When a PIN(Personal Identification Number) was informed,
-     * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
-     *
-     * @param pinNumber personal identification number
-     * @return the certificate information in X509Certificate format
-     * @throws CertificateCoreException in case of problem in loading
-     *
-     */
-    public X509Certificate loadFromToken(String pinNumber) throws CertificateCoreException;
+	/**
+	 * When a PIN(Personal Identification Number) was informed,
+	 * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 *
+	 * @param pinNumber personal identification number
+	 * @return the certificate information in X509Certificate format
+	 * @throws CertificateCoreException in case of problem in loading
+	 */
+	X509Certificate loadFromToken(String pinNumber) throws CertificateCoreException;
 
-    /**
-     * When a PIN(Personal Identification Number) and Alias was informed,
-     * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
-     *
-     * @param pinNumber a PIN(Personal Identification Number)
-     * @param alias desired alias
-     * @return  the certificate information in X509Certificate format
-     * @throws CertificateCoreException in case of problem in loading
-     *
-     */
-    public X509Certificate loadFromToken(String pinNumber, String alias) throws CertificateCoreException;
+	/**
+	 * When a PIN(Personal Identification Number) and Alias was informed,
+	 * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 *
+	 * @param pinNumber a PIN(Personal Identification Number)
+	 * @param alias     desired alias
+	 * @return the certificate information in X509Certificate format
+	 * @throws CertificateCoreException in case of problem in loading
+	 */
+	X509Certificate loadFromToken(String pinNumber, String alias) throws CertificateCoreException;
 
-    /**
-     * Associate a previously existing keystore
-     *
-     * @param keyStore java.security.keystore
-     * @throws CertificateCoreException if is not possible to set the keystore
-     *
-     */
-    public void setKeyStore(KeyStore keyStore) throws CertificateCoreException;
+	/**
+	 * Associate a previously existing keystore
+	 *
+	 * @param keyStore java.security.keystore
+	 * @throws CertificateCoreException if is not possible to set the keystore
+	 */
+	void setKeyStore(KeyStore keyStore) throws CertificateCoreException;
 
-    /**
-     *Returns the KeyStore used by {@link CertificateLoader}.
-     *
-     * @return java.security.keystore
-     * @throws CertificateCoreException if is not possible to get keystore
-     *
-     */
-    public KeyStore getKeyStore() throws CertificateCoreException;
+	/**
+	 * Returns the KeyStore used by {@link CertificateLoader}.
+	 *
+	 * @return java.security.keystore
+	 * @throws CertificateCoreException if is not possible to get keystore
+	 */
+	KeyStore getKeyStore() throws CertificateCoreException;
 
 }

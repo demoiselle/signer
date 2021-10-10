@@ -45,37 +45,36 @@ import org.bouncycastle.asn1.DERSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *
- *  CMSAttrs ::= SEQUENCE OF OBJECT IDENTIFIER  {@link ObjectIdentifier}
- *
- * 	mandatedSignedAttr CMSAttrs, -- Mandated CMS signed attributes
- *
- * 	mandatedUnsignedAttr CMSAttrs, -- Mandated CMS unsigned attributed
+ * CMSAttrs ::= SEQUENCE OF OBJECT IDENTIFIER  {@link ObjectIdentifier}
+ * <p>
+ * mandatedSignedAttr CMSAttrs, -- Mandated CMS signed attributes
+ * <p>
+ * mandatedUnsignedAttr CMSAttrs, -- Mandated CMS unsigned attributed
  */
 public class CMSAttrs extends ASN1Object {
 
-    private Collection<ObjectIdentifier> objectIdentifiers;
+	private Collection<ObjectIdentifier> objectIdentifiers;
 
-    public Collection<ObjectIdentifier> getObjectIdentifiers() {
-        return objectIdentifiers;
-    }
+	public Collection<ObjectIdentifier> getObjectIdentifiers() {
+		return objectIdentifiers;
+	}
 
-    public void setObjectIdentifiers(Collection<ObjectIdentifier> objectIdentifiers) {
-        this.objectIdentifiers = objectIdentifiers;
-    }
+	public void setObjectIdentifiers(Collection<ObjectIdentifier> objectIdentifiers) {
+		this.objectIdentifiers = objectIdentifiers;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        DERSequence derSequence = (DERSequence) derObject;
-        int total = derSequence.size();
-        for (int i = 0; i < total; i++) {
-            ObjectIdentifier objectIdentifier = new ObjectIdentifier();
-            objectIdentifier.parse(derSequence.getObjectAt(i).toASN1Primitive());
-            if (this.objectIdentifiers == null) {
-                this.objectIdentifiers = new ArrayList<ObjectIdentifier>();
-            }
-            this.objectIdentifiers.add(objectIdentifier);
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		DERSequence derSequence = (DERSequence) derObject;
+		int total = derSequence.size();
+		for (int i = 0; i < total; i++) {
+			ObjectIdentifier objectIdentifier = new ObjectIdentifier();
+			objectIdentifier.parse(derSequence.getObjectAt(i).toASN1Primitive());
+			if (this.objectIdentifiers == null) {
+				this.objectIdentifiers = new ArrayList<ObjectIdentifier>();
+			}
+			this.objectIdentifiers.add(objectIdentifier);
+		}
+	}
 
 }

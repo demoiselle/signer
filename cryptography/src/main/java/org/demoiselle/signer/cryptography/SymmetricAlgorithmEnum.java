@@ -3,32 +3,32 @@
  * Copyright (C) 2016 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
- * 
+ *
  * Demoiselle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
  * as published by the Free Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License version 3
  * along with this program; if not,  see <http://www.gnu.org/licenses/>
  * or write to the Free Software Foundation, Inc., 51 Franklin Street,
  * Fifth Floor, Boston, MA  02110-1301, USA.
  * ----------------------------------------------------------------------------
  * Este arquivo é parte do Framework Demoiselle.
- * 
+ *
  * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
  * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
  * do Software Livre (FSF).
- * 
+ *
  * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
  * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
  * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
  * para maiores detalhes.
- * 
+ *
  * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
  * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
@@ -38,17 +38,17 @@
 package org.demoiselle.signer.cryptography;
 
 /**
- *Defines the algorithms used for ICP-Brasil (PKI) standard symmetric encryption.
- *
- * Private Document Security of the Proprietary Entity and its Normative Backup 
+ * Defines the algorithms used for ICP-Brasil (PKI) standard symmetric encryption.
+ * <p>
+ * Private Document Security of the Proprietary Entity and its Normative Backup
  * ICP-Brasil = DOC-ICP-04 - item 6.1.1.3, DOC-ICP-04 - item 6.2.4.3, DOC-ICP-05 - item 6.2.4.4
- *  Algorithm e Key size = 3DES - 112 bits, AES - 128 or 
- *  256 bits Operating mode = CBC or GCM
- *  For more information, read document ICP-BRAZIL CRYPTOGRAPHY PATTERNS AND ALGORITHMS (DOC ICP-01.01)
+ * Algorithm e Key size = 3DES - 112 bits, AES - 128 or
+ * 256 bits Operating mode = CBC or GCM
+ * For more information, read document ICP-BRAZIL CRYPTOGRAPHY PATTERNS AND ALGORITHMS (DOC ICP-01.01)
  */
 public enum SymmetricAlgorithmEnum {
 
-	TRI_DES("DESede", "DESede/ECB/PKCS5Padding", 112), 
+	TRI_DES("DESede", "DESede/ECB/PKCS5Padding", 112),
 	AES("AES", "AES/ECB/PKCS5Padding", 128);
 
 	/**
@@ -60,7 +60,7 @@ public enum SymmetricAlgorithmEnum {
 	private String algorithm;
 	private int size;
 
-	private SymmetricAlgorithmEnum(String keyAlgorithm, String algorithm, int size) {
+	SymmetricAlgorithmEnum(String keyAlgorithm, String algorithm, int size) {
 		this.keyAlgorithm = keyAlgorithm;
 		this.algorithm = algorithm;
 		this.size = size;
@@ -82,6 +82,7 @@ public enum SymmetricAlgorithmEnum {
 	 * Retrieves an item from the enumeration corresponding to the passed parameter.
 	 * The passed parameter must be equal (case insensitive) to the algorithm name
 	 * of any item in this enumeration, otherwise it will return null.
+	 *
 	 * @param algorithm name
 	 * @return representation
 	 */
@@ -91,5 +92,4 @@ public enum SymmetricAlgorithmEnum {
 				return value;
 		return null;
 	}
-
 }

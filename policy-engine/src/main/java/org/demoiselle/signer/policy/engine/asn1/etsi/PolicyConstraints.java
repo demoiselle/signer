@@ -43,87 +43,85 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *
  * The policyConstraints extension constrains path processing in two ways.
- *  It can be used to prohibit policy mapping or require that each certificate
- *  in a path contain an acceptable policy identifier.
- *  The policyConstraints field, if present specifies requirement for explicit indication
- *  of the certificate policy and/or the constraints on policy mapping.
- *
- *  PolicyConstraints ::= SEQUENCE {
- *  			requireExplicitPolicy [0] SkipCerts OPTIONAL,
- *  			inhibitPolicyMapping [1] SkipCerts OPTIONAL
- *  }
- *
- *  			{@link SkipCerts} ::= INTEGER (0..MAX)
- *
+ * It can be used to prohibit policy mapping or require that each certificate
+ * in a path contain an acceptable policy identifier.
+ * The policyConstraints field, if present specifies requirement for explicit indication
+ * of the certificate policy and/or the constraints on policy mapping.
+ * <p>
+ * PolicyConstraints ::= SEQUENCE {
+ * requireExplicitPolicy [0] SkipCerts OPTIONAL,
+ * inhibitPolicyMapping [1] SkipCerts OPTIONAL
+ * }
+ * <p>
+ * {@link SkipCerts} ::= INTEGER (0..MAX)
  */
 public class PolicyConstraints extends ASN1Object {
 
-    enum TAG {
+	enum TAG {
 
-        requireExplicitPolicy(0), inhibitPolicyMapping(1);
-        int value;
+		requireExplicitPolicy(0), inhibitPolicyMapping(1);
+		int value;
 
-        private TAG(int value) {
-            this.value = value;
-        }
+		TAG(int value) {
+			this.value = value;
+		}
 
-        public static TAG getTag(int value) {
-            for (TAG tag : TAG.values()) {
-                if (tag.value == value) {
-                    return tag;
-                }
-            }
-            return null;
-        }
-    }
+		public static TAG getTag(int value) {
+			for (TAG tag : TAG.values()) {
+				if (tag.value == value) {
+					return tag;
+				}
+			}
+			return null;
+		}
+	}
 
-    private SkipCerts requireExplicitPolicy;
-    private SkipCerts inhibitPolicyMapping;
+	private SkipCerts requireExplicitPolicy;
+	private SkipCerts inhibitPolicyMapping;
 
-    public SkipCerts getRequireExplicitPolicy() {
-        return requireExplicitPolicy;
-    }
+	public SkipCerts getRequireExplicitPolicy() {
+		return requireExplicitPolicy;
+	}
 
-    public void setRequireExplicitPolicy(SkipCerts requireExplicitPolicy) {
-        this.requireExplicitPolicy = requireExplicitPolicy;
-    }
+	public void setRequireExplicitPolicy(SkipCerts requireExplicitPolicy) {
+		this.requireExplicitPolicy = requireExplicitPolicy;
+	}
 
-    public SkipCerts getInhibitPolicyMapping() {
-        return inhibitPolicyMapping;
-    }
+	public SkipCerts getInhibitPolicyMapping() {
+		return inhibitPolicyMapping;
+	}
 
-    public void setInhibitPolicyMapping(SkipCerts inhibitPolicyMapping) {
-        this.inhibitPolicyMapping = inhibitPolicyMapping;
-    }
+	public void setInhibitPolicyMapping(SkipCerts inhibitPolicyMapping) {
+		this.inhibitPolicyMapping = inhibitPolicyMapping;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        int total = derSequence.size();
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		int total = derSequence.size();
 
-        if (total > 0) {
-            for (int i = 0; i < total; i++) {
-                ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
-                if (object instanceof DERTaggedObject) {
-                    DERTaggedObject derTaggedObject = (DERTaggedObject) object;
-                    TAG tag = TAG.getTag(derTaggedObject.getTagNo());
-                    switch (tag) {
-                        case requireExplicitPolicy:
-                            this.requireExplicitPolicy = new SkipCerts();
-                            this.requireExplicitPolicy.parse(object);
-                            break;
-                        case inhibitPolicyMapping:
-                            this.inhibitPolicyMapping = new SkipCerts();
-                            this.inhibitPolicyMapping.parse(object);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-    }
+		if (total > 0) {
+			for (int i = 0; i < total; i++) {
+				ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
+				if (object instanceof DERTaggedObject) {
+					DERTaggedObject derTaggedObject = (DERTaggedObject) object;
+					TAG tag = TAG.getTag(derTaggedObject.getTagNo());
+					switch (tag) {
+						case requireExplicitPolicy:
+							this.requireExplicitPolicy = new SkipCerts();
+							this.requireExplicitPolicy.parse(object);
+							break;
+						case inhibitPolicyMapping:
+							this.inhibitPolicyMapping = new SkipCerts();
+							this.inhibitPolicyMapping.parse(object);
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
 
 }

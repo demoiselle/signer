@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
@@ -64,53 +65,52 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 /**
  * The signing certificate attribute is designed to prevent the simple
  * substitution and re-issue attacks, and to allow for a restricted set
- *  of authorization certificates to be used in verifying a signature.
- *  
- *   The definition of SigningCertificate is
- *   
- *    SigningCertificate ::=  SEQUENCE {
- *         certs        SEQUENCE OF ESSCertID,
- *         policies     SEQUENCE OF PolicyInformation OPTIONAL
- *      }
- *      
- *      
- *    id-aa-signingCertificate OBJECT IDENTIFIER ::= { iso(1)
- *        member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
- *         smime(16) id-aa(2) 12 }
- *
+ * of authorization certificates to be used in verifying a signature.
+ * <p>
+ * The definition of SigningCertificate is
+ * <p>
+ * SigningCertificate ::=  SEQUENCE {
+ * certs        SEQUENCE OF ESSCertID,
+ * policies     SEQUENCE OF PolicyInformation OPTIONAL
+ * }
+ * <p>
+ * <p>
+ * id-aa-signingCertificate OBJECT IDENTIFIER ::= { iso(1)
+ * member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
+ * smime(16) id-aa(2) 12 }
  */
 public class SigningCertificate implements SignedAttribute {
 
-    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_signingCertificate;
-    private Certificate[] certificates = null;
+	private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.id_aa_signingCertificate;
+	private Certificate[] certificates = null;
 
-    @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
-        this.certificates = certificates;
-    }
+	@Override
+	public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
+		this.certificates = certificates;
+	}
 
-    @Override
-    public String getOID() {
-        return identifier.getId();
-    }
+	@Override
+	public String getOID() {
+		return identifier.getId();
+	}
 
-    @Override
-    public Attribute getValue() {
-        try {
-            X509Certificate cert = (X509Certificate) certificates[0];
-            Digest digest = DigestFactory.getInstance().factoryDefault();
-            digest.setAlgorithm(DigestAlgorithmEnum.SHA_1);
-            byte[] hash = digest.digest(cert.getEncoded());
-            X500Name dirName = new X500Name(cert.getSubjectDN().getName());
-            GeneralName name = new GeneralName(dirName);
-            GeneralNames issuer = new GeneralNames(name);
-            ASN1Integer serial = new ASN1Integer(cert.getSerialNumber());
-            IssuerSerial issuerSerial = new IssuerSerial(issuer, serial);
-            ESSCertID essCertId = new ESSCertID(hash, issuerSerial);
-            return new Attribute(identifier, new DERSet(new DERSequence(new ASN1Encodable[]{new DERSequence(essCertId), new DERSequence(DERNull.INSTANCE)})));
+	@Override
+	public Attribute getValue() {
+		try {
+			X509Certificate cert = (X509Certificate) certificates[0];
+			Digest digest = DigestFactory.getInstance().factoryDefault();
+			digest.setAlgorithm(DigestAlgorithmEnum.SHA_1);
+			byte[] hash = digest.digest(cert.getEncoded());
+			X500Name dirName = new X500Name(cert.getSubjectDN().getName());
+			GeneralName name = new GeneralName(dirName);
+			GeneralNames issuer = new GeneralNames(name);
+			ASN1Integer serial = new ASN1Integer(cert.getSerialNumber());
+			IssuerSerial issuerSerial = new IssuerSerial(issuer, serial);
+			ESSCertID essCertId = new ESSCertID(hash, issuerSerial);
+			return new Attribute(identifier, new DERSet(new DERSequence(new ASN1Encodable[]{new DERSequence(essCertId), new DERSequence(DERNull.INSTANCE)})));
 
-        } catch (CertificateEncodingException ex) {
-            throw new SignerException(ex.getMessage());
-        }
-    }
+		} catch (CertificateEncodingException ex) {
+			throw new SignerException(ex.getMessage());
+		}
+	}
 }

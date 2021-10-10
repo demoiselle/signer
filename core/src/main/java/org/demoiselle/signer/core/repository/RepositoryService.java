@@ -50,93 +50,92 @@ import org.demoiselle.signer.core.util.RepositoryUtil;
 
 public class RepositoryService {
 
-    private static final String UPDATE = "update-crl-list";
-    private static final String ADD = "add-crl";
-    private static String rt = "";
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private static final String UPDATE = "update-crl-list";
+	private static final String ADD = "add-crl";
+	private static String rt = "";
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 
-    public static void main(String[] args) {
-        if (args == null || args.length < 2) {
-            println(coreMessagesBundle.getString("error.repository.service.args"));
-        } else {
+	public static void main(String[] args) {
+		if (args == null || args.length < 2) {
+			println(coreMessagesBundle.getString("error.repository.service.args"));
+		} else {
+			String op = args[0];
+			if (op.equalsIgnoreCase(ADD)) {
 
-            String op = args[0];
-            if (op.equalsIgnoreCase(ADD)) {
+				String url = args[1];
+				String file_index = args[2];
+				File file = new File(file_index);
+				ConfigurationRepo.getInstance().setCrlIndex(file.getName());
+				ConfigurationRepo.getInstance().setCrlPath(file.getParent());
+				OffLineCRLRepository rp = new OffLineCRLRepository();
+				rp.addFileIndex(url);
+				update(url);
 
-                String url = args[1];
-                String file_index = args[2];
-                File file = new File(file_index);
-                ConfigurationRepo.getInstance().setCrlIndex(file.getName());
-                ConfigurationRepo.getInstance().setCrlPath(file.getParent());
-                OffLineCRLRepository rp = new OffLineCRLRepository();
-                rp.addFileIndex(url);
-                update(url);
+			} else if (op.equalsIgnoreCase(UPDATE)) {
 
-            } else if (op.equalsIgnoreCase(UPDATE)) {
+				String file_index = args[1];
+				File fileIndex = new File(file_index);
+				ConfigurationRepo.getInstance().setCrlIndex(file_index);
 
-                String file_index = args[1];
-                File fileIndex = new File(file_index);
-                ConfigurationRepo.getInstance().setCrlIndex(file_index);
+				if (!fileIndex.exists()) {
 
-                if (!fileIndex.exists()) {
+					println(coreMessagesBundle.getString("error.file.not.found", file_index));
 
-                    println(coreMessagesBundle.getString("error.file.not.found",file_index));
+				} else {
+					Properties prop = new Properties();
 
-                } else {
-                    Properties prop = new Properties();
+					try {
+						prop.load(new FileInputStream(fileIndex));
+					} catch (Exception e) {
+						throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.load", fileIndex), e);
+					}
 
-                    try {
-                        prop.load(new FileInputStream(fileIndex));
-                    } catch (Exception e) {
-                        throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.load",fileIndex), e);
-                    }
+					Enumeration<Object> keys = prop.keys();
+					while (keys.hasMoreElements()) {
+						Object key = keys.nextElement();
+						String url = (String) prop.get(key);
+						update(url);
+					}
 
-                    Enumeration<Object> keys = prop.keys();
-                    while (keys.hasMoreElements()) {
-                        Object key = keys.nextElement();
-                        String url = (String) prop.get(key);
-                        update(url);
-                    }
+					try {
+						prop.store(new FileOutputStream(fileIndex), null);
+					} catch (IOException e) {
+						throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.load", fileIndex), e);
+					}
+				}
 
-                    try {
-                        prop.store(new FileOutputStream(fileIndex), null);
-                    } catch (IOException e) {
-                        throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.load",fileIndex), e);
-                    }
-                }
+			} else {
+				println(coreMessagesBundle.getString("error.repository.service.operation", op));
+			}
+		}
 
-            } else {
-                println(coreMessagesBundle.getString("error.repository.service.operation", op));
-            }
-        }
+	}
 
-    }
+	private static void update(String url) {
+		try {
+			ConfigurationRepo config = ConfigurationRepo.getInstance();
+			File fileCLR = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(url));
+			print(coreMessagesBundle.getString("info.repository.service.download", url));
+			RepositoryUtil.saveURL(url, fileCLR);
+			println("...[Ok]");
+		} catch (CertificateValidatorException e) {
+			println(coreMessagesBundle.getString("error.repository.service.fail"));
+			println(coreMessagesBundle.getString("error.repository.service.cause") + e.getMessage());
+		}
+	}
 
-    private static void update(String url) {
-        try {
-            ConfigurationRepo config = ConfigurationRepo.getInstance();
-            File fileCLR = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(url));
-            print(coreMessagesBundle.getString("info.repository.service.download",url));
-            RepositoryUtil.saveURL(url, fileCLR);
-            println("...[Ok]");
-        } catch (CertificateValidatorException e) {
-            println(coreMessagesBundle.getString("error.repository.service.fail"));
-            println(coreMessagesBundle.getString("error.repository.service.cause")+e.getMessage());
-        }
-    }
+	public static String getReturn() {
+		return rt;
+	}
 
-    public static String getReturn() {
-        return rt;
-    }
+	private static void println(String msg) {
+		rt = msg;
+		System.out.println(msg);
+	}
 
-    private static void println(String msg) {
-        rt = msg;
-        System.out.println(msg);
-    }
-
-    private static void print(String msg) {
-        rt = msg;
-        System.out.print(msg);
-    }
+	private static void print(String msg) {
+		rt = msg;
+		System.out.print(msg);
+	}
 }

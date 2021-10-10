@@ -44,32 +44,31 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 /**
  * The mandatedCertificateRef identifies whether just the signer's certificate,
  * or all the full certificate path shall be provided by the signer
- *
+ * <p>
  * CertRefReq ::= ENUMERATED {
- * 				signerOnly (1), -- Only reference to signer cert mandated
- * 				fullPath (2) -- References for full cert path up to a trust point required
- * 				}
- *
+ * signerOnly (1), -- Only reference to signer cert mandated
+ * fullPath (2) -- References for full cert path up to a trust point required
+ * }
  */
 public enum CertRefReq {
 
-    signerOnly(1), fullPath(2);
+	signerOnly(1), fullPath(2);
 
-    private int value;
+	private int value;
 
-    CertRefReq(int value) {
-        this.value = value;
-    }
+	CertRefReq(int value) {
+		this.value = value;
+	}
 
-    public static CertRefReq parse(ASN1Primitive derObject) {
-        ASN1Enumerated derEnumerated = ASN1Object.getDEREnumerated(derObject);
-        int value = derEnumerated.getValue().intValue();
-        for (CertRefReq certRefReq : CertRefReq.values()) {
-            if (certRefReq.value == value) {
-                return certRefReq;
-            }
-        }
-        return null;
-    }
+	public static CertRefReq parse(ASN1Primitive derObject) {
+		ASN1Enumerated derEnumerated = ASN1Object.getDEREnumerated(derObject);
+		int value = derEnumerated.getValue().intValue();
+		for (CertRefReq certRefReq : CertRefReq.values()) {
+			if (certRefReq.value == value) {
+				return certRefReq;
+			}
+		}
+		return null;
+	}
 
 }

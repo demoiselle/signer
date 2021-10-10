@@ -38,24 +38,22 @@
 package org.demoiselle.signer.core.repository;
 
 /**
- *
  * to do unchecked
- *
  */
 public class CRLFileNotFoundException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public CRLFileNotFoundException() {
-        super();
-    }
+	public CRLFileNotFoundException() {
+		super();
+	}
 
-    public CRLFileNotFoundException(String message) {
-        super(message);
-    }
+	public CRLFileNotFoundException(String message) {
+		super(message);
+	}
 
-    public CRLFileNotFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public CRLFileNotFoundException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

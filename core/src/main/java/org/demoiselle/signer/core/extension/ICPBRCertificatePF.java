@@ -54,27 +54,20 @@ public class ICPBRCertificatePF {
 	private OID_2_16_76_1_3_6 oID_2_16_76_1_3_6;
 
 	/**
-	 *
-	 * @param oid1
-	 *            -&gt; 2.16.76.1.3.1 and content = In the first 8 (eight) positions, the
-     * Date of birth of the holder for the certificate, in ddmmaaaa format;
-     * In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
-     * holder; In the 11 (eleven) subsequent positions, the number of
-     * Brazilian Social Identification number - NIS (PIS, PASEP or CI); In the 15 (fifteen) positions
-     * Subsequent, the Brazilian ID number (called RG) of the responsible for the certificate; In the six (6) positions
-     * Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brazilian state).
-	 *
-	 *
-	 * @param oid2
-	 *            -&gt; 2.16.76.1.3.5 and content = In the first 12 (eleven)
-	 * positions, the number of the Electoral document; In 3
-	 * (Three) subsequent positions, the Electoral document Zone; In the four (4)
-	 * following positions, the Section of Electoral document; In the twenty-two (22)
-	 * Subsequent  positions, the name of City and  and its UF (Initials for a Brazilian state) of the Electoral Document.
-	 *
-	 * @param oid3
-	 *            -&gt; 2.16.76.1.3.6 and content = In the 12 (twelve) positions, the number of the registry
-	 *            on Brazilian National Social Security Institute (INSS) called CEI .
+	 * @param oid1 -&gt; 2.16.76.1.3.1 and content = In the first 8 (eight) positions, the
+	 *             Date of birth of the holder for the certificate, in ddmmaaaa format;
+	 *             In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
+	 *             holder; In the 11 (eleven) subsequent positions, the number of
+	 *             Brazilian Social Identification number - NIS (PIS, PASEP or CI); In the 15 (fifteen) positions
+	 *             Subsequent, the Brazilian ID number (called RG) of the responsible for the certificate; In the six (6) positions
+	 *             Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brazilian state).
+	 * @param oid2 -&gt; 2.16.76.1.3.5 and content = In the first 12 (eleven)
+	 *             positions, the number of the Electoral document; In 3
+	 *             (Three) subsequent positions, the Electoral document Zone; In the four (4)
+	 *             following positions, the Section of Electoral document; In the twenty-two (22)
+	 *             Subsequent  positions, the name of City and  and its UF (Initials for a Brazilian state) of the Electoral Document.
+	 * @param oid3 -&gt; 2.16.76.1.3.6 and content = In the 12 (twelve) positions, the number of the registry
+	 *             on Brazilian National Social Security Institute (INSS) called CEI .
 	 */
 
 	public ICPBRCertificatePF(OID_2_16_76_1_3_1 oid1, OID_2_16_76_1_3_5 oid2, OID_2_16_76_1_3_6 oid3) {
@@ -84,7 +77,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return the Brazilian IRS Individuals Registry number called CPF
 	 */
 	public String getCPF() {
@@ -92,7 +84,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return Date of birth of the responsible for the certificate
 	 */
 	public String getBirthDate() {
@@ -100,7 +91,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return Brazilian Social Identification number of the responsible - initials are: NIS
 	 */
 	public String getNis() {
@@ -108,7 +98,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return the Brazilian ID number (called RG), of the certificate's holder
 	 */
 	public String getRg() {
@@ -116,7 +105,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return the initials of the issuing agency of the Brazilian ID (RG)
 	 */
 	public String getIssuingAgencyRg() {
@@ -124,7 +112,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
 	 */
 	public String getUfIssuingAgencyRg() {
@@ -132,7 +119,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return String that contains a number (with size = 12) of the Brazilian Electoral Document (Titulo Eleitor)
 	 */
 	public String getElectoralDocument() {
@@ -140,7 +126,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return String that contains a number (with size = 4) Section of  Electoral document
 	 */
 	public String getSectionElectoralDocument() {
@@ -148,7 +133,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return String that contains a number (with size = 3) Section of  Electoral document
 	 */
 	public String getZoneElectoralDocument() {
@@ -164,7 +148,6 @@ public class ICPBRCertificatePF {
 	 */
 
 	/**
-	 *
 	 * @return Name of City of  Electoral document
 	 */
 	public String getCityElectoralDocument() {
@@ -172,7 +155,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return Initials for a Brasilian state  of Electoral document
 	 */
 	public String getUFElectoralDocument() {
@@ -180,7 +162,6 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return Brazilian Social Identification Number (INSS-CEI) of the holder of certificate
 	 */
 	public String getCEI() {

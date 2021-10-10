@@ -36,9 +36,9 @@
  */
 
 package org.demoiselle.signer.policy.impl.xades.xml.impl;
+
 /**
  * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
- *
  */
 public class Constants {
 	public static String SignedProperties = "http://uri.etsi.org/01903#SignedProperties";
@@ -49,5 +49,4 @@ public class Constants {
 	public static final String XPATH = "http://www.w3.org/TR/1999/REC-xpath-19991116";
 	public static final String SHA256withRSA = "SHA256withRSA";
 	public static final String SHA512withRSA = "SHA512withRSA";
-
 }

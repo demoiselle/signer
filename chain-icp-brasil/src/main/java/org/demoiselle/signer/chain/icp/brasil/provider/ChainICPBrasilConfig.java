@@ -45,54 +45,52 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- *	Settings for Chain Repositories
- *	Depending on the files: chain-icpbrasil-config.properties or chain-icpbrasil-config-default.properties
+ * Settings for Chain Repositories
+ * Depending on the files: chain-icpbrasil-config.properties or chain-icpbrasil-config-default.properties
  *
  * @author emerson.saito@serpro.gov.br
  */
 public class ChainICPBrasilConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(ChainICPBrasilConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(ChainICPBrasilConfig.class);
 
-    private static ChainICPBrasilConfig instance = null;
-    private static ResourceBundle bundle = null;
-    private static final MessagesBundle ChainICPBrasilMessagesBundle = new MessagesBundle();
+	private static ChainICPBrasilConfig instance = null;
+	private static ResourceBundle bundle = null;
+	private static final MessagesBundle ChainICPBrasilMessagesBundle = new MessagesBundle();
 
-    private String url_local_ac_list;
-    private String url_local_ac_list_sha512;
-    private String url_iti_ac_list;
-    private String url_iti_ac_list_sha512;
-    private String local_dir = "/tmp";
+	private String url_local_ac_list;
+	private String url_local_ac_list_sha512;
+	private String url_iti_ac_list;
+	private String url_iti_ac_list_sha512;
+	private String local_dir = "/tmp";
 
-    /**
-     *
-     * @return  Returns an instance of ChainICPBrasilConfig
-     */
-    public static ChainICPBrasilConfig getInstance() {
-        if (instance == null) {
-            instance = new ChainICPBrasilConfig();
-        }
-        return instance;
-    }
+	/**
+	 * @return Returns an instance of ChainICPBrasilConfig
+	 */
+	public static ChainICPBrasilConfig getInstance() {
+		if (instance == null) {
+			instance = new ChainICPBrasilConfig();
+		}
+		return instance;
+	}
 
-    public ResourceBundle getBundle(String bundleName) {
-        return ResourceBundle.getBundle(bundleName);
-    }
+	public ResourceBundle getBundle(String bundleName) {
+		return ResourceBundle.getBundle(bundleName);
+	}
 
-    protected ChainICPBrasilConfig() {
-        if (bundle == null){
-	    	try {
-	        	bundle = getBundle("chain-icpbrasil-config");
-	        } catch (MissingResourceException mre) {
-	            try {
-	            	bundle = getBundle("chain-icpbrasil-config-default");
-	            } catch (MissingResourceException e) {
-	            	 logger.info(e.getMessage());
-	            }
-	        }
-        }
-    }
+	protected ChainICPBrasilConfig() {
+		if (bundle == null) {
+			try {
+				bundle = getBundle("chain-icpbrasil-config");
+			} catch (MissingResourceException mre) {
+				try {
+					bundle = getBundle("chain-icpbrasil-config-default");
+				} catch (MissingResourceException e) {
+					logger.info(e.getMessage());
+				}
+			}
+		}
+	}
 
 	/**
 	 * @return the url_local_ac_list
@@ -101,8 +99,9 @@ public class ChainICPBrasilConfig {
 		try {
 			setUrl_local_ac_list(bundle.getString("url_local_ac_list"));
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list"));		}
-    	return url_local_ac_list;
+			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list"));
+		}
+		return url_local_ac_list;
 	}
 
 	/**

@@ -38,24 +38,21 @@
 package org.demoiselle.signer.core.exception;
 
 /**
- *
  * Custom RuntimeException to do unchecked
- *
  */
 public class CertificateCoreException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public CertificateCoreException() {
-        super();
-    }
+	public CertificateCoreException() {
+		super();
+	}
 
-    public CertificateCoreException(String message) {
-        super(message);
-    }
+	public CertificateCoreException(String message) {
+		super(message);
+	}
 
-    public CertificateCoreException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+	public CertificateCoreException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

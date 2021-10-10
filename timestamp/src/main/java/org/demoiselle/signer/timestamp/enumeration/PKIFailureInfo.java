@@ -38,33 +38,32 @@
 package org.demoiselle.signer.timestamp.enumeration;
 
 /**
- *
  * @author 07721825741
  */
 public enum PKIFailureInfo {
 
-    badAlg(0, "Unrecognized or unsupported Algorithm Identifier."),
-    badRequest(2, "Transaction not permitted or supported."),
-    badDataFormat(5, "The data submitted has the wrong format."),
-    timeNotAvailable(14, "The TSA’s time source is not available."),
-    unacceptedPolicy(15, "The requested TSA policy is not supported by the TSA."),
-    unacceptedExtension(16, "The requested extension is not supported by the TSA."),
-    addInfoNotAvailable(17, "The additional information requested could not be understoodor is not available."),
-    systemFailure(25, "The request cannot be handled due to system failure.");
+	badAlg(0, "Unrecognized or unsupported Algorithm Identifier."),
+	badRequest(2, "Transaction not permitted or supported."),
+	badDataFormat(5, "The data submitted has the wrong format."),
+	timeNotAvailable(14, "The TSA’s time source is not available."),
+	unacceptedPolicy(15, "The requested TSA policy is not supported by the TSA."),
+	unacceptedExtension(16, "The requested extension is not supported by the TSA."),
+	addInfoNotAvailable(17, "The additional information requested could not be understoodor is not available."),
+	systemFailure(25, "The request cannot be handled due to system failure.");
 
-    private final int id;
-    private final String message;
+	private final int id;
+	private final String message;
 
-    PKIFailureInfo(int id, String message) {
-        this.id = id;
-        this.message = message;
-    }
+	PKIFailureInfo(int id, String message) {
+		this.id = id;
+		this.message = message;
+	}
 
-    public int getId() {
-        return id;
-    }
+	public int getId() {
+		return id;
+	}
 
-    public String getMessage() {
-        return message;
-    }
+	public String getMessage() {
+		return message;
+	}
 }

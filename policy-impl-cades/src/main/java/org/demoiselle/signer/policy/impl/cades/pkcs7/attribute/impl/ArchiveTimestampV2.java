@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
@@ -48,56 +49,49 @@ import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
 
 /**
- * 
- * archive-time-stamp Attribute Definition
- * 
- * The archive-time-stamp attribute is a time-stamp token of many of the
+ * archive-time-stamp Attribute Definition.
+ *
+ * <p>The archive-time-stamp attribute is a time-stamp token of many of the
  * elements of the signedData in the electronic signature.  If the
  * certificate-values and revocation-values attributes are not present
  * in the CAdES-BES or CAdES-EPES, then they shall be added to the
- * electronic signature prior to computing the archive time-stamp token.
- * 
- * The archive-time-stamp attribute is an unsigned attribute.  Several
+ * electronic signature prior to computing the archive time-stamp token.</p>
+ *
+ * <p>The archive-time-stamp attribute is an unsigned attribute.  Several
  * instances of this attribute may occur with an electronic signature
- * both over time and from different TSUs.
- * 
- * The following object identifier identifies the nested
- * 
- *   archive-time-stamp attribute:
- *   
+ * both over time and from different TSUs.</p>
+ *
+ * <p>The following object identifier identifies the nested
+ * archive-time-stamp attribute:</p>
+ *
+ * <pre>
  *   id-aa-ets-archiveTimestampV2  OBJECT IDENTIFIER ::=
  *    { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-9(9)
  *     smime(16) id-aa(2) 48}
- *     
+ *
  *     Archive-time-stamp attribute values have the ASN.1 syntax ArchiveTimeStampToken
  *     ArchiveTimeStampToken ::= TimeStampToken
-
- *
+ * </pre>
  */
-
 public class ArchiveTimestampV2 implements UnsignedAttribute {
 
 	private final String identifier = "1.2.840.113549.1.9.16.2.48";
-    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
-    private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
-    private PrivateKey privateKey = null;
-    private Certificate[] certificates = null;
-    byte[] content = null;
-    byte[] hash = null;
+	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+	private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
+	private PrivateKey privateKey = null;
+	private Certificate[] certificates = null;
 
-    @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
+	@Override
+	public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
+	}
 
-    }
+	@Override
+	public String getOID() {
+		return identifier;
+	}
 
-    @Override
-    public String getOID() {
-        return identifier;
-    }
-
-    @Override
-    public Attribute getValue() throws SignerException {
-        throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported",getClass().getName()));
-    }
-
+	@Override
+	public Attribute getValue() throws SignerException {
+		throw new UnsupportedOperationException(cadesMessagesBundle.getString("error.not.supported", getClass().getName()));
+	}
 }

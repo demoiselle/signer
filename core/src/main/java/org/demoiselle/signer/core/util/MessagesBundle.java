@@ -48,7 +48,6 @@ import java.util.ResourceBundle;
  */
 public class MessagesBundle {
 
-
 	private String bundleName = "signer_core_messages";
 	private static ResourceBundle resouceBundle;
 
@@ -59,7 +58,6 @@ public class MessagesBundle {
 		super();
 		MessagesBundle.setResouceBundle(ResourceBundle.getBundle(this.bundleName));
 	}
-
 
 	/**
 	 *

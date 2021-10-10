@@ -37,19 +37,18 @@
 
 package org.demoiselle.signer.core.oid;
 
-
 /**
  * subjectAltName
- *
+ * <p>
  * Subject alternative name ("subjectAltName" extension)
- *
+ * <p>
  * See IETF RFC 5280.
  *
  * @author Emerson Sachio Saito <emerson.saito@gmail.com>
  */
 public class OID_2_5_4_5 extends OIDGeneric {
 
-    public static final String OID = " 2.5.4.5";
+	public static final String OID = " 2.5.4.5";
 
 
 	public OID_2_5_4_5() {
@@ -60,13 +59,9 @@ public class OID_2_5_4_5 extends OIDGeneric {
 	}
 
 	/**
-	 *
 	 * @return subjectAltName
 	 */
 	public String getSubjectAltName() {
 		return super.getData();
 	}
-
-
-
 }

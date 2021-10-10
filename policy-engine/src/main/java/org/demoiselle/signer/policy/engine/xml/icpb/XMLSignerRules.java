@@ -41,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Class to represent SignerRules for XML policies
+ * Class to represent SignerRules for XML policies.
  *
  * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
  */

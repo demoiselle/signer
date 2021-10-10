@@ -38,38 +38,37 @@
 package org.demoiselle.signer.policy.impl.xades;
 
 /**
- * Class for representing XML ICP-Brasil policies by respective OID
- * 
- * @author emerson.saito@serpro.gov.br
+ * Class for representing XML ICP-Brasil policies by respective OID.
  *
+ * @author emerson.saito@serpro.gov.br
  */
 public enum XMLPoliciesOID {
-	
+
 	AD_RB_XADES_2_1("2.16.76.1.7.1.6.2.1"),
 	AD_RB_XADES_2_2("2.16.76.1.7.1.6.2.2"),
 	AD_RB_XADES_2_3("2.16.76.1.7.1.6.2.3"),
 	AD_RB_XADES_2_4("2.16.76.1.7.1.6.2.4"),
-	
+
 	AD_RT_XADES_2_1("2.16.76.1.7.1.7.2.1"),
 	AD_RT_XADES_2_2("2.16.76.1.7.1.7.2.2"),
 	AD_RT_XADES_2_3("2.16.76.1.7.1.7.2.3"),
 	AD_RT_XADES_2_4("2.16.76.1.7.1.7.2.4"),
-	
+
 	AD_RV_XADES_2_2("2.16.76.1.7.1.8.2.2"),
 	AD_RV_XADES_2_3("2.16.76.1.7.1.8.2.3"),
 	AD_RV_XADES_2_4("2.16.76.1.7.1.8.2.4"),
-	
+
 	AD_RC_XADES_2_3("2.16.76.1.7.1.9.2.3"),
 	AD_RC_XADES_2_4("2.16.76.1.7.1.9.2.4"),
-	
+
 	AD_RA_XADES_2_3("2.16.76.1.7.1.10.2.3"),
 	AD_RA_XADES_2_4("2.16.76.1.7.1.10.2.4");
-	
-	
+
+
 	private final String OID;
-	
+
 	XMLPoliciesOID(String parmOID) {
-		this.OID= parmOID;
+		this.OID = parmOID;
 
 	}
 

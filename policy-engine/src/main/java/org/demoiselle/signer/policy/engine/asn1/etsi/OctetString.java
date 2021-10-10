@@ -45,9 +45,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
- *
  * To get UTF8 String value of DEROctetString
- *
  */
 public class OctetString extends ASN1Object {
 
@@ -91,5 +89,4 @@ public class OctetString extends ASN1Object {
 			this.setValue(octetString);
 		}
 	}
-
 }

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import java.io.ByteArrayOutputStream;
@@ -101,9 +102,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
  * Basic Implementation for digital signatures in PKCS7 Format.
- * 
  */
 public class CAdESSigner implements PKCS7Signer {
 
@@ -125,11 +124,9 @@ public class CAdESSigner implements PKCS7Signer {
 	private Date notAfterSignerCertificate;
 	private String signatory;
 
-
 	public CAdESSigner() {
 		this.pkcs1.setAlgorithm((String) null);
 		this.setSignaturePolicy(Policies.AD_RB_CADES_2_3);
-
 	}
 
 	public CAdESSigner(String algorithm, Policies police) {
@@ -137,17 +134,14 @@ public class CAdESSigner implements PKCS7Signer {
 		this.setSignaturePolicy(police);
 
 	}
-	
+
 	public CAdESSigner(String algorithm, Policies police, boolean pades) {
 		this.pkcs1.setAlgorithm(algorithm);
 		this.setSignaturePolicy(police);
 		this.setPades(pades);
-
 	}
 
-	
 	/**
-	 * 
 	 * @return org.bouncycastle.cert.jcajce.JcaCertStore
 	 */
 	private Store<?> generatedCertStore(Certificate[] previewCerts) {
@@ -156,18 +150,18 @@ public class CAdESSigner implements PKCS7Signer {
 			List<Certificate> certificates = new ArrayList<>();
 			certificates.addAll(Arrays.asList(previewCerts));
 			boolean add = true;
-			
+
 			for (Certificate cert : previewCerts)
 				if (cert.equals(certificateChain[0]))
 					add = false;
-			
+
 			if (add) {
 				logger.debug("Adicionando Certificado no CertStore");
 				certificates.addAll(Arrays.asList(certificateChain[0]));
 			} else {
 				logger.debug("Certificado já assinou este arquivo. Não adicionar no CertStore");
 			}
-			
+
 			// CollectionCertStoreParameters cert = new
 			// CollectionCertStoreParameters(certificates);
 			result = new JcaCertStore(certificates);
@@ -183,8 +177,6 @@ public class CAdESSigner implements PKCS7Signer {
 		return this.pkcs1.getAlgorithm();
 	}
 
-	
-	
 	@Override
 	public PrivateKey getPrivateKey() {
 		return this.pkcs1.getPrivateKey();
@@ -221,7 +213,6 @@ public class CAdESSigner implements PKCS7Signer {
 	@Override
 	public void setCertificates(Certificate[] certificates) {
 		this.certificateChain = certificates;
-	
 	}
 
 	public void setDefaultCertificateValidators(boolean defaultCertificateValidators) {
@@ -252,8 +243,7 @@ public class CAdESSigner implements PKCS7Signer {
 	 * method it is necessary to inform the content, the private key and a
 	 * digital certificate in the ICP-Brasil (PKI) standard.
 	 *
-	 * @param content
-	 *            Content to be signed.
+	 * @param content Content to be signed.
 	 */
 
 	private byte[] doSign(byte[] content) {
@@ -277,7 +267,6 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 		}
 		return result;
-
 	}
 
 	private byte[] doSign(byte[] content, byte[] previewSignature) {
@@ -287,25 +276,25 @@ public class CAdESSigner implements PKCS7Signer {
 				logger.error(cadesMessagesBundle.getString("error.certificate.null"));
 				throw new SignerException(cadesMessagesBundle.getString("error.certificate.null"));
 			}
-			
+
 			if (getPrivateKey() == null) {
 				logger.error(cadesMessagesBundle.getString("error.privatekey.null"));
 				throw new SignerException(cadesMessagesBundle.getString("error.privatekey.null"));
 			}
-			
+
 			// Completa os certificados ausentes da cadeia, se houver
 			if (this.certificate == null && this.certificateChain != null && this.certificateChain.length > 0) {
 				this.certificate = (X509Certificate) this.certificateChain[0];
 			}
 
 			this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
-			
+
 			if (this.certificateChain.length < 3) {
 				throw new SignerException(cadesMessagesBundle.getString("error.no.ca", this.certificate.getIssuerDN()));
 			}
-			
-			Certificate[] certStore = new Certificate[] {};
-			
+
+			Certificate[] certStore = new Certificate[]{};
+
 			CMSSignedData cmsPreviewSignedData = null;
 			// Caso seja co-assinatura ou contra-assinatura
 			// Importar todos os certificados da assinatura anterior
@@ -313,17 +302,17 @@ public class CAdESSigner implements PKCS7Signer {
 				cmsPreviewSignedData = new CMSSignedData(new CMSAbsentContent(), previewSignature);
 				Collection<X509Certificate> previewCerts = this.getSignersCertificates(cmsPreviewSignedData);
 				//previewCerts.add(this.certificate);
-				certStore = previewCerts.toArray(new Certificate[] {});
+				certStore = previewCerts.toArray(new Certificate[]{});
 			}
-				
+
 			setCertificateManager(new CertificateManager(this.certificate));
-			
+
 			// Recupera a lista de algoritmos da politica e o tamanho minimo da
 			// chave
 			List<AlgAndLength> listOfAlgAndLength = new ArrayList<AlgAndLength>();
 
 			for (AlgAndLength algLength : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-					.getCommonRules().getAlgorithmConstraintSet().getSignerAlgorithmConstraints().getAlgAndLengths()) {
+				.getCommonRules().getAlgorithmConstraintSet().getSignerAlgorithmConstraints().getAlgAndLengths()) {
 				listOfAlgAndLength.add(algLength);
 			}
 			AlgAndLength algAndLength = null;
@@ -336,7 +325,7 @@ public class CAdESSigner implements PKCS7Signer {
 					if (algLength.getAlgID().getValue().equalsIgnoreCase(varSetedAlgorithmOID)) {
 						algAndLength = algLength;
 						SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum
-								.valueOf(this.pkcs1.getAlgorithm());
+							.valueOf(this.pkcs1.getAlgorithm());
 						String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
 						ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
 						varObjectIdentifier.setValue(varOIDAlgorithmHash);
@@ -349,7 +338,7 @@ public class CAdESSigner implements PKCS7Signer {
 				algAndLength = listOfAlgAndLength.get(1);
 				this.pkcs1.setAlgorithm(AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
 				SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum
-						.valueOf(this.pkcs1.getAlgorithm());
+					.valueOf(this.pkcs1.getAlgorithm());
 				String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
 				ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
 				varObjectIdentifier.setValue(varOIDAlgorithmHash);
@@ -362,14 +351,14 @@ public class CAdESSigner implements PKCS7Signer {
 				throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
 			}
 			logger.debug(cadesMessagesBundle.getString("info.algorithm.id", algAndLength.getAlgID().getValue()));
-			logger.debug(cadesMessagesBundle.getString("info.algorithm.name",AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue())));
+			logger.debug(cadesMessagesBundle.getString("info.algorithm.name", AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue())));
 			logger.debug(cadesMessagesBundle.getString("info.min.key.length", algAndLength.getMinKeyLength()));
 			// Recupera o tamanho minimo da chave para validacao
 			logger.debug(cadesMessagesBundle.getString("info.validating.key.length"));
 			int keyLegth = ((RSAKey) certificate.getPublicKey()).getModulus().bitLength();
 			if (keyLegth < algAndLength.getMinKeyLength()) {
 				throw new SignerException(cadesMessagesBundle.getString("error.min.key.length",
-						algAndLength.getMinKeyLength().toString(), keyLegth));
+					algAndLength.getMinKeyLength().toString(), keyLegth));
 			}
 
 			AttributeFactory attributeFactory = AttributeFactory.getInstance();
@@ -379,67 +368,66 @@ public class CAdESSigner implements PKCS7Signer {
 
 			//logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
 			if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-					.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-					.getObjectIdentifiers() != null) {
+				.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
+				.getObjectIdentifiers() != null) {
 				for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-						.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
-						.getMandatedSignedAttr().getObjectIdentifiers()) {
+					.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+					.getMandatedSignedAttr().getObjectIdentifiers()) {
 
 					SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
-							.factory(objectIdentifier.getValue());
+						.factory(objectIdentifier.getValue());
 					signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, content,
-							signaturePolicy, this.hash);
+						signaturePolicy, this.hash);
 					signedAttributes.add(signedOrUnsignedAttribute.getValue());
 				}
 			}
 
 			// Monta a tabela de atributos assinados
 			AttributeTable signedAttributesTable = new AttributeTable(signedAttributes);
-			
-			
+
 
 			// Create the table table generator that will added to the Signer
 			// builder
 			CMSAttributeTableGenerator signedAttributeGenerator;
-			if (this.isPades()){
+			if (this.isPades()) {
 				signedAttributeGenerator = new SimpleAttributeTableGenerator(signedAttributesTable);
-			}else{
+			} else {
 				signedAttributeGenerator = new DefaultSignedAttributeTableGenerator(signedAttributesTable);
-			}			
-			
+			}
+
 			// Recupera o(s) certificado(s) de confianca para validacao
 			Collection<X509Certificate> trustedCAs = new HashSet<X509Certificate>();
 
 			Collection<CertificateTrustPoint> ctp = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-					.getCommonRules().getSigningCertTrustCondition().getSignerTrustTrees().getCertificateTrustPoints();
+				.getCommonRules().getSigningCertTrustCondition().getSignerTrustTrees().getCertificateTrustPoints();
 			for (CertificateTrustPoint certificateTrustPoint : ctp) {
 				logger.debug(cadesMessagesBundle.getString("info.trust.point",
-						certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
+					certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
 				trustedCAs.add(certificateTrustPoint.getTrustpoint());
 			}
-			
+
 			// Efetua a validacao das cadeias do certificado baseado na politica
 			Collection<X509Certificate> certificateChainTrusted = new HashSet<X509Certificate>();
-			for (Certificate certCA : certificateChain){
+			for (Certificate certCA : certificateChain) {
 				certificateChainTrusted.add((X509Certificate) certCA);
-			}			
+			}
 			X509Certificate rootOfCertificate = null;
 			for (X509Certificate tcac : certificateChainTrusted) {
-			    logger.debug(tcac.getIssuerDN().toString());
-				if (CAManager.getInstance().isRootCA(tcac)){
+				logger.debug(tcac.getIssuerDN().toString());
+				if (CAManager.getInstance().isRootCA(tcac)) {
 					rootOfCertificate = tcac;
 				}
 			}
-			if (trustedCAs.contains(rootOfCertificate)){
-					logger.debug(cadesMessagesBundle.getString("info.trust.in.point", rootOfCertificate.getSubjectDN()));
-			}else{
-					// Não encontrou na política, verificará nas cadeias do
-					// componente chain-icp-brasil provavelmente certificado de
-					// homologação.
-					logger.debug(cadesMessagesBundle.getString("info.trust.poin.homolog"));
-					CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
+			if (trustedCAs.contains(rootOfCertificate)) {
+				logger.debug(cadesMessagesBundle.getString("info.trust.in.point", rootOfCertificate.getSubjectDN()));
+			} else {
+				// Não encontrou na política, verificará nas cadeias do
+				// componente chain-icp-brasil provavelmente certificado de
+				// homologação.
+				logger.debug(cadesMessagesBundle.getString("info.trust.poin.homolog"));
+				CAManager.getInstance().validateRootCAs(certificateChainTrusted, certificate);
 			}
-				
+
 			//  validade da politica
 			logger.debug(cadesMessagesBundle.getString("info.policy.valid.period"));
 			PolicyValidator pv = new PolicyValidator(this.signaturePolicy, this.policyName);
@@ -451,10 +439,10 @@ public class CAdESSigner implements PKCS7Signer {
 
 			logger.debug(cadesMessagesBundle.getString("info.algorithm.id", algorithmOID));
 			SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder()
-					.setSignedAttributeGenerator(signedAttributeGenerator)
-					.setUnsignedAttributeGenerator(null)
-					.build(AlgorithmNames.getAlgorithmNameByOID(algorithmOID), this.pkcs1.getPrivateKey(),
-							this.certificate);
+				.setSignedAttributeGenerator(signedAttributeGenerator)
+				.setUnsignedAttributeGenerator(null)
+				.build(AlgorithmNames.getAlgorithmNameByOID(algorithmOID), this.pkcs1.getPrivateKey(),
+					this.certificate);
 			gen.addSignerInfoGenerator(signerInfoGenerator);
 
 			CMSTypedData cmsTypedData;
@@ -471,13 +459,13 @@ public class CAdESSigner implements PKCS7Signer {
 
 
 			// Consulta e adiciona os atributos não assinados//
-			
+
 			ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
-			
-			
+
+
 			logger.debug(cadesMessagesBundle.getString("info.unsigned.attribute"));
 			Collection<SignerInformation> vNewSigners = cmsSignedData.getSignerInfos().getSigners();
- 			
+
 			Iterator<SignerInformation> it = vNewSigners.iterator();
 			SignerInformation oSi = it.next();
 
@@ -487,97 +475,96 @@ public class CAdESSigner implements PKCS7Signer {
 				for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
 					.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
 					.getMandatedUnsignedAttr().getObjectIdentifiers()) {
-						SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
+					SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 						.factory(objectIdentifier.getValue());
-						
-						switch(signedOrUnsignedAttribute.getOID()) {
-							//PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
-						  case "1.2.840.113549.1.9.16.2.14":
-							  logger.debug("TimeStampToken");							  
-							  PrivateKey pkForTimeStamp = this.pkcs1.getPrivateKeyForTimeStamp();
-								if( pkForTimeStamp == null) {
-									pkForTimeStamp = this.pkcs1.getPrivateKey(); 
-								}
-								Certificate varCertificateChainTimeStamp[] = this.certificateChainTimeStamp;
-							
-								if (varCertificateChainTimeStamp == null || varCertificateChainTimeStamp.length < 1) {
-									varCertificateChainTimeStamp = this.certificateChain;
-								}else {
-									varCertificateChainTimeStamp =
-											CAManager.getInstance().getCertificateChainArray((X509Certificate) varCertificateChainTimeStamp[0]);
-								}	
-								signedOrUnsignedAttribute.initialize(pkForTimeStamp, varCertificateChainTimeStamp, oSi.getSignature(),
-									signaturePolicy, this.hash);
 
-								break;
+					switch (signedOrUnsignedAttribute.getOID()) {
+						//PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
+						case "1.2.840.113549.1.9.16.2.14":
+							logger.debug("TimeStampToken");
+							PrivateKey pkForTimeStamp = this.pkcs1.getPrivateKeyForTimeStamp();
+							if (pkForTimeStamp == null) {
+								pkForTimeStamp = this.pkcs1.getPrivateKey();
+							}
+							Certificate varCertificateChainTimeStamp[] = this.certificateChainTimeStamp;
+
+							if (varCertificateChainTimeStamp == null || varCertificateChainTimeStamp.length < 1) {
+								varCertificateChainTimeStamp = this.certificateChain;
+							} else {
+								varCertificateChainTimeStamp =
+									CAManager.getInstance().getCertificateChainArray((X509Certificate) varCertificateChainTimeStamp[0]);
+							}
+							signedOrUnsignedAttribute.initialize(pkForTimeStamp, varCertificateChainTimeStamp, oSi.getSignature(),
+								signaturePolicy, this.hash);
+
+							break;
 						//PKCSObjectIdentifiers.id_aa_ets_escTimeStamp
-						  case "1.2.840.113549.1.9.16.2.25":
-							  logger.debug("ets_escTimeStamp");
-								ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
-								outputStream.write(oSi.getSignature());
-								AttributeTable varUnsignedAttributes = oSi.getUnsignedAttributes();
-								Attribute varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
-								outputStream.write(varAttribute.getAttrType().getEncoded());
-								outputStream.write(varAttribute.getAttrValues().getEncoded());
-								varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_certificateRefs.getId()));
-								outputStream.write(varAttribute.getAttrType().getEncoded());
-								outputStream.write(varAttribute.getAttrValues().getEncoded());
-								varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_revocationRefs.getId()));
-								outputStream.write(varAttribute.getAttrType().getEncoded());
-								outputStream.write(varAttribute.getAttrValues().getEncoded());
-								escTimeStampContent = outputStream.toByteArray( );
-								PrivateKey pkForEscTimeStamp = this.pkcs1.getPrivateKeyForTimeStamp();
-								if( pkForEscTimeStamp == null) {
-									pkForEscTimeStamp = this.pkcs1.getPrivateKey(); 
-								}
-								Certificate varCertificateChainEscTimeStamp[] = this.certificateChainTimeStamp;
-								if (varCertificateChainEscTimeStamp == null || varCertificateChainEscTimeStamp.length < 1) {
-									varCertificateChainEscTimeStamp = this.certificateChain;
-								}else {
-									varCertificateChainEscTimeStamp =
-											CAManager.getInstance().getCertificateChainArray((X509Certificate) varCertificateChainEscTimeStamp[0]);
-								}
-								signedOrUnsignedAttribute.initialize(pkForEscTimeStamp, varCertificateChainEscTimeStamp, escTimeStampContent,
-										signaturePolicy, this.hash);
-						    break;
-						  default:
-								signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
-										signaturePolicy, this.hash);
-						}
-						
-						unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
-						AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
-						vNewSigners.remove(oSi);
-						oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
-						vNewSigners.add(oSi);
+						case "1.2.840.113549.1.9.16.2.25":
+							logger.debug("ets_escTimeStamp");
+							ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+							outputStream.write(oSi.getSignature());
+							AttributeTable varUnsignedAttributes = oSi.getUnsignedAttributes();
+							Attribute varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
+							outputStream.write(varAttribute.getAttrType().getEncoded());
+							outputStream.write(varAttribute.getAttrValues().getEncoded());
+							varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_certificateRefs.getId()));
+							outputStream.write(varAttribute.getAttrType().getEncoded());
+							outputStream.write(varAttribute.getAttrValues().getEncoded());
+							varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_ets_revocationRefs.getId()));
+							outputStream.write(varAttribute.getAttrType().getEncoded());
+							outputStream.write(varAttribute.getAttrValues().getEncoded());
+							escTimeStampContent = outputStream.toByteArray();
+							PrivateKey pkForEscTimeStamp = this.pkcs1.getPrivateKeyForTimeStamp();
+							if (pkForEscTimeStamp == null) {
+								pkForEscTimeStamp = this.pkcs1.getPrivateKey();
+							}
+							Certificate varCertificateChainEscTimeStamp[] = this.certificateChainTimeStamp;
+							if (varCertificateChainEscTimeStamp == null || varCertificateChainEscTimeStamp.length < 1) {
+								varCertificateChainEscTimeStamp = this.certificateChain;
+							} else {
+								varCertificateChainEscTimeStamp =
+									CAManager.getInstance().getCertificateChainArray((X509Certificate) varCertificateChainEscTimeStamp[0]);
+							}
+							signedOrUnsignedAttribute.initialize(pkForEscTimeStamp, varCertificateChainEscTimeStamp, escTimeStampContent,
+								signaturePolicy, this.hash);
+							break;
+						default:
+							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
+								signaturePolicy, this.hash);
+					}
+
+					unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
+					AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
+					vNewSigners.remove(oSi);
+					oSi = SignerInformation.replaceUnsignedAttributes(oSi, unsignedAttributesTable);
+					vNewSigners.add(oSi);
 				}
 			}
-			
-			
+
 			//TODO Estudar este método de contra-assinatura posteriormente
 			if (previewSignature != null && previewSignature.length > 0) {
-				 vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
-			}				
+				vNewSigners.addAll(cmsPreviewSignedData.getSignerInfos().getSigners());
+			}
 			SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(vNewSigners);
 			CMSSignedData oSignedData = cmsSignedData;
 			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
-			
+
 			byte[] result = cmsSignedData.getEncoded();
-			
-			
-			String SN = certificate.getSerialNumber().toString()+"("+certificate.getSerialNumber().toString(16).toUpperCase()+")";
-			logger.debug(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0],SN));
-			setSignatory(certificate.getSubjectDN().toString().split(",")[0]+" " +SN);
+
+
+			String SN = certificate.getSerialNumber().toString() + "(" + certificate.getSerialNumber().toString(16).toUpperCase() + ")";
+			logger.debug(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0], SN));
+			setSignatory(certificate.getSubjectDN().toString().split(",")[0] + " " + SN);
 			PeriodValidator pV = new PeriodValidator();
-			setNotAfterSignerCertificate(pV.valDate(this.certificate));			
-			return result;			
+			setNotAfterSignerCertificate(pV.valDate(this.certificate));
+			return result;
 
 		} catch (Exception ex) {
-			logger.error(ex.getMessage()+"\n cause:"+ex.getCause());
+			logger.error(ex.getMessage() + "\n cause:" + ex.getCause());
 			throw new SignerException(ex);
 		}
 	}
-	
+
 	@Override
 	public void setSignaturePolicy(PolicyFactory.Policies signaturePolicy) {
 		this.setPolicyName(signaturePolicy.name());
@@ -585,7 +572,7 @@ public class CAdESSigner implements PKCS7Signer {
 		org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy sp = policyFactory.loadPolicy(signaturePolicy);
 		this.signaturePolicy = sp;
 	}
-	
+
 	@Override
 	public byte[] doAttachedSign(byte[] content) {
 		this.setAttached(true);
@@ -610,7 +597,7 @@ public class CAdESSigner implements PKCS7Signer {
 
 	@SuppressWarnings("static-access")
 	private CMSSignedData updateWithCounterSignature(final CMSSignedData counterSignature,
-			final CMSSignedData originalSignature, SignerId selector) {
+													 final CMSSignedData originalSignature, SignerId selector) {
 
 		// Retrieve the SignerInformation from the countersigned signature
 		final SignerInformationStore originalSignerInfos = originalSignature.getSignerInfos();
@@ -619,13 +606,13 @@ public class CAdESSigner implements PKCS7Signer {
 
 		// Add the countersignature
 		SignerInformation updatedSI = originalSignature.getSignerInfos().get(selector)
-				.addCounterSigners(originalSignerInfos.get(selector), signerInfos);
+			.addCounterSigners(originalSignerInfos.get(selector), signerInfos);
 
 		// Create updated SignerInformationStore
 		Collection<SignerInformation> counterSignatureInformationCollection = new ArrayList<SignerInformation>();
 		counterSignatureInformationCollection.add(updatedSI);
 		SignerInformationStore signerInformationStore = new SignerInformationStore(
-				counterSignatureInformationCollection);
+			counterSignatureInformationCollection);
 
 		// Return new, updated signature
 		return CMSSignedData.replaceSigners(originalSignature, signerInformationStore);
@@ -647,7 +634,7 @@ public class CAdESSigner implements PKCS7Signer {
 				byte[] previewSignatureFromSigner = previewSigner.getSignature();
 				CMSSignedData cmsCounterSignedData = new CMSSignedData(this.doSign(previewSignatureFromSigner));
 				cmsPreviewSignedData = this.updateWithCounterSignature(cmsCounterSignedData, cmsPreviewSignedData,
-						previewSigner.getSID());
+					previewSigner.getSID());
 			}
 			return cmsPreviewSignedData.getEncoded();
 		} catch (Throwable error) {
@@ -660,13 +647,12 @@ public class CAdESSigner implements PKCS7Signer {
 		this.hash = hash;
 		return this.doSign(null);
 	}
-	
-	
+
 	@Override
 	public byte[] doHashCoSign(byte[] hash, byte[] previewSigned) {
 		this.hash = hash;
 		return this.doSign(null, previewSigned);
-	}	
+	}
 
 	public String getPolicyName() {
 		return policyName;
@@ -710,7 +696,6 @@ public class CAdESSigner implements PKCS7Signer {
 	@Override
 	public void setCertificatesForTimeStamp(Certificate[] certificates) {
 		this.certificateChainTimeStamp = certificates;
-		
 	}
 
 	/**
@@ -719,8 +704,6 @@ public class CAdESSigner implements PKCS7Signer {
 	@Override
 	public void setPrivateKeyForTimeStamp(PrivateKey privateKeyForTimeStamp) {
 		this.pkcs1.setPrivateKeyForTimeStamp(privateKeyForTimeStamp);
-
-		
 	}
 
 	@Override
@@ -729,7 +712,6 @@ public class CAdESSigner implements PKCS7Signer {
 	}
 
 	/**
-	 *  
 	 * @return who perform the signature
 	 */
 	@Override
@@ -740,6 +722,4 @@ public class CAdESSigner implements PKCS7Signer {
 	public void setSignatory(String signatory) {
 		this.signatory = signatory;
 	}
-	
-	
 }

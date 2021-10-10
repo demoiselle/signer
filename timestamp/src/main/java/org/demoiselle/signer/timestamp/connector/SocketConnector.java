@@ -53,77 +53,77 @@ import org.slf4j.LoggerFactory;
  * The following simple TCP-based protocol is to be used for transport of TSA messages.
  * This protocol is suitable for cases where an entity
  * initiates a transaction and can poll to pick up the results.
- *
+ * <p>
  * The protocol basically assumes a listener process on a TSA that can
  * accept TSA messages on a well-defined port (IP port number 318).
- *
+ * <p>
  * Typically an initiator binds to this port and submits the initial TSA message.
  * The responder replies with a TSA message and/or with a reference number
  * to be used later when polling for the actual TSA  message response.
- *
+ * <p>
  * If a number of TSA response messages are to be produced for a given
  * request (say if a receipt must be sent before the actual token can be
  * produced) then a new polling reference is also returned.
- *
- *  When the final TSA response message has been picked up by the
- *  initiator then no new polling reference is supplied.
+ * <p>
+ * When the final TSA response message has been picked up by the
+ * initiator then no new polling reference is supplied.
  *
  * @author 07721825741
  */
 public class SocketConnector implements Connector {
 
-    private static final Logger logger = LoggerFactory.getLogger(SocketConnector.class);
-    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
+	private static final Logger logger = LoggerFactory.getLogger(SocketConnector.class);
+	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
-    private String hostname = "";
-    private int port;
-    private OutputStream out = null;
-    private Socket socket = null;
+	private String hostname = "";
+	private int port;
+	private OutputStream out = null;
+	private Socket socket = null;
 
-    @Override
-    public InputStream connect(byte[] content) throws CertificateCoreException {
-        try {
-        	TimeStampConfig.getInstance().getTimeOut();
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.send.request"));
-            socket = new Socket(hostname, port);
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", TimeStampConfig.getInstance().getTimeOut()));
-            socket.setSoTimeout(TimeStampConfig.getInstance().getTimeOut());
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
+	@Override
+	public InputStream connect(byte[] content) throws CertificateCoreException {
+		try {
+			TimeStampConfig.getInstance().getTimeOut();
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.send.request"));
+			socket = new Socket(hostname, port);
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", TimeStampConfig.getInstance().getTimeOut()));
+			socket.setSoTimeout(TimeStampConfig.getInstance().getTimeOut());
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.connected", new Object[]{socket.isConnected(), hostname, port}));
 
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
-            // A "direct TCP-based TSA message" consists of:length (32-bits), flag (8-bits), value
-            out = socket.getOutputStream();
-            out.write(Utils.intToByteArray(1 + content.length));
-            out.write(0x00);
-            out.write(content);
-            out.flush();
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.write"));
+			// A "direct TCP-based TSA message" consists of:length (32-bits), flag (8-bits), value
+			out = socket.getOutputStream();
+			out.write(Utils.intToByteArray(1 + content.length));
+			out.write(0x00);
+			out.write(content);
+			out.flush();
 
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
-            return socket.getInputStream();
-        } catch (IOException e) {
-        	logger.error(e.getMessage());
-        	throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.socket", e.getMessage()));
-        }
-    }
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.socket.response"));
+			return socket.getInputStream();
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.socket", e.getMessage()));
+		}
+	}
 
-    @Override
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
+	@Override
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
 
-    @Override
-    public void setPort(int port) {
-        this.port = port;
-    }
+	@Override
+	public void setPort(int port) {
+		this.port = port;
+	}
 
-    @Override
-    public void close() {
-        try {
-            socket.close();
-            out.close();
-        } catch (IOException ex) {
-            logger.debug(ex.getMessage());
-        }
+	@Override
+	public void close() {
+		try {
+			socket.close();
+			out.close();
+		} catch (IOException ex) {
+			logger.debug(ex.getMessage());
+		}
 
-    }
+	}
 }

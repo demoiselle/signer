@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.math.BigInteger;
@@ -74,58 +75,55 @@ import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute;
 
 /**
- * 
  * Complete Revocation Refs Attribute Definition
- * 
+ * <p>
  * The Complete Revocation Refs attribute is an unsigned attribute. Only a
  * single instance of this attribute must occur with an electronic signature. It
  * references the full set of the CRL or OCSP responses that have been used in
  * the validation of the signer and CA certificates used in ES with Complete
  * validation data.
- * 
+ * <p>
  * The following object identifier identifies the CompleteRevocationRefs
  * attribute:
- * 
+ * <p>
  * id-aa-ets-revocationRefs OBJECT IDENTIFIER ::= { iso(1) member-body(2)
  * us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-aa(2) 22}
- * 
+ * <p>
  * The complete revocation refs attribute value has the ASN.1 syntax
  * CompleteRevocationRefs.
- * 
+ * <p>
  * CompleteRevocationRefs ::= SEQUENCE OF CrlOcspRef
- * 
+ * <p>
  * The complete-revocation-references attribute value has the ASN.1 syntax
  * CompleteRevocationRefs:
- *
+ * <p>
  * CompleteRevocationRefs ::= SEQUENCE OF CrlOcspRef
- *
+ * <p>
  * CrlOcspRef ::= SEQUENCE { crlids [0] CRLListID OPTIONAL, ocspids [1]
  * OcspListID OPTIONAL, otherRev [2] OtherRevRefs OPTIONAL }
- *
+ * <p>
  * CompleteRevocationRefs shall contain one CrlOcspRef for the
  * signing-certificate, followed by one for each OtherCertID in the
  * CompleteCertificateRefs attribute. The second and subsequent CrlOcspRef
  * fields shall be in the same order as the OtherCertID to which they relate. At
  * least one of CRLListID or OcspListID or OtherRevRefs should be present for
  * all but the "trusted" CA of the certificate path.
- *
+ * <p>
  * CRLListID ::= SEQUENCE { crls SEQUENCE OF CrlValidatedID }
- *
+ * <p>
  * CrlValidatedID ::= SEQUENCE { crlHash OtherHash, crlIdentifier CrlIdentifier
  * OPTIONAL }
- *
+ * <p>
  * CrlIdentifier ::= SEQUENCE { crlissuer Name, crlIssuedTime UTCTime, crlNumber
  * INTEGER OPTIONAL }
- *
+ * <p>
  * OcspListID ::= SEQUENCE { ocspResponses SEQUENCE OF OcspResponsesID }
- *
+ * <p>
  * OcspResponsesID ::= SEQUENCE { ocspIdentifier OcspIdentifier, ocspRepHash
  * OtherHash OPTIONAL }
- *
+ * <p>
  * OcspIdentifier ::= SEQUENCE { ocspResponderID ResponderID, -- As in OCSP
  * response data producedAt GeneralizedTime -- As in OCSP response data }
- * 
- *
  */
 public class RevocationRefs implements UnsignedAttribute {
 
@@ -135,7 +133,7 @@ public class RevocationRefs implements UnsignedAttribute {
 
 	@Override
 	public void initialize(PrivateKey privateKey, Certificate[] certificates,
-			byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
+						   byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
 		this.certificates = certificates;
 	}
 
@@ -148,25 +146,25 @@ public class RevocationRefs implements UnsignedAttribute {
 	public Attribute getValue() throws SignerException {
 
 		try {
-			
-			int chainSize = certificates.length -1;
+
+			int chainSize = certificates.length - 1;
 			ArrayList<CrlValidatedID> crls = new ArrayList<CrlValidatedID>();
-			for (int ix = 0; ix < chainSize; ix++ ){
+			for (int ix = 0; ix < chainSize; ix++) {
 				X509Certificate cert = (X509Certificate) certificates[ix];
 				Collection<ICPBR_CRL> icpCrls = crlRepository.getX509CRL(cert);
 				for (ICPBR_CRL icpCrl : icpCrls) {
 					crls.add(makeCrlValidatedID(icpCrl.getCRL()));
-				}				
+				}
 			}
 			int crlsIdSize = crls.size();
 			CrlValidatedID[] crlsForId = new CrlValidatedID[crlsIdSize];
 			int i = 0;
-			for (CrlValidatedID crlVID : crls){
+			for (CrlValidatedID crlVID : crls) {
 				crlsForId[i] = crlVID;
 				i++;
 			}
 			//CrlListID crlids = new CrlListID(crlsForId);
-		
+
 			DERSequence crlValidatedIDSeq = new DERSequence(crlsForId);
 			//--CRLListID--/
 			ASN1Encodable[] crlValidatedIDSeqArr = new ASN1Encodable[1];
@@ -181,59 +179,56 @@ public class RevocationRefs implements UnsignedAttribute {
 			//--CompleteRevocationRefs--/
 			ASN1Encodable[] crlOscpRefArr = new ASN1Encodable[1];
 			crlOscpRefArr[0] = crlOscpRef;
-			DERSequence completeRevocationRefs = new DERSequence(crlOscpRefArr); 
-			
-			
+			DERSequence completeRevocationRefs = new DERSequence(crlOscpRefArr);
+
+
 			// TODO - OCSP - opcional
 			/*
 			BasicCertificate basicCert = new BasicCertificate(cert);
 			List<String> ListaURLCRL = basicCert.getCRLDistributionPoint();
 			OcspResponsesID[] ocspResponsesIDArray = new OcspResponsesID[chainSize];
-			for (int i = 0; i < chainSize; i++ ){			  
+			for (int i = 0; i < chainSize; i++ ){
 				OcspClientBouncyCastle client = new OcspClientBouncyCastle(null);
 			  	X509Certificate checkCert = (X509Certificate) certificates[i];
-			  	X509Certificate rootCert = (X509Certificate)  certificates[chainSize]; 
+			  	X509Certificate rootCert = (X509Certificate)  certificates[chainSize];
 			  	String crlUrl = ListaURLCRL.get(i);
-			  	//BasicOCSPResp ocspResp =  client.getBasicOCSPResp(checkCert,rootCert,crlUrl);			  
+			  	//BasicOCSPResp ocspResp =  client.getBasicOCSPResp(checkCert,rootCert,crlUrl);
 			  	BasicOCSPResp ocspResp =  client.getBasicOCSPResp(checkCert,rootCert, null);
-			  	ocspResponsesIDArray[i] = makeOcspResponsesID(ocspResp);			  
-			} 
-			  
+			  	ocspResponsesIDArray[i] = makeOcspResponsesID(ocspResp);
+			}
+
 			OcspListID ocspids = new OcspListID(ocspResponsesIDArray);
 			*/
-			
+
 			//CrlOcspRef crlOcspRef = new CrlOcspRef(crlids, ocspids, null);
 			//OtherRevRefs OtherRevRefs = new OtherRevRefs(null, OtherRevRefs);
 			//CrlOcspRef crlOcspRef = new CrlOcspRef(crlids, null, null);
-			return new Attribute(identifier,new DERSet(completeRevocationRefs ));
+			return new Attribute(identifier, new DERSet(completeRevocationRefs));
 			// CrlOcspRef[] crlOcspRefArray = new
 			// CrlOcspRef[completeRevocationRefs.size()];
 
 		} catch (NoSuchAlgorithmException | CRLException e) {
 			throw new SignerException(e.getMessage());
 		}
-		
+
 	}
 
 	/**
-	 * 
-	 * 
-	 * @param extract
-	 *            CrlValidatedID from X509CRL
+	 * @param extract CrlValidatedID from X509CRL
 	 * @return a CrlValidatedID
 	 * @throws NoSuchAlgorithmException
 	 * @throws CRLException
 	 */
 
 	private CrlValidatedID makeCrlValidatedID(X509CRL crl)
-			throws NoSuchAlgorithmException, CRLException {
+		throws NoSuchAlgorithmException, CRLException {
 
 		Digest digest = DigestFactory.getInstance().factoryDefault();
 		digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
-		
+
 		OtherHashAlgAndValue otherHashAlgAndValue = new OtherHashAlgAndValue(
-					new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256), new DEROctetString(digest.digest(crl.getEncoded())));
-		
+			new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256), new DEROctetString(digest.digest(crl.getEncoded())));
+
 		OtherHash hash = new OtherHash(otherHashAlgAndValue);
 
 		BigInteger crlnumber;
@@ -243,10 +238,10 @@ public class RevocationRefs implements UnsignedAttribute {
 			crlnumber = varASN1Integer.getPositiveValue();
 
 			crlid = new CrlIdentifier(new X500Name(crl.getIssuerX500Principal()
-					.getName()), new DERUTCTime(crl.getThisUpdate()), crlnumber);
+				.getName()), new DERUTCTime(crl.getThisUpdate()), crlnumber);
 		} else {
 			crlid = new CrlIdentifier(new X500Name(crl.getIssuerX500Principal()
-					.getName()), new DERUTCTime(crl.getThisUpdate()));
+				.getName()), new DERUTCTime(crl.getThisUpdate()));
 		}
 
 		CrlValidatedID crlvid = new CrlValidatedID(hash, crlid);
@@ -256,29 +251,28 @@ public class RevocationRefs implements UnsignedAttribute {
 
 	/**
 	 * make OcspResponsesID from BasicOCSPResp
-	 * 
+	 *
 	 * @param ocspResp
 	 * @return OcspResponsesID
 	 * @throws NoSuchAlgorithmException
 	 * @throws OCSPException
 	 * @throws IOException
-	 
-	@SuppressWarnings("unused")
-	private OcspResponsesID makeOcspResponsesID(BasicOCSPResp ocspResp)
-			throws NoSuchAlgorithmException, OCSPException, IOException {
 
-		Digest digest = DigestFactory.getInstance().factoryDefault();
-		digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
+	 @SuppressWarnings("unused") private OcspResponsesID makeOcspResponsesID(BasicOCSPResp ocspResp)
+	 throws NoSuchAlgorithmException, OCSPException, IOException {
 
-		byte[] digestValue = digest.digest(ocspResp.getEncoded());
-		OtherHash hash = new OtherHash(digestValue);
+	 Digest digest = DigestFactory.getInstance().factoryDefault();
+	 digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
 
-		OcspResponsesID ocsprespid = new OcspResponsesID(new OcspIdentifier(
-				ocspResp.getResponderId().toASN1Object(),
-				new DERGeneralizedTime(ocspResp.getProducedAt())), hash);
+	 byte[] digestValue = digest.digest(ocspResp.getEncoded());
+	 OtherHash hash = new OtherHash(digestValue);
 
-		return ocsprespid;
-	}
-	*/
+	 OcspResponsesID ocsprespid = new OcspResponsesID(new OcspIdentifier(
+	 ocspResp.getResponderId().toASN1Object(),
+	 new DERGeneralizedTime(ocspResp.getProducedAt())), hash);
+
+	 return ocsprespid;
+	 }
+	 */
 
 }

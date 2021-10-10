@@ -46,9 +46,8 @@ import java.lang.annotation.Target;
 
 /**
  * Used to prioritize some execution flow, as methods annoted with @startup or @shutdown
- *
  */
-@Target({ TYPE, METHOD })
+@Target({TYPE, METHOD})
 @Retention(RUNTIME)
 public @interface Priority {
 
@@ -87,6 +86,7 @@ public @interface Priority {
 	 * An integer value defines the priority order.
 	 * <p>
 	 * The lower the value, the greater priority.
+	 *
 	 * @return priority
 	 */
 	int value();

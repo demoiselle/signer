@@ -44,13 +44,12 @@ import java.util.List;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
+ * Class to represent a XML Signature Policy
  *
- *  Class to represent a XML Signature Policy
  * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
- *
  */
 public class XMLSignaturePolicy {
-	
+
 	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 	private String policyIssuerName = null;
 	private Date notBefore = null;
@@ -126,36 +125,36 @@ public class XMLSignaturePolicy {
 	}
 
 	@Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        //builder.append(policyMessagesBundle.getString("text.uri")).append(this.getSignPolicyURI()).append("\n");
-        //builder.append(policyMessagesBundle.getString("text.algo.hash")).append(this.getSignPolicyHashAlg().getAlgorithm().getValue()).append("\n");
-        //builder.append(policyMessagesBundle.getString("text.hash")).append(this.getSignPolicyHash().getValue()).append("\n");
-        builder.append(policyMessagesBundle.getString("text.oid")).append(this.getIdentifier()).append("\n");
-        builder.append(policyMessagesBundle.getString("text.launch.date")).append(this.getDateOfIssue()).append("\n");
-        builder.append(policyMessagesBundle.getString("text.issuer")).append(this.getPolicyIssuerName()).append("\n");
-        builder.append(policyMessagesBundle.getString("text.application")).append(this.getFieldOfApplication()).append("\n");
-        builder.append(policyMessagesBundle.getString("text.valid")).append(this.getNotAfter()).append(this.getNotBefore()).append("\n");
-        //builder.append(policyMessagesBundle.getString("text.external")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getExternalSignedData()).append("\n");
-        //builder.append(policyMessagesBundle.getString("text.mandated.ref")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateRef()).append("\n");
-       // builder.append(policyMessagesBundle.getString("text.mandated.info")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateInfo()).append("\n");
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		//builder.append(policyMessagesBundle.getString("text.uri")).append(this.getSignPolicyURI()).append("\n");
+		//builder.append(policyMessagesBundle.getString("text.algo.hash")).append(this.getSignPolicyHashAlg().getAlgorithm().getValue()).append("\n");
+		//builder.append(policyMessagesBundle.getString("text.hash")).append(this.getSignPolicyHash().getValue()).append("\n");
+		builder.append(policyMessagesBundle.getString("text.oid")).append(this.getIdentifier()).append("\n");
+		builder.append(policyMessagesBundle.getString("text.launch.date")).append(this.getDateOfIssue()).append("\n");
+		builder.append(policyMessagesBundle.getString("text.issuer")).append(this.getPolicyIssuerName()).append("\n");
+		builder.append(policyMessagesBundle.getString("text.application")).append(this.getFieldOfApplication()).append("\n");
+		builder.append(policyMessagesBundle.getString("text.valid")).append(this.getNotAfter()).append(this.getNotBefore()).append("\n");
+		//builder.append(policyMessagesBundle.getString("text.external")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getExternalSignedData()).append("\n");
+		//builder.append(policyMessagesBundle.getString("text.mandated.ref")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateRef()).append("\n");
+		// builder.append(policyMessagesBundle.getString("text.mandated.info")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateInfo()).append("\n");
 
-        for (XMLSignerAlgConstraint sac : getXmlSignerAlgConstraintList()) {
-            builder.append(policyMessagesBundle.getString("text.algo")).append(sac.getAlgId()).append("\n");
-            builder.append(policyMessagesBundle.getString("text.key.min.size")).append(sac.getMinKeyLength()).append("\n");
-        }
+		for (XMLSignerAlgConstraint sac : getXmlSignerAlgConstraintList()) {
+			builder.append(policyMessagesBundle.getString("text.algo")).append(sac.getAlgId()).append("\n");
+			builder.append(policyMessagesBundle.getString("text.key.min.size")).append(sac.getMinKeyLength()).append("\n");
+		}
 
-        builder.append("==============================================================").append("\n");
-        for (String sr: xmlSignerRules.getMandatedSignedQProperties()) {
-            builder.append(policyMessagesBundle.getString("text.signed.attr")).append(sr).append("\n");
-        }
+		builder.append("==============================================================").append("\n");
+		for (String sr : xmlSignerRules.getMandatedSignedQProperties()) {
+			builder.append(policyMessagesBundle.getString("text.signed.attr")).append(sr).append("\n");
+		}
 
-        builder.append("==============================================================").append("\n");
+		builder.append("==============================================================").append("\n");
 
-        for (String sr: xmlSignerRules.getMandatedUnsignedQProperties()) {
-                builder.append(policyMessagesBundle.getString("text.unsigned.attr")).append(sr).append("\n");
-        }        
-       
-        return builder.toString();
-    }
+		for (String sr : xmlSignerRules.getMandatedUnsignedQProperties()) {
+			builder.append(policyMessagesBundle.getString("text.unsigned.attr")).append(sr).append("\n");
+		}
+
+		return builder.toString();
+	}
 }

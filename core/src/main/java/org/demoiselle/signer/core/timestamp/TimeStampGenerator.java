@@ -45,34 +45,32 @@ import java.security.cert.Certificate;
 /**
  * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service
  * RFC 3161
+ *
  * @author 07721825741
  */
 public interface TimeStampGenerator {
 
 	/**
-	 *
-	 * @param content to be sign, if it is the parameter hash must to be null
-	 * @param privateKey authorized to use a TSA service
+	 * @param content      to be sign, if it is the parameter hash must to be null
+	 * @param privateKey   authorized to use a TSA service
 	 * @param certificates trusted chain
-	 * @param hash to be sign, if it is assigned the parameter content must to be null
+	 * @param hash         to be sign, if it is assigned the parameter content must to be null
 	 * @throws CertificateCoreException exception
 	 */
-    void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates, byte[] hash) throws CertificateCoreException;
+	void initialize(byte[] content, PrivateKey privateKey, Certificate[] certificates, byte[] hash) throws CertificateCoreException;
 
-    /**
-     *
-     * @return timestamp
-     * @throws CertificateCoreException exception
-     */
-    byte[] generateTimeStamp() throws CertificateCoreException;
+	/**
+	 * @return timestamp
+	 * @throws CertificateCoreException exception
+	 */
+	byte[] generateTimeStamp() throws CertificateCoreException;
 
-    /**
-     *
-     * @param content to be sign, if it is the parameter hash must to be null
-     * @param response signed timestamp from TSA
-     *  @param hash to be sign, if it is assigned the parameter content must to be null
-     * @throws CertificateCoreException exception
-     */
-    void validateTimeStamp(byte[] content, byte[] response, byte[] hash) throws CertificateCoreException;
+	/**
+	 * @param content  to be sign, if it is the parameter hash must to be null
+	 * @param response signed timestamp from TSA
+	 * @param hash     to be sign, if it is assigned the parameter content must to be null
+	 * @throws CertificateCoreException exception
+	 */
+	void validateTimeStamp(byte[] content, byte[] response, byte[] hash) throws CertificateCoreException;
 
 }

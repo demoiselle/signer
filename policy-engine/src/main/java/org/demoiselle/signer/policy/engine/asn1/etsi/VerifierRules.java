@@ -42,51 +42,48 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *
- * The verifier rules identify:
- *  • The CMS unsigned attributes that shall be present under this policy and
- *  shall be added by the verifier if not added by the signer.
- *
- *  VerifierRules ::= SEQUENCE {
- *  			mandatedUnsignedAttr {@link MandatedUnsignedAttr},
- *  			signPolExtensions {@link SignPolExtensions} OPTIONAL
- *  	}
- *
- *
+ * The verifier rules identify: the CMS unsigned attributes that
+ * shall be present under this policy and shall be added by the
+ * verifier if not added by the signer.
+ * <pre>
+ *     VerifierRules ::= SEQUENCE {
+ *     mandatedUnsignedAttr {@link MandatedUnsignedAttr},
+ *     signPolExtensions {@link SignPolExtensions} OPTIONAL
+ * }
+ * </pre>
  */
 public class VerifierRules extends ASN1Object {
 
-    private MandatedUnsignedAttr mandatedUnsignedAttr;
-    private SignPolExtensions signPolExtensions;
+	private MandatedUnsignedAttr mandatedUnsignedAttr;
+	private SignPolExtensions signPolExtensions;
 
-    public MandatedUnsignedAttr getMandatedUnsignedAttr() {
-        return mandatedUnsignedAttr;
-    }
+	public MandatedUnsignedAttr getMandatedUnsignedAttr() {
+		return mandatedUnsignedAttr;
+	}
 
-    public void setMandatedUnsignedAttr(MandatedUnsignedAttr mandatedUnsignedAttr) {
-        this.mandatedUnsignedAttr = mandatedUnsignedAttr;
-    }
+	public void setMandatedUnsignedAttr(MandatedUnsignedAttr mandatedUnsignedAttr) {
+		this.mandatedUnsignedAttr = mandatedUnsignedAttr;
+	}
 
-    public SignPolExtensions getSignPolExtensions() {
-        return signPolExtensions;
-    }
+	public SignPolExtensions getSignPolExtensions() {
+		return signPolExtensions;
+	}
 
-    public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
-        this.signPolExtensions = signPolExtensions;
-    }
+	public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
+		this.signPolExtensions = signPolExtensions;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
+	@Override
+	public void parse(ASN1Primitive derObject) {
 
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
 
-        this.mandatedUnsignedAttr = new MandatedUnsignedAttr();
-        this.mandatedUnsignedAttr.parse(derSequence.getObjectAt(0).toASN1Primitive());
+		this.mandatedUnsignedAttr = new MandatedUnsignedAttr();
+		this.mandatedUnsignedAttr.parse(derSequence.getObjectAt(0).toASN1Primitive());
 
-        if (derSequence.size() == 2) {
-            this.signPolExtensions = new SignPolExtensions();
-            this.signPolExtensions.parse(derSequence.getObjectAt(1).toASN1Primitive());
-        }
-    }
-
+		if (derSequence.size() == 2) {
+			this.signPolExtensions = new SignPolExtensions();
+			this.signPolExtensions.parse(derSequence.getObjectAt(1).toASN1Primitive());
+		}
+	}
 }

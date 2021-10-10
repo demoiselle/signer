@@ -51,7 +51,6 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
  * Recover a TimeStampGenerator service
- *
  */
 public final class TimeStampGeneratorSelector implements Serializable {
 
@@ -63,7 +62,6 @@ public final class TimeStampGeneratorSelector implements Serializable {
 
 	private TimeStampGeneratorSelector() {
 	}
-
 
 	public static TimeStampGenerator selectReference() {
 		TimeStampGenerator selected = selectClass(getOptions());
@@ -81,7 +79,6 @@ public final class TimeStampGeneratorSelector implements Serializable {
 	}
 
 	/**
-	 *
 	 * @param options Collection<TimeStampGenerator>
 	 * @return
 	 */
@@ -102,7 +99,8 @@ public final class TimeStampGeneratorSelector implements Serializable {
 	}
 
 	/**
-	 *  verify if have a @Priotity annotation
+	 * verify if have a @Priotity annotation
+	 *
 	 * @param clazz
 	 * @return
 	 */
@@ -115,14 +113,15 @@ public final class TimeStampGeneratorSelector implements Serializable {
 		}
 
 		if (priority == null) {
-			new CertificateCoreException(coreMessagesBundle.getString("error.priority.null",clazz.getClass().getName()));
+			new CertificateCoreException(coreMessagesBundle.getString("error.priority.null", clazz.getClass().getName()));
 		}
 
 		return result;
 	}
 
 	/**
-	 *  verify if have a @Priotity ambiguity annotation
+	 * verify if have a @Priotity ambiguity annotation
+	 *
 	 * @param type
 	 * @param selected
 	 * @param options
@@ -141,7 +140,7 @@ public final class TimeStampGeneratorSelector implements Serializable {
 		if (!ambiguous.isEmpty()) {
 			ambiguous.add(selected);
 
-			throw new CertificateCoreException(coreMessagesBundle.getString("error.priority.ambiguous",selected.getClass().getCanonicalName()));
+			throw new CertificateCoreException(coreMessagesBundle.getString("error.priority.ambiguous", selected.getClass().getCanonicalName()));
 		}
 	}
 

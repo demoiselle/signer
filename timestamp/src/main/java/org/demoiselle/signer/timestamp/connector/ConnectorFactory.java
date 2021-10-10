@@ -43,38 +43,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * For the types of connections with the time stamp authority.
  * The default is socket, if {@link ConnectionType} is not informed.
- *
  */
 public class ConnectorFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(ConnectorFactory.class);
-    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
+	private static final Logger logger = LoggerFactory.getLogger(ConnectorFactory.class);
+	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
-    public static Connector buildConnector(ConnectionType connectionType) {
+	public static Connector buildConnector(ConnectionType connectionType) {
 
-        switch (connectionType) {
+		switch (connectionType) {
 
-            case HTTP: {
-                logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.http"));
-                return new HttpConnector();
-            }
+			case HTTP: {
+				logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.http"));
+				return new HttpConnector();
+			}
 
-            case SOCKET: {
-                logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
-                return new SocketConnector();
-            }
+			case SOCKET: {
+				logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
+				return new SocketConnector();
+			}
 
-            default: {
-                logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
-                return new SocketConnector();
-            }
-        }
-    }
+			default: {
+				logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
+				return new SocketConnector();
+			}
+		}
+	}
 
-    private ConnectorFactory() {
+	private ConnectorFactory() {
 
-    }
+	}
 }

@@ -35,7 +35,6 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-
 package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
 import java.security.PrivateKey;
@@ -48,14 +47,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
+ *
  * Request a TimeStampToken from Certificate Autority  (TSA)
- * 
+ *
  * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
  *
  */
 public class XMLTimeStampToken {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(XMLTimeStampToken.class);
 	private static final TimeStampGenerator timeStampGenerator = TimeStampGeneratorSelector.selectReference();
     private static MessagesBundle xadesMessagesBundle = new MessagesBundle();
@@ -63,8 +62,8 @@ public class XMLTimeStampToken {
     private Certificate[] certificates = null;
     private byte[] content = null;
     private byte[] hash = null;
-    
-    
+
+
 	public XMLTimeStampToken(PrivateKey privateKey, Certificate[] certificates, byte[] content, byte[] hash) {
 		super();
 		this.privateKey = privateKey;
@@ -72,7 +71,7 @@ public class XMLTimeStampToken {
 		this.content = content;
 		this.hash = hash;
 	}
-	
+
 	public byte[] getTimeStampToken() throws XMLSignerException {
 		byte[] response = null;
         try {
@@ -94,9 +93,9 @@ public class XMLTimeStampToken {
             throw new XMLSignerException(ex.getMessage());
         }
 		return response;
-		
+
 	}
-    
-    
+
+
 
 }

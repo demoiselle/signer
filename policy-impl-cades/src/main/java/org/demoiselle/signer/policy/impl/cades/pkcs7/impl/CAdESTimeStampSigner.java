@@ -45,6 +45,7 @@ import java.security.cert.Certificate;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
@@ -74,17 +75,14 @@ import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 
 /**
- *
  * Basic implementation of Time Stamp on CADES format.
- *
- *
  */
 public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 
 	// private static final Logger logger =
 	// LoggerFactory.getLogger(CAdESTimeStampSigner.class);
 	private final PKCS1Signer pkcs1 = PKCS1Factory.getInstance()
-			.factoryDefault();
+		.factoryDefault();
 	private SignaturePolicy signaturePolicy;
 	private Certificate certificateChain[];
 	private ASN1InputStream ais;
@@ -95,7 +93,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 
 	@Override
 	public byte[] doTimeStampForSignature(byte[] signature)
-			throws SignerException {
+		throws SignerException {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
 			CMSSignedData cmsSignedData = new CMSSignedData(signature);
@@ -105,22 +103,22 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			AttributeFactory attributeFactory = AttributeFactory.getInstance();
 			ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
 			SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
-					.factory(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
-							.getId());
+				.factory(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
+					.getId());
 			signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(),
-					this.getCertificateChain(), signer.getSignature(),
-					signaturePolicy, null);
+				this.getCertificateChain(), signer.getSignature(),
+				signaturePolicy, null);
 			unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 			AttributeTable unsignedAttributesTable = new AttributeTable(
-					unsignedAttributes);
+				unsignedAttributes);
 			List<SignerInformation> vNewSigners = new ArrayList<SignerInformation>();
 			vNewSigners.add(SignerInformation.replaceUnsignedAttributes(signer,
-					unsignedAttributesTable));
+				unsignedAttributesTable));
 			SignerInformationStore oNewSignerInformationStore = new SignerInformationStore(
-					vNewSigners);
+				vNewSigners);
 			CMSSignedData oSignedData = cmsSignedData;
 			cmsSignedData = CMSSignedData.replaceSigners(oSignedData,
-					oNewSignerInformationStore);
+				oNewSignerInformationStore);
 			byte[] result = cmsSignedData.getEncoded();
 			return result;
 		} catch (CMSException ex) {
@@ -149,19 +147,19 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 		}
 	}
 
-	private byte[] doTimeStamp (byte[] content, byte[] hash){
+	private byte[] doTimeStamp(byte[] content, byte[] hash) {
 		try {
 			AttributeFactory attributeFactory = AttributeFactory.getInstance();
 
 			SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
-					.factory(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
-							.getId());
-			if (content != null){
+				.factory(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
+					.getId());
+			if (content != null) {
 				signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(),
-						this.getCertificateChain(), content, signaturePolicy, null);
-			}else{
+					this.getCertificateChain(), content, signaturePolicy, null);
+			} else {
 				signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(),
-						this.getCertificateChain(), null, signaturePolicy, hash);
+					this.getCertificateChain(), null, signaturePolicy, hash);
 			}
 			byte[] result = signedOrUnsignedAttribute.getValue().getEncoded();
 			return result;
@@ -169,6 +167,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			throw new SignerException(ex.getMessage());
 		}
 	}
+
 	@Override
 	public List<Timestamp> checkTimeStampOnSignature(byte[] signature) {
 		try {
@@ -180,26 +179,26 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			while (it.hasNext()) {
 				SignerInformation signer = (SignerInformation) it.next();
 				AttributeTable unsignedAttributes = signer
-						.getUnsignedAttributes();
+					.getUnsignedAttributes();
 				Attribute attributeTimeStamp = unsignedAttributes
-						.get(new ASN1ObjectIdentifier(
-								PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
-										.getId()));
+					.get(new ASN1ObjectIdentifier(
+						PKCSObjectIdentifiers.id_aa_signatureTimeStampToken
+							.getId()));
 				if (attributeTimeStamp != null) {
 					TimeStampOperator timeStampOperator = new TimeStampOperator();
 					byte[] varTimeStamp = attributeTimeStamp.getAttrValues()
-							.getObjectAt(0).toASN1Primitive().getEncoded();
+						.getObjectAt(0).toASN1Primitive().getEncoded();
 					TimeStampToken timeStampToken = new TimeStampToken(
-							new CMSSignedData(varTimeStamp));
+						new CMSSignedData(varTimeStamp));
 					Timestamp timeStampSigner = new Timestamp(timeStampToken);
 					timeStampOperator.validate(signer.getSignature(),
-							varTimeStamp, null);
+						varTimeStamp, null);
 					listOfTimeStamp.add(timeStampSigner);
 				}
 			}
 			return listOfTimeStamp;
 		} catch (CertificateCoreException | IOException | TSPException
-				| CMSException e) {
+			| CMSException e) {
 			throw new SignerException(e);
 		}
 	}
@@ -207,8 +206,8 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 	@Override
 	public Timestamp checkTimeStampWithContent(byte[] timeStamp, byte[] content) {
 		try {
-			return this.checkTimeStamp(timeStamp,content,null);
-			} catch (CertificateCoreException e) {
+			return this.checkTimeStamp(timeStamp, content, null);
+		} catch (CertificateCoreException e) {
 			throw new SignerException(e);
 		}
 	}
@@ -216,40 +215,41 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 	@Override
 	public Timestamp checkTimeStampWithHash(byte[] timeStamp, byte[] hash) {
 		try {
-			return this.checkTimeStamp(timeStamp,null,hash);
-			} catch (CertificateCoreException e) {
+			return this.checkTimeStamp(timeStamp, null, hash);
+		} catch (CertificateCoreException e) {
 			throw new SignerException(e);
 		}
 	}
 
 
-		private Timestamp checkTimeStamp(byte[] timeStamp, byte[] content,  byte[] hash){
+	private Timestamp checkTimeStamp(byte[] timeStamp, byte[] content, byte[] hash) {
 		try {
 			Security.addProvider(new BouncyCastleProvider());
 			ais = new ASN1InputStream(new ByteArrayInputStream(timeStamp));
-		    ASN1Sequence seq=(ASN1Sequence)ais.readObject();
-	        Attribute attributeTimeStamp = new Attribute((ASN1ObjectIdentifier)seq.getObjectAt(0), (ASN1Set)seq.getObjectAt(1));
-	        byte[] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
-	        TimeStampOperator timeStampOperator = new TimeStampOperator();
-	        if (content != null){
-	        	timeStampOperator.validate(content, varTimeStamp,null);
-	        }else{
-	        	timeStampOperator.validate(null, varTimeStamp,hash);
-	        }
+			ASN1Sequence seq = (ASN1Sequence) ais.readObject();
+			Attribute attributeTimeStamp = new Attribute((ASN1ObjectIdentifier) seq.getObjectAt(0), (ASN1Set) seq.getObjectAt(1));
+			byte[] varTimeStamp = attributeTimeStamp.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
+			TimeStampOperator timeStampOperator = new TimeStampOperator();
+			if (content != null) {
+				timeStampOperator.validate(content, varTimeStamp, null);
+			} else {
+				timeStampOperator.validate(null, varTimeStamp, hash);
+			}
 			TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
 			Timestamp timeStampSigner = new Timestamp(timeStampToken);
 			return timeStampSigner;
 		} catch (CertificateCoreException | IOException | TSPException
-				| CMSException e) {
+			| CMSException e) {
 			throw new SignerException(e);
 		}
 
 	}
+
 	@Override
 	public void setSignaturePolicy(PolicyFactory.Policies signaturePolicy) {
 		PolicyFactory policyFactory = PolicyFactory.getInstance();
 		org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy sp = policyFactory
-				.loadPolicy(signaturePolicy);
+			.loadPolicy(signaturePolicy);
 		this.signaturePolicy = sp;
 	}
 

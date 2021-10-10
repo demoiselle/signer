@@ -55,328 +55,317 @@ public class ConfigurationRepo {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationRepo.class);
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    /**
-     * System key to set online or offline mode
-     */
-    public static final String MODE_ONLINE = "signer.repository.online";
+	/**
+	 * System key to set online or offline mode
+	 */
+	public static final String MODE_ONLINE = "signer.repository.online";
 
+	/**
+	 * System environment key to set online or offline mode
+	 */
+	public static final String ENV_MODE_ONLINE = "SIGNER_REPOSITORY_ONLINE";
 
-    /**
-     * System environment key to set online or offline mode
-     */
-    public static final String ENV_MODE_ONLINE = "SIGNER_REPOSITORY_ONLINE";
-
-    /**
-     * System key to set storage location of index file of revoked certificate lists.
-     */
-    public static final String CRL_INDEX = "signer.repository.crl.index";
-
-
-    /**
-     * System environment key to set storage location of index file of revoked certificate lists.
-     */
-    public static final String ENV_CRL_INDEX = "SIGNER_REPOSITORY_CRL_INDEX";
-
-    /**
-     * System key to set storage location of path file of revoked certificate lists.
-     */
-    public static final String CRL_PATH = "signer.repository.crl.path";
-
-
-    /**
-     * System environment key to set storage location of path file of revoked certificate lists.
-     */
-    public static final String ENV_CRL_PATH = "SIGNER_REPOSITORY_CRL_PATH";
-
-
-    /**
-     * System key to set storage location of path file of LPA
-     */
-    public static final String LPA_PATH = "signer.repository.lpa.path";
-
-
-    /**
-     * System environment key to set storage location of path file of LPA
-     */
-    public static final String ENV_LPA_PATH = "SIGNER_REPOSITORY_LPA_PATH";
-
-
-    /**
-     * System key to set online only mode to get LPA
-     */
-    public static final String LPA_ONLINE = "signer.repository.lpa.online";
-
-    /**
-     * System environment key to set online only mode to get LPA
-     */
-    public static final String ENV_LPA_ONLINE = "SIGNER_REPOSITORY_LPA_ONLINE";
-
-
-    /**
-     * System key to set host of settings proxy
-     */
-    public static final String PROXY_HOST = "signer.proxy.host";
-
-
-    /**
-     * System environment key to set host of settings proxy
-     */
-    public static final String ENV_PROXY_HOST = "SIGNER_PROXY_HOST";
-
-    /**
-     * System  key to set host of settings proxy
-     */
-    public static final String PROXY_PORT = "signer.proxy.port";
-
-    /**
-     * System environment key to set host of settings proxy
-     */
-    public static final String ENV_PROXY_PORT = "SIGNER_PROXY_PORT";
-
-    /**
-     * System key to set host of settings proxy
-     */
-    public static final String PROXY_USER = "signer.proxy.user";
-
-    /**
-     * System environment key to set host of settings proxy
-     */
-    public static final String ENV_PROXY_USER = "SIGNER_PROXY_USER";
-
-    /**
-     * System key to set host of settings proxy
-     */
-    public static final String PROXY_PASSWORD = "signer.proxy.password";
-
-    /**
-     * System environment key to set host of settings proxy
-     */
-    public static final String ENV_PROXY_PASSWORD = "SIGNER_PROXY_PASSWORD";
-
-    /**
-     * System  key to set host of settings proxy
-     */
-    public static final String PROXY_TYPE = "signer.proxy.type";
-
-    /**
-     * System environment key to set host of settings proxy
-     */
-    public static final String ENV_PROXY_TYPE = "SIGNER_PROXY_TYPE";
+	/**
+	 * System key to set storage location of index file of revoked certificate lists.
+	 */
+	public static final String CRL_INDEX = "signer.repository.crl.index";
 
 
 	/**
-     * System key to set timeout for CRL url connection
-     */
-    public static final String CRL_CONNECTION_TIMEOUT = "signer.crl.connection.timeout";
+	 * System environment key to set storage location of index file of revoked certificate lists.
+	 */
+	public static final String ENV_CRL_INDEX = "SIGNER_REPOSITORY_CRL_INDEX";
 
+	/**
+	 * System key to set storage location of path file of revoked certificate lists.
+	 */
+	public static final String CRL_PATH = "signer.repository.crl.path";
 
-    /**
-     * System environment key set timeout for CRL url connection
-     */
-    public static final String ENV_CRL_CONNECTION_TIMEOUT = "SIGNER_CRL_CONNECTION_TIMEOUT";
+	/**
+	 * System environment key to set storage location of path file of revoked certificate lists.
+	 */
+	public static final String ENV_CRL_PATH = "SIGNER_REPOSITORY_CRL_PATH";
 
+	/**
+	 * System key to set storage location of path file of LPA
+	 */
+	public static final String LPA_PATH = "signer.repository.lpa.path";
 
+	/**
+	 * System environment key to set storage location of path file of LPA
+	 */
+	public static final String ENV_LPA_PATH = "SIGNER_REPOSITORY_LPA_PATH";
 
-    public static ConfigurationRepo instance = new ConfigurationRepo();
+	/**
+	 * System key to set online only mode to get LPA
+	 */
+	public static final String LPA_ONLINE = "signer.repository.lpa.online";
 
+	/**
+	 * System environment key to set online only mode to get LPA
+	 */
+	public static final String ENV_LPA_ONLINE = "SIGNER_REPOSITORY_LPA_ONLINE";
 
-    /**
-     * to static single instance
-     *
-     * @return instance of Configuration
-     */
-    public static ConfigurationRepo getInstance() {
-        return instance;
-    }
+	/**
+	 * System key to set host of settings proxy
+	 */
+	public static final String PROXY_HOST = "signer.proxy.host";
 
-    private String crlIndex = null;
-    private String crlPath = null;
-    private String lpaPath = null;
-    private boolean isOnlineLCR = true;
-    private Proxy proxy = Proxy.NO_PROXY;
-    private Proxy.Type type = Proxy.Type.HTTP;
-    private boolean isOnlineLPA = false;
-    private boolean validateLCR = true;
-    // Default is 10 seconds
-    private int crlTimeOut = 10000;
+	/**
+	 * System environment key to set host of settings proxy
+	 */
+	public static final String ENV_PROXY_HOST = "SIGNER_PROXY_HOST";
 
-    /**
-     * Check for system variables. If there is, assign in class variables otherwise use default values.
-     */
-    private ConfigurationRepo() {
+	/**
+	 * System  key to set host of settings proxy
+	 */
+	public static final String PROXY_PORT = "signer.proxy.port";
 
-        String mode_online = System.getenv(ENV_MODE_ONLINE);
-        if (mode_online == null || mode_online.isEmpty()) {
-        	mode_online = (String) System.getProperties().get(MODE_ONLINE);
-        	if (mode_online == null || mode_online.isEmpty()) {
-                setOnline(true);
-        	}else {
-        		setOnline(Boolean.valueOf(mode_online));
-        	}
-        } else {
-            setOnline(Boolean.valueOf(mode_online));
-        }
+	/**
+	 * System environment key to set host of settings proxy
+	 */
+	public static final String ENV_PROXY_PORT = "SIGNER_PROXY_PORT";
 
-        crlIndex = System.getenv(ENV_CRL_INDEX);
-        if (crlIndex == null || crlIndex.isEmpty()) {
-        	crlIndex =  (String) System.getProperties().get(CRL_INDEX);
-        	if (crlIndex == null || crlIndex.isEmpty()) {
-        		setCrlIndex(".crl_index");
-        	}else {
-        		setCrlIndex(crlIndex);
-        	}
-        }else {
-        	setCrlIndex(crlIndex);
-        }
+	/**
+	 * System key to set host of settings proxy
+	 */
+	public static final String PROXY_USER = "signer.proxy.user";
 
-        crlPath =  System.getenv(ENV_CRL_PATH);
-        if (crlPath == null || crlPath.isEmpty()) {
-        	crlPath = (String) System.getProperties().get(CRL_PATH);
-        	if (crlPath == null || crlPath.isEmpty()) {
-        		setCrlPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "crls");
-        	}
-        	else {
-            	setCrlPath(crlPath);
-            }
-        }else {
-        	setCrlPath(crlPath);
-        }
+	/**
+	 * System environment key to set host of settings proxy
+	 */
+	public static final String ENV_PROXY_USER = "SIGNER_PROXY_USER";
 
-        lpaPath = System.getenv(ENV_LPA_PATH);
-        if (lpaPath == null || lpaPath.isEmpty()) {
-        	lpaPath = (String) System.getProperties().get(LPA_PATH);
-        	if (lpaPath == null || lpaPath.isEmpty()) {
-        		setLpaPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "lpas");
-        	}else {
-            	setLpaPath(lpaPath);
-            }
-        }else {
-        	setLpaPath(lpaPath);
-        }
+	/**
+	 * System key to set host of settings proxy
+	 */
+	public static final String PROXY_PASSWORD = "signer.proxy.password";
 
-        String hostName = System.getenv(ENV_PROXY_HOST);
-        if (hostName == null || hostName.isEmpty()) {
-        	hostName = (String) System.getProperties().get(PROXY_HOST);
-        	if (hostName == null || hostName.isEmpty()) {
-        		setProxy(Proxy.NO_PROXY);
-        	}else {
-            	String proxyType = (String) System.getProperties().get(PROXY_TYPE);
-            	setType(proxyType);
-            	String port = (String) System.getProperties().get(PROXY_PORT);
-            	String user = (String) System.getProperties().get(PROXY_USER);
-            	String password = (String) System.getProperties().get(PROXY_PASSWORD);
-            	setProxy(hostName, port, user, password);
-            }
-        } else {
-        	String proxyType = System.getenv(ENV_PROXY_TYPE);
-        	setType(proxyType);
-        	String port = System.getenv(ENV_PROXY_PORT);
-        	String user = System.getenv(ENV_PROXY_USER);
-        	String password = System.getenv(ENV_PROXY_PASSWORD);
-        	setProxy(hostName, port, user, password);
-        }
+	/**
+	 * System environment key to set host of settings proxy
+	 */
+	public static final String ENV_PROXY_PASSWORD = "SIGNER_PROXY_PASSWORD";
 
-        String lpa_online =  System.getenv(ENV_LPA_ONLINE);
-        // default is false if not seted
-        if (lpa_online == null || lpa_online.isEmpty()) {
-        	lpa_online = (String) System.getProperties().get(LPA_ONLINE);
-        	if (lpa_online == null || lpa_online.isEmpty()) {
-        		setOnlineLPA(false);
-        	}else{
-        		setOnlineLPA(Boolean.valueOf(lpa_online));
-        	}
-        } else {
-            setOnlineLPA(Boolean.valueOf(lpa_online));
-        }
+	/**
+	 * System  key to set host of settings proxy
+	 */
+	public static final String PROXY_TYPE = "signer.proxy.type";
 
-        try {
-    		String varCrlTimeOut =  System.getenv(ENV_CRL_CONNECTION_TIMEOUT);
-            if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
-            	varCrlTimeOut = (String) System.getProperties().get(CRL_CONNECTION_TIMEOUT);
-            	if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
-            		LOGGER.debug("DEFAULT");
-            		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout",getCrlTimeOut()));
-            	}else {
-            		LOGGER.debug("KEY");
-            		setCrlTimeOut(Integer.valueOf(varCrlTimeOut));
-            	}
-            } else {
-            	LOGGER.debug("ENV");
-            	setCrlTimeOut(Integer.valueOf(varCrlTimeOut));
-            }
-    	}catch (Exception e) {
-    		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout",getCrlTimeOut()));
+	/**
+	 * System environment key to set host of settings proxy
+	 */
+	public static final String ENV_PROXY_TYPE = "SIGNER_PROXY_TYPE";
+
+	/**
+	 * System key to set timeout for CRL url connection
+	 */
+	public static final String CRL_CONNECTION_TIMEOUT = "signer.crl.connection.timeout";
+
+	/**
+	 * System environment key set timeout for CRL url connection
+	 */
+	public static final String ENV_CRL_CONNECTION_TIMEOUT = "SIGNER_CRL_CONNECTION_TIMEOUT";
+
+	public static ConfigurationRepo instance = new ConfigurationRepo();
+
+	/**
+	 * to static single instance
+	 *
+	 * @return instance of Configuration
+	 */
+	public static ConfigurationRepo getInstance() {
+		return instance;
+	}
+
+	private String crlIndex = null;
+	private String crlPath = null;
+	private String lpaPath = null;
+	private boolean isOnlineLCR = true;
+	private Proxy proxy = Proxy.NO_PROXY;
+	private Proxy.Type type = Proxy.Type.HTTP;
+	private boolean isOnlineLPA = false;
+	private boolean validateLCR = true;
+	// Default is 10 seconds
+	private int crlTimeOut = 10000;
+
+	/**
+	 * Check for system variables. If there is, assign in class variables otherwise use default values.
+	 */
+	private ConfigurationRepo() {
+
+		String mode_online = System.getenv(ENV_MODE_ONLINE);
+		if (mode_online == null || mode_online.isEmpty()) {
+			mode_online = (String) System.getProperties().get(MODE_ONLINE);
+			if (mode_online == null || mode_online.isEmpty()) {
+				setOnline(true);
+			} else {
+				setOnline(Boolean.valueOf(mode_online));
+			}
+		} else {
+			setOnline(Boolean.valueOf(mode_online));
+		}
+
+		crlIndex = System.getenv(ENV_CRL_INDEX);
+		if (crlIndex == null || crlIndex.isEmpty()) {
+			crlIndex = (String) System.getProperties().get(CRL_INDEX);
+			if (crlIndex == null || crlIndex.isEmpty()) {
+				setCrlIndex(".crl_index");
+			} else {
+				setCrlIndex(crlIndex);
+			}
+		} else {
+			setCrlIndex(crlIndex);
+		}
+
+		crlPath = System.getenv(ENV_CRL_PATH);
+		if (crlPath == null || crlPath.isEmpty()) {
+			crlPath = (String) System.getProperties().get(CRL_PATH);
+			if (crlPath == null || crlPath.isEmpty()) {
+				setCrlPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "crls");
+			} else {
+				setCrlPath(crlPath);
+			}
+		} else {
+			setCrlPath(crlPath);
+		}
+
+		lpaPath = System.getenv(ENV_LPA_PATH);
+		if (lpaPath == null || lpaPath.isEmpty()) {
+			lpaPath = (String) System.getProperties().get(LPA_PATH);
+			if (lpaPath == null || lpaPath.isEmpty()) {
+				setLpaPath(System.getProperty("java.io.tmpdir") + File.separatorChar + "lpas");
+			} else {
+				setLpaPath(lpaPath);
+			}
+		} else {
+			setLpaPath(lpaPath);
+		}
+
+		String hostName = System.getenv(ENV_PROXY_HOST);
+		if (hostName == null || hostName.isEmpty()) {
+			hostName = (String) System.getProperties().get(PROXY_HOST);
+			if (hostName == null || hostName.isEmpty()) {
+				setProxy(Proxy.NO_PROXY);
+			} else {
+				String proxyType = (String) System.getProperties().get(PROXY_TYPE);
+				setType(proxyType);
+				String port = (String) System.getProperties().get(PROXY_PORT);
+				String user = (String) System.getProperties().get(PROXY_USER);
+				String password = (String) System.getProperties().get(PROXY_PASSWORD);
+				setProxy(hostName, port, user, password);
+			}
+		} else {
+			String proxyType = System.getenv(ENV_PROXY_TYPE);
+			setType(proxyType);
+			String port = System.getenv(ENV_PROXY_PORT);
+			String user = System.getenv(ENV_PROXY_USER);
+			String password = System.getenv(ENV_PROXY_PASSWORD);
+			setProxy(hostName, port, user, password);
+		}
+
+		String lpa_online = System.getenv(ENV_LPA_ONLINE);
+		// default is false if not seted
+		if (lpa_online == null || lpa_online.isEmpty()) {
+			lpa_online = (String) System.getProperties().get(LPA_ONLINE);
+			if (lpa_online == null || lpa_online.isEmpty()) {
+				setOnlineLPA(false);
+			} else {
+				setOnlineLPA(Boolean.valueOf(lpa_online));
+			}
+		} else {
+			setOnlineLPA(Boolean.valueOf(lpa_online));
+		}
+
+		try {
+			String varCrlTimeOut = System.getenv(ENV_CRL_CONNECTION_TIMEOUT);
+			if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
+				varCrlTimeOut = (String) System.getProperties().get(CRL_CONNECTION_TIMEOUT);
+				if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
+					LOGGER.debug("DEFAULT");
+					LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout", getCrlTimeOut()));
+				} else {
+					LOGGER.debug("KEY");
+					setCrlTimeOut(Integer.valueOf(varCrlTimeOut));
+				}
+			} else {
+				LOGGER.debug("ENV");
+				setCrlTimeOut(Integer.valueOf(varCrlTimeOut));
+			}
+		} catch (Exception e) {
+			LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout", getCrlTimeOut()));
 
 		}
 
-    }
+	}
 
-    /**
-     * Gets the location where the revoked certificate lists index file is stored
-     *
-     * @return location of CRL index file, default is .crl_index
-     */
-    public String getCrlIndex() {
-        return crlIndex;
-    }
+	/**
+	 * Gets the location where the revoked certificate lists index file is stored
+	 *
+	 * @return location of CRL index file, default is .crl_index
+	 */
+	public String getCrlIndex() {
+		return crlIndex;
+	}
 
-    public void setCrlIndex(String crlIndex) {
-        this.crlIndex = crlIndex;
-        LOGGER.debug(coreMessagesBundle.getString("info.crl.index", getCrlIndex()));
-    }
+	public void setCrlIndex(String crlIndex) {
+		this.crlIndex = crlIndex;
+		LOGGER.debug(coreMessagesBundle.getString("info.crl.index", getCrlIndex()));
+	}
 
-    /**
-     * Returns whether the repository is in online (TRUE) or offline (FALSE) mode
-     * Default is TRUE
-     *
-     * @return true (online) or false (offline)
-     */
-    public boolean isOnline() {
-        return isOnlineLCR;
-    }
+	/**
+	 * Returns whether the repository is in online (TRUE) or offline (FALSE) mode
+	 * Default is TRUE
+	 *
+	 * @return true (online) or false (offline)
+	 */
+	public boolean isOnline() {
+		return isOnlineLCR;
+	}
 
-    /**
-     * Determines whether the repository query should be done online or offline.
-     *
-     * @param isOnline True for online, False for offline.
-     */
-    public void setOnline(boolean isOnline) {
-        this.isOnlineLCR = isOnline;
-        LOGGER.debug(coreMessagesBundle.getString("info.crl.online", isOnline()));
-    }
+	/**
+	 * Determines whether the repository query should be done online or offline.
+	 *
+	 * @param isOnline True for online, False for offline.
+	 */
+	public void setOnline(boolean isOnline) {
+		this.isOnlineLCR = isOnline;
+		LOGGER.debug(coreMessagesBundle.getString("info.crl.online", isOnline()));
+	}
 
-    /**
-     * Retrieves the location where the CRL(certificate revoked lists) repository is stored
-     *
-     * Default is "java.io.tmpdir" + "crls"
-     * @return location of CRL repository
-     */
-    public String getCrlPath() {
-        return crlPath;
-    }
+	/**
+	 * Retrieves the location where the CRL(certificate revoked lists) repository is stored
+	 * <p>
+	 * Default is "java.io.tmpdir" + "crls"
+	 *
+	 * @return location of CRL repository
+	 */
+	public String getCrlPath() {
+		return crlPath;
+	}
 
-    /**
-     * Configures the location where the CRL (certificate revoked lists) repository will be stored
-     *
-     * @param crlPath path for CRL repository
-     */
-    public void setCrlPath(String crlPath) {
-        this.crlPath = crlPath;
-        LOGGER.debug(coreMessagesBundle.getString("info.crl.path", getCrlPath()));
-    }
+	/**
+	 * Configures the location where the CRL (certificate revoked lists) repository will be stored
+	 *
+	 * @param crlPath path for CRL repository
+	 */
+	public void setCrlPath(String crlPath) {
+		this.crlPath = crlPath;
+		LOGGER.debug(coreMessagesBundle.getString("info.crl.path", getCrlPath()));
+	}
 
-    /** Retrieves the location where the LPA local repository is stored
-     *
-     * Default is "java.io.tmpdir" + "lpas"
-     * @return location of local LPA repository
-     */
+	/**
+	 * Retrieves the location where the LPA local repository is stored
+	 * <p>
+	 * Default is "java.io.tmpdir" + "lpas"
+	 *
+	 * @return location of local LPA repository
+	 */
 	public String getLpaPath() {
 		return lpaPath;
 	}
 
 	/**
-	 *
-	 *  Configures the location where the LPA local repository will be stored
+	 * Configures the location where the LPA local repository will be stored
 	 *
 	 * @param lpaPath path for LPA local repository
 	 */
@@ -387,8 +376,7 @@ public class ConfigurationRepo {
 	}
 
 	/**
-	 *
-	 * @return  Proxy was set
+	 * @return Proxy was set
 	 */
 	public Proxy getProxy() {
 		return proxy;
@@ -400,7 +388,6 @@ public class ConfigurationRepo {
 	}
 
 	/**
-	 *
 	 * @return Proxy.Type was set
 	 */
 	public Proxy.Type getType() {
@@ -410,9 +397,9 @@ public class ConfigurationRepo {
 	public void setType(String type) {
 		if (type == null || type.isEmpty()) {
 			this.type = Proxy.Type.HTTP;
-        } else {
-        	this.type = Proxy.Type.valueOf(type.toUpperCase());
-        }
+		} else {
+			this.type = Proxy.Type.valueOf(type.toUpperCase());
+		}
 	}
 
 	/**
@@ -436,19 +423,18 @@ public class ConfigurationRepo {
 						}
 					};
 					Authenticator.setDefault(authenticator);
-					LOGGER.debug(coreMessagesBundle.getString("info.proxy.running",hostName,port));
-				}else {
+					LOGGER.debug(coreMessagesBundle.getString("info.proxy.running", hostName, port));
+				} else {
 					LOGGER.error(coreMessagesBundle.getString("error.proxy.password.null"));
 				}
-	        }
-		} catch(UnknownHostException uhe) {
-			LOGGER.error(coreMessagesBundle.getString("error.proxy.host",hostName, port, uhe.getMessage()));
+			}
+		} catch (UnknownHostException uhe) {
+			LOGGER.error(coreMessagesBundle.getString("error.proxy.host", hostName, port, uhe.getMessage()));
 			setProxy(Proxy.NO_PROXY);
 		}
 	}
 
 	/**
-	 *
 	 * @return if LPA recovery mode is online
 	 */
 	public boolean isOnlineLPA() {
@@ -457,7 +443,7 @@ public class ConfigurationRepo {
 
 	public void setOnlineLPA(boolean isOnlineLPA) {
 		this.isOnlineLPA = isOnlineLPA;
-		LOGGER.debug(coreMessagesBundle.getString("info.lpa.online",isOnlineLPA()));
+		LOGGER.debug(coreMessagesBundle.getString("info.lpa.online", isOnlineLPA()));
 	}
 
 	public boolean isValidateLCR() {
@@ -466,7 +452,7 @@ public class ConfigurationRepo {
 
 	public void setValidateLCR(boolean validateLCR) {
 		this.validateLCR = validateLCR;
-		LOGGER.debug(coreMessagesBundle.getString("info.crl.validate",isValidateLCR()));
+		LOGGER.debug(coreMessagesBundle.getString("info.crl.validate", isValidateLCR()));
 	}
 
 	public int getCrlTimeOut() {
@@ -475,6 +461,6 @@ public class ConfigurationRepo {
 
 	public void setCrlTimeOut(int crlTimeOut) {
 		this.crlTimeOut = crlTimeOut;
-		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout",getCrlTimeOut()));
+		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout", getCrlTimeOut()));
 	}
 }

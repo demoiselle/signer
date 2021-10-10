@@ -54,7 +54,6 @@ public  final class Proxy {
 	public Proxy() {
 	}
 
-
 	public static void setProxy()throws Exception {
 		try{
 			if(proxyEndereco == null || proxyEndereco.trim().isEmpty() || proxyPorta == null || proxyPorta.trim().isEmpty() ){
@@ -88,8 +87,6 @@ public  final class Proxy {
 		}
 	}
 
-
-
 	public static String getProxyEndereco() {
 		return proxyEndereco;
 	}
@@ -121,5 +118,4 @@ public  final class Proxy {
 	public static void setProxySenha(String proxySenha) {
 		Proxy.proxySenha = proxySenha;
 	}
-
 }

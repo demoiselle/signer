@@ -40,11 +40,9 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *
  * A specific commitment type identifier shall not appear in more than one commitment rule.
- * 	CommitmentType ::= SEQUENCE {
- * 		identifier CommitmentTypeIdentifier,
- *
+ * CommitmentType ::= SEQUENCE {
+ * identifier CommitmentTypeIdentifier,
  */
 public class CommitmentTypeIdentifier extends ASN1Object {
 }

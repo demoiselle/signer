@@ -44,30 +44,31 @@ import java.util.List;
  */
 public interface Checker {
 
-    /**
-     * Check a digital signature with attached content, informed by parameter signedData
-     * @param signedData attached signature to be checked
-     * @return List&lt;SignatureInformations&gt; list of signature information
-     */
+	/**
+	 * Check a digital signature with attached content, informed by parameter signedData
+	 *
+	 * @param signedData attached signature to be checked
+	 * @return List&lt;SignatureInformations&gt; list of signature information
+	 */
 	List<SignatureInformations> checkAttachedSignature(byte[] signedData);
 
-    /**
-     * Check an digital detached signature, informed by parameter signedData and it's content
-     *
-     * @param content content to be checked
-     * @param signedData detached signature
-     * @return List&lt;SignatureInformations&gt; list of signature information
-     */
+	/**
+	 * Check an digital detached signature, informed by parameter signedData and it's content
+	 *
+	 * @param content    content to be checked
+	 * @param signedData detached signature
+	 * @return List&lt;SignatureInformations&gt; list of signature information
+	 */
 
 	List<SignatureInformations> checkDetachedSignature(byte[] content, byte[] signedData);
 
-    /**
-     * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
-     *
-     * @param digestAlgorithmOID OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
-     * @param calculatedHashContent calculated hash
-     * @param signedData detached signature
-     * @return List&lt;SignatureInformation&gt; list of signature information
-    */
+	/**
+	 * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
+	 *
+	 * @param digestAlgorithmOID    OID of algorithm used to calculate a hash from content (ex: 2.16.840.1.101.3.4.2.1 )
+	 * @param calculatedHashContent calculated hash
+	 * @param signedData            detached signature
+	 * @return List&lt;SignatureInformation&gt; list of signature information
+	 */
 	List<SignatureInformations> checkSignatureByHash(String digestAlgorithmOID, byte[] calculatedHashContent, byte[] signedData);
 }

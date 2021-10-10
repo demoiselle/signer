@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
@@ -62,38 +63,38 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.UnsignedAttribute
 /**
  *
  *  Revocation Values Attribute Definition
- *  
- *  The Revocation Values attribute is an unsigned attribute. 
- *   Only a single instance of this attribute must occur with an electronic signature.  
+ *
+ *  The Revocation Values attribute is an unsigned attribute.
+ *   Only a single instance of this attribute must occur with an electronic signature.
  *   It holds the values of CRLs and OCSP referenced in the CompleteRevocationRefs attribute.
- *   
+ *
  *   The following object identifier identifies the Revocation Values attribute:
- *   
- *   id-aa-ets-revocationValues OBJECT IDENTIFIER ::= { iso(1) member-body(2) 
+ *
+ *   id-aa-ets-revocationValues OBJECT IDENTIFIER ::= { iso(1) member-body(2)
  *   				us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-aa(2) 24}
- *   
+ *
  *   The revocation values attribute value has the ASN.1 syntax RevocationValues.
- *   
+ *
  *   RevocationValues ::=  SEQUENCE {
  *    crlVals           [0] SEQUENCE OF CertificateList     OPTIONAL,
  *    ocspVals          [1] SEQUENCE OF BasicOCSPResponse   OPTIONAL,
  *    otherRevVals      [2] OtherRevVals
  *  }
- *  
+ *
  *     OtherRevVals ::= SEQUENCE {
  *     otherRevValType       OtherRevValType,
  *     otherRevVals          ANY DEFINED BY otherRevValType
  *   }
- *   
+ *
  *   OtherRevValType ::= OBJECT IDENTIFIER
- *   
- *  The syntax and semantics of the other revocation values is outside the scope of this document. 
+ *
+ *  The syntax and semantics of the other revocation values is outside the scope of this document.
  *  The definition of the syntax of the other form of revocation information is as identified by OtherRevRefType.
- *  
+ *
  *  CertificateList is defined in RFC 2459 [RFC2459] and in ITU-T Recommendation X.509 [X509]).
- *  
+ *
  *   BasicOCSPResponse is defined in RFC 2560 [OCSP].
- *   
+ *
  * @author 07721825741
  */
 public class RevocationValues implements UnsignedAttribute {
@@ -120,14 +121,14 @@ public class RevocationValues implements UnsignedAttribute {
     	ArrayList<CertificateList> crlVals = new ArrayList<CertificateList>();
     	List<BasicOCSPResponse> ocspVals = new ArrayList<BasicOCSPResponse>();
     	try {
-    	
+
     		int chainSize = certificates.length -1;
     		for (int ix = 0; ix < chainSize; ix++ ){
     			X509Certificate cert = (X509Certificate) certificates[ix];
     			Collection<ICPBR_CRL> icpCrls = crlRepository.getX509CRL(cert);
     			for (ICPBR_CRL icpCrl : icpCrls) {
     				crlList.add(icpCrl.getCRL());
-    			}				
+    			}
     		}
     		if (crlList.isEmpty()){
     			throw new SignerException(cadesMessagesBundle.getString("error.crl.list.empty"));

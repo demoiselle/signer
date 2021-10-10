@@ -39,36 +39,36 @@ package org.demoiselle.signer.core.exception;
 
 /**
  * Custom RuntimeException to do unchecked
- *  *
+ * *
  */
 public class CertificateValidatorCRLException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    /**
-     * Default constructor
-     */
-    public CertificateValidatorCRLException() {
-        super();
-    }
+	/**
+	 * Default constructor
+	 */
+	public CertificateValidatorCRLException() {
+		super();
+	}
 
-    /**
-     * Constructor with message
-     *
-     * @param message message of exception
-     */
-    public CertificateValidatorCRLException(String message) {
-        super(message);
-    }
+	/**
+	 * Constructor with message
+	 *
+	 * @param message message of exception
+	 */
+	public CertificateValidatorCRLException(String message) {
+		super(message);
+	}
 
-    /**
-     * Constructor with message and cause
-     *
-     * @param message message of exception
-     * @param cause cause of exception
-     */
-    public CertificateValidatorCRLException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	/**
+	 * Constructor with message and cause
+	 *
+	 * @param message message of exception
+	 * @param cause   cause of exception
+	 */
+	public CertificateValidatorCRLException(String message, Throwable cause) {
+		super(message, cause);
+	}
 
 }

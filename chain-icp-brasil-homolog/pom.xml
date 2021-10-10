@@ -34,24 +34,27 @@
  ou escreva para a Fundação do Software Livre (FSF) Inc.,
  51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>chain-icp-brasil-homolog</artifactId>
     <packaging>jar</packaging>
 
-    
+
     <name>Demoiselle Signer CA ICP-Brasil Homologação</name>
-    <description>Demoiselle Signer Component to provides, with purpose of tests, a FAKE Certificate Authority chain of the ICP-BRAZIL's digital signature policies</description>
+    <description>Demoiselle Signer Component to provides, with purpose of tests, a FAKE Certificate Authority chain of
+        the ICP-BRAZIL's digital signature policies
+    </description>
     <url>http://www.demoiselle.org</url>
 
-	<parent>
+    <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
         <relativePath>../parent</relativePath>
         <version>4.0.0-SNAPSHOT</version>
-	</parent>
+    </parent>
 
     <dependencies>
         <dependency>
@@ -59,4 +62,4 @@
             <artifactId>signer-core</artifactId>
         </dependency>
     </dependencies>
-    </project>
+</project>
