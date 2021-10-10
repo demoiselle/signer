@@ -1,9 +1,9 @@
-/target
-/.project
-/.classpath
-/.settings
-/.externalToolBuilders
-/.DS_Store
+target/
+.project
+.classpath
+.settings/
+.externalToolBuilders
+.DS_Store
 /pom.xml.releaseBackup
 .idea
 *.iml
