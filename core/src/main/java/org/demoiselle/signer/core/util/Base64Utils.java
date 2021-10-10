@@ -54,7 +54,7 @@ public class Base64Utils {
 	private static byte[] mBase64EncMap, mBase64DecMap;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-	/**
+	/*
 	 * Class initializer. Initializes the Base64 alphabet (specified in
 	 * RFC-2045).
 	 */

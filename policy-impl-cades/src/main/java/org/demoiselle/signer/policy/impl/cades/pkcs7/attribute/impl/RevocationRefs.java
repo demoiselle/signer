@@ -207,21 +207,19 @@ public class RevocationRefs implements UnsignedAttribute {
 			// CrlOcspRef[] crlOcspRefArray = new
 			// CrlOcspRef[completeRevocationRefs.size()];
 
-		} catch (NoSuchAlgorithmException | CRLException e) {
+		} catch (CRLException e) {
 			throw new SignerException(e.getMessage());
 		}
-
 	}
 
 	/**
-	 * @param extract CrlValidatedID from X509CRL
+	 * @param crl CrlValidatedID from X509CRL
 	 * @return a CrlValidatedID
 	 * @throws NoSuchAlgorithmException
 	 * @throws CRLException
 	 */
-
 	private CrlValidatedID makeCrlValidatedID(X509CRL crl)
-		throws NoSuchAlgorithmException, CRLException {
+		throws CRLException {
 
 		Digest digest = DigestFactory.getInstance().factoryDefault();
 		digest.setAlgorithm(DigestAlgorithmEnum.SHA_256);
@@ -249,7 +247,7 @@ public class RevocationRefs implements UnsignedAttribute {
 		return crlvid;
 	}
 
-	/**
+	/*
 	 * make OcspResponsesID from BasicOCSPResp
 	 *
 	 * @param ocspResp

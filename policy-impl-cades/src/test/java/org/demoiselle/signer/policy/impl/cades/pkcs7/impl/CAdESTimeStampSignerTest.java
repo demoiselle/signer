@@ -70,7 +70,7 @@ public class CAdESTimeStampSignerTest {
 			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows ou NeoID
-			 KeyStore ks = getKeyStoreTokenBySigner();
+			KeyStore ks = getKeyStoreTokenBySigner();
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
@@ -92,7 +92,7 @@ public class CAdESTimeStampSignerTest {
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 
 			byte[] signatureWithTimeStamp = varCAdESTimeStampSigner
-					.doTimeStampForSignature(signatureFile);
+				.doTimeStampForSignature(signatureFile);
 
 			File file = new File(fileSignatureDirName + "_timestamp" + ".p7s");
 			FileOutputStream os = new FileOutputStream(file);
@@ -183,7 +183,7 @@ public class CAdESTimeStampSignerTest {
 
 			// gera o hash do conteudo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+				.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			byte[] hash = md.digest(content);
 
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
@@ -198,7 +198,7 @@ public class CAdESTimeStampSignerTest {
 
 			byte[] timeStampForContent = varCAdESTimeStampSigner.doTimeStampFromHashContent(hash);
 
-			File file = new File(fileDirName +"_fromHash"+ ".timestamp.p7s");
+			File file = new File(fileDirName + "_fromHash" + ".timestamp.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(timeStampForContent);
 			os.flush();
@@ -216,17 +216,16 @@ public class CAdESTimeStampSignerTest {
 		String fileSignatureDirName = "/";
 
 
-
 		try {
 			byte[] signatureFile = readContent(fileSignatureDirName);
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 			List<Timestamp> listTimeStamp = varCAdESTimeStampSigner.checkTimeStampOnSignature(signatureFile);
-			if (!listTimeStamp.isEmpty()){
-				for (Timestamp ts : listTimeStamp){
+			if (!listTimeStamp.isEmpty()) {
+				for (Timestamp ts : listTimeStamp) {
 					System.out.println(ts.toString());
 					assertTrue(true);
 				}
-			}else{
+			} else {
 				assertTrue(false);
 			}
 
@@ -243,18 +242,15 @@ public class CAdESTimeStampSignerTest {
 		String fileContentDirName = "/";
 
 
-
-
-
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
 			byte[] content = readContent(fileContentDirName);
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 			Timestamp varTimeStamp = varCAdESTimeStampSigner.checkTimeStampWithContent(timeStampFile, content);
-			if (varTimeStamp != null){
+			if (varTimeStamp != null) {
 				System.out.println(varTimeStamp.toString());
 				assertTrue(true);
-			}else{
+			} else {
 				assertTrue(false);
 			}
 		} catch (Exception ex) {
@@ -272,14 +268,14 @@ public class CAdESTimeStampSignerTest {
 			byte[] content = readContent(fileContentDirName);
 			// gera o hash do conteudo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+				.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			byte[] hash = md.digest(content);
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 			Timestamp varTimeStamp = varCAdESTimeStampSigner.checkTimeStampWithHash(timeStampFile, hash);
-			if (varTimeStamp != null){
+			if (varTimeStamp != null) {
 				System.out.println(varTimeStamp.toString());
 				assertTrue(true);
-			}else{
+			} else {
 				assertTrue(false);
 			}
 		} catch (Exception ex) {
@@ -320,7 +316,7 @@ public class CAdESTimeStampSignerTest {
 			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
 			Security.addProvider(p);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 
@@ -334,7 +330,6 @@ public class CAdESTimeStampSignerTest {
 	}
 
 	/**
-	 *
 	 * Faz a leitura do certificado armazenado em arquivo (A1)
 	 */
 
@@ -375,11 +370,8 @@ public class CAdESTimeStampSignerTest {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
-		} finally {
 		}
-
 	}
-
 
 	private String getAlias(KeyStore ks) {
 		Certificate[] certificates = null;

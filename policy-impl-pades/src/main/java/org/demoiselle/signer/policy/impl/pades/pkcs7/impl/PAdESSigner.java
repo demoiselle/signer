@@ -89,12 +89,12 @@ public class PAdESSigner implements PCKS7Signer {
 		cAdESSigner.setAlgorithm(algorithm);
 	}
 
-	@Override
-	/**
+	/*
 	 * Not for PAdES.
 	 * @param content
 	 * @return null
 	 */
+	@Override
 	public byte[] doAttachedSign(byte[] content) {
 		return null;
 	}

@@ -34,19 +34,15 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.chain.icp.brasil.provider.impl;
 
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -67,14 +63,11 @@ import org.demoiselle.signer.core.util.MessagesBundle;
  * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from
  * SERPRO's mirror URL http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip
  */
-
 public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	private static final String STRING_URL_ZIP = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list();
 	private static final String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list_sha512();
-
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class);
-
 
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
 
@@ -184,7 +177,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	 * @return byte array with calculated hash
 	 * @throws IOException Exception
 	 */
-	public byte[] checksum(File input) throws IOException {
+	public byte[] checksum(File input) {
 		try (InputStream in = new FileInputStream(input)) {
 
 			MessageDigest digest = MessageDigest.getInstance("SHA-512");
@@ -194,9 +187,10 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				digest.update(block, 0, length);
 			}
 			return digest.digest();
-		} catch (Exception e) {
+		} catch (IOException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 

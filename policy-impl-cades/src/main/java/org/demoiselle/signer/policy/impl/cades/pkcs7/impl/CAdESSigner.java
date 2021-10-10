@@ -239,7 +239,7 @@ public class CAdESSigner implements PKCS7Signer {
 	 * with content of type DATA: OID ContentType 1.2.840.113549.1.9.3 = OID
 	 * Data 1.2.840.113549.1.7.1 It uses the algorithm set in the algorithm
 	 * property, and if this property is not informed the algorithm of the
-	 * {@link SignerAlgorithmEnum.DEFAULT} enumeration will be used. For this
+	 * {@link SignerAlgorithmEnum#DEFAULT} enumeration will be used. For this
 	 * method it is necessary to inform the content, the private key and a
 	 * digital certificate in the ICP-Brasil (PKI) standard.
 	 *

@@ -68,7 +68,6 @@ public class CAdESSignerTest {
 	// locais.
 
 	/**
-	 *
 	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do token.
 	 */
 	@SuppressWarnings("restriction")
@@ -78,7 +77,7 @@ public class CAdESSignerTest {
 			// ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
 
 			// Para TOKEN Branco a linha abaixo
-			 //String pkcs11LibraryPath =	 "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+			//String pkcs11LibraryPath =	 "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
 
 			// Para TOKEN Azul a linha abaixo
 			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
@@ -88,7 +87,7 @@ public class CAdESSignerTest {
 			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
 			Security.addProvider(p);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,	new KeyStore.PasswordProtection("senha".toCharArray()));
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 
@@ -97,11 +96,8 @@ public class CAdESSignerTest {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
-		} finally {
 		}
-
 	}
-
 
 	// Usa o Signer para leitura, funciona para windows e NeoID
 	private KeyStore getKeyStoreTokenBySigner() {
@@ -116,11 +112,8 @@ public class CAdESSignerTest {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
-		} finally {
 		}
-
 	}
-
 
 	// lê pelo InputStream
 	private KeyStore getKeyStoreStreamBySigner() {
@@ -141,20 +134,17 @@ public class CAdESSignerTest {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
-		} finally {
 		}
-
 	}
-
 
 	/**
 	 * le a partir do arquivo .p12 ou pfx
+	 *
 	 * @return
 	 */
 	private KeyStore getKeyStoreFileBySigner() {
 
 		try {
-
 
 
 			// informar o caminho e nome do arquivo
@@ -169,21 +159,15 @@ public class CAdESSignerTest {
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			return null;
-		} finally {
 		}
-
 	}
 
-
 	/**
-	 *
 	 * Keytore a partir de MSCAPI
 	 */
 
 	private KeyStore getKeyStoreOnWindows() {
-
 		try {
-
 			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
 
 			KeyStore ks = msKeyStoreLoader.getKeyStore();
@@ -194,10 +178,7 @@ public class CAdESSignerTest {
 			e1.printStackTrace();
 			return null;
 		}
-
 	}
-
-
 
 	/**
 	 * Teste com envio do conteúdo
@@ -362,7 +343,7 @@ public class CAdESSignerTest {
 
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
+				.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 
 			// devido a uma restrição do token branco, no windws só funciona com 256
 			String varSO = System.getProperty("os.name");
@@ -373,9 +354,9 @@ public class CAdESSignerTest {
 			byte[] hash = Base64.decodeBase64("dvlpOKVdXfIrnWqTVRyMcElaRRcbSqXokpISZxawfoU\\u003d");
 
 			//String contentEncoded = Base64.encodeBase64String(fileToSign);
-        	//System.out.println("contentEncoded : "+contentEncoded);
-            //String hashEncoded = new String(Base64.encodeBase64(hash));
-            //System.out.println("hashEncoded: "+hashEncoded);
+			//System.out.println("contentEncoded : "+contentEncoded);
+			//String hashEncoded = new String(Base64.encodeBase64(hash));
+			//System.out.println("hashEncoded: "+hashEncoded);
 
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
@@ -402,7 +383,7 @@ public class CAdESSignerTest {
 			System.out.println("Efetuando a  assinatura do hash");
 			byte[] signature = signer.doHashSign(hash);
 			String signatureEncoded = new String(Base64.encodeBase64(signature));
-			System.out.println("signatureEncoded :"+signatureEncoded);
+			System.out.println("signatureEncoded :" + signatureEncoded);
 			File file = new File(fileDirName + "by_hash.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
@@ -508,11 +489,10 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Neo Id e windows
-			 KeyStore ks = getKeyStoreTokenBySigner();
+			KeyStore ks = getKeyStoreTokenBySigner();
 
 			// Para certificado em Token
 			// KeyStore ks = getKeyStoreToken();
-
 
 
 			// Para certificado em arquivo A1
@@ -582,11 +562,10 @@ public class CAdESSignerTest {
 			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Neo Id e windows
-			 //KeyStore ks = getKeyStoreTokenBySigner();
+			//KeyStore ks = getKeyStoreTokenBySigner();
 
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
-
 
 
 			// Para certificado em arquivo A1
@@ -655,10 +634,9 @@ public class CAdESSignerTest {
 			byte[] signatureFile = readContent(fileSignatureDirName);
 
 
-
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
+				.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 			// devido a uma restrição do token branco, no windws só funciona com 256
 			String varSO = System.getProperty("os.name");
 			if (varSO.contains("indows")) {
@@ -669,7 +647,7 @@ public class CAdESSignerTest {
 			byte[] hash = md.digest(fileToSign);
 
 			String hashEncoded = new String(Base64.encodeBase64(hash));
-			System.out.println("Hash_Encoded"+hashEncoded);
+			System.out.println("Hash_Encoded" + hashEncoded);
 
 			// quando certificado em arquivo, precisa informar a senha
 			char[] senha = "senha".toCharArray();
@@ -766,8 +744,8 @@ public class CAdESSignerTest {
 			while (e.hasMoreElements()) {
 				alias = e.nextElement();
 				System.out.println("alias..............: " + alias);
-				System.out.println("iskeyEntry"+ ks.isKeyEntry(alias));
-				System.out.println("containsAlias"+ks.containsAlias(alias));
+				System.out.println("iskeyEntry" + ks.isKeyEntry(alias));
+				System.out.println("containsAlias" + ks.containsAlias(alias));
 				certificates = ks.getCertificateChain(alias);
 			}
 		} catch (Exception ex) {

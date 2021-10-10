@@ -68,7 +68,7 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 	/**
 	 * Performs the signature using the Java API.
 	 * It uses the algorithm value on property: algorithm.
-	 * If this property is not set, the {@link SignerAlgorithmEnum.DEFAULT} enumeration algorithm
+	 * If this property is not set, the {@link SignerAlgorithmEnum#DEFAULT} enumeration algorithm
 	 * will be used.
 	 * For this method it is necessary to inform the content and the private key.
 	 *

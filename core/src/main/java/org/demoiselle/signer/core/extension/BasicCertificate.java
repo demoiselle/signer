@@ -125,16 +125,11 @@ public class BasicCertificate {
 	 * @param is The input stream of the certificate to be used
 	 * @return X509Certificate X509 certificate
 	 * @throws CertificateException exception
-	 * @throws IOException          exception
 	 * @throws Exception            exception
 	 */
-	private X509Certificate getCertificate(InputStream is) throws CertificateException, IOException, Exception {
-		X509Certificate cert = null;
-
+	private X509Certificate getCertificate(InputStream is) throws CertificateException, Exception {
 		CertificateFactory cf = CertificateFactory.getInstance("X509");
-		cert = (X509Certificate) cf.generateCertificate(is);
-
-		return cert;
+		return (X509Certificate) cf.generateCertificate(is);
 	}
 
 	/**

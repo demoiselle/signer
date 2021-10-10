@@ -175,7 +175,7 @@ public class TimeStampOperator {
 	}
 
 	/**
-	 * Sends the time stamp request {@link createRequest} to a time stamp server
+	 * Sends the time stamp request {@link #createRequest(PrivateKey, Certificate[], byte[], byte[])} to a time stamp server
 	 *
 	 * @param request request to be sent
 	 * @return The time stamp returned by the server

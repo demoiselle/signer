@@ -101,7 +101,7 @@ public class KeyStoreLoaderFactory {
 	/**
 	 * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
 	 *
-	 * @param InputStrean containing keystore
+	 * @param inputStream containing keystore
 	 * @return {@link KeyStoreLoader}
 	 */
 	public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream) {
@@ -109,15 +109,9 @@ public class KeyStoreLoaderFactory {
 	}
 
 	/**
-	 *
-	 *
-	 *
-	 */
-
-	/**
 	 * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
 	 *
-	 * @param InputStrean containing keystore
+	 * @param inputStream containing keystore
 	 * @param type        type of keystore (maybe PKCS12 or JKS
 	 * @return {@link KeyStoreLoader}
 	 */

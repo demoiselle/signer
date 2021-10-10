@@ -140,14 +140,10 @@ public class ICPBRCertificatePF {
 	}
 
 	/**
-	 *
 	 * @return o municipio e a UF do Titulo de Eleitor
-	 *
-	 *         public String getMunicipioUfTituloEleitor(){ return
-	 *         oID_2_16_76_1_3_5.getMunicipioUf(); }
-	 */
-
-	/**
+	 * <p>
+	 * public String getMunicipioUfTituloEleitor(){ return
+	 * oID_2_16_76_1_3_5.getMunicipioUf(); }
 	 * @return Name of City of  Electoral document
 	 */
 	public String getCityElectoralDocument() {
