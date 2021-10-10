@@ -149,9 +149,9 @@ public interface Signer {
 	PrivateKey getPrivateKeyForTimeStamp();
 
 	/**
-	 * Data of end of Certificate use
+	 * Data of end of Certificate use.
 	 *
-	 * @return
+	 * @return Date of end certificate use.
 	 */
 	Date getNotAfterSignerCertificate();
 

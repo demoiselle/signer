@@ -47,10 +47,10 @@ import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 public class PolicyUtils {
 
 	/**
-	 * return the policy by OID
+	 * return the policy by OID.
 	 *
-	 * @param oid
-	 * @return @see PolicyFactory.Policies
+	 * @param oid the OID.
+	 * @return the corresponding {@link PolicyFactory.Policies}.
 	 */
 	public static PolicyFactory.Policies getPolicyByOid(String oid) {
 

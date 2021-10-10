@@ -152,14 +152,15 @@ public class TimeStampOperator {
 	}
 
 	/**
-	 * Creates a time stamp request using a certificate of type PKCS12
+	 * Creates a time stamp request using a certificate of type PKCS12.
 	 *
-	 * @param keystoreLocation key store location
-	 * @param pin              personal identification number
-	 * @param alias            alias
-	 * @param content          content of the request
-	 * @return request as a byte[]
-	 * @throws CertificateCoreException exception
+	 * @param keystoreLocation key store location.
+	 * @param pin              personal identification number.
+	 * @param alias            alias.
+	 * @param content          content of the request.
+	 * @param hash             a hash.
+	 * @return request as a byte[].
+	 * @throws CertificateCoreException exception.
 	 */
 	public byte[] createRequest(String keystoreLocation, String pin, String alias, byte[] content, byte[] hash) throws CertificateCoreException {
 		try {

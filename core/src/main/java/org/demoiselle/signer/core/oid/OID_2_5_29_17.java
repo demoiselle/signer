@@ -45,7 +45,7 @@ package org.demoiselle.signer.core.oid;
  *
  * See IETF RFC 5280.
  *
- * @author Emerson Sachio Saito <emerson.saito@gmail.com>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class OID_2_5_29_17 extends OIDGeneric {
 

@@ -171,11 +171,10 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	}
 
 	/**
-	 * calculte SHA-512 hash from downloaded file.
+	 * Calculate SHA-512 hash from file.
 	 *
-	 * @param input file to read from
-	 * @return byte array with calculated hash
-	 * @throws IOException Exception
+	 * @param input file to read from.
+	 * @return byte array with calculated hash.
 	 */
 	public byte[] checksum(File input) {
 		try (InputStream in = new FileInputStream(input)) {

@@ -77,10 +77,10 @@ public class PolicyFactory {
 	}
 
 	/**
-	 * Load policies on CAdES and PAdES format
+	 * Load policies on CAdES and PAdES format.
 	 *
-	 * @param policy
-	 * @return
+	 * @param policy The policy to load.
+	 * @return The corresponding {@link SignaturePolicy}.
 	 */
 	public SignaturePolicy loadPolicy(Policies policy) {
 		SignaturePolicy signaturePolicy = new SignaturePolicy();
@@ -92,13 +92,9 @@ public class PolicyFactory {
 	}
 
 	/**
-	 * @param policy
-	 * @return
-	 * @throws ParserConfigurationException
-	 * @throws SAXException
-	 * @throws IOException
+	 * @param policy The policy to load.
+	 * @return The corresponding {@link Document}.
 	 */
-
 	public Document loadXMLPolicy(Policies policy) {
 		SignaturePolicy signaturePolicy = new SignaturePolicy();
 		InputStream is = this.getClass().getResourceAsStream(policy.getFile());
@@ -106,7 +102,6 @@ public class PolicyFactory {
 		signaturePolicy.setSignPolicyURI(policy.getUrl());
 		return policyXML;
 	}
-
 
 	/**
 	 * @return LPA ICP Brasil signature policy v1

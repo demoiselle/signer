@@ -40,7 +40,7 @@ package org.demoiselle.signer.core.oid;
 /**
  * subject:jurisdictionOfIncorporationCountryName ASN.1 - X520countryName as specified in RFC 3280
  *
- * @author Emerson Sachio Saito <emerson.saito@gmail.com>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class OID_1_3_6_1_4_1_311_60_2_1_3 extends OIDGeneric {
 

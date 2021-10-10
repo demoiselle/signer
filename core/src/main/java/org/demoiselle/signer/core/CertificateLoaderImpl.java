@@ -99,9 +99,10 @@ public class CertificateLoaderImpl implements CertificateLoader {
 	}
 
 	/**
-	 * Obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 * Obtain the certificate from a Token or Smartcard,
+	 * defined by ICP-BRASIL with the name A3.
 	 *
-	 * @return the certificate information in X509Certificate format
+	 * @return the certificate information in X509Certificate format.
 	 */
 	@Override
 	public X509Certificate loadFromToken() {
@@ -110,12 +111,12 @@ public class CertificateLoaderImpl implements CertificateLoader {
 
 	/**
 	 * When a PIN(Personal Identification Number) was informed,
-	 * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 * obtain the certificate from a Token or Smartcard, defined
+	 * by ICP-BRASIL with the name A3.
 	 *
-	 * @param pinNumber personal id number
-	 * @return the certificate information in X509Certificate format
+	 * @param pinNumber personal id number.
+	 * @return the certificate information in X509Certificate format.
 	 */
-
 	@Override
 	public X509Certificate loadFromToken(String pinNumber) {
 		if (this.keyStore == null) {
@@ -133,12 +134,13 @@ public class CertificateLoaderImpl implements CertificateLoader {
 	}
 
 	/**
-	 * When a PIN(Personal Identification Number) and Alias was informed,
-	 * obtain the certificate from a Token or Smartcard, defined by ICP-BRASIL with the name A3.
+	 * When a PIN (Personal Identification Number) and alias was informed,
+	 * obtain the certificate from a Token or Smartcard,
+	 * defined by ICP-BRASIL with the name A3.
 	 *
-	 * @param pinNumber a PIN(Personal Identification Number)
-	 * @param alias     desired alias
-	 * @return the certificate information in X509Certificate format
+	 * @param pinNumber a PIN (Personal Identification Number).
+	 * @param alias     desired alias.
+	 * @return the certificate information in X509Certificate format.
 	 */
 	@Override
 	public X509Certificate loadFromToken(String pinNumber, String alias) {
@@ -152,5 +154,4 @@ public class CertificateLoaderImpl implements CertificateLoader {
 			throw new CertificateCoreException("", e);
 		}
 	}
-
 }

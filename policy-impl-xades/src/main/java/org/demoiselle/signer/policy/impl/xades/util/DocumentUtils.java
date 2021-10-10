@@ -73,7 +73,7 @@ import org.xml.sax.SAXException;
 /**
  * Class for commons XML methods
  *
- * @author Emerson Saito <emerson.saito@serpro.gov.br>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class DocumentUtils {
 
@@ -216,9 +216,10 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * @param doc
-	 * @return
-	 * @throws XMLSignerException
+	 * @param doc The document.
+	 * @return The corresponding element.
+	 *
+	 * @throws XMLSignerException In case of failure.
 	 */
 	public static Element getDocumentData(Document doc) throws XMLSignerException {
 
@@ -245,17 +246,19 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * @param alg
-	 * @param xml
-	 * @param canonical
-	 * @return
-	 * @throws XMLSignerException
+	 * Get a value.
+	 *
+	 * @param alg The algorithm.
+	 * @param xml The XML node.
+	 * @param canonical The canonical.
+	 * @return The SHA value.
+	 *
+	 * @throws XMLSignerException in case of failure.
 	 */
 	public static byte[] getShaCanonizedValue(String alg, Node xml, String canonical) throws XMLSignerException {
 		Init.init();
 		Canonicalizer c14n = null;
 		try {
-
 			c14n = Canonicalizer.getInstance(canonical);
 		} catch (InvalidCanonicalizerException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
@@ -279,10 +282,10 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * Reade content from file
+	 * Read content from file.
 	 *
-	 * @param parmFile
-	 * @return
+	 * @param parmFile the filename.
+	 * @return the content.
 	 */
 	public static byte[] readContent(String parmFile) {
 		try {

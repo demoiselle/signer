@@ -66,18 +66,21 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
  * The signing certificate attribute is designed to prevent the simple
  * substitution and re-issue attacks, and to allow for a restricted set
  * of authorization certificates to be used in verifying a signature.
- * <p>
- * The definition of SigningCertificate is
- * <p>
+ *
+ * <p>The definition of SigningCertificate is</p>
+ *
+ * <pre>
  * SigningCertificate ::=  SEQUENCE {
- * certs        SEQUENCE OF ESSCertID,
- * policies     SEQUENCE OF PolicyInformation OPTIONAL
+ *     certs        SEQUENCE OF ESSCertID,
+ *     policies     SEQUENCE OF PolicyInformation OPTIONAL
  * }
- * <p>
- * <p>
- * id-aa-signingCertificate OBJECT IDENTIFIER ::= { iso(1)
- * member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
- * smime(16) id-aa(2) 12 }
+ *
+ * id-aa-signingCertificate OBJECT IDENTIFIER ::= {
+ *     iso(1)
+ *     member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs9(9)
+ *     smime(16) id-aa(2) 12
+ * }
+ * </pre>
  */
 public class SigningCertificate implements SignedAttribute {
 

@@ -41,7 +41,7 @@ import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
 
 /**
- * define a method to load X.509 Extension OIDs
+ * Define a method to load X.509 Extension OIDs.
  */
 public interface IOIDExtensionLoader {
 

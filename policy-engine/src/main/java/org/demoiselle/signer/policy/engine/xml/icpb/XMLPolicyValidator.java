@@ -56,7 +56,7 @@ import org.w3c.dom.NodeList;
 /**
  * Validate if a policy is on valid period and not revoked
  *
- * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class XMLPolicyValidator {
 
