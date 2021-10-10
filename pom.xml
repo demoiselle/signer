@@ -145,6 +145,9 @@
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
+                    <links>
+                        <link>https://docs.oracle.com/javase/7/docs/api/</link>
+                    </links>
                 </configuration>
                 <executions>
                     <execution>
