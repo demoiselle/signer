@@ -8,7 +8,7 @@
 
     <name>Demoiselle Signer Parent</name>
     <description>Parent artifact for Demoiselle Signer</description>
-    <url>http://signer.demoiselle.io</url>
+    <url>https://www.frameworkdemoiselle.gov.br</url>
 
     <parent>
         <groupId>org.demoiselle.signer</groupId>

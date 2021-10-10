@@ -11,7 +11,7 @@
     <name>Demoiselle Signer Build</name>
     <description>Demoiselle Framework's component for specifications of ICP-BRASIL Public Key Infrastructure (PKI)
     </description>
-    <url>http://signer.demoiselle.io</url>
+    <url>https://www.frameworkdemoiselle.gov.br</url>
 
     <parent>
         <groupId>org.sonatype.oss</groupId>
@@ -22,13 +22,13 @@
     <licenses>
         <license>
             <name>GNU Lesser General Public License, Version 3</name>
-            <url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
         </license>
     </licenses>
 
     <organization>
         <name>SERPRO - Serviço Federal de Processamento de Dados</name>
-        <url>http://www.serpro.gov.br</url>
+        <url>https://www.serpro.gov.br</url>
     </organization>
 
     <developers>
@@ -37,44 +37,44 @@
             <name>Ednara Oliveira Santos</name>
             <email>ednaraoliveira@gmail.com</email>
             <organization>SERPRO</organization>
-            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
         </developer>
         <developer>
             <name>Emerson Sachio Saito</name>
             <email>emerson.saito@gmail.com</email>
             <organization>SERPRO</organization>
-            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
         </developer>
         <developer>
             <name>Fabiano Sardenberg Kuss</name>
             <email>fabiano.kuss@serpro.gov.br</email>
             <organization>SERPRO</organization>
-            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
         </developer>
         <developer>
             <name>Humberto de Melo Pacheco</name>
             <email>humberto.pacheco@serpro.gov.br</email>
             <organization>SERPRO</organization>
-            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
         </developer>
         <developer>
             <name>José René Campanario</name>
             <email>joserene.campa@gmail.com</email>
             <organization>SERPRO</organization>
-            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
         </developer>
         <developer>
             <name>Julian Cesar dos Santos</name>
             <email>juliancesar@gmail.com</email>
             <organization>SERPRO</organization>
-            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
         </developer>
 
         <developer>
             <name>Vanderson Botelho da Silva</name>
             <email>botelhojp@gmail.com</email>
             <organization>SERPRO</organization>
-            <organizationUrl>http://www.serpro.gov.br</organizationUrl>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
         </developer>
 
     </developers>
@@ -199,7 +199,7 @@
         <pluginRepository>
             <id>nexus-jboss-org</id>
             <name>JBoss Maven Repository</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
 
         </pluginRepository>
 
@@ -276,7 +276,7 @@
         <repository>
             <id>nexus-jboss-org</id>
             <name>JBoss Maven Repository</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public</url>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
 
         </repository>
 

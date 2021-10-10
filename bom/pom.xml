@@ -8,18 +8,18 @@
 	<name>Demoiselle Signer Bill of Materials</name>
 
 	<description>Contains the list of all dependencies needed for build Demoiselle Signer Project.</description>
-	<url>http://www.frameworkdemoiselle.gov.br</url>
+	<url>https://www.frameworkdemoiselle.gov.br</url>
 
 	<licenses>
 		<license>
 			<name>GNU Lesser General Public License, Version 3</name>
-			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
+			<url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
 		</license>
 	</licenses>
 
 	<organization>
 		<name>SERPRO - Serviço Federal de Processamento de Dados</name>
-		<url>http://www.serpro.gov.br</url>
+		<url>https://www.serpro.gov.br</url>
 	</organization>
 
 	<parent>
