@@ -35,4 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
+/**
+ * Documentation of package (put it here)
+ */
 package org.demoiselle.signer.cryptography.util;

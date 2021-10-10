@@ -34,9 +34,9 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.signature.policy.engine.factory;
 
-import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+package org.demoiselle.signer.policy.engine.factory;
+
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.junit.Test;
 import org.slf4j.Logger;
