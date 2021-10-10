@@ -403,12 +403,12 @@ public class ConfigurationRepo {
 	}
 
 	/**
-	 * Configure Proxy
+	 * Configure Proxy.
 	 *
-	 * @param hostName
-	 * @param port
-	 * @param userName
-	 * @param password
+	 * @param hostName the host name.
+	 * @param port the port.
+	 * @param userName the username.
+	 * @param password the password.
 	 */
 	public void setProxy(String hostName, String port, final String userName, final String password) {
 		try {

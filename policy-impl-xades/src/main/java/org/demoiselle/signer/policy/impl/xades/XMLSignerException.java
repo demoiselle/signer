@@ -38,13 +38,14 @@
 package org.demoiselle.signer.policy.impl.xades;
 
 /**
- * custom unchecked exceptions.
+ * Custom unchecked exceptions.
  *
- * @author Emerson Saito <emerson.saito@serpro.gov.br>
+ * @author Emerson Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class XMLSignerException extends RuntimeException {
+
 	/**
-	 *
+	 * Serial version of this exception.
 	 */
 	private static final long serialVersionUID = 5292066774806172289L;
 
@@ -69,6 +70,4 @@ public class XMLSignerException extends RuntimeException {
 	public XMLSignerException(Throwable cause) {
 		super(cause);
 	}
-
-
 }

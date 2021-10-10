@@ -53,10 +53,10 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
 public class Utils {
 
 	/**
-	 * Transforms int to Big Endian according to specification RFC 3161
+	 * Transforms int to Big Endian according to specification RFC 3161.
 	 *
-	 * @param value
-	 * @return
+	 * @param value the int value.
+	 * @return corresponding bytes of int.
 	 */
 	public static byte[] intToByteArray(int value) {
 		byte buffer[] = new byte[4];

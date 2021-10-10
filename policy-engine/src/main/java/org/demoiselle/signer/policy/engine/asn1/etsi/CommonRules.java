@@ -47,16 +47,18 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * rules are defined in terms of trust conditions for certificates, timestamps
  * and attributes, along with any constraints on attributes that may be included
  * in the electronic signature.
- * <p>
- * <p>
+ *
+ * <pre>
  * CommitmentRule ::= SEQUENCE {
- * selCommitmentTypes  {@link SelectedCommitmentTypes},
- * signerAndVeriferRules [0] {@link SignerAndVerifierRules} OPTIONAL,
- * signingCertTrustCondition [1] {@link SigningCertTrustCondition} OPTIONAL,
- * timeStampTrustCondition [2] {@link TimestampTrustCondition} OPTIONAL,
- * attributeTrustCondition [3] {@link AttributeTrustCondition} OPTIONAL,
- * algorithmConstraintSet [4] {@link AlgorithmConstraintSet} OPTIONAL,
- * signPolExtensions [5] {@link SignPolExtensions} OPTIONAL }
+ *     selCommitmentTypes  {@link SelectedCommitmentTypes},
+ *     signerAndVeriferRules [0] {@link SignerAndVerifierRules} OPTIONAL,
+ *     signingCertTrustCondition [1] {@link SigningCertTrustCondition} OPTIONAL,
+ *     timeStampTrustCondition [2] {@link TimestampTrustCondition} OPTIONAL,
+ *     attributeTrustCondition [3] {@link AttributeTrustCondition} OPTIONAL,
+ *     algorithmConstraintSet [4] {@link AlgorithmConstraintSet} OPTIONAL,
+ *     signPolExtensions [5] {@link SignPolExtensions} OPTIONAL
+ * }
+ * </pre>
  *
  * @author 07721825741
  */

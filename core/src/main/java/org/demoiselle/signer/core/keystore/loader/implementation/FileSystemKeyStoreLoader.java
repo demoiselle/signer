@@ -79,10 +79,11 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 	}
 
 	/**
-	 * Class constructor that checks whether the specified parameters exists and whether they are valid.
+	 * Class constructor that checks whether the specified
+	 * parameters exist and whether they are valid.
 	 *
-	 * @param inputStream
-	 * @param type
+	 * @param inputStream the input.
+	 * @param type the type.
 	 */
 	public FileSystemKeyStoreLoader(InputStream inputStream, String type) {
 
@@ -100,9 +101,10 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 	}
 
 	/**
-	 * Class constructor for default type PKCS12, that checks whether the specified parameter exists .
+	 * Class constructor for default type PKCS12, that checks
+	 * whether the specified parameter exists.
 	 *
-	 * @param inputStream
+	 * @param inputStream the input.
 	 */
 	public FileSystemKeyStoreLoader(InputStream inputStream) {
 

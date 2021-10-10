@@ -72,11 +72,12 @@ public class RequestSigner {
 	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
 	/**
-	 * Signs a time stamp request
+	 * Signs a time stamp request.
 	 *
-	 * @param privateKey   private key to sign with
-	 * @param certificates certificate chain
-	 * @param request      request to be signed
+	 * @param privateKey   private key to sign with.
+	 * @param certificates certificate chain.
+	 * @param request      request to be signed.
+	 * @param algorithm the algorithm to be used.
 	 * @return The signed request
 	 */
 	public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request, String algorithm) {

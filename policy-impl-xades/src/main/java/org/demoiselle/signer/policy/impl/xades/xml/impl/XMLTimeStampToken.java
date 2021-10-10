@@ -48,9 +48,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- * Request a TimeStampToken from Certificate Autority  (TSA)
+ * Request a TimeStampToken from Certificate Autority  (TSA).
  *
- * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  *
  */
 public class XMLTimeStampToken {

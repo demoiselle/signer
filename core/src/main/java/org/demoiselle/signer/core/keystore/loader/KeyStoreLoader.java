@@ -61,7 +61,7 @@ public interface KeyStoreLoader {
 	void setCallbackHandler(CallbackHandler callback);
 
 	/**
-	 * @param pinNumber
+	 * @param pinNumber the personal identification number.
 	 * @return KeyStore keystore
 	 */
 	KeyStore getKeyStore(String pinNumber);

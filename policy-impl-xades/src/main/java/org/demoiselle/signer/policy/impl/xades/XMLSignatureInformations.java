@@ -64,7 +64,6 @@ public class XMLSignatureInformations {
 	private boolean invalidSignature = false;
 	private BasicCertificate icpBrasilcertificate = null;
 
-
 	/**
 	 * @return list of Certificate chain stored on signature
 	 */
@@ -99,9 +98,8 @@ public class XMLSignatureInformations {
 	/**
 	 * Set Date from user's computer when signature was generated (it is NOT a timestamp date)
 	 *
-	 * @param signDate
+	 * @param signDate the date in which signature was generated.
 	 */
-
 	public void setSignDate(Date signDate) {
 		this.signDate = signDate;
 	}
@@ -114,9 +112,9 @@ public class XMLSignatureInformations {
 	}
 
 	/**
-	 * TimeStamp stored on signature
+	 * TimeStamp stored on signature.
 	 *
-	 * @param timeStampSigner
+	 * @param timeStampSigner the timestamp.
 	 */
 	public void setTimeStampSigner(Timestamp timeStampSigner) {
 		this.timeStampSigner = timeStampSigner;
@@ -131,7 +129,7 @@ public class XMLSignatureInformations {
 	}
 
 	/**
-	 * @param signaturePolicy
+	 * @param signaturePolicy the policy.
 	 */
 	public void setSignaturePolicy(XMLSignaturePolicy signaturePolicy) {
 		this.signaturePolicy = signaturePolicy;
@@ -145,7 +143,7 @@ public class XMLSignatureInformations {
 	}
 
 	/**
-	 * @param validatorErrors
+	 * @param validatorErrors the erros produced by validators.
 	 */
 	public void setValidatorErrors(LinkedList<String> validatorErrors) {
 		this.validatorErrors = validatorErrors;
@@ -173,9 +171,9 @@ public class XMLSignatureInformations {
 	}
 
 	/**
-	 * set true (invalid) ou false (valid)
+	 * set true (invalid) ou false (valid).
 	 *
-	 * @param invalidSignature
+	 * @param invalidSignature the value signature validity.
 	 */
 	public void setInvalidSignature(boolean invalidSignature) {
 		this.invalidSignature = invalidSignature;

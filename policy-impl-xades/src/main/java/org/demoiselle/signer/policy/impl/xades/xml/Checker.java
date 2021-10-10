@@ -44,7 +44,7 @@ import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
 import org.w3c.dom.Document;
 
 /**
- * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public interface Checker {
 

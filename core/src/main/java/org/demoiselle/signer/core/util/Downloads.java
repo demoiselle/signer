@@ -54,11 +54,13 @@ public class Downloads {
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 	/**
-	 * execute file download from defined URL
+	 * Get the input stream from provided address.
 	 *
-	 * @param stringURL
-	 * @return InputStream
-	 * @throws RuntimeException
+	 * @param stringURL sequence from with an {@link InputStream}
+	 *                  will be returned.
+	 *
+	 * @return the {@link InputStream} corresponding to the
+	 * other param.
 	 */
 	public static InputStream getInputStreamFromURL(final String stringURL) throws RuntimeException {
 		try {

@@ -81,11 +81,11 @@ public class DocumentUtils {
 	private static MessagesBundle xadesMessagesBundle = new MessagesBundle();
 
 	/**
-	 * Get String form tagName
+	 * Get String form tagName.
 	 *
-	 * @param parmDocument
-	 * @param parmTagName
-	 * @return
+	 * @param parmDocument the document.
+	 * @param parmTagName the tag name.
+	 * @return the corresponding value.
 	 */
 	public static String getString(Document parmDocument, String parmTagName) throws XMLSignerException {
 		Init.init();
@@ -102,10 +102,11 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * Load XML Document from File name and Location
+	 * Load XML Document from File name and Location.
 	 *
-	 * @param xmlFile
-	 * @return
+	 * @param xmlFile the XML filename.
+	 *
+	 * @return the document.
 	 */
 	public static Document loadXMLDocument(String xmlFile) throws XMLSignerException {
 
@@ -138,10 +139,11 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * Load XML Document from byte[] that represents a XML file
+	 * Load XML Document from byte[] that represents a XML file.
 	 *
-	 * @param xmlContent
-	 * @return
+	 * @param xmlContent bytes of XML content.
+	 *
+	 * @return the document.
 	 */
 	public static Document loadXMLDocument(byte[] xmlContent) throws XMLSignerException {
 		try {
@@ -163,11 +165,12 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * Load XML Document from InputStream that represents a XML file
+	 * Load XML Document from InputStream that represents a XML file.
 	 *
-	 * @param is
-	 * @return
-	 * @throws XMLSignerException
+	 * @param is the input.
+	 * @return the XML document.
+	 *
+	 * @throws XMLSignerException in case of failure.
 	 */
 	public static Document loadXMLDocument(InputStream is) throws XMLSignerException {
 
@@ -190,10 +193,11 @@ public class DocumentUtils {
 	}
 
 	/**
-	 * Load XML Document from String that represents a XML file
+	 * Load XML Document from String that represents a XML file.
 	 *
-	 * @param xmlString
-	 * @return
+	 * @param xmlString the XML content.
+	 *
+	 * @return the document.
 	 */
 	public static Document loadXMLDocumentFromString(String xmlString) throws XMLSignerException {
 		//return loadXMLDocument(xmlString.getBytes());

@@ -97,8 +97,8 @@ import org.w3c.dom.NodeList;
  * presented in
  * https://www.gov.br/iti/pt-br/centrais-de-conteudo/doc-icp-15-03-versao-7-4-req-das-pol-de-assin-dig-na-icp-brasil-pdf
  *
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
- * @author Emerson Saito <emerson.saito@serpro.gov.br>
+ * @author Fabiano Kuss &lt;fabiano.kuss@serpro.gov.br&gt;
+ * @author Emerson Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class XMLSigner implements Signer {
 
@@ -157,13 +157,12 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Sign a XML file, from File Name and location. (ex:
-	 * signEnveloped(true,"/tmp/file.xml");
+	 * Sign an XML file, from File Name and location.
 	 *
-	 * @param isFileLocation indicates the next parameter is a fileLocation
-	 * @param fileNameSource
-	 * @return
-	 * @throws XMLSignerException
+	 * @param isFileLocation indicates the next parameter is a fileLocation.
+	 * @param fileNameSource the filename of content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(boolean isFileLocation, String fileNameSource) throws XMLSignerException {
 
@@ -186,14 +185,13 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Sign a XML file, from String that represents a XML document
+	 * Sign a XML file, from String that represents a XML document.
 	 *
-	 * @param xmlAsString
-	 * @return
-	 * @throws XMLSignerException
+	 * @param xmlAsString the XML content to sign.
+	 * @return the documento.
+	 * @throws XMLSignerException the failure
 	 */
 	public Document signEnveloped(String xmlAsString) throws XMLSignerException {
-
 		if (xmlAsString == null || xmlAsString.isEmpty()) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "String xmlAsString"));
 			throw new XMLSignerException(
@@ -206,27 +204,26 @@ public class XMLSigner implements Signer {
 	/**
 	 * Sign a XML file, from XML Document
 	 *
-	 * @param docToSing
-	 * @return
-	 * @throws XMLSignerException
+	 * @param docToSing the document to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(Document docToSing) throws XMLSignerException {
-
 		if (docToSing == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "Document docToSing"));
 			throw new XMLSignerException(
 				xadesMessagesBundle.getString("error.xml.parameter.null", "Document docToSing"));
 		}
-		return this.signEnveloped(docToSing, null);
 
+		return this.signEnveloped(docToSing, null);
 	}
 
 	/**
-	 * Sign a XML file, from byte array that represents a XML document
+	 * Sign a XML file, from byte array that represents a XML document.
 	 *
-	 * @param content
-	 * @return
-	 * @throws XMLSignerException
+	 * @param content the content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(byte[] content) throws XMLSignerException {
 
@@ -236,15 +233,14 @@ public class XMLSigner implements Signer {
 		}
 
 		return this.signEnveloped(DocumentUtils.loadXMLDocument(content), null);
-
 	}
 
 	/**
-	 * Sign a XML file, from InputStream that represents a XML document
+	 * Sign a XML file, from InputStream that represents a XML document.
 	 *
-	 * @param content
-	 * @return
-	 * @throws XMLSignerException
+	 * @param content the content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(InputStream content) throws XMLSignerException {
 		if (content == null) {
@@ -257,12 +253,12 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Generates a destached XML signature from byte array
+	 * Generates a destached XML signature from byte array.
 	 *
-	 * @param isFile
-	 * @param fileNameToSign
-	 * @return
-	 * @throws XMLSignerException
+	 * @param isFile the input stream.
+	 * @param fileNameToSign the filename of content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signDetachedEnveloped(InputStream isFile, String fileNameToSign) throws XMLSignerException {
 
@@ -285,11 +281,11 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Generates a destached XML signature from a File name and location
+	 * Generates a detached XML signature from a File name and location.
 	 *
-	 * @param fileNameToSign
+	 * @param fileNameToSign the filename of content to sign.
 	 * @return a Document with signature
-	 * @throws XMLSignerException
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signDetachedEnveloped(String fileNameToSign) throws XMLSignerException {
 
@@ -309,12 +305,12 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Generates a destached XML signature from byte array
+	 * Generates a destached XML signature from byte array.
 	 *
-	 * @param content
-	 * @param fileNameToSign
-	 * @return
-	 * @throws XMLSignerException
+	 * @param content the content.
+	 * @param fileNameToSign the filename of document to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signDetachedEnveloped(byte[] content, String fileNameToSign) throws XMLSignerException {
 
@@ -340,11 +336,11 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Generates a destached XML signature from hash byte array
+	 * Generates a destached XML signature from hash byte array.
 	 *
-	 * @param hash
-	 * @return
-	 * @throws XMLSignerException
+	 * @param hash the hash.
+	 * @return the documento.
+	 * @throws XMLSignerException the failure produced when signing.
 	 */
 	public Document signDetachedEnveloped(byte[] hash) throws XMLSignerException {
 

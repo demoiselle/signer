@@ -480,20 +480,20 @@ public class Configuration {
 
 	/**
 	 *
-	 * default is true
+	 * default is true.
 	 *
-	 * @return if MSCAPI is ON (true) or OFF (false)
+	 * @return if MSCAPI is ON (true) or OFF (false).
 	 */
 	public static boolean isMSCAPI_ON() {
 		return MSCAPI_ON;
 	}
 
 	/**
-	 * set MSCAPI to ON (true) or OFF (false)
-	 * @param mSCAPI_ON
+	 * set MSCAPI to ON (true) or OFF (false).
+	 * @param mSCAPI_ON the value to set.
+	 *
 	 */
 	public static void setMSCAPI_ON(boolean mSCAPI_ON) {
 		MSCAPI_ON = mSCAPI_ON;
 	}
-
 }

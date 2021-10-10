@@ -38,7 +38,7 @@
 package org.demoiselle.signer.policy.impl.xades;
 
 /**
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
+ * @author Fabiano Kuss &lt;fabiano.kuss@serpro.gov.br&gt;
  */
 public enum SignaturePack {
 

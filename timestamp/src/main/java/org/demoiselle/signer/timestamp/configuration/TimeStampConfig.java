@@ -128,7 +128,7 @@ public class TimeStampConfig {
 	}
 
 	/**
-	 * @return
+	 * @return the timeout.
 	 */
 	public int getTimeOut() {
 		return timeOut;

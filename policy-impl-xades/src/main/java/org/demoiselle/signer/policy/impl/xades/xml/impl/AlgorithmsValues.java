@@ -42,7 +42,7 @@ import java.util.HashMap;
 import org.apache.xml.security.c14n.Canonicalizer;
 
 /**
- * * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
+ * * @author Fabiano Kuss &lt;fabiano.kuss@serpro.gov.br&gt;
  */
 public class AlgorithmsValues {
 	static HashMap<String, String> signatureDigest = null;

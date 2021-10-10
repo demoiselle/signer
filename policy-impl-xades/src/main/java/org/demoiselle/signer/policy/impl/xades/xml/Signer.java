@@ -44,7 +44,7 @@ import java.util.Date;
 import org.w3c.dom.Document;
 
 /**
- * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public interface Signer {
 

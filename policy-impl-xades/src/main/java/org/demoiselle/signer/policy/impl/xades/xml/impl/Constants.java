@@ -38,7 +38,7 @@
 package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
 /**
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
+ * @author Fabiano Kuss &lt;fabiano.kuss@serpro.gov.br&gt;
  */
 public class Constants {
 	public static String SignedProperties = "http://uri.etsi.org/01903#SignedProperties";

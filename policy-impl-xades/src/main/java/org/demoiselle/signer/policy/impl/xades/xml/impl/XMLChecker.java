@@ -102,8 +102,8 @@ import org.w3c.dom.NodeList;
  * presented in
  * https://www.gov.br/iti/pt-br/centrais-de-conteudo/doc-icp-15-03-versao-7-4-req-das-pol-de-assin-dig-na-icp-brasil-pdf
  *
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
- * @author Emerson Saito <emerson.saito@serpro.gov.br>
+ * @author Fabiano Kuss &lt;fabiano.kuss@serpro.gov.br&gt;
+ * @author Emerson Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class XMLChecker implements Checker {
 
@@ -445,11 +445,11 @@ public class XMLChecker implements Checker {
 	}
 
 	/**
-	 * Check detached Signature with signed hash from signed data
+	 * Check detached Signature with signed hash from signed data.
 	 *
-	 * @param docHash
-	 * @param signature
-	 * @return
+	 * @param docHash the hahs.
+	 * @param signature the document.
+	 * @return {@code true} if checked ok.
 	 */
 	public boolean checkHash(byte[] docHash, Document signature) {
 		isDetached = true;

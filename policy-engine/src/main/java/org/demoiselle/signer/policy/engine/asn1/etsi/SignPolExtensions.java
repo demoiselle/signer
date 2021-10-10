@@ -46,9 +46,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  * ETSI TR 102 272 V1.1.1 (2003-12)
- * <p>
- * Additional signature policy rules may be added to:
- * <p>
+ *
+ * <p>Additional signature policy rules may be added to:</p>
+ *
  * <ul>
  * <li>the overall signature policy structure, as defined in clause 6.1;</li>
  * <li>the signature validation policy structure, as defined in clause 6.2;</li>
@@ -59,9 +59,11 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * <li>the revocation requirements in clause 6.6.2;</li>
  * <li>the algorithm constraints in clause 6.10.</li>
  * </ul>
- * These extensions to the signature policy rules shall be defined using
+ *
+ * <p>These extensions to the signature policy rules shall be defined using
  * an ASN.1 syntax with an associated object identifier carried in the
- * SignPolExtn as defined below:
+ * SignPolExtn as defined below:</p>
+ *
  * <pre>
  * SignPolExtensions ::= SEQUENCE OF {@link SignPolExtn}
  * </pre>

@@ -96,11 +96,11 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * Set Date from user's computer when signature was generated (it is NOT a timestamp date)
+	 * Set Date from user's computer when signature was
+	 * generated (it is NOT a timestamp date).
 	 *
-	 * @param signDate
+	 * @param signDate set date of signature.
 	 */
-
 	public void setSignDate(Date signDate) {
 		this.signDate = signDate;
 	}
@@ -113,9 +113,9 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * TimeStamp stored on signature
+	 * TimeStamp stored on signature.
 	 *
-	 * @param timeStampSigner
+	 * @param timeStampSigner the timestamp.
 	 */
 	public void setTimeStampSigner(Timestamp timeStampSigner) {
 		this.timeStampSigner = timeStampSigner;
@@ -144,7 +144,7 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * @param signaturePolicy
+	 * @param signaturePolicy the policy.
 	 */
 	public void setSignaturePolicy(SignaturePolicy signaturePolicy) {
 		this.signaturePolicy = signaturePolicy;
@@ -158,7 +158,7 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * @param validatorErrors
+	 * @param validatorErrors erros produced by validators.
 	 */
 	public void setValidatorErrors(LinkedList<String> validatorErrors) {
 		this.validatorErrors = validatorErrors;
@@ -186,9 +186,9 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * set true (invalid) ou false (valid)
+	 * set true (invalid) ou false (valid).
 	 *
-	 * @param invalidSignature
+	 * @param invalidSignature define validity of signature.
 	 */
 	public void setInvalidSignature(boolean invalidSignature) {
 		this.invalidSignature = invalidSignature;
