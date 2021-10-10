@@ -156,6 +156,17 @@
                             <goal>jar</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>aggregate</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/html</outputDirectory>
+                            <reportOutputDirectory>${basedir}/target/html</reportOutputDirectory>
+                            <overview>${basedir}/parent/overview.html</overview>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
