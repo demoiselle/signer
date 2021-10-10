@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.utils;
 
 import java.io.File;
@@ -45,7 +46,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import org.demoiselle.signer.core.exception.CertificateCoreException;
-
 
 /**
  * Class with utility methods for the time stamp component.
@@ -94,7 +94,7 @@ public class Utils {
 
     /**
      * Writes a set of bytes to a file on disk
-     * 
+     *
      * @param content Content to be written to disk
      * @param parmFile Filename and path
      * @throws CertificateCoreException

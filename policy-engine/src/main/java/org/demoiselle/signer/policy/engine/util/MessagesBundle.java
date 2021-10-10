@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.engine.util;
 
 import java.text.MessageFormat;
@@ -41,39 +42,39 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * 
+ *
  *  Custom Messages Bundle implementation to allows parameterization
  *
  */
 public class MessagesBundle {
 
-	
+
 	private String bundleName = "messages";
-	private static ResourceBundle resouceBundle; 
-	
+	private static ResourceBundle resouceBundle;
+
 	/**
-	 * Default constructor using the messages.properties file 
+	 * Default constructor using the messages.properties file
 	 */
 	public MessagesBundle() {
 		super();
 		MessagesBundle.setResouceBundle(ResourceBundle.getBundle(this.bundleName));
 	}
-	
+
 
 	/**
-	 * 
+	 *
 	 * @param parmBundleName name for a .properties file
 	 */
 	public MessagesBundle(String parmBundleName) {
 		super();
 		this.bundleName = parmBundleName;
-		ResourceBundle varResourceBundle = ResourceBundle.getBundle(this.bundleName); 
+		ResourceBundle varResourceBundle = ResourceBundle.getBundle(this.bundleName);
 		MessagesBundle.setResouceBundle(varResourceBundle);
 	}
 
 	/**
 	 * example: getString("key.propertie.name")
-	 * 
+	 *
 	 * @param key name of key to read
 	 * @return value associated with key, as String
 	 */
@@ -87,7 +88,7 @@ public class MessagesBundle {
 
 	/**
 	 * example: getString("key.propertie.name", parm1, parm2 )
-	 * 
+	 *
 	 * @param key name of key to read from
 	 * @param params values to interpolate result
 	 * @return value associated with key, interpolated by params

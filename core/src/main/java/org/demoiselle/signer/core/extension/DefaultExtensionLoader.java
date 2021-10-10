@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.extension;
 
 import org.demoiselle.signer.core.IOIDExtensionLoader;
@@ -52,7 +53,7 @@ import java.security.cert.X509Certificate;
  *
  */
 public class DefaultExtensionLoader implements IOIDExtensionLoader {
-	
+
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
     @Override

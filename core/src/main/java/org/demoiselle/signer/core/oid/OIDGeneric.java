@@ -34,15 +34,9 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.oid;
 
-/**
- *
- * Generic Class for treatment of some attributes of certificates of ICP-BRASIL, 
- * for: Individual (Pessoa Física) of the Business Entity (Pessoa Jurídica) and Equipment. 
- * In accordance with the standards defined in DOC-ICP-04 v2.0 dated 04/18/2006.
- *
- */
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -60,6 +54,13 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 import sun.security.util.DerValue;
 import sun.security.x509.OtherName;
 
+/**
+ *
+ * Generic Class for treatment of some attributes of certificates of ICP-BRASIL,
+ * for: Individual (Pessoa Física) of the Business Entity (Pessoa Jurídica) and Equipment.
+ * In accordance with the standards defined in DOC-ICP-04 v2.0 dated 04/18/2006.
+ *
+ */
 @SuppressWarnings("restriction")
 public class OIDGeneric {
 
@@ -211,5 +212,5 @@ public class OIDGeneric {
 	public static String getPackageName() {
 		return packageName;
 	}
-	
+
 }

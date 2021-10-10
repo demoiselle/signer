@@ -49,11 +49,11 @@ import org.demoiselle.signer.timestamp.Timestamp;
 
 /**
  * Basic informations about a signature that was validated
- * 
+ *
  * @author emerson.saito@gmail.com
  */
 public class SignatureInformations {
-	
+
 	private LinkedList<X509Certificate> chain;
 	private Date signDate;
     private Timestamp timeStampSigner = null;
@@ -61,12 +61,11 @@ public class SignatureInformations {
     private Date notAfter;
     private LinkedList<String> validatorWarnins = new LinkedList<String>();
     private LinkedList<String> validatorErrors = new LinkedList<String>();
-    private boolean invalidSignature = false; 
+    private boolean invalidSignature = false;
     private BasicCertificate icpBrasilcertificate = null;
 
-
     /**
-     * 
+     *
      * @return list of Certificate chain stored on signature
      */
 	public LinkedList<X509Certificate> getChain() {
@@ -78,8 +77,8 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * 
-	 * @return Date on user's computer when signature was generated (it is NOT a timestamp date) 
+	 *
+	 * @return Date on user's computer when signature was generated (it is NOT a timestamp date)
 	 *
 	 */
 	public Date getSignDate() {
@@ -87,8 +86,8 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * 
-	 * @return String on user's computer in GMT format (dd-MMM-yyyy HH:mm:ss:S z) when signature was generated (it is NOT a timestamp date) 
+	 *
+	 * @return String on user's computer in GMT format (dd-MMM-yyyy HH:mm:ss:S z) when signature was generated (it is NOT a timestamp date)
 	 *
 	 */
 	public String getSignDateGMT() {
@@ -100,18 +99,18 @@ public class SignatureInformations {
 			return null;
 		}
     }
-	
+
 	/**
-	 * Set Date from user's computer when signature was generated (it is NOT a timestamp date) 
+	 * Set Date from user's computer when signature was generated (it is NOT a timestamp date)
 	 * @param signDate
 	 */
-	
+
 	public void setSignDate(Date signDate) {
 		this.signDate = signDate;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return TimeStamp stored on signature
 	 */
 	public Timestamp getTimeStampSigner() {
@@ -125,33 +124,33 @@ public class SignatureInformations {
 	public void setTimeStampSigner(Timestamp timeStampSigner) {
 		this.timeStampSigner = timeStampSigner;
 	}
-	
-	/** 
-	 * 
+
+	/**
+	 *
 	 * @deprecated use getIcpBrasilcertificate()
 	 * @return list of Signers BasicCertificates
 	 */
 	public BasicCertificate getSignerBasicCertificate(){
-		
+
 		for(X509Certificate cert : getChain()){
 			BasicCertificate certificate = new BasicCertificate(cert);
 			if (!certificate.isCACertificate()){
 				return certificate;
-			}												
+			}
 		}
-		return null;		
+		return null;
 	}
 
 	/**
-	 *  
-	 * @return the Signature Policy used 
+	 *
+	 * @return the Signature Policy used
 	 */
 	public SignaturePolicy getSignaturePolicy() {
 		return signaturePolicy;
 	}
 
 	/**
-	 * 
+	 *
 	 * @param signaturePolicy
 	 */
 	public void setSignaturePolicy(SignaturePolicy signaturePolicy) {
@@ -159,7 +158,7 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return a list of Validator Errors
 	 */
 	public LinkedList<String> getValidatorErrors() {
@@ -167,7 +166,7 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param validatorErrors
 	 */
 	public void setValidatorErrors(LinkedList<String> validatorErrors) {
@@ -189,8 +188,8 @@ public class SignatureInformations {
 	}
 
 	/**
-	 * 
-	 * @return if signature is invalid 
+	 *
+	 * @return if signature is invalid
 	 */
 	public boolean isInvalidSignature() {
 		return invalidSignature;
@@ -218,5 +217,5 @@ public class SignatureInformations {
 
 	public void setValidatorWarnins(LinkedList<String> validatorWarnins) {
 		this.validatorWarnins = validatorWarnins;
-	}	
+	}
 }

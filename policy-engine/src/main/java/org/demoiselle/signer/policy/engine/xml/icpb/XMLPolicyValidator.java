@@ -41,6 +41,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
+
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.engine.exception.PolicyException;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
@@ -53,11 +54,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 /**
- * 
  * Validate if a policy is on valid period and not revoked
- * 
- * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
  *
+ * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
  */
 public class XMLPolicyValidator {
 
@@ -78,10 +77,10 @@ public class XMLPolicyValidator {
 		boolean valid = false;
 
 		getXmlSignaturePolicy()
-				.setPolicyIssuerName(xsp.getElementsByTagName("pa:PolicyIssuerName").item(0).getTextContent());
+			.setPolicyIssuerName(xsp.getElementsByTagName("pa:PolicyIssuerName").item(0).getTextContent());
 		getXmlSignaturePolicy().setIdentifier(xsp.getElementsByTagName("XAdES:Identifier").item(0).getTextContent());
 		getXmlSignaturePolicy()
-				.setFieldOfApplication(xsp.getElementsByTagName("pa:FieldOfApplication").item(0).getTextContent());
+			.setFieldOfApplication(xsp.getElementsByTagName("pa:FieldOfApplication").item(0).getTextContent());
 
 		NodeList paSignerRules = xsp.getElementsByTagName("pa:SignerRules");
 		XMLSignerRules xmlSignerRules = new XMLSignerRules();
@@ -95,11 +94,11 @@ public class XMLPolicyValidator {
 				for (int k = 0; k < signerRuleChildNodeList.getLength(); k++) {
 					if (typeOfProperties.equalsIgnoreCase("pa:MandatedSignedQProperties")) {
 						xmlSignerRules.getMandatedSignedQProperties()
-								.add(signerRuleChildNodeList.item(k).getTextContent());
+							.add(signerRuleChildNodeList.item(k).getTextContent());
 					}
 					if (typeOfProperties.equalsIgnoreCase("pa:MandatedUnsignedQProperties")) {
 						xmlSignerRules.getMandatedUnsignedQProperties()
-								.add(signerRuleChildNodeList.item(k).getTextContent());
+							.add(signerRuleChildNodeList.item(k).getTextContent());
 					}
 				}
 			}
@@ -115,7 +114,7 @@ public class XMLPolicyValidator {
 				NodeList algAndLengthNodeList = algAndLength.getChildNodes();
 				XMLSignerAlgConstraint xmlSignerAlgConstraint = new XMLSignerAlgConstraint();
 				for (int k = 0; k < algAndLengthNodeList.getLength(); k++) {
-					Node childNode = algAndLengthNodeList.item(k);				
+					Node childNode = algAndLengthNodeList.item(k);
 					if (childNode.getNodeName().equalsIgnoreCase("pa:AlgId")) {
 						xmlSignerAlgConstraint.setAlgId(childNode.getTextContent());
 					}
@@ -149,9 +148,9 @@ public class XMLPolicyValidator {
 		Date actualDate = new GregorianCalendar().getTime();
 		if (actualDate.before(xspNotBeforeDate) || actualDate.after(xspNotAfterDate)) {
 			LOGGER.error(policyMessagesBundle.getString("error.policy.valid.period", sdf.format(xspNotBeforeDate),
-					sdf.format(xspNotAfterDate)));
+				sdf.format(xspNotAfterDate)));
 			throw new PolicyException(policyMessagesBundle.getString("error.policy.valid.period",
-					sdf.format(xspNotBeforeDate), sdf.format(xspNotAfterDate)));
+				sdf.format(xspNotBeforeDate), sdf.format(xspNotAfterDate)));
 		}
 		PolicyFactory factory = PolicyFactory.getInstance();
 		Document tempLPAXML = factory.loadLPAXAdES();
@@ -178,7 +177,7 @@ public class XMLPolicyValidator {
 				}
 				if (actualDate.after(lpaNextUpdateDate)) {
 					LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",
-							config.getLpaPath() + "LPA_XAdES.xml", sdf.format(lpaNextUpdateDate)));
+						config.getLpaPath() + "LPA_XAdES.xml", sdf.format(lpaNextUpdateDate)));
 					tempLPAXML = factory.loadLPAXAdESUrl();
 					if (tempLPAXML != null) {
 						lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
@@ -187,11 +186,11 @@ public class XMLPolicyValidator {
 						} catch (ParseException e) {
 							LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 							throw new PolicyException(
-									policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+								policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 						}
 						if (actualDate.after(lpaNextUpdateDate)) {
 							LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
-									sdf.format(lpaNextUpdateDate)));
+								sdf.format(lpaNextUpdateDate)));
 						} else {
 							setLPAXML(tempLPAXML);
 						}
@@ -211,7 +210,7 @@ public class XMLPolicyValidator {
 					}
 					if (actualDate.after(lpaNextUpdateDate)) {
 						LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
-								sdf.format(lpaNextUpdateDate)));
+							sdf.format(lpaNextUpdateDate)));
 					} else {
 						setLPAXML(tempLPAXML);
 					}
@@ -238,21 +237,21 @@ public class XMLPolicyValidator {
 						} catch (ParseException e) {
 							LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 							throw new PolicyException(
-									policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+								policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 						}
 					}
 					String textPolicyOID = "";
 					if (elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:policyOIDurn")
-							|| elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:policyOID")) {
+						|| elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:policyOID")) {
 						textPolicyOID = elementPolicyInfochild.getTextContent();
 					}
 					// Found a policy on LPA
 					if (textPolicyOID.equalsIgnoreCase(textPolicyIdentifier)) {
 						if (policyRevogationDate != null) {
 							LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",
-									sdf.format(policyRevogationDate)));
+								sdf.format(policyRevogationDate)));
 							throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",
-									sdf.format(policyRevogationDate)));
+								sdf.format(policyRevogationDate)));
 						}
 						valid = true;
 					}

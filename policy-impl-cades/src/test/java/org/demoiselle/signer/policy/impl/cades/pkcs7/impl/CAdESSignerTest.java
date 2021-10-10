@@ -34,47 +34,28 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
-import java.security.KeyStore.Builder;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.Security;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.X509Certificate;
-import java.util.Enumeration;
-import java.util.List;
-
-import javax.net.ssl.KeyManagerFactory;
-
 import org.apache.commons.codec.binary.Base64;
-import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
-import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
-import org.demoiselle.signer.core.util.Proxy;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
-import org.junit.Test;
+
+import java.io.*;
+import java.security.*;
+import java.security.KeyStore.Builder;
+import java.security.cert.Certificate;
+import java.util.Enumeration;
+
+import static org.junit.Assert.assertTrue;
 
 
 /**
@@ -87,7 +68,7 @@ public class CAdESSignerTest {
 	// locais.
 
 	/**
-	 * 
+	 *
 	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do token.
 	 */
 	@SuppressWarnings("restriction")
@@ -120,13 +101,13 @@ public class CAdESSignerTest {
 		}
 
 	}
-	
-	
+
+
 	// Usa o Signer para leitura, funciona para windows e NeoID
 	private KeyStore getKeyStoreTokenBySigner() {
 
 		try {
-			
+
 			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
 			KeyStore keyStore = keyStoreLoader.getKeyStore();
 
@@ -139,17 +120,17 @@ public class CAdESSignerTest {
 		}
 
 	}
-	
-	
+
+
 	// lê pelo InputStream
 	private KeyStore getKeyStoreStreamBySigner() {
 
 		try {
-			
+
 			// informar o caminho e nome do arquivo
 			String filep12 = "/";
-			
-						
+
+
 			InputStream readStream = readStream(filep12);
 
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(readStream);
@@ -164,8 +145,8 @@ public class CAdESSignerTest {
 		}
 
 	}
-	
-	
+
+
 	/**
 	 * le a partir do arquivo .p12 ou pfx
 	 * @return
@@ -175,10 +156,10 @@ public class CAdESSignerTest {
 		try {
 
 
-			
+
 			// informar o caminho e nome do arquivo
 			File filep12 = new File("/home/signer/Documentos/00NeoSigner/pf01.p12");
-			
+
 
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
 			// Informar a senha
@@ -192,19 +173,19 @@ public class CAdESSignerTest {
 		}
 
 	}
-	
-	
+
+
 	/**
-	 * 
+	 *
 	 * Keytore a partir de MSCAPI
 	 */
 
 	private KeyStore getKeyStoreOnWindows() {
 
 		try {
-			
+
 			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
-			
+
 			KeyStore ks = msKeyStoreLoader.getKeyStore();
 
 			return ks;
@@ -215,9 +196,9 @@ public class CAdESSignerTest {
 		}
 
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Teste com envio do conteúdo
 	 */
@@ -228,12 +209,12 @@ public class CAdESSignerTest {
 			System.out.println("******** TESTANDO COM ARQUIVO *****************");
 
 			// INFORMAR o arquivo
-			
+
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
 			String fileDirName = "/tmp/";
 			byte[] fileToSign;
-			
+
 			fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
 			// se informar o fileDirName decomentar abaixo
 			//fileToSign = readContent(fileDirName);
@@ -249,7 +230,7 @@ public class CAdESSignerTest {
 			//Proxy.setProxyUsuario("usuario");
 			//Proxy.setProxy();
 
-			
+
 			// Para certificado NeoID e windows token
 			KeyStore ks = getKeyStoreTokenBySigner();
 
@@ -262,13 +243,13 @@ public class CAdESSignerTest {
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
-			
+
 			String alias = getAlias(ks);
 			//String aliasToTs = getAlias(ksToTS);
 			//char[] senhaTS = "senha".toCharArray();
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
-			
+
 			signer.setCertificates(ks.getCertificateChain(alias));
 
 			// para token
@@ -278,7 +259,7 @@ public class CAdESSignerTest {
 			// quando certificado em arquivo, precisa informar a senha
 			//char[] senha = "teste".toCharArray();
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
-			
+
 			// politica referencia básica sem carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
@@ -286,7 +267,7 @@ public class CAdESSignerTest {
 			// pode ser outro certificado para timestamp
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));
 			//signer.setPrivateKeyForTimeStamp((PrivateKey) ksToTS.getKey(aliasToTs, senhaTS));
-						
+
 			// referencia de validação
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RV_CADES_2_3);
 			// para mudar o algoritimo
@@ -299,27 +280,27 @@ public class CAdESSignerTest {
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
 			// Assinatura desatachada
-			
+
 			// Cache de cadeia
 			//CAManagerConfiguration config = CAManagerConfiguration.getInstance();
 			//config.setCached(true);
 			//org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance().setCached(true);
-			
+
 			// Cache LCR
 			//ConfigurationRepo config = ConfigurationRepo.getInstance();
 			//config.setCrlIndex("crl_index");
 			//config.setCrlPath("/tmp/lcr_cache/");
 			//config.setOnline(false);
 			//config.setValidateLCR(false);
-			
-			
+
+
 			// Diretorio LPA
 			//ConfigurationRepo config = ConfigurationRepo.getInstance();
 			//config.setLpaPath("/home/signer/lpa/");
 			// LPA online
 			//config.setOnlineLPA(false);
-			
-			
+
+
 			TimeStampConfig tsConfig = TimeStampConfig.getInstance();
 			tsConfig.setTimeOut(100);
 			tsConfig.setConnectReplay(2);
@@ -348,14 +329,14 @@ public class CAdESSignerTest {
 		try {
 
 			System.out.println("******** TESTANDO COM HASH *****************");
-			
+
 			// INFORMAR o arquivo para gerar o hash
 			String fileDirName = "/tmp/";
-									
-						
+
+
 			//byte[] fileToSign = readContent(fileDirName);
 
-		
+
 			// Para certificado em arquivo A1 é preciso essa senha para PrivateKey
 			// para token troque a senha em: getKeyStoreToken()
 			//char[] senha = "senha".toCharArray();
@@ -366,10 +347,10 @@ public class CAdESSignerTest {
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
 
-			
+
 			// Para certificado em token
 			//KeyStore ks = getKeyStoreToken();
-			
+
 			// Para certificado NeoID e windows token
 			KeyStore ks = getKeyStoreTokenBySigner();
 
@@ -388,21 +369,21 @@ public class CAdESSignerTest {
 			if (varSO.contains("indows")) {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			}
-			
+
 			byte[] hash = Base64.decodeBase64("dvlpOKVdXfIrnWqTVRyMcElaRRcbSqXokpISZxawfoU\\u003d");
-					
-			//String contentEncoded = Base64.encodeBase64String(fileToSign);	                	
-        	//System.out.println("contentEncoded : "+contentEncoded);	                	
-            //String hashEncoded = new String(Base64.encodeBase64(hash));	                    
+
+			//String contentEncoded = Base64.encodeBase64String(fileToSign);
+        	//System.out.println("contentEncoded : "+contentEncoded);
+            //String hashEncoded = new String(Base64.encodeBase64(hash));
             //System.out.println("hashEncoded: "+hashEncoded);
-			
+
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
 			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
-			
+
 			// Para certificado em arquivo A1
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias,senha));
 
@@ -415,7 +396,7 @@ public class CAdESSignerTest {
 			// com carimbo de tempo
 			// signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 
-			
+
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do hash");
@@ -440,13 +421,13 @@ public class CAdESSignerTest {
 	//@Test
 	public void testSignAttached() {
 		try {
-			
+
 			System.out.println("******** TESTANDO COM CONTEÚDO ATACHADO*****************");
 
 			// INFORMAR o arquivo
 			String fileDirName = "/";
-			
-			
+
+
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
@@ -454,7 +435,7 @@ public class CAdESSignerTest {
 
 			// Para certificado em Token
 			//KeyStore ks = getKeyStoreToken();
-			
+
 			// Para certificado NeoID e windows token
 			KeyStore ks = getKeyStoreTokenBySigner();
 
@@ -464,7 +445,7 @@ public class CAdESSignerTest {
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
-			
+
 			String alias = getAlias(ks);
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
@@ -479,7 +460,7 @@ public class CAdESSignerTest {
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
-			
+
 			// Referencia de validação
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RA_CADES_2_4);
 
@@ -503,7 +484,7 @@ public class CAdESSignerTest {
 			assertTrue(true);
 		} catch (KeyStoreException | NoSuchAlgorithmException | UnrecoverableKeyException | IOException ex) {
 			ex.printStackTrace();
-			assertTrue(false);			
+			assertTrue(false);
 		}
 	}
 
@@ -519,7 +500,7 @@ public class CAdESSignerTest {
 			// INFORMAR o arquivo
 			String fileDirName = "caminha do arquivo do conteudo";
 			String fileSignatureDirName = "caminho do arquivo com a(s) assinatura(s) .p7s";
-					
+
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
 
@@ -532,17 +513,17 @@ public class CAdESSignerTest {
 			// Para certificado em Token
 			// KeyStore ks = getKeyStoreToken();
 
-			
+
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
-			
-			
+
+
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
 
 			String alias = getAlias(ks);
-			
+
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
@@ -593,7 +574,7 @@ public class CAdESSignerTest {
 			// INFORMAR o arquivo
 			String fileDirName = "";
 			String fileSignatureDirName = "";
-			
+
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
 
@@ -606,17 +587,17 @@ public class CAdESSignerTest {
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
 
-			
+
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
-			
-			
+
+
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
 
 			String alias = getAlias(ks);
-			
+
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
@@ -654,8 +635,8 @@ public class CAdESSignerTest {
 			assertTrue(false);
 		}
 	}
-	
-	
+
+
 	/**
 	 * Teste de coassinatura com envio do hash calculado
 	 */
@@ -668,13 +649,13 @@ public class CAdESSignerTest {
 			// INFORMAR o arquivo
 			String fileDirName = "/";
 			String fileSignatureDirName = "/";
-						
+
 
 			byte[] fileToSign = readContent(fileDirName);
 			byte[] signatureFile = readContent(fileSignatureDirName);
-			
-			
-			
+
+
+
 			// gera o hash do arquivo
 			java.security.MessageDigest md = java.security.MessageDigest
 					.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
@@ -684,9 +665,9 @@ public class CAdESSignerTest {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			}
 
-			
+
 			byte[] hash = md.digest(fileToSign);
-			
+
 			String hashEncoded = new String(Base64.encodeBase64(hash));
 			System.out.println("Hash_Encoded"+hashEncoded);
 
@@ -698,16 +679,16 @@ public class CAdESSignerTest {
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
-			
-			
+
+
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
-			
-			
+
+
 			KeyStore ks = getKeyStoreTokenBySigner();
 
 			String alias = getAlias(ks);
-			
+
 			/* Parametrizando o objeto doSign */
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
@@ -728,7 +709,7 @@ public class CAdESSignerTest {
 			if (varSO.contains("indows")) {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
-			
+
 			// Cache LCR
 			ConfigurationRepo config = ConfigurationRepo.getInstance();
 			//config.setCrlIndex(".crl_index");
@@ -749,7 +730,7 @@ public class CAdESSignerTest {
 			ex.printStackTrace();
 			assertTrue(false);
 		}
-	}	
+	}
 
 	private byte[] readContent(String parmFile) {
 		byte[] result = null;
@@ -764,7 +745,7 @@ public class CAdESSignerTest {
 		}
 		return result;
 	}
-	
+
 	private InputStream readStream(String parmFile) {
 		InputStream result = null;
 		try {

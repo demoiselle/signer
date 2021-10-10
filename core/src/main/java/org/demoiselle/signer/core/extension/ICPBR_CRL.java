@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.extension;
 
 import java.io.ByteArrayInputStream;
@@ -48,8 +49,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
- *  ICP-BRASIL's definitions of Certificate revocation list (CRL) on java.security.cert.X509CRL format 
+ *
+ *  ICP-BRASIL's definitions of Certificate revocation list (CRL) on java.security.cert.X509CRL format
  *
  */
 public class ICPBR_CRL {

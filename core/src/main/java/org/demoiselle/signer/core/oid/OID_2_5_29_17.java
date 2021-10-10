@@ -34,22 +34,23 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.oid;
 
 
 /**
  * subjectAltName
- * 
- * Subject alternative name ("subjectAltName" extension)  
- * 
- * See IETF RFC 5280.  
+ *
+ * Subject alternative name ("subjectAltName" extension)
+ *
+ * See IETF RFC 5280.
  *
  * @author Emerson Sachio Saito <emerson.saito@gmail.com>
  */
 public class OID_2_5_29_17 extends OIDGeneric {
 
     public static final String OID = "2.5.29.17";
-    
+
 
 	public OID_2_5_29_17() {
 	}
@@ -59,13 +60,13 @@ public class OID_2_5_29_17 extends OIDGeneric {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return subjectAltName
 	 */
 	public String getSubjectAltName() {
 		return super.getData();
 	}
-    
-    
+
+
 
 }

@@ -34,42 +34,30 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.apache.commons.codec.binary.Base64;
-import org.bouncycastle.cert.X509CertificateHolder;
-import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
-import org.bouncycastle.cms.CMSException;
-import org.bouncycastle.cms.CMSProcessableByteArray;
-import org.bouncycastle.cms.CMSSignedData;
-import org.bouncycastle.cms.SignerInformation;
 import org.demoiselle.signer.core.CertificateLoader;
 import org.demoiselle.signer.core.CertificateLoaderImpl;
-import org.demoiselle.signer.core.CertificateManager;
-import org.demoiselle.signer.core.ca.manager.CAManager;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.Base64Utils;
-import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.Ignore;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.cert.X509Certificate;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 //import br.gov.serpro.supcd.lcrmanager.sync.LcrManagerSync;
 //import br.gov.serpro.supcd.lcrmanager.sync.exception.LcrManagerSyncException;
@@ -77,9 +65,10 @@ import org.junit.Test;
 /**
  *
  */
+@Ignore
 @SuppressWarnings("unused")
 public class CAdESCheckerTest {
-	
+
 
 	/**
 	 * Verifica assinatura desanexada do arquivo
@@ -88,8 +77,8 @@ public class CAdESCheckerTest {
 	public void testVerifyDetachedSignature() {
 		String fileToVerifyDirName = "/";
 		String fileSignatureDirName = "/";
-		
-		
+
+
 		byte[] fileToVerify;
 		byte[] signatureFile;
 		fileToVerify = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
@@ -97,8 +86,8 @@ public class CAdESCheckerTest {
 		// Caso informe o arquivo descomentar abaixo
 		//fileToVerify = readContent(fileToVerifyDirName);
 		//signatureFile = readContent(fileSignatureDirName);
-		
-		
+
+
         //Configura cache do demoseille signer:
         CAManagerConfiguration config = CAManagerConfiguration.getInstance();
         config.setCached(true);
@@ -110,8 +99,8 @@ public class CAdESCheckerTest {
         configlcr.setCrlPath("/tmp/lcrs");
         configlcr.setOnline(false);
         System.setProperty("lcr.manager.sync.strategy", "REPLICATE");
-        
-        		
+
+
 		// cache interno
         /*
 		try {
@@ -120,21 +109,21 @@ public class CAdESCheckerTest {
 		    X509CertificateHolder certificateHolder = (X509CertificateHolder) cms.getCertificates().getMatches(signerInfo.getSID())
                 .iterator().next();
 		    X509Certificate varCert;
-		
+
 			varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
 			LcrManagerSync  lMS=  LcrManagerSync.getInstance();
 			lMS.update(varCert);
-			
-	        
+
+
 
 		} catch (CertificateException e) {
 			e.printStackTrace();
 		} catch (LcrManagerSyncException e) {
 			e.printStackTrace();
 		} catch (CMSException e) {
-			e.printStackTrace();		
+			e.printStackTrace();
 		}*/
-        
+
 
 		CAdESChecker checker = new CAdESChecker();
 
@@ -163,7 +152,7 @@ public class CAdESCheckerTest {
 				}
 				// Carimbo do tempo
 				if(si.getTimeStampSigner()!= null) {
-					
+
 					System.out.println(si.getTimeStampSigner().toString());
 				}
 				// A assinatura pode estar correta mas não foi possível verificar algum atributo exigido pela ICP-Brasil
@@ -193,8 +182,8 @@ public class CAdESCheckerTest {
 	public void testVerifyAttachedSignature() {
 
 		String fileSignatureDirName = "/";
-		
-	
+
+
 
 		byte[] signatureFile = readContent(fileSignatureDirName);
 
@@ -224,7 +213,7 @@ public class CAdESCheckerTest {
 				}
 				// Carimbo do tempo
 				if(si.getTimeStampSigner()!= null) {
-					
+
 					System.out.println(si.getTimeStampSigner().toString());
 				}
 				// A assinatura pode estar correta mas não foi possível verificar algum atributo
@@ -266,23 +255,23 @@ public class CAdESCheckerTest {
 		try {
 			// é necessário ter certeza do OID do Hash que foi gerada a
 			// assinatura (no windws por restrição do token branco, é 256.
-			
+
 			md = java.security.MessageDigest
 					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
-			
+
 			//md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 
 			// gera o hash do arquivo que foi assinado
 			byte[] hash = md.digest(fileToVerify);
-			
-			
+
+
 			String base64String = 	Base64Utils.base64Encode(hash);
-			
+
 			System.out.println(base64String);
 
 			CAdESChecker checker = new CAdESChecker();
-			
-			
+
+
 
 			System.out.println("Efetuando a validacao da assinatura");
 			System.out.println("OID_hash"+ SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash());
@@ -313,7 +302,7 @@ public class CAdESCheckerTest {
 					}
 					// Carimbo do tempo
 					if(si.getTimeStampSigner()!= null) {
-						
+
 						System.out.println(si.getTimeStampSigner().toString());
 					}
 					// A assinatura pode estar correta mas não foi possível verificar algum atributo
@@ -337,13 +326,13 @@ public class CAdESCheckerTest {
 			assertTrue(false);
 		}
 	}
-	
-	
-	
+
+
+
 	/**
 	 * Verifica assinatura com conteúdo anexado e extrai o conteúdo
-	 * 
-	 * O componente não interpreta o tipo do contéudo anexado na assinatura 
+	 *
+	 * O componente não interpreta o tipo do contéudo anexado na assinatura
 	 * portanto o sistema deve ter essa informação se for tratar o contéudo anexado
 	 */
 	// @Test
@@ -355,7 +344,7 @@ public class CAdESCheckerTest {
 
 		CAdESChecker checker = new CAdESChecker();
 		AttachedContentValidation varAttachedContentValidation =checker.getAttached(signatureFile, true);
-		
+
 		System.out.println("Efetuando a validacao da assinatura");
 		List<SignatureInformations> signaturesInfo = varAttachedContentValidation.getSignaturesInfo();
 		if (signaturesInfo != null) {
@@ -379,7 +368,7 @@ public class CAdESCheckerTest {
 				}
 				// Carimbo do tempo
 				if(si.getTimeStampSigner()!= null) {
-					
+
 					System.out.println(si.getTimeStampSigner().toString());
 				}
 				// A assinatura pode estar correta mas não foi possível verificar algum atributo
@@ -393,7 +382,7 @@ public class CAdESCheckerTest {
 				}
 
 			}
-			
+
 			File file = new File("new_extrated_content");
 			FileOutputStream os;
 			try {
@@ -406,7 +395,7 @@ public class CAdESCheckerTest {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-						
+
 			assertTrue(true);
 
 		} else {
@@ -414,7 +403,7 @@ public class CAdESCheckerTest {
 			assertTrue(false);
 		}
 	}
-	
+
 	/**
 	 * Verifica assinatura desanexada do a partir de um BASE64
 	 */
@@ -422,10 +411,10 @@ public class CAdESCheckerTest {
 	public void testVerifyDetachedSignatureBase64() {
 		String fileToVerifyOnBase64 = "";
 		String signatureOnBase64 = "";
-		
+
 		byte[] fileToVerify = Base64Utils.base64Decode(fileToVerifyOnBase64);
 		byte[] signatureFile = Base64Utils.base64Decode(signatureOnBase64);
-		
+
         //Configura cache do demoseille signer:
         CAManagerConfiguration config = CAManagerConfiguration.getInstance();
         config.setCached(true);
@@ -460,7 +449,7 @@ public class CAdESCheckerTest {
 				}
 				// Carimbo do tempo
 				if(si.getTimeStampSigner()!= null) {
-					
+
 					System.out.println(si.getTimeStampSigner().toString());
 				}
 				// A assinatura pode estar correta mas não foi possível verificar algum atributo exigido pela ICP-Brasil
@@ -482,15 +471,15 @@ public class CAdESCheckerTest {
 			assertTrue(false);
 		}
 	}
-	
+
 	//@Test
 	public void testVerifyCertificate() {
-		
+
 		File fileToVerify = new File("/");
-		
 
 
-		
+
+
 		CertificateLoader loader = new CertificateLoaderImpl();
         X509Certificate certificado = loader.load(fileToVerify);
         BasicCertificate signerCertificate = new BasicCertificate(certificado);
@@ -513,7 +502,7 @@ public class CAdESCheckerTest {
 				System.out.println("Nivel:"+signerCertificate.getCertificateLevel());
 			}
 		}
-		/*		
+		/*
 		try {
 			CertificateManager cm = new CertificateManager(certificado);
 			assertTrue(true);
@@ -521,15 +510,15 @@ public class CAdESCheckerTest {
 			assertTrue(false);
 			ex.printStackTrace();
 		}
-		
+
 		LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(certificado);
 		// menor que 2 = autoAssinado
 		if (varChain.size() < 2){
 			assertTrue(false);
-			System.out.println("Erro");			
-		}*/					
+			System.out.println("Erro");
+		}*/
 	}
-	
+
 
 	private byte[] readContent(String parmFile) {
 		byte[] result = null;
@@ -554,7 +543,7 @@ public class CAdESCheckerTest {
 		byte[] signature = Base64.decodeBase64(imgPDF);
 
 		File file = new File("/.p7s");
-		
+
 
 
 		FileOutputStream os;
@@ -571,16 +560,16 @@ public class CAdESCheckerTest {
 	}
 	//@Test
 	public void testGerarBase64FromFile (){
-		
+
 		String fileToVerifyDirName = "/";
-				
-		
+
+
 		byte[] fileToVerify = readContent(fileToVerifyDirName);
 		String S = Base64.encodeBase64String(fileToVerify);
 		System.out.println(S);
-	
+
 	}
-	
-	
+
+
 
 }

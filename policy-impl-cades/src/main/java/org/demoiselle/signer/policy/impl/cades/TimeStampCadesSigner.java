@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades;
 
 import java.security.PrivateKey;
@@ -48,78 +49,72 @@ import org.demoiselle.signer.timestamp.Timestamp;
  */
 public interface TimeStampCadesSigner {
 
-
     /**
-     * 
-     * Generates a timestamp for a Digital Signature on CADES format, 
+     *
+     * Generates a timestamp for a Digital Signature on CADES format,
      * the result will contains the signature whith timestamp
      * @param signature signature to be timestamped
      * @return timestamped signature
      */
-    abstract public byte[] doTimeStampForSignature (byte[] signature);
-    
-    
+	byte[] doTimeStampForSignature(byte[] signature);
+
     /**
-     * 
-     * Generates a timestamp for a content 
+     *
+     * Generates a timestamp for a content
      * @param content to be sign
      * @return timeStamp timestamped content
      */
-    abstract public byte[] doTimeStampForContent (byte[] content);
-    
-    
+	byte[] doTimeStampForContent(byte[] content);
+
     /**
-     * 
-     * Generates a timestamp to a previous calculated hash from a content 
+     *
+     * Generates a timestamp to a previous calculated hash from a content
      * @param hash to be sign
      * @return timeStamp timestamped hash
      */
-    abstract public byte[] doTimeStampFromHashContent (byte[] hash);
-        
+	byte[] doTimeStampFromHashContent(byte[] hash);
+
     /**
      * Check a timestamp on CADES signature
-     * 
+     *
      * @param signature CADES signature
      * @return list of timestamps
     */
-   abstract public List<Timestamp> checkTimeStampOnSignature(byte[] signature);
-      
+	List<Timestamp> checkTimeStampOnSignature(byte[] signature);
+
    /**
-    * Check a timestamp for a informed content 
+    * Check a timestamp for a informed content
     * @param timeStamp timestamp to check
     * @param content content related to timestamp
     * @return Timestamp
     */
-   	abstract public Timestamp checkTimeStampWithContent (byte[] timeStamp, byte[] content);
-   	
+   Timestamp checkTimeStampWithContent(byte[] timeStamp, byte[] content);
+
    	/**
-     * Check a timestamp for a informed calculated hash from content 
+     * Check a timestamp for a informed calculated hash from content
      * @param timeStamp timestamp content
      * @param hash hash to check
      * @return Timestamp
      */
-    abstract public Timestamp checkTimeStampWithHash (byte[] timeStamp, byte[] hash);
-
+	Timestamp checkTimeStampWithHash(byte[] timeStamp, byte[] hash);
 
     /**
      * Private key required for asymmetric cryptography
      *
      * @param privateKey set private key
      */
-    abstract public void setPrivateKey(PrivateKey privateKey);
+	void setPrivateKey(PrivateKey privateKey);
 
-    
 	/**
-	 *  Assign a Certificate 
+	 *  Assign a Certificate
 	 * @param certificate set certificate
 	 */
-    abstract public void setCertificates(Certificate certificate[]);
-    
+	void setCertificates(Certificate certificate[]);
+
     /**
-     * Set a signature policy 
-     * 
+     * Set a signature policy
+     *
      * @param signaturePolicy set signature policy
      */
-    abstract public void setSignaturePolicy(PolicyFactory.Policies signaturePolicy);
-
+	void setSignaturePolicy(PolicyFactory.Policies signaturePolicy);
 }

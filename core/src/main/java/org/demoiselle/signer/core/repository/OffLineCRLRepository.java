@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.repository;
 
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
@@ -60,12 +61,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of an Offline Repository. 
- * In this case, only the file system will be used to recover the CRL files. 
+ * Implementation of an Offline Repository.
+ * In this case, only the file system will be used to recover the CRL files.
  * It is recommended in this case, that there is some service constantly updating these CRL's files.
  */
 public class OffLineCRLRepository implements CRLRepository {
-	
+
 	private final ConfigurationRepo config;
     private final Logger logger = LoggerFactory.getLogger(OffLineCRLRepository.class);
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
@@ -116,8 +117,8 @@ public class OffLineCRLRepository implements CRLRepository {
     }
 
     /**
-     * 
-     * @param uRLCRL a valid url address 
+     *
+     * @param uRLCRL a valid url address
      * @return
      */
     private ICPBR_CRL getICPBR_CRL(String uRLCRL) {

@@ -3,37 +3,38 @@
  * Copyright (C) 2016 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
- * 
+ *
  * Demoiselle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
  * as published by the Free Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License version 3
  * along with this program; if not,  see <http://www.gnu.org/licenses/>
  * or write to the Free Software Foundation, Inc., 51 Franklin Street,
  * Fifth Floor, Boston, MA  02110-1301, USA.
  * ----------------------------------------------------------------------------
  * Este arquivo é parte do Framework Demoiselle.
- * 
+ *
  * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
  * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
  * do Software Livre (FSF).
- * 
+ *
  * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
  * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
  * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
  * para maiores detalhes.
- * 
+ *
  * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
  * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 import org.bouncycastle.asn1.ASN1Primitive;
@@ -42,18 +43,18 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * 
+ *
  * The policyConstraints extension constrains path processing in two ways.
  *  It can be used to prohibit policy mapping or require that each certificate
  *  in a path contain an acceptable policy identifier.
- *  The policyConstraints field, if present specifies requirement for explicit indication 
+ *  The policyConstraints field, if present specifies requirement for explicit indication
  *  of the certificate policy and/or the constraints on policy mapping.
- *  
+ *
  *  PolicyConstraints ::= SEQUENCE {
  *  			requireExplicitPolicy [0] SkipCerts OPTIONAL,
- *  			inhibitPolicyMapping [1] SkipCerts OPTIONAL 
+ *  			inhibitPolicyMapping [1] SkipCerts OPTIONAL
  *  }
- *  
+ *
  *  			{@link SkipCerts} ::= INTEGER (0..MAX)
  *
  */

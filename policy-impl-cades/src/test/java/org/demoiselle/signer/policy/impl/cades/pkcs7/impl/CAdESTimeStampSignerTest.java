@@ -1,50 +1,77 @@
+/*
+ * Demoiselle Framework
+ * Copyright (C) 2016 SERPRO
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
+ *
+ * Demoiselle Framework is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License version 3
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License version 3
+ * along with this program; if not,  see <http://www.gnu.org/licenses/>
+ * or write to the Free Software Foundation, Inc., 51 Franklin Street,
+ * Fifth Floor, Boston, MA  02110-1301, USA.
+ * ----------------------------------------------------------------------------
+ * Este arquivo é parte do Framework Demoiselle.
+ *
+ * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
+ * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
+ * do Software Livre (FSF).
+ *
+ * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
+ * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
+ * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
+ * para maiores detalhes.
+ *
+ * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
+ * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
+ * ou escreva para a Fundação do Software Livre (FSF) Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
+ */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
-import static org.junit.Assert.*;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.timestamp.Timestamp;
+import org.junit.Ignore;
 
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.KeyStore;
+import javax.net.ssl.KeyManagerFactory;
+import java.io.*;
+import java.security.*;
 import java.security.KeyStore.Builder;
-import java.security.KeyStoreException;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.Security;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 import java.util.List;
 
-import javax.net.ssl.KeyManagerFactory;
+import static org.junit.Assert.assertTrue;
 
-import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
-import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
-import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
-import org.demoiselle.signer.timestamp.Timestamp;
-import org.junit.Test;
-
+@Ignore
 @SuppressWarnings("unused")
 public class CAdESTimeStampSignerTest {
 
 	// TESTES COMENTADOS PARA BUILD
-	
+
 	//@Test
 	public void testDoTimeStampForSignature() {
 		String fileSignatureDirName = "/.p7s";
-						
+
 		try {
-			
+
 			// Para certificado em Token
 			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows ou NeoID
 			 KeyStore ks = getKeyStoreTokenBySigner();
-			
+
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
 
@@ -52,7 +79,7 @@ public class CAdESTimeStampSignerTest {
 			//char[] senha = "senha".toCharArray();
 
 			String alias = getAlias(ks);
-			
+
 			byte[] signatureFile = readContent(fileSignatureDirName);
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 
@@ -63,7 +90,7 @@ public class CAdESTimeStampSignerTest {
 
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
-			
+
 			byte[] signatureWithTimeStamp = varCAdESTimeStampSigner
 					.doTimeStampForSignature(signatureFile);
 
@@ -84,25 +111,25 @@ public class CAdESTimeStampSignerTest {
 	//@Test
 	public void testDoTimeStampForContent() {
 		String fileDirName = "/";
-				
+
 		try {
-			
+
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
-			
-			
+
+
 			// Para certificado em arquivo A1
-			// KeyStore ks = getKeyStoreFile();			
+			// KeyStore ks = getKeyStoreFile();
 
 			// quando certificado em arquivo, precisa informar a senha
 			//char[] senha = "senha".toCharArray();
 
 
 			String alias = getAlias(ks);
-			
+
 			byte[] content = readContent(fileDirName);
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 
@@ -113,7 +140,7 @@ public class CAdESTimeStampSignerTest {
 
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
-			
+
 			byte[] timeStampForContent = varCAdESTimeStampSigner.doTimeStampForContent(content);
 
 			File file = new File(fileDirName + "junit.timestamp.p7s");
@@ -133,32 +160,32 @@ public class CAdESTimeStampSignerTest {
 	//@Test
 	public void testDoTimeStampForHashContent() {
 		String fileDirName = "local_e_nome_do_arquivo";
-		
+
 		try {
-			
+
 			// Para certificado em Token
 			KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
-			
+
 			// Para certificado em arquivo A1
-			// KeyStore ks = getKeyStoreFile();			
+			// KeyStore ks = getKeyStoreFile();
 
 			// quando certificado em arquivo, precisa informar a senha
 			//char[] senha = "senha".toCharArray();
 
 
 			String alias = getAlias(ks);
-			
+
 			byte[] content = readContent(fileDirName);
-			
-			
+
+
 			// gera o hash do conteudo
 			java.security.MessageDigest md = java.security.MessageDigest
 					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			byte[] hash = md.digest(content);
-			
+
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 
 			varCAdESTimeStampSigner.setCertificates(ks.getCertificateChain(alias));
@@ -168,7 +195,7 @@ public class CAdESTimeStampSignerTest {
 
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
-			
+
 			byte[] timeStampForContent = varCAdESTimeStampSigner.doTimeStampFromHashContent(hash);
 
 			File file = new File(fileDirName +"_fromHash"+ ".timestamp.p7s");
@@ -189,7 +216,7 @@ public class CAdESTimeStampSignerTest {
 		String fileSignatureDirName = "/";
 
 
-		
+
 		try {
 			byte[] signatureFile = readContent(fileSignatureDirName);
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
@@ -202,11 +229,11 @@ public class CAdESTimeStampSignerTest {
 			}else{
 				assertTrue(false);
 			}
-				
+
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			assertTrue(false);
-		}		
+		}
 
 	}
 
@@ -214,11 +241,11 @@ public class CAdESTimeStampSignerTest {
 	public void testCheckTimeStampWithContent() {
 		String fileTimeStampDirName = "/.p7s";
 		String fileContentDirName = "/";
-		
 
-		
 
-		
+
+
+
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
 			byte[] content = readContent(fileContentDirName);
@@ -229,13 +256,13 @@ public class CAdESTimeStampSignerTest {
 				assertTrue(true);
 			}else{
 				assertTrue(false);
-			}			
+			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			assertTrue(false);						
+			assertTrue(false);
 		}
 	}
-	
+
 	//@Test
 	public void testCheckTimeStampWithHash() {
 		String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
@@ -274,7 +301,7 @@ public class CAdESTimeStampSignerTest {
 		}
 		return result;
 	}
-	
+
 	@SuppressWarnings("restriction")
 	private KeyStore getKeyStoreToken() {
 
@@ -307,7 +334,7 @@ public class CAdESTimeStampSignerTest {
 	}
 
 	/**
-	 * 
+	 *
 	 * Faz a leitura do certificado armazenado em arquivo (A1)
 	 */
 
@@ -335,11 +362,11 @@ public class CAdESTimeStampSignerTest {
 
 	}
 
-	
+
 	private KeyStore getKeyStoreTokenBySigner() {
 
 		try {
-			
+
 			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
 			KeyStore keyStore = keyStoreLoader.getKeyStore();
 
@@ -353,7 +380,7 @@ public class CAdESTimeStampSignerTest {
 
 	}
 
-	
+
 	private String getAlias(KeyStore ks) {
 		Certificate[] certificates = null;
 		String alias = "";

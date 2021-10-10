@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades;
 
 import java.util.ArrayList;
@@ -45,10 +46,10 @@ import java.util.List;
  *
  */
 public class AttachedContentValidation {
-	
-	private byte[] extractedContent = null; 
+
+	private byte[] extractedContent = null;
 	private List<SignatureInformations> signaturesInfo = new ArrayList<SignatureInformations>();
-	
+
 	public AttachedContentValidation() {
 		super();
 	}
@@ -68,7 +69,4 @@ public class AttachedContentValidation {
 	public void setSignaturesInfo(List<SignatureInformations> signaturesInfo) {
 		this.signaturesInfo = signaturesInfo;
 	}
-	
-	
-
 }

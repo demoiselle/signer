@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.utils;
 
 import java.util.MissingResourceException;
@@ -45,7 +46,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  *
- *	Generates the required settings for time stamp request. 
+ *	Generates the required settings for time stamp request.
  *	Depending on the files: timestamp-config.properties or timestamp-config-default.properties
  *
  * @author 07721825741
@@ -57,13 +58,13 @@ public class TimeStampConfig {
     private static TimeStampConfig instance = null;
     private static ResourceBundle bundle = null;
     private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
-    
+
     private String tspHostname;
     private int tspPort;
     private String tspOid;
-    
+
     /**
-     * 
+     *
      * @return  Returns an instance of TimeStampConfig
      */
     public static TimeStampConfig getInstance() {
@@ -75,7 +76,7 @@ public class TimeStampConfig {
 
     public ResourceBundle getBundle(String bundleName) {
         return ResourceBundle.getBundle(bundleName);
-    }    
+    }
 
     protected TimeStampConfig() {
         if (bundle == null){
@@ -96,7 +97,7 @@ public class TimeStampConfig {
     		tspHostname = bundle.getString("tsp_hostname");
 		} catch (MissingResourceException e) {
 			logger.error(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));
-			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));		
+			throw new RuntimeException(timeStampMessagesBundle.getString("error.timestamp.config", "tspHostname"));
 		}
     	return tspHostname;
     }

@@ -46,25 +46,25 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Time-Stamp Protocol via HTTP
- * 
+ *
  * This subsection specifies a means for conveying ASN.1-encoded
  * messages for the protocol exchanges described in Section 2 and
  * Appendix D via the HyperText Transfer Protocol.
- * 
+ *
  * Two MIME objects are specified as follows.
- * 
+ *
  * Content-Type: application/timestamp-query
- * 
+ *
  *    &lt;&lt;the ASN.1 DER-encoded Time-Stamp Request message&gt;&gt;
- *    
+ *
  * Content-Type: application/timestamp-reply
- *       
+ *
  *    &lt;&lt;the ASN.1 DER-encoded Time-Stamp Response message&gt;&gt;
- *    
+ *
  *  These MIME objects can be sent and received using common HTTP
  *  processing engines over WWW links and provides a simple browser-
  *  server transport for Time-Stamp messages.
- *  
+ *
  *  Upon receiving a valid request, the server MUST respond with either a
  *  valid response with content type application/timestamp-response or with an HTTP error.
  *
@@ -72,15 +72,14 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpConnector implements Connector {
 
-	
 	private static final Logger logger = LoggerFactory.getLogger(HttpConnector.class);
     private String hostname;
     private int port;
     private OutputStream out = null;
     private HttpsURLConnection HttpsConnector;
-	
+
 	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
-	
+
     @Override
     public InputStream connect(byte[] content) {
     	logger.info(timeStampMessagesBundle.getString("error.not.supported", getClass().getName() ));
@@ -97,8 +96,6 @@ public class HttpConnector implements Connector {
     	this.port = port;
     }
 
-    
-    
     public HttpsURLConnection getHttpsConnector() {
 		return HttpsConnector;
 	}
@@ -116,12 +113,12 @@ public class HttpConnector implements Connector {
 	}
 
 	@Override
-    public void close() {    	
+    public void close() {
     	try {
     		this.HttpsConnector.disconnect();
 			this.out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
-		} 
+		}
     }
 }

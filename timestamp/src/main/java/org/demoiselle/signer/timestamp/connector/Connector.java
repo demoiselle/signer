@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.connector;
 
 import java.io.InputStream;
@@ -43,16 +44,16 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
 
 /**
  * Defines the basic methods for connecting to the time stamp authority.
- * 
+ *
  * @author 07721825741
  */
 public interface Connector {
 
-	abstract public InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException;
+	InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException;
 
-	abstract public void close();
+	void close();
 
-	abstract public void setHostname(String hostname);
+	void setHostname(String hostname);
 
-	abstract public void setPort(int port);
+	void setPort(int port);
 }

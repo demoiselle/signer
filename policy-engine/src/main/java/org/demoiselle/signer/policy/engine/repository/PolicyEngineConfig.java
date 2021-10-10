@@ -58,7 +58,7 @@ public class PolicyEngineConfig {
     private static PolicyEngineConfig instance = null;
     private static ResourceBundle bundle = null;
     private static MessagesBundle PolicyEngineMessagesBundle = new MessagesBundle();
-    
+
     private String url_local_lpa_cades;
     private String url_local_lpa_cades_sha;
     private String url_local_lpa_xades;
@@ -72,9 +72,9 @@ public class PolicyEngineConfig {
     private String url_iti_lpa_xades_sha;
     private String url_iti_lpa_pades;
     private String url_iti_lpa_pades_sha;
-    
+
     /**
-     * 
+     *
      * @return  Returns an instance of PolicyEngineConfig
      */
     public static PolicyEngineConfig getInstance() {
@@ -86,7 +86,7 @@ public class PolicyEngineConfig {
 
     public ResourceBundle getBundle(String bundleName) {
         return ResourceBundle.getBundle(bundleName);
-    }    
+    }
 
     protected PolicyEngineConfig() {
         if (bundle == null){
@@ -109,10 +109,9 @@ public class PolicyEngineConfig {
 		try {
     		url_local_lpa_cades = bundle.getString("url_local_lpa_cades");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_cades"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_cades"));
 		}
     	return url_local_lpa_cades;
-
 	}
 
 	/**
@@ -129,7 +128,7 @@ public class PolicyEngineConfig {
 		try {
 			url_local_lpa_cades_sha = bundle.getString("url_local_lpa_cades_sha");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_cades_sha"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_cades_sha"));
 		}
 		return url_local_lpa_cades_sha;
 	}
@@ -148,7 +147,7 @@ public class PolicyEngineConfig {
 		try {
 			url_local_lpa_xades = bundle.getString("url_local_lpa_xades");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_xades"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_xades"));
 		}
 		return url_local_lpa_xades;
 	}
@@ -167,7 +166,7 @@ public class PolicyEngineConfig {
 		try {
 			url_local_lpa_xades_sha = bundle.getString("url_local_lpa_xades_sha");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_xades_sha"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_xades_sha"));
 		}
 		return url_local_lpa_xades_sha;
 	}
@@ -186,7 +185,7 @@ public class PolicyEngineConfig {
 		try {
 			url_local_lpa_pades = bundle.getString("url_local_lpa_pades");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_pades"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_pades"));
 		}
 		return url_local_lpa_pades;
 	}
@@ -205,7 +204,7 @@ public class PolicyEngineConfig {
 		try {
 			url_local_lpa_pades_sha = bundle.getString("url_local_lpa_pades_sha");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_pades_sha"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_pades_sha"));
 		}
 		return url_local_lpa_pades_sha;
 	}
@@ -224,7 +223,7 @@ public class PolicyEngineConfig {
 		try {
 			url_iti_lpa_cades = bundle.getString("url_iti_lpa_cades");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_cades"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_cades"));
 		}
 		return url_iti_lpa_cades;
 	}
@@ -243,7 +242,7 @@ public class PolicyEngineConfig {
 		try {
 			url_iti_lpa_cades_sha = bundle.getString("url_iti_lpa_cades_sha");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_cades_sha"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_cades_sha"));
 		}
 		return url_iti_lpa_cades_sha;
 	}
@@ -262,7 +261,7 @@ public class PolicyEngineConfig {
 		try {
 			url_iti_lpa_xades = bundle.getString("url_iti_lpa_xades");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_xades"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_xades"));
 		}
 		return url_iti_lpa_xades;
 	}
@@ -281,7 +280,7 @@ public class PolicyEngineConfig {
 		try {
 			url_iti_lpa_xades_sha = bundle.getString("url_iti_lpa_xades_sha");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_xades_sha"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_xades_sha"));
 		}
 		return url_iti_lpa_xades_sha;
 	}
@@ -300,7 +299,7 @@ public class PolicyEngineConfig {
 		try {
 			url_iti_lpa_pades = bundle.getString("url_iti_lpa_pades");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_pades"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_pades"));
 		}
 		return url_iti_lpa_pades;
 	}
@@ -319,7 +318,7 @@ public class PolicyEngineConfig {
 		try {
 			url_iti_lpa_pades_sha = bundle.getString("url_iti_lpa_pades_sha");
 		} catch (MissingResourceException e) {
-			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_pades_sha"));	
+			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_iti_lpa_pades_sha"));
 		}
 		return url_iti_lpa_pades_sha;
 	}
@@ -329,5 +328,5 @@ public class PolicyEngineConfig {
 	 */
 	public void setUrl_iti_lpa_pades_sha(String url_iti_lpa_pades_sha) {
 		this.url_iti_lpa_pades_sha = url_iti_lpa_pades_sha;
-	} 
+	}
 }

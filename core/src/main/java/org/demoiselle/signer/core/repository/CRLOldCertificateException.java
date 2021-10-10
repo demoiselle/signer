@@ -34,12 +34,12 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.core.repository;
 
+package org.demoiselle.signer.core.repository;
 
 /**
  * to do unchecked
- * 
+ *
  */
 public class CRLOldCertificateException extends RuntimeException {
 

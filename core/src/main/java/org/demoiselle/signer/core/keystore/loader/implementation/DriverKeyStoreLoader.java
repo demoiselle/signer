@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.keystore.loader.implementation;
 
 import java.io.ByteArrayInputStream;
@@ -65,9 +66,9 @@ import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * Implementation of KeyStoreLoader based operating system drivers. 
+ * Implementation of KeyStoreLoader based operating system drivers.
  * You must enter the driver file in the operating system and the API name.
- * 
+ *
  */
 public class DriverKeyStoreLoader implements KeyStoreLoader {
 
@@ -76,8 +77,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
     private CallbackHandler callback;
 	private Formatter formatter;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-	
-	
+
+
 	/**
 	 * read the config file
 	 */
@@ -119,7 +120,7 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
         Configuration.getInstance().addDriver(driverName, driverPath);
         KeyStore keyStore = null;
         formatter = new Formatter();
-        
+
         String pkcs11ConfigSettings = formatter.format(PKCS11_CONTENT_CONFIG_FILE, driverName, driverPath).toString();
         byte[] pkcs11ConfigBytes = pkcs11ConfigSettings.getBytes();
         ByteArrayInputStream confStream = new ByteArrayInputStream(pkcs11ConfigBytes);
@@ -134,8 +135,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
             keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
             keyStore.load(null, null);
 
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException 
-        		| NoSuchMethodException | SecurityException | InvocationTargetException | KeyStoreException | NoSuchAlgorithmException 
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
+        		| NoSuchMethodException | SecurityException | InvocationTargetException | KeyStoreException | NoSuchAlgorithmException
         		| NoSuchProviderException | CertificateException ex) {
             if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
                 throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
@@ -169,8 +170,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
             keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
             keyStore.load(null, null);
 
-        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException 
-        		| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException 
+        } catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
+        		| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException
         		| KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
             if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
                 throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
@@ -220,7 +221,7 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
         return keyStore;
     }
-    
+
     @Override
     public void setCallbackHandler(CallbackHandler callback) {
         this.callback = callback;

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp;
 
 import java.security.PrivateKey;
@@ -56,16 +57,15 @@ import org.slf4j.LoggerFactory;
 
 @Priority(Priority.MIN_PRIORITY)
 public class TimestampGeneratorImpl implements TimeStampGenerator {
-	
-	private static final Logger logger = LoggerFactory.getLogger(TimestampGeneratorImpl.class);
-	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
+	private static final Logger logger = LoggerFactory.getLogger(TimestampGeneratorImpl.class);
+	private static final MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
     private byte[] content = null;
     private PrivateKey privateKey;
     private Certificate[] certificates;
     private byte[] hash = null;
-    
+
     /**
      * Initializes the attributes needed to get the time stamp
      *
@@ -101,7 +101,7 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
                 if (resp != null)   break;
     		} catch (CertificateCoreException e) {
     			attempt++;
-    		}	
+    		}
         }
         if (resp != null && resp.length > 1) {
         	logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
@@ -109,8 +109,7 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
         }else {
         	logger.error(timeStampMessagesBundle.getString("info.timestamp.attempt.exceeded", attempt));
         	throw new CertificateCoreException(timeStampMessagesBundle.getString("info.timestamp.attempt.exceeded", attempt));
-        } 
-        
+        }
     }
 
     /**

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.keystore.loader.implementation;
 
 import java.io.File;
@@ -56,7 +57,7 @@ import org.slf4j.LoggerFactory;
 public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 
     private static final String FILE_TYPE_PKCS12 = "PKCS12";
-    private static final String FILE_TYPE_JKS = "JKS";        
+    private static final String FILE_TYPE_JKS = "JKS";
     private static MessagesBundle coreMessagesBundle = new MessagesBundle();
     private static final Logger logger = LoggerFactory.getLogger(FileSystemKeyStoreLoader.class);
     private File fileKeyStore = null;
@@ -70,14 +71,14 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
      */
     public FileSystemKeyStoreLoader(File file) {
 
-        if (file == null || !file.exists() || !file.isFile()) {        	
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.file.invalid"));           
+        if (file == null || !file.exists() || !file.isFile()) {
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.file.invalid"));
         }
 
         this.setFileKeyStore(file);
 
     }
-    
+
     /**
      *  Class constructor that checks whether the specified parameters exists and whether they are valid.
      * 	@param inputStream
@@ -85,36 +86,36 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
      */
     public FileSystemKeyStoreLoader(InputStream  inputStream, String type) {
 
-        if (inputStream == null) {        	
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));           
+        if (inputStream == null) {
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));
         }
-        if (type == null || type.isEmpty()) {        	
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));           
+        if (type == null || type.isEmpty()) {
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));
         }
-        if (!type.equalsIgnoreCase("PKCS12") && !type.equalsIgnoreCase("JKS")) {        	
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));           
+        if (!type.equalsIgnoreCase("PKCS12") && !type.equalsIgnoreCase("JKS")) {
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));
         }
         this.setInputStreamKeyStore(inputStream);
         this.setType(type);
     }
-    
+
     /**
      *  Class constructor for default type PKCS12, that checks whether the specified parameter exists .
      * 	@param inputStream
-     * 
+     *
      */
     public FileSystemKeyStoreLoader(InputStream  inputStream) {
 
-        if (inputStream == null) {        	
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));           
+        if (inputStream == null) {
+            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));
         }
-        
+
         this.setInputStreamKeyStore(inputStream);
         this.setType(FILE_TYPE_PKCS12);
     }
 
     /**
-     * 
+     *
      * @return PCKS12 or JKS keystore file.
      */
     public File getFileKeyStore() {
@@ -124,8 +125,8 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
     public void setFileKeyStore(File fileKeyStore) {
         this.fileKeyStore = fileKeyStore;
     }
-    
-            
+
+
 
     public InputStream getInputStreamKeyStore() {
 		return inputStreamKeyStore;
@@ -144,18 +145,18 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 	}
 
 	/**
-     * Attempts to load the KeyStore first in the PKCS12 pattern. 
+     * Attempts to load the KeyStore first in the PKCS12 pattern.
      * If this is not possible, it will store the received exception and
-     * then attempt to load a KeyStore into the JKS standard. 
+     * then attempt to load a KeyStore into the JKS standard.
      * Failing in both attempts, it will throw an exception.
      *
      * @param pinNumber pin
      * @return keystore
      */
     public KeyStore getKeyStore(String pinNumber) {
-       
+
         logger.info("FileSystemKeyStoreLoader.getKeyStore()");
-        
+
         KeyStore result = null;
         if (this.fileKeyStore !=null ) {
             //String extensao = fileKeyStore.getName().substring(fileKeyStore.getName().lastIndexOf("."), fileKeyStore.getName().length());
@@ -164,7 +165,7 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
                     result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_PKCS12);
                 } catch (Throwable throwable) {
                         throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass",fileKeyStore.getName()), throwable);
-                    }            
+                    }
             }else{if (fileKeyStore.getName().endsWith("jks")){
             		try{
                         result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_JKS);
@@ -178,12 +179,12 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 
         }else {
         	try {
-        			result = this.getKeyStoreWithTypeFromInputStream(pinNumber);	
-        		                
+        			result = this.getKeyStoreWithTypeFromInputStream(pinNumber);
+
             } catch (Throwable throwable) {
                     throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass"), throwable);
                 }
-        	
+
         }
         return result;
     }
@@ -200,7 +201,7 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
     }
 
     /**
-     * 
+     *
      * @param pinNumber pin
      * @param keyStoreType PKSC12 or JKS
      * @return keystore
@@ -219,7 +220,7 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
     }
 
     /**
-     * 
+     *
      * @param pinNumber pin
      * @return keystore
      */
@@ -234,11 +235,11 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
         }
         return result;
     }
-    
+
 	@Override
 	public void setCallbackHandler(CallbackHandler callback) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }

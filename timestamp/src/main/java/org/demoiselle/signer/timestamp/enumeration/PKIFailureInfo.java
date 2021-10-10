@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.enumeration;
 
 /**
@@ -54,7 +55,7 @@ public enum PKIFailureInfo {
     private final int id;
     private final String message;
 
-    private PKIFailureInfo(int id, String message) {
+    PKIFailureInfo(int id, String message) {
         this.id = id;
         this.message = message;
     }

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.extension;
 
 import org.demoiselle.signer.core.IOIDExtensionLoader;
@@ -44,14 +45,14 @@ import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
 
 /**
- * 
+ *
  * Load X.509 Extension OIDs for
  */
 public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
 
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-	
-	
+
+
     @Override
     public void load(Object object, Field field, X509Certificate x509) {
         if (field.isAnnotationPresent(ICPBrasilExtension.class)) {

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core;
 
 import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
@@ -42,20 +43,20 @@ import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import java.security.cert.X509Certificate;
 
 /**
- * 
- * define a method to validate a java.security.cert.X509Certificate 
+ *
+ * define a method to validate a java.security.cert.X509Certificate
  *
  */
 public interface IValidator {
 
 	/**
-	 * 
+	 *
 	 * @param x509 java.security.cert.X509Certificate
 	 * @throws CertificateValidatorException when validation fails
 	 */
     public void validate(X509Certificate x509) throws CertificateValidatorException, CertificateValidatorCRLException;
-    
-    
-    
+
+
+
 
 }

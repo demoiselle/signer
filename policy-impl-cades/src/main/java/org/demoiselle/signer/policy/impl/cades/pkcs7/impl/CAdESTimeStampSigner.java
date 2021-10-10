@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import java.io.ByteArrayInputStream;
@@ -72,11 +73,10 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.factory.Attribute
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 
-
 /**
- * 
+ *
  * Basic implementation of Time Stamp on CADES format.
- * 
+ *
  *
  */
 public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
@@ -162,7 +162,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			}else{
 				signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(),
 						this.getCertificateChain(), null, signaturePolicy, hash);
-			}			
+			}
 			byte[] result = signedOrUnsignedAttribute.getValue().getEncoded();
 			return result;
 		} catch (IOException ex) {
@@ -201,7 +201,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 		} catch (CertificateCoreException | IOException | TSPException
 				| CMSException e) {
 			throw new SignerException(e);
-		}		
+		}
 	}
 
 	@Override
@@ -210,7 +210,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			return this.checkTimeStamp(timeStamp,content,null);
 			} catch (CertificateCoreException e) {
 			throw new SignerException(e);
-		}	
+		}
 	}
 
 	@Override
@@ -221,7 +221,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 			throw new SignerException(e);
 		}
 	}
-	
+
 
 		private Timestamp checkTimeStamp(byte[] timeStamp, byte[] content,  byte[] hash){
 		try {
@@ -235,7 +235,7 @@ public class CAdESTimeStampSigner implements PKCS7TimeStampSigner {
 	        	timeStampOperator.validate(content, varTimeStamp,null);
 	        }else{
 	        	timeStampOperator.validate(null, varTimeStamp,hash);
-	        }			
+	        }
 			TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimeStamp));
 			Timestamp timeStampSigner = new Timestamp(timeStampToken);
 			return timeStampSigner;

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.extension;
 
 import org.demoiselle.signer.core.oid.OIDGeneric;
@@ -63,8 +64,7 @@ import java.util.Map;
  *
  * Extra Informations for ICP-BRASIL (DOC-ICP-04) Certificates. Abstracts the
  * rules to "PESSOA FISICA", "PESSOA JURIDICA" and "EQUIPAMENTO/APLICAÇÃO"
- * 
- * 
+ *
  */
 public class CertificateExtra {
 
@@ -177,7 +177,7 @@ public class CertificateExtra {
 	 * <B> * </b> the initials of the issuing agency of the ID (RG) <br>
 	 * <B> * </b> UF (Initials for a Brasilian state) of the issuing agency of the
 	 * RG <br>
-	 * 
+	 *
 	 * @return OID_2_16_76_1_3_1
 	 */
 	public OID_2_16_76_1_3_1 getOID_2_16_76_1_3_1() {
@@ -280,7 +280,7 @@ public class CertificateExtra {
 	 * Has some "ICP-BRASIL Equipment" attributes<br>
 	 * Corporate name in the the Brazilian IRS's Bussiness Company Registry Number
 	 * called CNPJ without abbreviations,
-	 * 
+	 *
 	 *
 	 * @return OID_2_16_76_1_3_8
 	 */
@@ -295,8 +295,8 @@ public class CertificateExtra {
 	public String getEmail() {
 		return email;
 	}
-	
-	
+
+
 	/**
 	 *
 	 * @return the DNS for certificate.
@@ -306,7 +306,7 @@ public class CertificateExtra {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	public OID_1_3_6_1_4_1_311_60_2_1_3 getOID_1_3_6_1_4_1_311_60_2_1_3() {

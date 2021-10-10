@@ -107,27 +107,6 @@
 
 	<build>
 		<plugins>
-		<!--  TODO rever esse plugin pois gera erro no projeto
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-toolchains-plugin</artifactId>
-				<version>3.1</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>toolchain</goal>
-						</goals>
-					</execution>
-				</executions>
-				<configuration>
-					<toolchains>
-						<jdk>
-							<version>1.7</version>
-							<vendor>oracle</vendor>
-						</jdk>
-					</toolchains>
-				</configuration>
-			</plugin> -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -214,12 +193,7 @@
 			<name>Sonatype Nexus Snapshots</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
 		</pluginRepository>
-<!-- 		<pluginRepository>		
-			<id>demoiselle.sourceforge.net-release</id>
-			<url>http://demoiselle.sourceforge.net/repository/release</url>			 
-			
-		</pluginRepository>
-		-->
+
 		<pluginRepository>
 			<id>nexus-jboss-org</id>
 			<name>JBoss Maven Repository</name>
@@ -235,11 +209,7 @@
 			<id>repo-maven-apache-org</id>
 			<url>https://repo.maven.apache.org/maven2</url>
 		</pluginRepository> 
-		<!--    
-		<pluginRepository>
-			<id>insecure.repo1.maven.org</id>
-			<url>http://insecure.repo1.maven.org/maven2/</url>
-		</pluginRepository> -->
+
   </pluginRepositories>
   
 	<reporting>
@@ -277,11 +247,6 @@
 	</scm>
 
 	<distributionManagement>
-		<!-- <site>
-			<id>demoiselle-sourceforge-net</id>
-			<url>${site.url}</url>
-		</site>
-		 -->
 
 		<snapshotRepository>
 			<id>sonatype-nexus-snapshots</id>
@@ -306,17 +271,6 @@
 			<url>https://oss.sonatype.org/content/repositories/releases</url>	
 		</repository>
 
-		<!-- Legacy 
-		<repository>
-			<id>demoiselle-sourceforge-net-release</id>
-			<url>http://demoiselle.sourceforge.net/repository/release</url>
-		
-		</repository>
-		<repository>
-			<id>snapshot-sourceforge-net-release</id>
-			<url>http://demoiselle.sourceforge.net/repository/snapshot</url>
-		</repository>
-		-->
 		<repository>
 			<id>nexus-jboss-org</id>
 			<name>JBoss Maven Repository</name>
@@ -333,14 +287,7 @@
 			<url>https://repo.maven.apache.org/maven2</url>
 			
 		</repository>
-		<!--
-		
-		<repository>
-			<id>http://insecure.repo1.maven.org/maven2</id>
-			<url>http://insecure.repo1.maven.org/maven2/</url>
-		</repository>
-	-->
-	</repositories>
 
+	</repositories>
 
 </project>

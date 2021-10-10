@@ -1,7 +1,57 @@
+/*
+ * Demoiselle Framework
+ * Copyright (C) 2016 SERPRO
+ * ----------------------------------------------------------------------------
+ * This file is part of Demoiselle Framework.
+ *
+ * Demoiselle Framework is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public License version 3
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License version 3
+ * along with this program; if not,  see <http://www.gnu.org/licenses/>
+ * or write to the Free Software Foundation, Inc., 51 Franklin Street,
+ * Fifth Floor, Boston, MA  02110-1301, USA.
+ * ----------------------------------------------------------------------------
+ * Este arquivo é parte do Framework Demoiselle.
+ *
+ * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
+ * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
+ * do Software Livre (FSF).
+ *
+ * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
+ * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
+ * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
+ * para maiores detalhes.
+ *
+ * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
+ * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
+ * ou escreva para a Fundação do Software Livre (FSF) Inc.,
+ * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
+ */
+
 package org.demoiselle.signer.policy.impl.xades.xml;
 
-import static org.junit.Assert.assertFalse;
+import org.apache.commons.io.IOUtils;
+import org.bouncycastle.util.encoders.Base64;
+import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
+import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
+import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
+import org.demoiselle.signer.policy.impl.xades.xml.impl.Constants;
+import org.demoiselle.signer.policy.impl.xades.xml.impl.XMLSigner;
+import org.w3c.dom.Document;
 
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,22 +65,7 @@ import java.security.Security;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
 
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-
-import org.apache.commons.io.IOUtils;
-import org.bouncycastle.util.encoders.Base64;
-import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
-import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
-import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
-import org.demoiselle.signer.policy.impl.xades.xml.impl.Constants;
-import org.demoiselle.signer.policy.impl.xades.xml.impl.XMLSigner;
-import org.junit.Test;
-import org.w3c.dom.Document;
+import static org.junit.Assert.assertFalse;
 
 public class XMLSignerTest {
 
@@ -50,7 +85,7 @@ public class XMLSignerTest {
 			// ks = getKeyStoreToken();
 
 			String fileName = "teste_assinatura.xml";
-			
+
 			ClassLoader classLoader = getClass().getClassLoader();
 			URL fileUri = classLoader.getResource(fileName);
 			File newFile = new File(fileUri.toURI());
@@ -69,14 +104,14 @@ public class XMLSignerTest {
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica de Assinatura
 			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RB_XADES_2_4.getOID());
-			
-			
+
+
 			xmlSigner.setSignatureAlgorithm(Constants.SHA512withRSA);
 			if (org.demoiselle.signer.core.keystore.loader.configuration.Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
 				xmlSigner.setSignatureAlgorithm(Constants.SHA256withRSA);
-				
-			}	
-			
+
+			}
+
 			// indicando o local do arquivo XML
 			Document doc = xmlSigner.signEnveloped(true, newFile.getPath());
 			doc.setXmlStandalone(true);
@@ -412,7 +447,7 @@ public class XMLSignerTest {
 		}
 
 	}
-	
+
 	 //@Test
 		public void testDetachedEnvelopedFromHash() {
 
@@ -431,7 +466,7 @@ public class XMLSignerTest {
 				String fileName = "teste_assinatura.xml";
 
 				ClassLoader classLoader = getClass().getClassLoader();
-								
+
 				String alias = getAlias(ks);
 				XMLSigner xmlSigner = new XMLSigner();
 
@@ -447,7 +482,7 @@ public class XMLSignerTest {
 				// para mudar a politica
 				//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 				// indicando o local do arquivo XML
-				
+
 				java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
 				byte[] hash = md.digest(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)));
 				System.out.println(Base64.toBase64String(hash));
@@ -466,9 +501,9 @@ public class XMLSignerTest {
 				assertFalse(true);
 			}
 
-	
+
 		}
-	
+
 	// Usa o Signer para leitura, funciona para windows e NeoID
 		private KeyStore getKeyStoreTokenBySigner() {
 
@@ -489,7 +524,7 @@ public class XMLSignerTest {
 
 
 	/**
-	 * 
+	 *
 	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do
 	 * token.
 	 */
@@ -532,7 +567,7 @@ public class XMLSignerTest {
 		try {
 			// informar o caminho e nome do arquivo
 			File filep12 = new File("/");
-			
+
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
 			// Informar a senha
 			KeyStore keystore = loader.getKeyStore("senha");

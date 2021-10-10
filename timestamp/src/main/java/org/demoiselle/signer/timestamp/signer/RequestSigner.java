@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.signer;
 
 import java.io.IOException;
@@ -63,7 +64,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Timestamp request, signed.
- * 
+ *
  * @author 07721825741
  */
 public class RequestSigner {
@@ -94,19 +95,19 @@ public class RequestSigner {
             if (algorithm != null && !algorithm.isEmpty()){
             	varAlgorithm = algorithm;
             }else{
-            	
+
             	// If is WINDOWS, is ONLY WORKS with SHA256
 				if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
 					logger.debug(timeStampMessagesBundle.getString("info.timestamp.winhash"));
-					
+
 					varAlgorithm = "SHA256withRSA";
 				}else{
-					logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));					
+					logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));
 					varAlgorithm = "SHA512withRSA";
 				}
-				
+
             }
-            	
+
             SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder().build(varAlgorithm, privateKey, signCert);
             generator.addSignerInfoGenerator(signerInfoGenerator);
 
@@ -125,7 +126,7 @@ public class RequestSigner {
             logger.error("signRequest:"+ex.getMessage());
             throw new CertificateCoreException(ex.getMessage());
         }
-        
+
     }
 
 }
