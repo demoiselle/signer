@@ -144,7 +144,6 @@
                 <version>3.3.1</version>
                 <configuration>
                     <source>1.7</source>
-                    <target>1.7</target>
                     <links>
                         <link>https://docs.oracle.com/javase/7/docs/api/</link>
                     </links>
@@ -258,6 +257,45 @@
         </plugins>
     </reporting>
 
+    <profiles>
+        <profile>
+            <!-- mvn javadoc:aggregate -P aggregated    -->
+            <!-- Output: target/html/apidocs/index.html -->
+            <id>aggregated</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <source>1.7</source>
+                            <links>
+                                <link>https://docs.oracle.com/javase/7/docs/api/</link>
+                            </links>
+                            <outputDirectory>${basedir}/target/html</outputDirectory>
+                            <reportOutputDirectory>${basedir}/target/html</reportOutputDirectory>
+                            <overview>${basedir}/parent/overview.html</overview>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>aggregate</id>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
     <scm>
         <connection>scm:git:https://github.com/demoiselle/${project.alias}.git</connection>
