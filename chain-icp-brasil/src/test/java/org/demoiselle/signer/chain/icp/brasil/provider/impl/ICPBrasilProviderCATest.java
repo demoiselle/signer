@@ -51,7 +51,7 @@ public class ICPBrasilProviderCATest {
 
 	@Test
 	public void checkNameOfProvider() {
-		assertTrue(provider.getName().contains("keystore"));
+		assertTrue(provider.getName().contains("icpbrasil.jks"));
 	}
 
 	@Test
