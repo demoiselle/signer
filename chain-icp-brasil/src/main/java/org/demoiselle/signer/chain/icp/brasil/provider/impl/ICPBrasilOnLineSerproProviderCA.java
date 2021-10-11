@@ -60,8 +60,9 @@ import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from
- * SERPRO's mirror URL http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip
+ * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain
+ * (<a href="http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip">ACcompactado.zip</a>)
+ * from SERPRO's mirror URL.
  */
 public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 

@@ -45,8 +45,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Settings for Chain Repositories
- * Depending on the files: chain-icpbrasil-config.properties or chain-icpbrasil-config-default.properties
+ * Provide locations for ICP-Brasil Chain and corresponding hash values.
+ * It depends on the files "chain-icpbrasil-config.properties" or
+ * "chain-icpbrasil-config-default.properties".
  *
  * @author emerson.saito@serpro.gov.br
  */
@@ -55,6 +56,8 @@ public class ChainICPBrasilConfig {
 	private static final Logger logger = LoggerFactory.getLogger(ChainICPBrasilConfig.class);
 
 	private static ChainICPBrasilConfig instance = null;
+
+	// FIXME it seems a case for Properties (https://www.baeldung.com/java-properties)
 	private static ResourceBundle bundle = null;
 	private static final MessagesBundle ChainICPBrasilMessagesBundle = new MessagesBundle();
 
@@ -62,6 +65,8 @@ public class ChainICPBrasilConfig {
 	private String url_local_ac_list_sha512;
 	private String url_iti_ac_list;
 	private String url_iti_ac_list_sha512;
+
+	// FIXME system file specific
 	private String local_dir = "/tmp";
 
 	/**
@@ -162,30 +167,30 @@ public class ChainICPBrasilConfig {
 	}
 
 	/**
-	 * @param url_iti_ac_list_sha512 the url_iti_ac_list_sha512 to set
+	 * @param url_iti_ac_list_sha512 the url_iti_ac_list_sha512 to set.
 	 */
 	public void setUrl_iti_ac_list_sha512(String url_iti_ac_list_sha512) {
 		this.url_iti_ac_list_sha512 = url_iti_ac_list_sha512;
 	}
 
 	/**
-	 * @return the local_dir
+	 * @return the local_dir.
 	 */
 	public String getLocal_dir() {
 		try {
 			setLocal_dir(bundle.getString("local_dir"));
 		} catch (MissingResourceException e) {
 			logger.info(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "local_dir"));
+			// FIXME system file specific
 			local_dir = "/tmp";
 		}
 		return local_dir;
 	}
 
 	/**
-	 * @param local_dir the local_dir to set
+	 * @param local_dir the local_dir to set.
 	 */
 	public void setLocal_dir(String local_dir) {
 		this.local_dir = local_dir;
 	}
-
 }

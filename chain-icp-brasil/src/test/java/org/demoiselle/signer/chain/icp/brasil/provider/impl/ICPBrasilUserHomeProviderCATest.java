@@ -37,42 +37,19 @@
 
 package org.demoiselle.signer.chain.icp.brasil.provider.impl;
 
-import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
+import org.junit.Test;
 
-/**
- * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain
- * (<a href="http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip">
- *     ACcompactado.zip</a>) from ITI.
- */
-public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderCA {
+import static junit.framework.TestCase.assertNotNull;
 
-	private static String STRING_URL_ZIP = ChainICPBrasilConfig.getInstance().getUrl_iti_ac_list();
-	private static String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_iti_ac_list_sha512();
+public class ICPBrasilUserHomeProviderCATest {
 
-	/**
-	 *
-	 * @return the address where is located a compacted file that
-	 * contains the chain of ICP-BRASIL's trusted Certificate Authority.
-	 */
-	@Override
-	public String getURLZIP() {
-		return ICPBrasilOnLineITIProviderCA.STRING_URL_ZIP;
+	@Test
+	public void construtor() {
+		assertNotNull(new ICPBrasilUserHomeProviderCA());
 	}
 
-	/**
-	 *  return the address where is located a file that contains the hash code (SHA512)
-	 *  which corresponds to the file downloaded with {@link #getURLZIP()} .
-	 */
-	public String getURLHash() {
-		return ICPBrasilOnLineITIProviderCA.STRING_URL_HASH;
+	@Test
+	public void constantePublica() {
+		assertNotNull(ICPBrasilUserHomeProviderCA.PATH_HOME_USER);
 	}
-
-	/**
-	 * This provider Name
-	 */
-	@Override
-	public String getName() {
-		return chainMessagesBundle.getString("info.provider.name.iti", getURLZIP());
-	}
-
 }

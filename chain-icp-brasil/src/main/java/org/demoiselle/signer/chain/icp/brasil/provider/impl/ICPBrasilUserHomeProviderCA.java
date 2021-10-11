@@ -77,12 +77,11 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	public static final Path FULL_PATH_HASH = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, FILENAME_HASH);
 
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilUserHomeProviderCA.class);
-	private static MessagesBundle chainMessagesBundle = new MessagesBundle();
+	private static final MessagesBundle chainMessagesBundle = new MessagesBundle();
 
 	/**
 	 * Main method for read trusted Certificate Authorities Chain
 	 */
-
 	@Override
 	public Collection<X509Certificate> getCAs() {
 
@@ -150,7 +149,6 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 		}
 
 		return finalFolder;
-
 	}
 
 	/**
