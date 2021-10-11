@@ -53,6 +53,7 @@ import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
+ * FIXME rename to ICPBrasilKeystoreProviderCA for consistence
  * Provides trusted Certificate Authority chain of the ICP-BRAZIL's digital signature policies
  * from Keystore (icpbrasil.jks) stored in resources library
  */
@@ -65,8 +66,6 @@ public class ICPBrasilProviderCA implements ProviderCA {
 	 */
 	@Override
 	public Collection<X509Certificate> getCAs() {
-
-
 		KeyStore keyStore = this.getKeyStore();
 		List<X509Certificate> result = new ArrayList<X509Certificate>();
 		try {
@@ -104,7 +103,9 @@ public class ICPBrasilProviderCA implements ProviderCA {
 	}
 
 	/**
-	 * This provider Name
+	 * This provider Name.
+	 *
+	 * @return the provider name.
 	 */
 	@Override
 	public String getName() {

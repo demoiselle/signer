@@ -50,6 +50,8 @@ public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderC
 	private static String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_iti_ac_list_sha512();
 
 	/**
+	 * Get the address (URL) of a compressed file (zip) with certificates
+	 * from ICP-Brasil chain of Certificate Authority.
 	 *
 	 * @return the address where is located a compacted file that
 	 * contains the chain of ICP-BRASIL's trusted Certificate Authority.
@@ -60,19 +62,23 @@ public class ICPBrasilOnLineITIProviderCA extends ICPBrasilOnLineSerproProviderC
 	}
 
 	/**
-	 *  return the address where is located a file that contains the hash code (SHA512)
-	 *  which corresponds to the file downloaded with {@link #getURLZIP()} .
+	 *  Get the address where is located a file that contains the hash code (SHA512)
+	 *  which corresponds to the file downloaded with {@link #getURLZIP()}.
+	 *
+	 * @return address (URL) of hash code (SHA512) of file available at
+	 * {@link #getURLZIP()}.
 	 */
 	public String getURLHash() {
 		return ICPBrasilOnLineITIProviderCA.STRING_URL_HASH;
 	}
 
 	/**
-	 * This provider Name
+	 * This provider Name.
+	 *
+	 * @return the provider name.
 	 */
 	@Override
 	public String getName() {
 		return chainMessagesBundle.getString("info.provider.name.iti", getURLZIP());
 	}
-
 }

@@ -41,17 +41,21 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 
 /**
- * Define methods to provides trusted Certificate Authority chain of the ICP-BRAZIL (PKI)
+ * Provider of trusted Certificate Authority chain of the ICP-BRAZIL (PKI).
+ * The provider can get information from trusted source like ITI,
+ * SERPRO or even a local keystore file, among other approaches.
  */
 public interface ProviderCA {
 
 	/**
-	 * @return the name of provider
+	 * Get the name of provider.
+	 *
+	 * @return the name of provider.
 	 */
-	public String getName();
+	String getName();
 
 	/**
-	 * @return Collection of Certificate Authority stored on provider
+	 * @return Collection of Certificate Authority stored on provider.
 	 */
-	public Collection<X509Certificate> getCAs();
+	Collection<X509Certificate> getCAs();
 }

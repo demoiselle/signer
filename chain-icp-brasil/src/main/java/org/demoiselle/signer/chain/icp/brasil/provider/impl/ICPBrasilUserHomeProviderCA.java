@@ -60,6 +60,7 @@ import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
+ * FIXME each provider should be independent of any other
  * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file
  * (ACcompactado.zip) stored on user home folder, that was previous
  * downloaded by {@link ICPBrasilOnLineSerproProviderCA} or
@@ -105,7 +106,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 		LOGGER.debug(chainMessagesBundle.getString("info.loading.from.file", fileZip.toString()));
 
-		Collection<X509Certificate> result = new HashSet<X509Certificate>();
+		Collection<X509Certificate> result = new HashSet<>();
 		long timeBefore = 0;
 		long timeAfter = 0;
 		try {
@@ -182,7 +183,6 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				} catch (CertificateException error) {
 					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate"));
 				}
-
 			}
 		} catch (IOException error) {
 			LOGGER.error(chainMessagesBundle.getString("error.stream"));

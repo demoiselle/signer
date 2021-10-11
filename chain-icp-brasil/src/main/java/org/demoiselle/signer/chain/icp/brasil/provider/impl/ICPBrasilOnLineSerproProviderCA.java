@@ -37,7 +37,13 @@
 
 package org.demoiselle.signer.chain.icp.brasil.provider.impl;
 
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -93,7 +99,10 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	}
 
 	/**
-	 * Read Certificate Authority chain from file
+	 * Read Certificate Authority chain from local file.
+	 * Get fresh copy if needed.
+	 *
+	 * @return Collection of certificates from chain.
 	 */
 	@Override
 	public Collection<X509Certificate> getCAs() {
@@ -121,17 +130,14 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				if (!onlineHash.equals("")) {
 
 					// Gera o hash do arquivo local
+					// FIXME DigestImpl.convertToHex instead of DatatypeConverter.printHexBinary
 					String localZipHash = DatatypeConverter.printHexBinary(checksum(new File(pathZip.toString())));
 
 					// Pega SOMENTE o hash sem o nome do arquivo
 					String onlineHashWithouFilename = onlineHash.replace(ICPBrasilUserHomeProviderCA.FILENAME_ZIP, "")
 						.replaceAll(" ", "").replaceAll("\n", "");
 
-					if (onlineHashWithouFilename.equalsIgnoreCase(localZipHash)) {
-						useCache = true;
-					} else {
-						useCache = false;
-					}
+					useCache = onlineHashWithouFilename.equalsIgnoreCase(localZipHash);
 
 				} else {
 					LOGGER.warn(chainMessagesBundle.getString("error.hash.empty"));
@@ -144,6 +150,8 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				// Baixa um novo arquivo
 				LOGGER.debug(chainMessagesBundle.getString("info.file.downloading", getURLZIP()));
 				InputStream inputStreamZip = Downloads.getInputStreamFromURL(getURLZIP());
+
+				// FIXME fails if directory does not exist
 				Files.copy(inputStreamZip, pathZip, StandardCopyOption.REPLACE_EXISTING);
 				inputStreamZip.close();
 				LOGGER.debug(chainMessagesBundle.getString("info.sucess"));
@@ -172,6 +180,8 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	}
 
 	/**
+	 * FIXME static
+	 * FIXME localize on core
 	 * Calculate SHA-512 hash from file.
 	 *
 	 * @param input file to read from.
@@ -257,7 +267,6 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 		return result;
 	}
 
-
 	/**
 	 * This provider Name
 	 */
@@ -265,5 +274,4 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	public String getName() {
 		return chainMessagesBundle.getString("info.provider.name.serpro", getURLZIP());
 	}
-
 }

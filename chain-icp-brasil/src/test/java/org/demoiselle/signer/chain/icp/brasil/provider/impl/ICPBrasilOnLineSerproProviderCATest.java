@@ -42,22 +42,16 @@ import org.junit.Test;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
-import static junit.framework.TestCase.assertNotNull;
 import static junit.framework.TestCase.assertTrue;
 
-public class ICPBrasilUserHomeProviderCATest {
+public class ICPBrasilOnLineSerproProviderCATest {
 
-	private final ICPBrasilUserHomeProviderCA provider =
-		new ICPBrasilUserHomeProviderCA();
-
-	@Test
-	public void construtor() {
-		new ICPBrasilUserHomeProviderCA();
-	}
+	private final ICPBrasilOnLineSerproProviderCA provider =
+		new ICPBrasilOnLineSerproProviderCA();
 
 	@Test
-	public void constantePublica() {
-		assertNotNull(ICPBrasilUserHomeProviderCA.PATH_HOME_USER);
+	public void checkNameOfProvider() {
+		assertTrue(provider.getName().contains("serpro"));
 	}
 
 	@Test
