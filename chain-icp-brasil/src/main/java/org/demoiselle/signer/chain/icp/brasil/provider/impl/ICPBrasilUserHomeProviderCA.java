@@ -60,9 +60,10 @@ import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file (ACcompactado.zip) stored on user home folder,
- * that was previous downloaded by ICPBrasilOnLineSerproProviderCA or ICPBrasilOnLineITIProviderCA.
- * *
+ * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file
+ * (ACcompactado.zip) stored on user home folder, that was previous
+ * downloaded by {@link ICPBrasilOnLineSerproProviderCA} or
+ * {@link ICPBrasilOnLineITIProviderCA}.
  */
 public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
@@ -198,6 +199,5 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	@Override
 	public String getName() {
 		return chainMessagesBundle.getString("info.provider.name.userhome", FULL_PATH_ZIP);
-
 	}
 }

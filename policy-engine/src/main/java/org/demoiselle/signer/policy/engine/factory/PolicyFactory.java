@@ -61,9 +61,10 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 /**
- * Factory for the digital signature policies defined by ICP-BRASIL
- * <p>
- * http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
+ * Factory for the digital signature policies defined by ICP-BRASIL.
+ * Consulte
+ * <a href="http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital">
+ *     portal do ITI</a> para detalhes.
  */
 public class PolicyFactory {
 
@@ -107,7 +108,6 @@ public class PolicyFactory {
 	 * @return LPA ICP Brasil signature policy v1
 	 * @deprecated Politics DISCONTINUED
 	 */
-
 	@Deprecated
 	public LPA loadLPA() {
 		org.demoiselle.signer.policy.engine.asn1.icpb.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.LPA();
@@ -117,12 +117,10 @@ public class PolicyFactory {
 		return listaPoliticaAssinatura;
 	}
 
-
 	/**
 	 * @return LPA ICP Brasil signature policy v2
 	 * @deprecated Politics DISCONTINUED 28/11/2016
 	 */
-
 	@Deprecated
 	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAv2() {
 		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
@@ -137,7 +135,6 @@ public class PolicyFactory {
 	 *
 	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA ICP Brasil signature policy v2
 	 */
-
 	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdES() {
 		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
 		InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.CAdES.getFile());
@@ -170,13 +167,11 @@ public class PolicyFactory {
 		return XMLUtil.loadXMLDocument(is);
 	}
 
-
 	/**
 	 * Load signature policy for CAdES standard (PKCS) from local repository
 	 *
 	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
 	 */
-
 	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESLocal() {
 		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
 		InputStream is;
@@ -197,7 +192,6 @@ public class PolicyFactory {
 		} else {
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
-
 		}
 	}
 
@@ -227,8 +221,6 @@ public class PolicyFactory {
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 		}
-
-
 	}
 
 	/**
@@ -236,7 +228,6 @@ public class PolicyFactory {
 	 *
 	 * @return
 	 */
-
 	public Document loadLPAXAdESLocal() {
 
 		InputStream is = null;
@@ -257,18 +248,14 @@ public class PolicyFactory {
 		} else {
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
-
 		}
-
 	}
-
 
 	/**
 	 * Load signature policy for CAdES standard (PKCS) from url
 	 *
 	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
 	 */
-
 	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESUrl() {
 		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
 		String conURL = ListOfSubscriptionPolicies.CAdES_ITI_URL.getUrl();
@@ -297,7 +284,6 @@ public class PolicyFactory {
 		}
 
 		return listaPoliticaAssinatura;
-
 	}
 
 	/**
@@ -390,7 +376,6 @@ public class PolicyFactory {
 		return listaPoliticaAssinatura;
 	}
 
-
 	/**
 	 * Load signature policy for XAdES (XML) standard from url
 	 */
@@ -423,13 +408,11 @@ public class PolicyFactory {
 		}
 
 		return localLPAXML;
-
 	}
 
 	/**
 	 * Load signature policy for XAdES (XML) standard from local url
 	 */
-
 	public Document loadLocalLPAXAdESUrl() {
 
 		InputStream is;
@@ -452,7 +435,6 @@ public class PolicyFactory {
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
 		return localLPAXML;
-
 	}
 
 	private ASN1Primitive readANS1FromStream(InputStream is) {
@@ -480,7 +462,6 @@ public class PolicyFactory {
 	 */
 	public enum Policies {
 
-
 		AD_RB_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB.der",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RB.der"),
 		AD_RB_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v1_1.der",
@@ -493,7 +474,6 @@ public class PolicyFactory {
 			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.der"),
 		AD_RB_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.der",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.der"),
-
 
 		AD_RT_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT.der",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RT.der"),
@@ -615,7 +595,7 @@ public class PolicyFactory {
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_2.der");
 
 
-		private Policies(String file, String url) {
+		Policies(String file, String url) {
 			this.file = file;
 			this.url = url;
 		}
@@ -632,7 +612,6 @@ public class PolicyFactory {
 			return url;
 		}
 	}
-
 
 	/**
 	 * List of policies:
@@ -652,7 +631,6 @@ public class PolicyFactory {
 		LPAV1_URL("http://politicas.icpbrasil.gov.br/LPA.der"),
 		LPAV2_URL("http://politicas.icpbrasil.gov.br/LPAv2.der"),
 
-
 		CAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades()),
 		CAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades_sha()),
 		XAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades()),
@@ -666,20 +644,13 @@ public class PolicyFactory {
 		PAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades()),
 		PAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades_sha());
 
-
 		private String url;
 		private String file;
 
-
-		private ListOfSubscriptionPolicies(String file) {
+		ListOfSubscriptionPolicies(String file) {
 			this.file = file;
 			this.url = file;
 		}
-
-//        private ListOfSubscriptionPolicies(String file, String url) {
-//        	this.file = file;
-//            this.url = url;
-//        }
 
 		public String getUrl() {
 			return url;
@@ -689,6 +660,4 @@ public class PolicyFactory {
 			return file;
 		}
 	}
-
-
 }
