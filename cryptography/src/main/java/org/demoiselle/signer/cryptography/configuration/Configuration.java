@@ -38,6 +38,7 @@
 package org.demoiselle.signer.cryptography.configuration;
 
 /**
+ * FIXME goes to core
  * Class responsible for concentrating this component's settings
  */
 public class Configuration {
