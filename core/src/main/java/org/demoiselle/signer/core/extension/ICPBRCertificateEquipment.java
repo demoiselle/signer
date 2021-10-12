@@ -50,27 +50,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes<br>
- * <p>
- * <p>
- * <p>
- * oid1 2.16.76.1.3.2 and content = name of the person responsible for
- * the certificate
- * <p>
- * oid2 2.16.76.1.3.3 and content= Brazilian National Registry of Bussiness Entities called
- * Cadastro Nacional de Pessoa Juridica (CNPJ), if the certificate is a CNPJ
- * <p>
- * <p>
- * oid3 2.16.76.1.3.4 and content = In the first 8 (eight) positions, the
- * Date of birth of the person responsible for the certificate, in ddmmaaaa format;
- * In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
- * Responsible; In the 11 (eleven) subsequent positions, the number of
- * Brazilian Social Identification number - NIS (PIS, PASEP or CI); In the 15 (fifteen) positions
- * Subsequent, the Brazilian ID number (called RG) of the responsible for the certificate; In the six (6) positions
- * Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brasilian state).
- * <p>
- * oid4 2.16.76.1.3.8 and content = Corporate name in the the Brazilian IRS's Bussiness Company Registry Number caled CNPJ without abbreviations,
- * if its is an equipment certificate
+ * Has some "ICP-BRASIL Pessoa Juridica and Equipment" attributes
+ *
+ * <ul>
+ *
+ * <li>oid1 2.16.76.1.3.2 and content = name of the person responsible for
+ * the certificate.</li>
+ *
+ * <li>oid2 2.16.76.1.3.3 and content= Brazilian National Registry of
+ * Bussiness Entities called Cadastro Nacional de Pessoa Juridica (CNPJ),
+ * if the certificate is a CNPJ.</li>
+ *
+ * <li>oid3 2.16.76.1.3.4 and content = In the first 8 (eight) positions,
+ * the Date of birth of the person responsible for the certificate, in
+ * ddmmaaaa format.</li>
+ *
+ * <li>In the 11 (eleven) subsequent positions, the Brazilian IRS
+ * Individuals Registry number called CPF of the Responsible;</li>
+ *
+ * <li>In the 11 (eleven) subsequent positions, the number of
+ * Brazilian Social Identification number - NIS (PIS, PASEP or CI);</li>
+ *
+ * <li>In the 15 (fifteen) positions Subsequent, the Brazilian ID number
+ * (called RG) of the responsible for the certificate;</li>
+ *
+ * <li>In the six (6) positions Subsequent, the initials of the issuing
+ * agency of the ID (RG) and its UF (Initials for a Brasilian state).</li>
+ *
+ * <li>oid4 2.16.76.1.3.8 and content = Corporate name in the the Brazilian
+ * IRS's Bussiness Company Registry Number caled CNPJ without abbreviations,
+ * if its is an equipment certificate.</li>
+ *
+ * </ul>
  */
 public class ICPBRCertificateEquipment {
 
@@ -97,6 +108,8 @@ public class ICPBRCertificateEquipment {
 	 *             Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brasilian state).
 	 * @param oid4 2.16.76.1.3.8 and content = Corporate name in the the Brazilian IRS's Bussiness Company Registry Number caled CNPJ without abbreviations,
 	 *             if its is an equipment certificate
+	 * @param oid5 fake.
+	 * @param serialNumber fake
 	 */
 	public ICPBRCertificateEquipment(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_8 oid4,
 									 OID_2_5_29_17 oid5, String serialNumber) {

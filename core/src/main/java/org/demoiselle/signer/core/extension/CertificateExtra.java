@@ -301,7 +301,7 @@ public class CertificateExtra {
 	}
 
 	/**
-	 * @return
+	 * @return fake.
 	 */
 	public OID_1_3_6_1_4_1_311_60_2_1_3 getOID_1_3_6_1_4_1_311_60_2_1_3() {
 		return (OID_1_3_6_1_4_1_311_60_2_1_3) extras.get("1.3.6.1.4.1.311.60.2.1.3");

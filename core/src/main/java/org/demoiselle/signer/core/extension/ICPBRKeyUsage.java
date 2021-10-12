@@ -65,30 +65,65 @@ public class ICPBRKeyUsage {
 		this.keyUsage = cert.getKeyUsage();
 	}
 
+	/**
+	 * Fake.
+	 *
+	 * @return Fake boolean.
+	 */
 	public boolean isDigitalSignature() {
 		return keyUsage[0];
 	}
 
+	/**
+	 * Fake.
+	 *
+	 * @return Fake boolean.
+	 */
 	public boolean isNonRepudiation() {
 		return keyUsage[1];
 	}
 
+	/**
+	 * Fake.
+	 *
+	 * @return Fake boolean.
+	 */
 	public boolean isKeyEncipherment() {
 		return keyUsage[2];
 	}
 
+	/**
+	 * Fake.
+	 *
+	 * @return Fake boolean.
+	 */
 	public boolean isDataEncipherment() {
 		return keyUsage[3];
 	}
 
+	/**
+	 * Fake.
+	 *
+	 * @return Fake boolean.
+	 */
 	public boolean isKeyAgreement() {
 		return keyUsage[4];
 	}
 
+	/**
+	 * Checks.
+	 *
+	 * @return cert sign.
+	 */
 	public boolean isKeyCertSign() {
 		return keyUsage[5];
 	}
 
+	/**
+	 * Get is CRL sign.
+	 *
+	 * @return is CRL sign.
+	 */
 	public boolean isCRLSign() {
 		return keyUsage[6];
 	}
@@ -97,6 +132,11 @@ public class ICPBRKeyUsage {
 		return keyUsage[7];
 	}
 
+	/**
+	 * Get if is only cipher.
+	 *
+	 * @return is only cipher.
+	 */
 	public boolean isDecipherOnly() {
 		return keyUsage[8];
 	}

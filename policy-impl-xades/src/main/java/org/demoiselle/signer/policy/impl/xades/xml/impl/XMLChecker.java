@@ -122,7 +122,7 @@ public class XMLChecker implements Checker {
 	 *
 	 * @param isFileLocation true if the next parameter is a path and name for XML file
 	 * @param xmlSignedFile  path and name for XML file
-	 * @return
+	 * @return fake.
 	 */
 	@Override
 	public boolean check(boolean isFileLocation, String xmlSignedFile) throws XMLSignerException {
@@ -149,8 +149,8 @@ public class XMLChecker implements Checker {
 	 * * XML signature validation using byte[] data.
 	 * The content must contains both content and signature
 	 *
-	 * @param docData
-	 * @return
+	 * @param docData fake.
+	 * @return fake.
 	 */
 	@Override
 	public boolean check(byte[] docData) throws XMLSignerException {
@@ -183,9 +183,9 @@ public class XMLChecker implements Checker {
 	 * XML signature validation with detached content from path and file names
 	 * example: check("/tmp/signedFile","/tmp/signaturefile.xml")
 	 *
-	 * @param signedContentFileName
-	 * @param signatureFileName
-	 * @return
+	 * @param signedContentFileName fake.
+	 * @param signatureFileName fake.
+	 * @return fake.
 	 */
 	@Override
 	public boolean check(String signedContentFileName, String signatureFileName) throws XMLSignerException {
@@ -213,7 +213,7 @@ public class XMLChecker implements Checker {
 	 *
 	 * @param signedContent a signed content in byte[] format
 	 * @param signature     the XML signature in byte[] format
-	 * @return
+	 * @return fake.
 	 */
 	@Override
 	public boolean check(byte[] signedContent, byte[] signature) throws XMLSignerException {
@@ -232,10 +232,10 @@ public class XMLChecker implements Checker {
 	}
 
 	/**
-	 * XML signature validation from InputStream that represents a XML file
+	 * XML signature validation from InputStream that represents a XML file.
 	 *
-	 * @param isXMLFile
-	 * @return
+	 * @param isXMLFile fake.
+	 * @return fake.
 	 */
 	@Override
 	public boolean check(InputStream isXMLFile) throws XMLSignerException {
@@ -250,9 +250,9 @@ public class XMLChecker implements Checker {
 	/**
 	 * XML signature detached validation from InputStream that represents a content and XML Signature
 	 *
-	 * @param isContent
-	 * @param isXMLSignature
-	 * @return
+	 * @param isContent fake.
+	 * @param isXMLSignature fake.
+	 * @return fake.
 	 */
 	@Override
 	public boolean check(InputStream isContent, InputStream isXMLSignature) throws XMLSignerException {
@@ -359,9 +359,9 @@ public class XMLChecker implements Checker {
 	/**
 	 * XML signature validation with detached hash content and signature.
 	 *
-	 * @param docHash
-	 * @param signature
-	 * @return
+	 * @param docHash fake.
+	 * @param signature fake.
+	 * @return fake.
 	 */
 	public boolean checkHash(byte[] docHash, byte[] signature) {
 		if (docHash == null || docHash.length <= 0) {
@@ -382,8 +382,8 @@ public class XMLChecker implements Checker {
 	 * Verify signature from String that represents a XML Document
 	 * The content must contains both content and signature
 	 *
-	 * @param xmlAsString
-	 * @return
+	 * @param xmlAsString fake.
+	 * @return fake.
 	 */
 	public boolean check(String xmlAsString) {
 

@@ -363,8 +363,9 @@ public class PolicyFactory {
 
 	/**
 	 * Load signature policy for XAdES (XML) standard from url
+	 *
+	 * @return fake.
 	 */
-
 	public Document loadLPAXAdESUrl() {
 
 		Document localLPAXML;
@@ -390,6 +391,8 @@ public class PolicyFactory {
 
 	/**
 	 * Load signature policy for XAdES (XML) standard from local url
+	 *
+	 * @return fake.
 	 */
 	public Document loadLocalLPAXAdESUrl() {
 

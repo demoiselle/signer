@@ -46,17 +46,17 @@ import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
- * Abstract class for provide methods to get org.bouncycastle.asn1.DERSequence
- * and  org.bouncycastle.asn1.ASN1Enumerated from org.bouncycastle.asn1.ASN1Primitive
+ * Abstract class for provide methods to get {@link DERSequence}
+ * and {@link ASN1Enumerated} from {@link ASN1Primitive}.
  */
 public abstract class ASN1Object {
 
-	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
 	/**
-	 * @param derObject Object to convert
-	 * @return org.bouncycastle.asn1.DERSequence Converted sequence or null, if not possible
-	 * @see org.bouncycastle.asn1.ASN1Primitive ASN1 primitive
+	 * @param derObject Object to convert from.
+	 * @return Corresponding {@link DERSequence} or null, if not possible.
+	 * @see ASN1Primitive
 	 */
 	public static ASN1Sequence getDERSequence(ASN1Primitive derObject) {
 		ASN1Sequence sequence = null;
@@ -76,8 +76,9 @@ public abstract class ASN1Object {
 
 	/**
 	 * @param derObject Primitive object to convert to Enumerated
-	 * @return org.bouncycastle.asn1.ASN1Enumerated ASN1 Enumerated, or null if not possible to convert
-	 * @see org.bouncycastle.asn1.ASN1Primitive
+	 * @return ASN1 Enumerated ({@link ASN1Enumerated}), or null
+	 * if not possible to convert.
+	 * @see ASN1Primitive
 	 */
 	public static ASN1Enumerated getDEREnumerated(ASN1Primitive derObject) {
 		ASN1Enumerated derEnumerated = null;

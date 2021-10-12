@@ -130,9 +130,9 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * To set another policy @see PolicyUtils
+	 * To set another policy @see PolicyUtils.
 	 *
-	 * @param policyOID
+	 * @param policyOID the policy OID.
 	 */
 	public void setPolicyId(String policyOID) {
 		this.policyOID = policyOID;

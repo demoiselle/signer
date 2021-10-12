@@ -96,7 +96,7 @@ public class Utils {
 	 *
 	 * @param content  Content to be written to disk
 	 * @param parmFile Filename and path
-	 * @throws CertificateCoreException
+	 * @throws CertificateCoreException fake.
 	 */
 	public static void writeContent(byte[] content, String parmFile) throws CertificateCoreException {
 		try {
