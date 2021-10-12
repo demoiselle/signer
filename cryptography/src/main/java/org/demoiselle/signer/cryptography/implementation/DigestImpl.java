@@ -129,6 +129,7 @@ public class DigestImpl implements Digest {
 	}
 
 	/**
+	 * FIXME goes to core (reused in many places)
 	 * convert a byte[] into HEXADECIMAL base content.
 	 *
 	 * @param data
