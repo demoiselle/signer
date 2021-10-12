@@ -37,14 +37,6 @@
 
 package org.demoiselle.signer.policy.engine.factory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
@@ -58,9 +50,16 @@ import org.demoiselle.signer.policy.engine.util.XMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
+ * FIXME move to policy.engine package?
+ * FIXME should we value https over http to get policies?
  * Factory for the digital signature policies defined by ICP-BRASIL.
  * Consulte
  * <a href="http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital">
@@ -99,6 +98,8 @@ public class PolicyFactory {
 	public Document loadXMLPolicy(Policies policy) {
 		SignaturePolicy signaturePolicy = new SignaturePolicy();
 		InputStream is = this.getClass().getResourceAsStream(policy.getFile());
+
+		// FIXME from now on should goes to core loadDocumentFromInputStream
 		Document policyXML = XMLUtil.loadXMLDocument(is);
 		signaturePolicy.setSignPolicyURI(policy.getUrl());
 		return policyXML;
@@ -224,6 +225,7 @@ public class PolicyFactory {
 	}
 
 	/**
+	 * FIXME core should take care of file, URL and similar things used over and over again
 	 * Load signature policy for XAdES (XML) standard from local repository
 	 *
 	 * @return

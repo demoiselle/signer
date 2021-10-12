@@ -60,6 +60,7 @@ public class LPARepository {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LPARepository.class);
 
 	/**
+	 * FIXME function to download and persist content from URL should goes to core, only LPA details stay here
 	 * to save file on user local directory
 	 *
 	 * @param urlConLPA Url for get the LPA file

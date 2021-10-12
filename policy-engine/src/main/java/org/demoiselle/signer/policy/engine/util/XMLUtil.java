@@ -48,6 +48,9 @@ import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
+/**
+ * FIXME goes to core in this architecture?
+ */
 public class XMLUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(XMLUtil.class);
 	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");

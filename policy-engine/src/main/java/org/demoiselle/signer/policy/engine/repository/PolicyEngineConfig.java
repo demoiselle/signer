@@ -55,6 +55,8 @@ public class PolicyEngineConfig {
 	private static final Logger logger = LoggerFactory.getLogger(PolicyEngineConfig.class);
 
 	private static PolicyEngineConfig instance = null;
+
+	// FIXME it seems a case for Properties class, not ResourceBundle.
 	private static ResourceBundle bundle = null;
 	private static MessagesBundle PolicyEngineMessagesBundle = new MessagesBundle();
 
