@@ -61,6 +61,7 @@ public class DigestImpl implements Digest {
 	private final int BUFSIZE = 256;
 	private static MessagesBundle crytographyMessagesBundle = new MessagesBundle("messages_cryptography");
 
+	// FIXME should check the name (avoid garbage-in garbage-out)
 	@Override
 	public void setAlgorithm(String algorithm) {
 		this.algorithm = algorithm;

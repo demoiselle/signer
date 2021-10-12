@@ -38,6 +38,7 @@
 package org.demoiselle.signer.cryptography;
 
 /**
+ * FIXME maybe a better name is just SymmetricAlgorithm
  * Defines the algorithms used for ICP-Brasil (PKI) standard symmetric encryption.
  * <p>
  * Private Document Security of the Proprietary Entity and its Normative Backup

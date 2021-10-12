@@ -38,6 +38,7 @@
 package org.demoiselle.signer.cryptography;
 
 /**
+ * FIXME maybe a better name is just DigestAlgorithm
  * Defines the Digest algorithms,
  * according to the standard defined by the Brazilian public key infrastructure (ICP-Brasil).
  */
@@ -60,7 +61,7 @@ public enum DigestAlgorithmEnum {
 
 	private String algorithm;
 
-	private DigestAlgorithmEnum(String algorithm) {
+	DigestAlgorithmEnum(String algorithm) {
 		this.algorithm = algorithm;
 	}
 

@@ -284,6 +284,11 @@ public class CAdESTimeStampSignerTest {
 		}
 	}
 
+	/**
+	 * FIXME goes to core
+	 * @param parmFile file to read
+	 * @return content of file.
+	 */
 	private byte[] readContent(String parmFile) {
 		byte[] result = null;
 		try {
@@ -326,13 +331,13 @@ public class CAdESTimeStampSignerTest {
 			e1.printStackTrace();
 			return null;
 		}
-
 	}
 
 	/**
-	 * Faz a leitura do certificado armazenado em arquivo (A1)
+	 * Faz a leitura do certificado armazenado em arquivo (A1).
+	 *
+	 * @return keystore obtido de arquivo.
 	 */
-
 	private KeyStore getKeyStoreFile() {
 
 		try {

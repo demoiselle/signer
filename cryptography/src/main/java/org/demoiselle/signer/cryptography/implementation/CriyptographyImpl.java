@@ -54,6 +54,7 @@ import org.demoiselle.signer.cryptography.util.MessagesBundle;
 import com.sun.crypto.provider.SunJCE;
 
 /**
+ * FIXME maybe it is better as a value object
  * Standard implementation for the @link Cryptography interface
  */
 @SuppressWarnings("restriction")
@@ -62,7 +63,10 @@ public class CriyptographyImpl implements Cryptography {
 	private String algorithm;
 	private String keyAlgorithm;
 	private Integer size;
+
+	// FIXME is it needed? this is the default one?
 	private Provider provider = new SunJCE();
+
 	private Key key;
 	private Cipher cipher;
 	private static MessagesBundle crytographyMessagesBundle = new MessagesBundle("messages_cryptography");

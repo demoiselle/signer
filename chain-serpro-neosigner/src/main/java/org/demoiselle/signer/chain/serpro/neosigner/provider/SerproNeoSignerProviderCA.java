@@ -86,8 +86,6 @@ public class SerproNeoSignerProviderCA implements ProviderCA {
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPRO));
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPROSoftware));
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPROSoftware));
-
-
 		} catch (Throwable error) {
 			logger.error(error.getMessage());
 			return null;
