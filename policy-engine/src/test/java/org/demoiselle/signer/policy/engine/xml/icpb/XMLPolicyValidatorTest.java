@@ -56,7 +56,6 @@ public class XMLPolicyValidatorTest {
 			new XMLPolicyValidator(PolicyFactory.getInstance().loadXMLPolicy(PolicyFactory.Policies.AD_RA_XADES_2_4));
 		assertTrue(xMLPolicyValidator.validate());
 		System.out.println(xMLPolicyValidator.getXmlSignaturePolicy().toString());
-
 	}
 
 }

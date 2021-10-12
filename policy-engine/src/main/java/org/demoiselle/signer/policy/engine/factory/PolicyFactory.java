@@ -63,14 +63,14 @@ import java.nio.file.Paths;
  * Factory for the digital signature policies defined by ICP-BRASIL.
  * Consulte
  * <a href="http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital">
- *     portal do ITI</a> para detalhes.
+ * portal do ITI</a> para detalhes.
  */
 public class PolicyFactory {
 
 	public static final PolicyFactory instance = new PolicyFactory();
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PolicyFactory.class);
-	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
 	public static PolicyFactory getInstance() {
 		return PolicyFactory.instance;
@@ -96,12 +96,10 @@ public class PolicyFactory {
 	 * @return The corresponding {@link Document}.
 	 */
 	public Document loadXMLPolicy(Policies policy) {
-		SignaturePolicy signaturePolicy = new SignaturePolicy();
 		InputStream is = this.getClass().getResourceAsStream(policy.getFile());
-
 		// FIXME from now on should goes to core loadDocumentFromInputStream
 		Document policyXML = XMLUtil.loadXMLDocument(is);
-		signaturePolicy.setSignPolicyURI(policy.getUrl());
+
 		return policyXML;
 	}
 
@@ -232,8 +230,8 @@ public class PolicyFactory {
 	 */
 	public Document loadLPAXAdESLocal() {
 
-		InputStream is = null;
-		Document localLPAXML = null;
+		InputStream is;
+		Document localLPAXML;
 		try {
 			ConfigurationRepo config = ConfigurationRepo.getInstance();
 			Path pathLPA = Paths.get(config.getLpaPath(), "LPA_XAdES.xml");
@@ -272,17 +270,12 @@ public class PolicyFactory {
 				LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
 				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			}
-		} catch (RuntimeException ex) {
+		} catch (IOException | RuntimeException ex) {
 			LOGGER.error(ex.getMessage());
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			listaPoliticaAssinatura = loadLocalLPACAdESUrl();
 			return listaPoliticaAssinatura;
 
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-			listaPoliticaAssinatura = loadLocalLPACAdESUrl();
-			return listaPoliticaAssinatura;
 		}
 
 		return listaPoliticaAssinatura;
@@ -335,12 +328,7 @@ public class PolicyFactory {
 				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			}
 			listaPoliticaAssinatura.parse(primitive);
-		} catch (RuntimeException e) {
-			LOGGER.error(e.getMessage());
-			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-			listaPoliticaAssinatura = loadLocalLPAPAdESUrl();
-			return listaPoliticaAssinatura;
-		} catch (IOException e) {
+		} catch (IOException | RuntimeException e) {
 			LOGGER.error(e.getMessage());
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			listaPoliticaAssinatura = loadLocalLPAPAdESUrl();
@@ -368,10 +356,7 @@ public class PolicyFactory {
 				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			}
 			listaPoliticaAssinatura.parse(primitive);
-		} catch (RuntimeException e) {
-			LOGGER.error(e.getMessage());
-			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-		} catch (IOException e) {
+		} catch (IOException | RuntimeException e) {
 			LOGGER.error(e.getMessage());
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
@@ -384,7 +369,7 @@ public class PolicyFactory {
 
 	public Document loadLPAXAdESUrl() {
 
-		Document localLPAXML = null;
+		Document localLPAXML;
 		String conURL = ListOfSubscriptionPolicies.XAdES_ITI_URL.getUrl();
 
 		try {
@@ -396,19 +381,12 @@ public class PolicyFactory {
 				LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
 				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			}
-		} catch (RuntimeException ex) {
+		} catch (IOException | RuntimeException ex) {
 			LOGGER.error(ex.getMessage());
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			localLPAXML = loadLocalLPAXAdESUrl();
 			return localLPAXML;
-
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
-			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-			localLPAXML = loadLocalLPAXAdESUrl();
-			return localLPAXML;
 		}
-
 		return localLPAXML;
 	}
 
@@ -418,7 +396,7 @@ public class PolicyFactory {
 	public Document loadLocalLPAXAdESUrl() {
 
 		InputStream is;
-		Document localLPAXML = null;
+		Document localLPAXML;
 		String conURL = ListOfSubscriptionPolicies.XAdES_LOCAL_URL.getUrl();
 		try {
 			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url", conURL));
@@ -429,10 +407,7 @@ public class PolicyFactory {
 				LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
 				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			}
-		} catch (RuntimeException e) {
-			LOGGER.error(e.getMessage());
-			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-		} catch (IOException e) {
+		} catch (IOException | RuntimeException e) {
 			LOGGER.error(e.getMessage());
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
@@ -446,12 +421,14 @@ public class PolicyFactory {
 			primitive = asn1is.readObject();
 		} catch (IOException error) {
 			LOGGER.error("Error reading stream.", error);
+			// FIXME we should use an appropriate exception (specific one)
 			throw new RuntimeException(error);
 		} finally {
 			try {
 				asn1is.close();
 			} catch (IOException error) {
 				LOGGER.error(error.getMessage());
+				// FIXME it has some side effects
 				throw new RuntimeException(error);
 			}
 		}
@@ -459,6 +436,8 @@ public class PolicyFactory {
 	}
 
 	/**
+	 * FIXME this is not consistent with other similar issues. Should all use the same strategy?
+	 * FIXME use https instead of http
 	 * Policies available on the ITI website.
 	 * http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
 	 */
@@ -602,13 +581,13 @@ public class PolicyFactory {
 			this.url = url;
 		}
 
-		private String file;
+		private final String file;
 
 		public String getFile() {
 			return file;
 		}
 
-		private String url;
+		private final String url;
 
 		public String getUrl() {
 			return url;
@@ -646,8 +625,8 @@ public class PolicyFactory {
 		PAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades()),
 		PAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades_sha());
 
-		private String url;
-		private String file;
+		private final String url;
+		private final String file;
 
 		ListOfSubscriptionPolicies(String file) {
 			this.file = file;

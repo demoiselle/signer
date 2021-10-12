@@ -44,7 +44,7 @@ import java.util.List;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
- * Class to represent a XML Signature Policy
+ * Class to represent an XML Signature Policy
  *
  * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
