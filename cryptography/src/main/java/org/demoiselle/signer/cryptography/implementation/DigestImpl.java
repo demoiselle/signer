@@ -98,6 +98,7 @@ public class DigestImpl implements Digest {
 			MessageDigest md = MessageDigest.getInstance(this.algorithm);
 			FileInputStream fileIS = new FileInputStream(file);
 			BufferedInputStream bis = new BufferedInputStream(fileIS);
+			// FIXME no need for this extra brocker DataInputStream
 			DataInputStream dis = new DataInputStream(bis);
 			DigestInputStream digin = new DigestInputStream(dis, md);
 			byte[] buffer = new byte[BUFSIZE];
@@ -129,6 +130,7 @@ public class DigestImpl implements Digest {
 	}
 
 	/**
+	 * FIXME goes to core (reused in many places)
 	 * convert a byte[] into HEXADECIMAL base content.
 	 *
 	 * @param data
