@@ -82,5 +82,4 @@ public class GeneralizedTime extends ASN1Object {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
 }

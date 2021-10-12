@@ -98,9 +98,7 @@ public class PolicyFactory {
 	public Document loadXMLPolicy(Policies policy) {
 		InputStream is = this.getClass().getResourceAsStream(policy.getFile());
 		// FIXME from now on should goes to core loadDocumentFromInputStream
-		Document policyXML = XMLUtil.loadXMLDocument(is);
-
-		return policyXML;
+		return XMLUtil.loadXMLDocument(is);
 	}
 
 	/**
@@ -226,7 +224,7 @@ public class PolicyFactory {
 	 * FIXME core should take care of file, URL and similar things used over and over again
 	 * Load signature policy for XAdES (XML) standard from local repository
 	 *
-	 * @return
+	 * @return load XML file as Document.
 	 */
 	public Document loadLPAXAdESLocal() {
 
