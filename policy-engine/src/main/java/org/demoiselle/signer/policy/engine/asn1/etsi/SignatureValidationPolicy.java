@@ -57,6 +57,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *     signPolExtensions {@link SignPolExtensions} OPTIONAL
  * }
  * </pre>
+ *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SignatureValidationPolicy extends ASN1Object {
 

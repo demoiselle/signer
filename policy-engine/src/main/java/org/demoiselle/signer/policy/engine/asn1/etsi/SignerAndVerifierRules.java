@@ -51,6 +51,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *     verifierRules {@link VerifierRules}
  * }
  * </pre>
+ *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SignerAndVerifierRules extends ASN1Object {
 

@@ -52,7 +52,8 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  */
 public enum CertRefReq {
 
-	signerOnly(1), fullPath(2);
+	signerOnly(1),
+	fullPath(2);
 
 	private int value;
 

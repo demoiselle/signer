@@ -55,6 +55,9 @@ import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
  * 				signPolExtensions {@link SignPolExtensions} OPTIONAL
  * }
  * </pre>
+ *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SignPolicyInfo extends ASN1Object {
 

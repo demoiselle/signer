@@ -71,7 +71,7 @@ public class AlgorithmConstraints extends ASN1Object {
 			AlgAndLength algAndLength = new AlgAndLength();
 			algAndLength.parse(derSequence.getObjectAt(i).toASN1Primitive());
 			if (this.algAndLengths == null) {
-				this.algAndLengths = new ArrayList<AlgAndLength>();
+				this.algAndLengths = new ArrayList<>();
 			}
 			this.algAndLengths.add(algAndLength);
 		}

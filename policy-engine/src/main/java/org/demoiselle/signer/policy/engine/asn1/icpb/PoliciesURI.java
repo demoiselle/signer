@@ -46,14 +46,13 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * String textualPolicyURI; String asn1PolicyURI; String xmlPolicyURI;
  *
  */
-
 public class PoliciesURI extends ASN1Object {
 
 	enum TAG {
 		textualPolicyURI(0), asn1PolicyURI(1), xmlPolicyURI(2);
 		int value;
 
-		private TAG(int value) {
+		TAG(int value) {
 			this.value = value;
 		}
 

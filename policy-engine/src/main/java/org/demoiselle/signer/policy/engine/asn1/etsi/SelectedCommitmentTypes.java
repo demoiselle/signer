@@ -54,6 +54,11 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *   recognizedCommitmentType {@link CommitmentType}
  * }
  * </pre>
+ *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERNull
+ * @see DERSequence
  */
 public class SelectedCommitmentTypes extends ASN1Object {
 

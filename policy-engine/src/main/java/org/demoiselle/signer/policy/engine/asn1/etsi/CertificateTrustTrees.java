@@ -52,6 +52,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * the TSA's certificate and attribute certificates
  * <p>
  * Collection&lt; CertificateTrustPoint &gt; @link CertificateTrustPoint
+ *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
  */
 public class CertificateTrustTrees extends ASN1Object {
 

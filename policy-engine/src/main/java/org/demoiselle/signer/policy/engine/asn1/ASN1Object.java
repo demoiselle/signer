@@ -48,6 +48,13 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 /**
  * Abstract class for provide methods to get {@link DERSequence}
  * and {@link ASN1Enumerated} from {@link ASN1Primitive}.
+ *
+ * @see ASN1Enumerated
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERSequence
+ * @see DERTaggedObject
+ * @see DLSequence
  */
 public abstract class ASN1Object {
 

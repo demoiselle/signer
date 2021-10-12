@@ -42,10 +42,12 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * parse an org.bouncycastle.asn1.ASN1Primitive to get
- * <p>
- * {@link EnuRevReq },
- * {@link SignPolExtensions} OPTIONAL
+ * Parse an {@link ASN1Primitive} to get
+ * {@link EnuRevReq } and
+ * {@link SignPolExtensions} OPTIONAL.
+ *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class RevReq extends ASN1Object {
 
@@ -77,6 +79,5 @@ public class RevReq extends ASN1Object {
 			this.exRevReq = new SignPolExtensions();
 			this.exRevReq.parse(derSequence.getObjectAt(1).toASN1Primitive());
 		}
-
 	}
 }

@@ -43,10 +43,15 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * AlgAndLength ::= SEQUENCE {
- * algID {@link ObjectIdentifier} ,
- * minKeyLength INTEGER
- * OPTIONAL, -- Minimum key length in bits other SignPolExtensions OPTIONAL }
+ *
+ * <pre>
+ *     AlgAndLength ::= SEQUENCE {
+ *        algID {@link ObjectIdentifier} ,
+ *        minKeyLength INTEGER
+ *        OPTIONAL,
+ *        -- Minimum key length in bits other SignPolExtensions OPTIONAL
+ *     }
+ * </pre>
  *
  * @author 09275643784
  */

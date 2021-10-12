@@ -55,6 +55,12 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * there is no limit to the allowed length of the certification path.
  * <p>
  * Collection&lt; @link ObjectIdentifier &gt; PathLenConstraint ::= INTEGER (0..MAX)
+ *
+ * @see ASN1Primitive
+ * @see DERSequence
+ * @see DERTaggedObject
+ * @see org.bouncycastle.asn1.ASN1Object
+ * @see ASN1Object
  */
 public class PathLenConstraint extends ASN1Object {
 
@@ -69,6 +75,7 @@ public class PathLenConstraint extends ASN1Object {
 		this.pathLenConstraints = pathLenConstraints;
 	}
 
+	// FIXME there are many parser methods with this strategy should we refactor it?
 	@Override
 	public void parse(ASN1Primitive derObject) {
 		DERTaggedObject derTaggedObject = (DERTaggedObject) derObject;
@@ -78,7 +85,7 @@ public class PathLenConstraint extends ASN1Object {
 			ObjectIdentifier objectIdentifier = new ObjectIdentifier();
 			objectIdentifier.parse(derSequence.getObjectAt(i).toASN1Primitive());
 			if (this.pathLenConstraints == null) {
-				this.pathLenConstraints = new ArrayList<ObjectIdentifier>();
+				this.pathLenConstraints = new ArrayList<>();
 			}
 			this.pathLenConstraints.add(objectIdentifier);
 		}

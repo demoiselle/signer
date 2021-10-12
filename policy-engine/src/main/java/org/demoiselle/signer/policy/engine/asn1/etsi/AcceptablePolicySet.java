@@ -47,10 +47,10 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 /**
  * The acceptablePolicySet field identifies the initial set of certificate policies,
  * any of which are acceptable under the signature policy.
- * <p>
- * AcceptablePolicySet ::= SEQUENCE OF CertPolicyId
- * <p>
- * Collection&lt; CertPolicyId &gt; @link CertPolicyId
+ *
+ * <pre>AcceptablePolicySet ::= SEQUENCE OF CertPolicyId</pre>
+ *
+ * @see CertPolicyId
  */
 public class AcceptablePolicySet extends ASN1Object {
 

@@ -53,6 +53,9 @@ import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
  * 					notBefore {@link GeneralizedTime},
  * 					notAfter {@link GeneralizedTime} OPTIONAL }
  * </pre>
+ *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SigningPeriod extends ASN1Object {
 

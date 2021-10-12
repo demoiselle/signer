@@ -47,6 +47,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * org.bouncycastle.asn1.esf.OtherHashAlgAndValue asn1PolicyDigest;
  * org.bouncycastle.asn1.esf.OtherHashAlgAndValue xmlPolicyDigest;
  *
+ * @see org.bouncycastle.asn1.esf.OtherHashAlgAndValue
  */
 public class PoliciesDigest extends ASN1Object {
 
@@ -56,11 +57,13 @@ public class PoliciesDigest extends ASN1Object {
 
 	enum TAG {
 
-		textualPolicyDigest(0), asn1PolicyDigest(1), xmlPolicyDigest(2);
+		textualPolicyDigest(0),
+		asn1PolicyDigest(1),
+		xmlPolicyDigest(2);
 
 		int value;
 
-		private TAG(int value) {
+		TAG(int value) {
 			this.value = value;
 		}
 

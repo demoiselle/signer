@@ -51,6 +51,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * eitherCheck (3), -- At least one of CRL or OCSP checks shall be carried out
  * noCheck (4), -- no check is mandated
  * other (5) -- Other mechanism as defined by signature policy extension }
+ *
+ * @see ASN1Enumerated
+ * @see ASN1Primitive
  */
 public enum EnuRevReq {
 

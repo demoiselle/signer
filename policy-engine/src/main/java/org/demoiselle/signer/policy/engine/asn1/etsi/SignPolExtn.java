@@ -53,6 +53,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * The extnValue field shall contain the DER(see ITU-T Recommendation X.690 [3])
  * encoded value of the extension. The definition of an extension, as identified by
  * extnID shall include a definition of the syntax and semantics of the extension.</p>
+ *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SignPolExtn extends ASN1Object {
 

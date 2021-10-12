@@ -55,6 +55,11 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * }
  * <p>
  * {@link SkipCerts} ::= INTEGER (0..MAX)
+ *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERTaggedObject
+ * @see ASN1Object
  */
 public class PolicyConstraints extends ASN1Object {
 

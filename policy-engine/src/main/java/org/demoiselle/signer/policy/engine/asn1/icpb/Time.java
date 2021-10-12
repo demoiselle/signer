@@ -49,6 +49,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *
  * Parse {@link ASN1Primitive} and transform {@link ASN1GeneralizedTime} to {@link Date}
  *
+ * @see ASN1GeneralizedTime
+ * @see ASN1Primitive
+ * @see DERUTCTime
  */
 public class Time extends ASN1Object {
 

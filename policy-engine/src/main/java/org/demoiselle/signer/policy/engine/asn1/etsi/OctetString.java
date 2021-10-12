@@ -45,7 +45,13 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
- * To get UTF8 String value of DEROctetString
+ * To get UTF8 String value of DEROctetString.
+ *
+ * @see ASN1Primitive
+ * @see DEROctetString
+ * @see ASN1Object
+ * @see org.bouncycastle.asn1.ASN1Object
+ * @see MessagesBundle
  */
 public class OctetString extends ASN1Object {
 
@@ -63,7 +69,7 @@ public class OctetString extends ASN1Object {
 	}
 
 	public String getValueUTF8() {
-		String result = null;
+		String result;
 		try {
 			result = new String(this.derOctetString.getOctets(), "UTF8");
 		} catch (UnsupportedEncodingException error) {

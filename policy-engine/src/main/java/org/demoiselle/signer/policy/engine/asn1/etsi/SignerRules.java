@@ -81,6 +81,13 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *
  * CMSAttrs ::= SEQUENCE OF OBJECT IDENTIFIER *
  * </pre>
+ *
+ * @see ASN1Boolean
+ * @see ASN1Encodable
+ * @see ASN1Sequence
+ * @see ASN1Primitive
+ * @see DERSequence
+ * @see DERTaggedObject
  */
 public class SignerRules extends ASN1Object {
 
@@ -197,6 +204,7 @@ public class SignerRules extends ASN1Object {
 		mandatedCertificateRef(0),
 		mandatedCertificateInfo(1),
 		signPolExtensions(2);
+
 		private int value;
 
 		TAG(int value) {

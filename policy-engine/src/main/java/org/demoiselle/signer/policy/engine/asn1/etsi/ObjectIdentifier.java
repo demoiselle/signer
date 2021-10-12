@@ -42,7 +42,11 @@ import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * parse an org.bouncycastle.asn1.ASN1Primitive to get the OID as a string
+ * FIXME should it be betther with a factory method parse?
+ *
+ * Parse an {@link ASN1Primitive} to get the OID as a string.
+ *
+ * @see ASN1ObjectIdentifier
  */
 public class ObjectIdentifier extends ASN1Object {
 

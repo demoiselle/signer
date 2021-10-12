@@ -58,6 +58,9 @@ import org.bouncycastle.asn1.ASN1Primitive;
  * ambiguity. Another difference is the possibility to encode time
  * information of any wanted precision via the fractional seconds
  * element.</p>
+ *
+ * @see ASN1GeneralizedTime
+ * @see ASN1Primitive
  */
 public class GeneralizedTime extends ASN1Object {
 

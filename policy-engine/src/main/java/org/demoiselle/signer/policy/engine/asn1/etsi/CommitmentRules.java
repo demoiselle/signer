@@ -45,9 +45,16 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * The CommitmentRules consists of the validation rules which apply to given commitment types:
+ * The CommitmentRules consists of the validation rules which
+ * apply to given commitment types:
+ *
+ * <pre>
  * CommitmentRules ::= SEQUENCE OF CommitmentRule
- * {@link CommitmentRule}
+ * </pre>
+ *
+ * @see CommitmentRule
+ * @see ASN1Object
+ * @see ASN1Sequence
  */
 public class CommitmentRules extends ASN1Object {
 
@@ -57,7 +64,8 @@ public class CommitmentRules extends ASN1Object {
 		return commitmentRules;
 	}
 
-	public void setCommitmentRules(Collection<CommitmentRule> commitmentRules) {
+	public void setCommitmentRules(
+		final Collection<CommitmentRule> commitmentRules) {
 		this.commitmentRules = commitmentRules;
 	}
 
@@ -69,7 +77,7 @@ public class CommitmentRules extends ASN1Object {
 			CommitmentRule commitmentRule = new CommitmentRule();
 			commitmentRule.parse(derSequence.getObjectAt(i).toASN1Primitive());
 			if (this.commitmentRules == null) {
-				this.commitmentRules = new ArrayList<CommitmentRule>();
+				this.commitmentRules = new ArrayList<>();
 			}
 			this.commitmentRules.add(commitmentRule);
 		}

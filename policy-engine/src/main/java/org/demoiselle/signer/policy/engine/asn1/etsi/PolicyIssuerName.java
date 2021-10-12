@@ -42,6 +42,7 @@ import java.util.Map;
 
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERPrintableString;
 import org.bouncycastle.asn1.DERSequence;
@@ -56,6 +57,18 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
  * The policyIssuerName field identifies the policy issuer in one or more of the general name forms.
  * <p>
  * PolicyIssuerName ::= GeneralNames
+ *
+ * @see ASN1Encodable
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DEROctetString
+ * @see DERPrintableString
+ * @see DERSequence
+ * @see DERSet
+ * @see DERTaggedObject
+ * @see DERUTF8String
+ * @see DLSequence
+ * @see ASN1Object
  */
 public class PolicyIssuerName extends ASN1Object {
 

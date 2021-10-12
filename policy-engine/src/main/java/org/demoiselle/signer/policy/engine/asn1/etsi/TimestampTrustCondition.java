@@ -62,11 +62,15 @@ public class TimestampTrustCondition extends ASN1Object {
 
 	enum TAG {
 
-		ttsCertificateTrustTrees(0), ttsRevReq(1), ttsNameConstraints(2),
-		cautionPeriod(3), signatureTimestampDelay(4);
+		ttsCertificateTrustTrees(0),
+		ttsRevReq(1),
+		ttsNameConstraints(2),
+		cautionPeriod(3),
+		signatureTimestampDelay(4);
+
 		int value;
 
-		private TAG(int value) {
+		TAG(int value) {
 			this.value = value;
 		}
 

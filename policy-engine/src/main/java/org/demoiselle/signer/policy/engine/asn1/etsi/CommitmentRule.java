@@ -44,7 +44,13 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 /**
  * The CommitmentRule for given commitment types are defined in terms
  * of trust conditions for certificates, timestamps and attributes,
- * along with any constraints on attributes that may be included in the electronic signature
+ * along with any constraints on attributes that may be included in
+ * the electronic signature.
+ *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see ASN1Object
+ * @see SelectedCommitmentTypes
  */
 public class CommitmentRule extends CommonRules {
 

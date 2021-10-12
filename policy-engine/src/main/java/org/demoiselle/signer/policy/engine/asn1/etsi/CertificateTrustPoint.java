@@ -55,8 +55,10 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * {@link AcceptablePolicySet } OPTIONAL, -- If not present "any policy"
  * {@link NameConstraints } OPTIONAL,
  * {@link PolicyConstraints } OPTIONAL
+ *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
  */
-
 public class CertificateTrustPoint extends ASN1Object {
 
 	enum TAG {

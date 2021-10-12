@@ -52,6 +52,9 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  *     signerRevReq {@link CertRevReq}
  * }
  * </pre>
+ *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SigningCertTrustCondition extends ASN1Object {
 

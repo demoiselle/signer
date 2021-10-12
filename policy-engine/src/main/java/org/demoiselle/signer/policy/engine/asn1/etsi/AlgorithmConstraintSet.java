@@ -60,12 +60,15 @@ public class AlgorithmConstraintSet extends ASN1Object {
 
 	public enum TAG {
 
-		signerAlgorithmConstraints(0), eeCertAlgorithmConstraints(1),
-		caCertAlgorithmConstraints(2), aaCertAlgorithmConstraints(3),
+		signerAlgorithmConstraints(0),
+		eeCertAlgorithmConstraints(1),
+		caCertAlgorithmConstraints(2),
+		aaCertAlgorithmConstraints(3),
 		tsaCertAlgorithmConstraints(4);
-		int value;
 
-		private TAG(int value) {
+		private int value;
+
+		TAG(int value) {
 			this.value = value;
 		}
 

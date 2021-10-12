@@ -51,11 +51,17 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
  * passed between the issuer and signer/verifier. The hash is
  * calculated without the outer type and length fields.
  *
- * <p>
+ * <pre>
  * SignaturePolicy ::= SEQUENCE {
- * signPolicyHashAlg {@link AlgorithmIdentifier},
- * signPolicyInfo {@link SignPolicyInfo},
- * signPolicyHash {@link SignPolicyHash} OPTIONAL }
+ *     signPolicyHashAlg AlgorithmIdentifier,
+ *     signPolicyInfo SignPolicyInfo,
+ *     signPolicyHash SignPolicyHash OPTIONAL
+ * }
+ * </pre>
+ *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DEROctetString
  */
 public class SignaturePolicy {
 

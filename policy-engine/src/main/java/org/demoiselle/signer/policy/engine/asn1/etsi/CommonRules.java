@@ -61,6 +61,11 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * </pre>
  *
  * @author 07721825741
+ *
+ * @see ASN1Object
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERTaggedObject
  */
 public class CommonRules extends ASN1Object {
 
@@ -179,7 +184,7 @@ public class CommonRules extends ASN1Object {
 
 		private final int value;
 
-		private TAG(int value) {
+		TAG(int value) {
 			this.value = value;
 		}
 

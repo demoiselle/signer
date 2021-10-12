@@ -52,12 +52,19 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * <p>
  * The fieldOfApplication and semantics fields define the specific use
  * and meaning of the commitment within the overall field of application defined for the policy.
+ *
+ * @see ASN1Object
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERTaggedObject
  */
 public class CommitmentType extends ASN1Object {
 
 	enum TAG {
 
-		fieldOfApplication(0), semantics(1);
+		fieldOfApplication(0),
+		semantics(1);
+
 		int value;
 
 		TAG(int value) {

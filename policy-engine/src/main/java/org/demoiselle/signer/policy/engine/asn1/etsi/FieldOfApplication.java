@@ -43,8 +43,10 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  * The fieldofApplication is a description of the expected application of this policy.
- * <p>
+ *
+ * <pre>
  * FieldOfApplication ::= DirectoryString
+ * </pre>
  */
 public class FieldOfApplication extends ASN1Object {
 
