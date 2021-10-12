@@ -40,7 +40,7 @@ import org.demoiselle.signer.cryptography.Digest;
 import org.demoiselle.signer.cryptography.implementation.DigestImpl;
 
 /**
- * Factory specialized in creating objects for interface {@link Digest}
+ * Factory specialized in creating objects for interface {@link Digest}.
  */
 public class DigestFactory extends GenericFactory<Digest> {
 
