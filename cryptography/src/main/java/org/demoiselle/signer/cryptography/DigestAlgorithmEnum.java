@@ -38,6 +38,7 @@
 package org.demoiselle.signer.cryptography;
 
 /**
+ * FIXME would be nice to implement checkAvailability and returns non available ones?
  * Defines the Digest algorithms,
  * according to the standard defined by the Brazilian public key infrastructure (ICP-Brasil).
  */
