@@ -38,6 +38,8 @@
 package org.demoiselle.signer.policy.engine.exception;
 
 /**
+ * FIXME coul be moved to policy.engine package?
+ *
  * custom unchecked exceptions for package
  */
 public class PolicyException extends RuntimeException {
@@ -49,7 +51,7 @@ public class PolicyException extends RuntimeException {
 	}
 
 	public PolicyException(String message, Throwable cause,
-			boolean enableSuppression, boolean writableStackTrace) {
+						   boolean enableSuppression, boolean writableStackTrace) {
 		super(message, cause, enableSuppression, writableStackTrace);
 	}
 
@@ -64,7 +66,6 @@ public class PolicyException extends RuntimeException {
 	public PolicyException(Throwable cause) {
 		super(cause);
 	}
-
 
 
 }

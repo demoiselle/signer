@@ -34,69 +34,71 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.timestamp.connector;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import javax.net.ssl.HttpsURLConnection;
+
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Time-Stamp Protocol via HTTP
- *
+ * <p>
  * This subsection specifies a means for conveying ASN.1-encoded
  * messages for the protocol exchanges described in Section 2 and
  * Appendix D via the HyperText Transfer Protocol.
- *
+ * <p>
  * Two MIME objects are specified as follows.
- *
+ * <p>
  * Content-Type: application/timestamp-query
- *
- *    &lt;&lt;the ASN.1 DER-encoded Time-Stamp Request message&gt;&gt;
- *
+ * <p>
+ * &lt;&lt;the ASN.1 DER-encoded Time-Stamp Request message&gt;&gt;
+ * <p>
  * Content-Type: application/timestamp-reply
- *
- *    &lt;&lt;the ASN.1 DER-encoded Time-Stamp Response message&gt;&gt;
- *
- *  These MIME objects can be sent and received using common HTTP
- *  processing engines over WWW links and provides a simple browser-
- *  server transport for Time-Stamp messages.
- *
- *  Upon receiving a valid request, the server MUST respond with either a
- *  valid response with content type application/timestamp-response or with an HTTP error.
+ * <p>
+ * &lt;&lt;the ASN.1 DER-encoded Time-Stamp Response message&gt;&gt;
+ * <p>
+ * These MIME objects can be sent and received using common HTTP
+ * processing engines over WWW links and provides a simple browser-
+ * server transport for Time-Stamp messages.
+ * <p>
+ * Upon receiving a valid request, the server MUST respond with either a
+ * valid response with content type application/timestamp-response or with an HTTP error.
  *
  * @author 07721825741
  */
 public class HttpConnector implements Connector {
 
 	private static final Logger logger = LoggerFactory.getLogger(HttpConnector.class);
-    private String hostname;
-    private int port;
-    private OutputStream out = null;
-    private HttpsURLConnection HttpsConnector;
+	private String hostname;
+	private int port;
+	private OutputStream out = null;
+	private HttpsURLConnection HttpsConnector;
 
 	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
-    @Override
-    public InputStream connect(byte[] content) {
-    	logger.info(timeStampMessagesBundle.getString("error.not.supported", getClass().getName() ));
-        throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName() ));
-    }
+	@Override
+	public InputStream connect(byte[] content) {
+		logger.info(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
+		throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
+	}
 
-    @Override
-    public void setHostname(String hostname) {
-    	this.hostname = hostname;
-    }
+	@Override
+	public void setHostname(String hostname) {
+		this.hostname = hostname;
+	}
 
-    @Override
-    public void setPort(int port) {
-    	this.port = port;
-    }
+	@Override
+	public void setPort(int port) {
+		this.port = port;
+	}
 
-    public HttpsURLConnection getHttpsConnector() {
+	public HttpsURLConnection getHttpsConnector() {
 		return HttpsConnector;
 	}
 
@@ -113,12 +115,12 @@ public class HttpConnector implements Connector {
 	}
 
 	@Override
-    public void close() {
-    	try {
-    		this.HttpsConnector.disconnect();
+	public void close() {
+		try {
+			this.HttpsConnector.disconnect();
 			this.out.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-    }
+	}
 }

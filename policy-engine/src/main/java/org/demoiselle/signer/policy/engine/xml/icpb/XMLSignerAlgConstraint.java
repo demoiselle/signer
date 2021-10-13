@@ -44,12 +44,15 @@ public class XMLSignerAlgConstraint {
 	public String getAlgId() {
 		return AlgId;
 	}
+
 	public void setAlgId(String algId) {
 		AlgId = algId;
 	}
+
 	public String getMinKeyLength() {
 		return MinKeyLength;
 	}
+
 	public void setMinKeyLength(String minKeyLength) {
 		MinKeyLength = minKeyLength;
 	}

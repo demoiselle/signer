@@ -45,73 +45,73 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- *	Settings for Policies Repositories
- *	Depending on the files: policy-engine-config.properties or policy-engine-config-default.properties
+ * Settings for Policies Repositories
+ * Depending on the files: policy-engine-config.properties or policy-engine-config-default.properties
  *
  * @author emerson.saito@serpro.gov.br
  */
 public class PolicyEngineConfig {
 
-    private static final Logger logger = LoggerFactory.getLogger(PolicyEngineConfig.class);
+	private static final Logger logger = LoggerFactory.getLogger(PolicyEngineConfig.class);
 
-    private static PolicyEngineConfig instance = null;
-    private static ResourceBundle bundle = null;
-    private static MessagesBundle PolicyEngineMessagesBundle = new MessagesBundle();
+	private static PolicyEngineConfig instance = null;
 
-    private String url_local_lpa_cades;
-    private String url_local_lpa_cades_sha;
-    private String url_local_lpa_xades;
-    private String url_local_lpa_xades_sha;
-    private String url_local_lpa_pades;
-    private String url_local_lpa_pades_sha;
+	// FIXME it seems a case for Properties class, not ResourceBundle.
+	private static ResourceBundle bundle = null;
+	private static MessagesBundle PolicyEngineMessagesBundle = new MessagesBundle();
 
-    private String url_iti_lpa_cades;
-    private String url_iti_lpa_cades_sha;
-    private String url_iti_lpa_xades;
-    private String url_iti_lpa_xades_sha;
-    private String url_iti_lpa_pades;
-    private String url_iti_lpa_pades_sha;
+	private String url_local_lpa_cades;
+	private String url_local_lpa_cades_sha;
+	private String url_local_lpa_xades;
+	private String url_local_lpa_xades_sha;
+	private String url_local_lpa_pades;
+	private String url_local_lpa_pades_sha;
 
-    /**
-     *
-     * @return  Returns an instance of PolicyEngineConfig
-     */
-    public static PolicyEngineConfig getInstance() {
-        if (instance == null) {
-            instance = new PolicyEngineConfig();
-        }
-        return instance;
-    }
+	private String url_iti_lpa_cades;
+	private String url_iti_lpa_cades_sha;
+	private String url_iti_lpa_xades;
+	private String url_iti_lpa_xades_sha;
+	private String url_iti_lpa_pades;
+	private String url_iti_lpa_pades_sha;
 
-    public ResourceBundle getBundle(String bundleName) {
-        return ResourceBundle.getBundle(bundleName);
-    }
+	/**
+	 * @return Returns an instance of PolicyEngineConfig
+	 */
+	public static PolicyEngineConfig getInstance() {
+		if (instance == null) {
+			instance = new PolicyEngineConfig();
+		}
+		return instance;
+	}
 
-    protected PolicyEngineConfig() {
-        if (bundle == null){
-	    	try {
-	        	bundle = getBundle("policy-engine-config");
-	        } catch (MissingResourceException mre) {
-	            try {
-	            	bundle = getBundle("policy-engine-config-default");
-	            } catch (MissingResourceException e) {
-	            	 logger.info(e.getMessage());
-	            }
-	        }
-        }
-    }
+	public ResourceBundle getBundle(String bundleName) {
+		return ResourceBundle.getBundle(bundleName);
+	}
+
+	protected PolicyEngineConfig() {
+		if (bundle == null) {
+			try {
+				bundle = getBundle("policy-engine-config");
+			} catch (MissingResourceException mre) {
+				try {
+					bundle = getBundle("policy-engine-config-default");
+				} catch (MissingResourceException e) {
+					logger.info(e.getMessage());
+				}
+			}
+		}
+	}
 
 	/**
 	 * @return the url_local_lpa_cades
 	 */
 	public String getUrl_local_lpa_cades() {
 		try {
-    		url_local_lpa_cades = bundle.getString("url_local_lpa_cades");
+			url_local_lpa_cades = bundle.getString("url_local_lpa_cades");
 		} catch (MissingResourceException e) {
 			throw new RuntimeException(PolicyEngineMessagesBundle.getString("error.policy.engine.config", "url_local_lpa_cades"));
 		}
-    	return url_local_lpa_cades;
+		return url_local_lpa_cades;
 	}
 
 	/**

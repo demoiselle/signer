@@ -44,29 +44,29 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 /**
  * The fieldofApplication is a description of the expected application of this policy.
  *
+ * <pre>
  * FieldOfApplication ::= DirectoryString
- *
- *
+ * </pre>
  */
 public class FieldOfApplication extends ASN1Object {
 
-    private String value;
+	private String value;
 
-    public String getValue() {
-        return value;
-    }
+	public String getValue() {
+		return value;
+	}
 
-    public void setValue(String value) {
-        this.value = value;
-    }
+	public void setValue(String value) {
+		this.value = value;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        if (derObject instanceof DERUTF8String) {
-            DERUTF8String derUTF8String = (DERUTF8String) derObject;
-            this.setValue(derUTF8String.getString());
-        } else {
-            this.setValue(derObject.toString());
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		if (derObject instanceof DERUTF8String) {
+			DERUTF8String derUTF8String = (DERUTF8String) derObject;
+			this.setValue(derUTF8String.getString());
+		} else {
+			this.setValue(derObject.toString());
+		}
+	}
 }

@@ -56,6 +56,11 @@ import org.demoiselle.signer.policy.engine.asn1.etsi.SigningPeriod;
  *    {@link PoliciesURI} policiesURI;
  *    {@link PoliciesDigest} policiesDigest;
  *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERTaggedObject
+ * @see DirectoryString
+ * @see SigningPeriod
  */
 public class PolicyInfo extends ASN1Object {
 

@@ -37,15 +37,14 @@
 
 package org.demoiselle.signer.core.oid;
 
-
 /**
  * subject:jurisdictionOfIncorporationCountryName ASN.1 - X520countryName as specified in RFC 3280
  *
- * @author Emerson Sachio Saito <emerson.saito@gmail.com>
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public class OID_1_3_6_1_4_1_311_60_2_1_3 extends OIDGeneric {
 
-    public static final String OID = "1.3.6.1.4.1.311.60.2.1.3";
+	public static final String OID = "1.3.6.1.4.1.311.60.2.1.3";
 
 
 	public OID_1_3_6_1_4_1_311_60_2_1_3() {
@@ -56,13 +55,9 @@ public class OID_1_3_6_1_4_1_311_60_2_1_3 extends OIDGeneric {
 	}
 
 	/**
-	 *
 	 * @return subject:jurisdictionOfIncorporationCountryName
 	 */
 	public String getJurisdictionOfIncorporationCountryName() {
 		return super.getData();
 	}
-
-
-
 }

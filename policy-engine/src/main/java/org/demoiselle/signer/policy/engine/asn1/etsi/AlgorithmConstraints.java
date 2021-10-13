@@ -45,38 +45,36 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *
  * AlgorithmConstraints ::= SEQUENCE OF AlgAndLength
- *
+ * <p>
  * Collection&lt; AlgAndLength &gt;
- *
+ * <p>
  * {@link AlgAndLength}
- *
  */
 public class AlgorithmConstraints extends ASN1Object {
 
-    private Collection<AlgAndLength> algAndLengths;
+	private Collection<AlgAndLength> algAndLengths;
 
-    public Collection<AlgAndLength> getAlgAndLengths() {
-        return algAndLengths;
-    }
+	public Collection<AlgAndLength> getAlgAndLengths() {
+		return algAndLengths;
+	}
 
-    public void setAlgAndLengths(Collection<AlgAndLength> algAndLengths) {
-        this.algAndLengths = algAndLengths;
-    }
+	public void setAlgAndLengths(Collection<AlgAndLength> algAndLengths) {
+		this.algAndLengths = algAndLengths;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        int total = derSequence.size();
-        for (int i = 0; i < total; i++) {
-            AlgAndLength algAndLength = new AlgAndLength();
-            algAndLength.parse(derSequence.getObjectAt(i).toASN1Primitive());
-            if (this.algAndLengths == null) {
-                this.algAndLengths = new ArrayList<AlgAndLength>();
-            }
-            this.algAndLengths.add(algAndLength);
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		int total = derSequence.size();
+		for (int i = 0; i < total; i++) {
+			AlgAndLength algAndLength = new AlgAndLength();
+			algAndLength.parse(derSequence.getObjectAt(i).toASN1Primitive());
+			if (this.algAndLengths == null) {
+				this.algAndLengths = new ArrayList<>();
+			}
+			this.algAndLengths.add(algAndLength);
+		}
+	}
 
 }

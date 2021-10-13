@@ -51,122 +51,120 @@ import org.bouncycastle.util.encoders.Hex;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
+ * It is defined as a ContentInfo([CMS]) and SHALL encapsulate
+ * a signed data content type.
  *
- *  It is defined as a ContentInfo([CMS]) and SHALL encapsulate a signed data content type.
- *
- *   	TimeStampToken ::= ContentInfo
- *        -- contentType is id-signedData ([CMS])
- *        -- content is SignedData ([CMS])
- *
- *       id-aa-timeStampToken OBJECT IDENTIFIER ::= { iso(1) member-body(2)
- *          us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) aa(2) 14 }
+ * <pre>
+ *     TimeStampToken ::= ContentInfo
+ *     -- contentType is id-signedData ([CMS])
+ *     -- content is SignedData ([CMS])
+ * </pre>
+ * id-aa-timeStampToken OBJECT IDENTIFIER ::= { iso(1) member-body(2)
+ * us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) aa(2) 14 }
  *
  * @author 07721825741
  */
 public class Timestamp {
 
-    private final static Logger logger = Logger.getLogger(Timestamp.class.getName());
-    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
+	private final static Logger logger = Logger.getLogger(Timestamp.class.getName());
+	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
+	private TimeStampToken timeStampToken = null;
 
-    private TimeStampToken timeStampToken = null;
+	public Timestamp(TimeStampToken timeStampToken) {
+		this.timeStampToken = timeStampToken;
+	}
 
-    public Timestamp(TimeStampToken timeStampToken) {
-        this.timeStampToken = timeStampToken;
-    }
+	/**
+	 * Returns a stream of bytes encoded in ASN.1 format, which represents the encoded object.
+	 *
+	 * @return timestamp encoded as a byte[]
+	 */
+	public byte[] getEncoded() {
+		try {
+			return timeStampToken.getEncoded();
+		} catch (IOException ex) {
+			logger.error(ex.getMessage());
+		}
+		return null;
+	}
 
-    /**
-     * Returns a stream of bytes encoded in ASN.1 format, which represents the encoded object.
-     *
-     * @return timestamp encoded as a byte[]
-     */
-    public byte[] getEncoded() {
-        try {
-            return timeStampToken.getEncoded();
-        } catch (IOException ex) {
-            logger.error(ex.getMessage());
-        }
-        return null;
-    }
+	public String getPolicy() {
+		return timeStampToken.getTimeStampInfo().getPolicy().toString();
+	}
 
+	public String getSerialNumber() {
+		return timeStampToken.getTimeStampInfo().getSerialNumber().toString();
+	}
 
-    public String getPolicy() {
-        return timeStampToken.getTimeStampInfo().getPolicy().toString();
-    }
+	public String getHashAlgorithm() {
+		return timeStampToken.getTimeStampInfo().getHashAlgorithm().getAlgorithm().toString();
+	}
 
+	public byte[] getMessageImprintDigest() {
+		return timeStampToken.getTimeStampInfo().getMessageImprintDigest();
+	}
 
-    public String getSerialNumber() {
-        return timeStampToken.getTimeStampInfo().getSerialNumber().toString();
-    }
+	public String getMessageImprintDigestBase64() {
+		return Base64.toBase64String(timeStampToken.getTimeStampInfo().getMessageImprintDigest());
+	}
 
-    public String getHashAlgorithm() {
-        return timeStampToken.getTimeStampInfo().getHashAlgorithm().getAlgorithm().toString();
-    }
+	public String getMessageImprintDigestHex() {
+		return Hex.toHexString(timeStampToken.getTimeStampInfo().getMessageImprintDigest()).toUpperCase();
+	}
 
-    public byte[] getMessageImprintDigest() {
-        return timeStampToken.getTimeStampInfo().getMessageImprintDigest();
-    }
+	public Store<?> getCRLs() {
+		return timeStampToken.getCRLs();
+	}
 
-    public String getMessageImprintDigestBase64() {
-        return Base64.toBase64String(timeStampToken.getTimeStampInfo().getMessageImprintDigest());
-    }
+	public Store<?> getCertificates() {
+		return timeStampToken.getCertificates();
+	}
 
-    public String getMessageImprintDigestHex() {
-        return Hex.toHexString(timeStampToken.getTimeStampInfo().getMessageImprintDigest()).toUpperCase();
-    }
+	public Map<?, ?> getSignedAttributes() {
+		return timeStampToken.getSignedAttributes().toHashtable();
+	}
 
-    public Store<?> getCRLs() {
-        return timeStampToken.getCRLs();
-    }
+	public Map<?, ?> getUnsignedAttributes() {
+		return timeStampToken.getUnsignedAttributes().toHashtable();
+	}
 
-    public Store<?> getCertificates() {
-        return timeStampToken.getCertificates();
-    }
+	/**
+	 * The attributes of the Time Stamp Authority's certificate.
+	 *
+	 * @return Authority information
+	 */
+	public String getTimeStampAuthorityInfo() {
+		return timeStampToken.getTimeStampInfo().getTsa().toString();
+	}
 
-    public Map<?, ?> getSignedAttributes() {
-        return timeStampToken.getSignedAttributes().toHashtable();
-    }
+	/**
+	 * Returns the nonce value, or returns null if there is no
+	 *
+	 * @return nonce value, or returns null if there is no
+	 */
+	public BigInteger getNonce() {
+		return timeStampToken.getTimeStampInfo().getNonce();
+	}
 
-    public Map<?, ?> getUnsignedAttributes() {
-        return timeStampToken.getUnsignedAttributes().toHashtable();
-    }
+	public String getTimeStamp() {
+		SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:S z");
+		dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
+		return dateFormatGmt.format(timeStampToken.getTimeStampInfo().getGenTime());
+	}
 
-    /**
-     *
-     * The attributes of the Time Stamp Authority's certificate.
-     * @return Authority information
-     */
-    public String getTimeStampAuthorityInfo() {
-        return timeStampToken.getTimeStampInfo().getTsa().toString();
-    }
-
-    /**
-     * Returns the nonce value, or returns null if there is no
-     *
-     * @return nonce value, or returns null if there is no
-     */
-    public BigInteger getNonce() {
-        return timeStampToken.getTimeStampInfo().getNonce();
-    }
-
-    public String getTimeStamp() {
-        SimpleDateFormat dateFormatGmt = new SimpleDateFormat("dd-MMM-yyyy HH:mm:ss:S z");
-        dateFormatGmt.setTimeZone(TimeZone.getTimeZone("GMT"));
-        return dateFormatGmt.format(timeStampToken.getTimeStampInfo().getGenTime());
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder(0);
-        builder.append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.datetime")).append(this.getTimeStamp()).append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.policy")).append(this.getPolicy()).append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.serial.number")).append(this.getSerialNumber()).append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.certificate")).append(this.getTimeStampAuthorityInfo()).append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.hash")).append(this.getHashAlgorithm()).append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.hex")).append(this.getMessageImprintDigestHex()).append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.base64")).append(this.getMessageImprintDigestBase64()).append("\n");
-        builder.append(timeStampMessagesBundle.getString("text.timestamp.mid")).append(this.getMessageImprintDigest()).append("\n");
-        return builder.toString();
-       }
-    }
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder(0);
+		builder.append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.datetime")).append(this.getTimeStamp()).append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.policy")).append(this.getPolicy()).append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.serial.number")).append(this.getSerialNumber()).append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.certificate")).append(this.getTimeStampAuthorityInfo()).append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.hash")).append(this.getHashAlgorithm()).append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.hex")).append(this.getMessageImprintDigestHex()).append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.mid.base64")).append(this.getMessageImprintDigestBase64()).append("\n");
+		builder.append(timeStampMessagesBundle.getString("text.timestamp.mid")).append(this.getMessageImprintDigest()).append("\n");
+		return builder.toString();
+	}
+}

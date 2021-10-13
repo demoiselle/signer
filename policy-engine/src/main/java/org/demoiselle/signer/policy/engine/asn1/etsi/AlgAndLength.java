@@ -44,57 +44,60 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  *
- * AlgAndLength ::= SEQUENCE {
- * 				algID {@link ObjectIdentifier} ,
- * 				minKeyLength INTEGER
- * OPTIONAL, -- Minimum key length in bits other SignPolExtensions OPTIONAL }
+ * <pre>
+ *     AlgAndLength ::= SEQUENCE {
+ *        algID {@link ObjectIdentifier} ,
+ *        minKeyLength INTEGER
+ *        OPTIONAL,
+ *        -- Minimum key length in bits other SignPolExtensions OPTIONAL
+ *     }
+ * </pre>
  *
  * @author 09275643784
- *
  */
 public class AlgAndLength extends ASN1Object {
 
-    private ObjectIdentifier algID;
-    private Integer minKeyLength;
-    private SignPolExtensions other;
+	private ObjectIdentifier algID;
+	private Integer minKeyLength;
+	private SignPolExtensions other;
 
-    public ObjectIdentifier getAlgID() {
-        return algID;
-    }
+	public ObjectIdentifier getAlgID() {
+		return algID;
+	}
 
-    public void setAlgID(ObjectIdentifier algID) {
-        this.algID = algID;
-    }
+	public void setAlgID(ObjectIdentifier algID) {
+		this.algID = algID;
+	}
 
-    public Integer getMinKeyLength() {
-        return minKeyLength;
-    }
+	public Integer getMinKeyLength() {
+		return minKeyLength;
+	}
 
-    public void setMinKeyLength(Integer minKeyLength) {
-        this.minKeyLength = minKeyLength;
-    }
+	public void setMinKeyLength(Integer minKeyLength) {
+		this.minKeyLength = minKeyLength;
+	}
 
-    public SignPolExtensions getOther() {
-        return other;
-    }
+	public SignPolExtensions getOther() {
+		return other;
+	}
 
-    public void setOther(SignPolExtensions other) {
-        this.other = other;
-    }
+	public void setOther(SignPolExtensions other) {
+		this.other = other;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        this.algID = new ObjectIdentifier();
-        this.algID.parse(derSequence.getObjectAt(0).toASN1Primitive());
-        if (derSequence.size() >= 2) {
-            ASN1Integer derInteger = (ASN1Integer) derSequence.getObjectAt(1).toASN1Primitive();
-            this.setMinKeyLength(derInteger.getValue().intValue());
-        }
-        if (derSequence.size() == 3) {
-            this.other = new SignPolExtensions();
-            this.other.parse(derSequence.getObjectAt(2).toASN1Primitive());
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		this.algID = new ObjectIdentifier();
+		this.algID.parse(derSequence.getObjectAt(0).toASN1Primitive());
+		if (derSequence.size() >= 2) {
+			ASN1Integer derInteger = (ASN1Integer) derSequence.getObjectAt(1).toASN1Primitive();
+			this.setMinKeyLength(derInteger.getValue().intValue());
+		}
+		if (derSequence.size() == 3) {
+			this.other = new SignPolExtensions();
+			this.other.parse(derSequence.getObjectAt(2).toASN1Primitive());
+		}
+	}
 
 }

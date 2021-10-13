@@ -3,32 +3,32 @@
  * Copyright (C) 2016 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
- * 
+ *
  * Demoiselle Framework is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public License version 3
  * as published by the Free Software Foundation.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU Lesser General Public License version 3
  * along with this program; if not,  see <http://www.gnu.org/licenses/>
  * or write to the Free Software Foundation, Inc., 51 Franklin Street,
  * Fifth Floor, Boston, MA  02110-1301, USA.
  * ----------------------------------------------------------------------------
  * Este arquivo é parte do Framework Demoiselle.
- * 
+ *
  * O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
  * modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
  * do Software Livre (FSF).
- * 
+ *
  * Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
  * GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
  * APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
  * para maiores detalhes.
- * 
+ *
  * Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
  * "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses/>
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
@@ -54,8 +54,6 @@ import org.demoiselle.signer.cryptography.util.MessagesBundle;
 
 /**
  * Implementation of the Digest methods.
- * 
- *
  */
 public class DigestImpl implements Digest {
 
@@ -63,13 +61,14 @@ public class DigestImpl implements Digest {
 	private final int BUFSIZE = 256;
 	private static MessagesBundle crytographyMessagesBundle = new MessagesBundle("messages_cryptography");
 
+	// FIXME should check the name (avoid garbage-in garbage-out)
 	@Override
 	public void setAlgorithm(String algorithm) {
 		this.algorithm = algorithm;
 	}
 
 	/**
-	 * Method responsible for generating a summary of bytes passed as parameter. 
+	 * Method responsible for generating a summary of bytes passed as parameter.
 	 * It uses the SHA256 algorithm as default.
 	 */
 	@Override
@@ -99,6 +98,7 @@ public class DigestImpl implements Digest {
 			MessageDigest md = MessageDigest.getInstance(this.algorithm);
 			FileInputStream fileIS = new FileInputStream(file);
 			BufferedInputStream bis = new BufferedInputStream(fileIS);
+			// FIXME no need for this extra brocker DataInputStream
 			DataInputStream dis = new DataInputStream(bis);
 			DigestInputStream digin = new DigestInputStream(dis, md);
 			byte[] buffer = new byte[BUFSIZE];
@@ -109,9 +109,9 @@ public class DigestImpl implements Digest {
 		} catch (NoSuchAlgorithmException e) {
 			throw new CryptographyException(crytographyMessagesBundle.getString("error.set.algorithm"), e);
 		} catch (FileNotFoundException e) {
-			throw new CryptographyException(crytographyMessagesBundle.getString("error.file.not.found",file), e);
+			throw new CryptographyException(crytographyMessagesBundle.getString("error.file.not.found", file), e);
 		} catch (IOException e) {
-			throw new CryptographyException(crytographyMessagesBundle.getString("error.reading.file",file), e);
+			throw new CryptographyException(crytographyMessagesBundle.getString("error.reading.file", file), e);
 		}
 	}
 
@@ -130,7 +130,9 @@ public class DigestImpl implements Digest {
 	}
 
 	/**
+	 * FIXME goes to core (reused in many places)
 	 * convert a byte[] into HEXADECIMAL base content.
+	 *
 	 * @param data
 	 * @return
 	 */

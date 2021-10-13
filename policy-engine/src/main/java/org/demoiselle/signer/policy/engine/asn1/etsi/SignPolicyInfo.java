@@ -45,6 +45,7 @@ import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 /**
  * ETSI TR 102 272 V1.1.1 (2003-12)
  *
+ * <pre>
  * SignPolicyInfo ::= SEQUENCE {
  * 				signPolicyIdentifier {@link SignPolicyId},
  * 				dateOfIssue {@link GeneralizedTime},
@@ -52,90 +53,91 @@ import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
  * 				fieldOfApplication {@link FieldOfApplication},
  * 				signatureValidationPolicy {@link SignatureValidationPolicy},
  * 				signPolExtensions {@link SignPolExtensions} OPTIONAL
-}
+ * }
+ * </pre>
  *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SignPolicyInfo extends ASN1Object {
 
-    private SignPolicyId signPolicyIdentifier;
-    private GeneralizedTime dateOfIssue;
-    private PolicyIssuerName policyIssuerName;
-    private FieldOfApplication fieldOfApplication;
-    private SignatureValidationPolicy signatureValidationPolicy;
-    private SignPolExtensions signPolExtensions;
+	private SignPolicyId signPolicyIdentifier;
+	private GeneralizedTime dateOfIssue;
+	private PolicyIssuerName policyIssuerName;
+	private FieldOfApplication fieldOfApplication;
+	private SignatureValidationPolicy signatureValidationPolicy;
+	private SignPolExtensions signPolExtensions;
 
-    public SignPolicyId getSignPolicyIdentifier() {
-        return signPolicyIdentifier;
-    }
+	public SignPolicyId getSignPolicyIdentifier() {
+		return signPolicyIdentifier;
+	}
 
-    public void setSignPolicyIdentifier(SignPolicyId signPolicyIdentifier) {
-        this.signPolicyIdentifier = signPolicyIdentifier;
-    }
+	public void setSignPolicyIdentifier(SignPolicyId signPolicyIdentifier) {
+		this.signPolicyIdentifier = signPolicyIdentifier;
+	}
 
-    public GeneralizedTime getDateOfIssue() {
-        return dateOfIssue;
-    }
+	public GeneralizedTime getDateOfIssue() {
+		return dateOfIssue;
+	}
 
-    public void setDateOfIssue(GeneralizedTime dateOfIssue) {
-        this.dateOfIssue = dateOfIssue;
-    }
+	public void setDateOfIssue(GeneralizedTime dateOfIssue) {
+		this.dateOfIssue = dateOfIssue;
+	}
 
-    public PolicyIssuerName getPolicyIssuerName() {
-        return policyIssuerName;
-    }
+	public PolicyIssuerName getPolicyIssuerName() {
+		return policyIssuerName;
+	}
 
-    public void setPolicyIssuerName(PolicyIssuerName policyIssuerName) {
-        this.policyIssuerName = policyIssuerName;
-    }
+	public void setPolicyIssuerName(PolicyIssuerName policyIssuerName) {
+		this.policyIssuerName = policyIssuerName;
+	}
 
-    public FieldOfApplication getFieldOfApplication() {
-        return fieldOfApplication;
-    }
+	public FieldOfApplication getFieldOfApplication() {
+		return fieldOfApplication;
+	}
 
-    public void setFieldOfApplication(FieldOfApplication fieldOfApplication) {
-        this.fieldOfApplication = fieldOfApplication;
-    }
+	public void setFieldOfApplication(FieldOfApplication fieldOfApplication) {
+		this.fieldOfApplication = fieldOfApplication;
+	}
 
-    public SignatureValidationPolicy getSignatureValidationPolicy() {
-        return signatureValidationPolicy;
-    }
+	public SignatureValidationPolicy getSignatureValidationPolicy() {
+		return signatureValidationPolicy;
+	}
 
-    public void setSignatureValidationPolicy(
-            SignatureValidationPolicy signatureValidationPolicy) {
-        this.signatureValidationPolicy = signatureValidationPolicy;
-    }
+	public void setSignatureValidationPolicy(
+		SignatureValidationPolicy signatureValidationPolicy) {
+		this.signatureValidationPolicy = signatureValidationPolicy;
+	}
 
-    public SignPolExtensions getSignPolExtensions() {
-        return signPolExtensions;
-    }
+	public SignPolExtensions getSignPolExtensions() {
+		return signPolExtensions;
+	}
 
-    public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
-        this.signPolExtensions = signPolExtensions;
-    }
+	public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
+		this.signPolExtensions = signPolExtensions;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        this.signPolicyIdentifier = new SignPolicyId();
-        this.signPolicyIdentifier.parse(derSequence.getObjectAt(0).toASN1Primitive());
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		this.signPolicyIdentifier = new SignPolicyId();
+		this.signPolicyIdentifier.parse(derSequence.getObjectAt(0).toASN1Primitive());
 
-        this.dateOfIssue = new GeneralizedTime();
-        this.dateOfIssue.parse(derSequence.getObjectAt(1).toASN1Primitive());
+		this.dateOfIssue = new GeneralizedTime();
+		this.dateOfIssue.parse(derSequence.getObjectAt(1).toASN1Primitive());
 
-        this.policyIssuerName = new PolicyIssuerName();
-        this.policyIssuerName.parse(derSequence.getObjectAt(2).toASN1Primitive());
+		this.policyIssuerName = new PolicyIssuerName();
+		this.policyIssuerName.parse(derSequence.getObjectAt(2).toASN1Primitive());
 
-        this.fieldOfApplication = new FieldOfApplication();
-        this.fieldOfApplication.parse(derSequence.getObjectAt(3).toASN1Primitive());
+		this.fieldOfApplication = new FieldOfApplication();
+		this.fieldOfApplication.parse(derSequence.getObjectAt(3).toASN1Primitive());
 
-        this.signatureValidationPolicy = new SignatureValidationPolicy();
-        this.signatureValidationPolicy.parse(derSequence.getObjectAt(4).toASN1Primitive());
+		this.signatureValidationPolicy = new SignatureValidationPolicy();
+		this.signatureValidationPolicy.parse(derSequence.getObjectAt(4).toASN1Primitive());
 
-        if (derSequence.size() == 6) {
-            this.signPolExtensions = new SignPolExtensions();
-            this.signPolExtensions.parse(derSequence.getObjectAt(5).toASN1Primitive());
-        }
-
-    }
-
+		if (derSequence.size() == 6) {
+			this.signPolExtensions = new SignPolExtensions();
+			this.signPolExtensions.parse(derSequence.getObjectAt(5).toASN1Primitive());
+		}
+	}
 }

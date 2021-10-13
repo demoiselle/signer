@@ -45,37 +45,37 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *  The acceptablePolicySet field identifies the initial set of certificate policies,
- *   any of which are acceptable under the signature policy.
+ * The acceptablePolicySet field identifies the initial set of certificate policies,
+ * any of which are acceptable under the signature policy.
  *
- *    AcceptablePolicySet ::= SEQUENCE OF CertPolicyId
+ * <pre>AcceptablePolicySet ::= SEQUENCE OF CertPolicyId</pre>
  *
- *    Collection&lt; CertPolicyId &gt; @link CertPolicyId
+ * @see CertPolicyId
  */
 public class AcceptablePolicySet extends ASN1Object {
 
-    private Collection<CertPolicyId> certPolicyIds;
+	private Collection<CertPolicyId> certPolicyIds;
 
-    public Collection<CertPolicyId> getCertPolicyIds() {
-        return certPolicyIds;
-    }
+	public Collection<CertPolicyId> getCertPolicyIds() {
+		return certPolicyIds;
+	}
 
-    public void setCertPolicyIds(Collection<CertPolicyId> certPolicyIds) {
-        this.certPolicyIds = certPolicyIds;
-    }
+	public void setCertPolicyIds(Collection<CertPolicyId> certPolicyIds) {
+		this.certPolicyIds = certPolicyIds;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        int total = derSequence.size();
-        for (int i = 0; i < total; i++) {
-            CertPolicyId certPolicyId = new CertPolicyId();
-            certPolicyId.parse(derSequence.getObjectAt(i).toASN1Primitive());
-            if (this.certPolicyIds == null) {
-                this.certPolicyIds = new ArrayList<>();
-            }
-            this.certPolicyIds.add(certPolicyId);
-        }
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		int total = derSequence.size();
+		for (int i = 0; i < total; i++) {
+			CertPolicyId certPolicyId = new CertPolicyId();
+			certPolicyId.parse(derSequence.getObjectAt(i).toASN1Primitive());
+			if (this.certPolicyIds == null) {
+				this.certPolicyIds = new ArrayList<>();
+			}
+			this.certPolicyIds.add(certPolicyId);
+		}
+	}
 
 }

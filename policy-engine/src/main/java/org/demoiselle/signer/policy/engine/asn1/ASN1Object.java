@@ -45,63 +45,65 @@ import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
-
 /**
+ * Abstract class for provide methods to get {@link DERSequence}
+ * and {@link ASN1Enumerated} from {@link ASN1Primitive}.
  *
- * Abstract class for provide methods to get org.bouncycastle.asn1.DERSequence
- * and  org.bouncycastle.asn1.ASN1Enumerated from org.bouncycastle.asn1.ASN1Primitive
- *
+ * @see ASN1Enumerated
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERSequence
+ * @see DERTaggedObject
+ * @see DLSequence
  */
 public abstract class ASN1Object {
 
-	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
 	/**
-	 *
-	 * @param derObject Object to convert
-	 * @return org.bouncycastle.asn1.DERSequence Converted sequence or null, if not possible
-	 * @see org.bouncycastle.asn1.ASN1Primitive ASN1 primitive
+	 * @param derObject Object to convert from.
+	 * @return Corresponding {@link DERSequence} or null, if not possible.
+	 * @see ASN1Primitive
 	 */
-    public static ASN1Sequence getDERSequence(ASN1Primitive derObject) {
-        ASN1Sequence sequence = null;
-        if (derObject instanceof DERTaggedObject) {
-            ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
-            if (object instanceof DERSequence) {
-                sequence = (DERSequence) object;
-            }
-        } else if (derObject instanceof DERSequence) {
-            sequence = (DERSequence) derObject;
-        } else if (derObject instanceof DLSequence) {
+	public static ASN1Sequence getDERSequence(ASN1Primitive derObject) {
+		ASN1Sequence sequence = null;
+		if (derObject instanceof DERTaggedObject) {
+			ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
+			if (object instanceof DERSequence) {
+				sequence = (DERSequence) object;
+			}
+		} else if (derObject instanceof DERSequence) {
+			sequence = (DERSequence) derObject;
+		} else if (derObject instanceof DLSequence) {
 
-            sequence = (DLSequence) derObject.toASN1Primitive();
-        }
-        return sequence;
-    }
+			sequence = (DLSequence) derObject.toASN1Primitive();
+		}
+		return sequence;
+	}
 
-    /**
-     *
-     * @param derObject Primitive object to convert to Enumerated
-     * @return org.bouncycastle.asn1.ASN1Enumerated ASN1 Enumerated, or null if not possible to convert
-	 * @see org.bouncycastle.asn1.ASN1Primitive
-     */
-    public static ASN1Enumerated getDEREnumerated(ASN1Primitive derObject) {
-        ASN1Enumerated derEnumerated = null;
-        if (derObject instanceof DERTaggedObject) {
-            ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
-            if (object instanceof ASN1Enumerated) {
-                derEnumerated = (ASN1Enumerated) object;
-            }
-        } else if (derObject instanceof ASN1Enumerated) {
-            derEnumerated = (ASN1Enumerated) derObject;
-        }
-        return derEnumerated;
-    }
+	/**
+	 * @param derObject Primitive object to convert to Enumerated
+	 * @return ASN1 Enumerated ({@link ASN1Enumerated}), or null
+	 * if not possible to convert.
+	 * @see ASN1Primitive
+	 */
+	public static ASN1Enumerated getDEREnumerated(ASN1Primitive derObject) {
+		ASN1Enumerated derEnumerated = null;
+		if (derObject instanceof DERTaggedObject) {
+			ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
+			if (object instanceof ASN1Enumerated) {
+				derEnumerated = (ASN1Enumerated) object;
+			}
+		} else if (derObject instanceof ASN1Enumerated) {
+			derEnumerated = (ASN1Enumerated) derObject;
+		}
+		return derEnumerated;
+	}
 
-    /**
-     *
-     * @param derObject ASN1 Primitive to parse
-     */
-    public void parse(ASN1Primitive derObject) {
-        System.out.println(this.getClass() + policyMessagesBundle.getString("info.not.implemented"));
-    }
+	/**
+	 * @param derObject ASN1 Primitive to parse
+	 */
+	public void parse(ASN1Primitive derObject) {
+		System.out.println(this.getClass() + policyMessagesBundle.getString("info.not.implemented"));
+	}
 }

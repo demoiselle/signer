@@ -42,37 +42,34 @@ import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- *
- * parse an org.bouncycastle.asn1.ASN1Primitive to get
- *  {@link ObjectIdentifier}
- *
+ * Parse an {@link ASN1Primitive} to get {@link ObjectIdentifier}.
  */
 public class AlgorithmIdentifier extends ASN1Object {
 
-    private ObjectIdentifier algorithm;
-    private Object parameters;
+	private ObjectIdentifier algorithm;
+	private Object parameters;
 
-    public ObjectIdentifier getAlgorithm() {
-        return algorithm;
-    }
+	public ObjectIdentifier getAlgorithm() {
+		return algorithm;
+	}
 
-    public void setAlgorithm(ObjectIdentifier algorithm) {
-        this.algorithm = algorithm;
-    }
+	public void setAlgorithm(ObjectIdentifier algorithm) {
+		this.algorithm = algorithm;
+	}
 
-    public Object getParameters() {
-        return parameters;
-    }
+	public Object getParameters() {
+		return parameters;
+	}
 
-    public void setParameters(Object parameters) {
-        this.parameters = parameters;
-    }
+	public void setParameters(Object parameters) {
+		this.parameters = parameters;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        this.algorithm = new ObjectIdentifier();
-        DLSequence derSequence = (DLSequence) derObject;
-        this.algorithm.parse(derSequence.getObjectAt(0).toASN1Primitive());
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		this.algorithm = new ObjectIdentifier();
+		DLSequence derSequence = (DLSequence) derObject;
+		this.algorithm.parse(derSequence.getObjectAt(0).toASN1Primitive());
+	}
 
 }

@@ -42,47 +42,50 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
+ * <pre>
  * SignPolExtn ::= SEQUENCE {
  * 				extnID OBJECT IDENTIFIER {@link ObjectIdentifier},
  * 				extnValue OCTET STRING {@link OctetString}
- *  	}
+ *    }
+ * </pre>
  *
- * The extnID field shall contain the object identifier for the extension.
+ * <p>The extnID field shall contain the object identifier for the extension.
  * The extnValue field shall contain the DER(see ITU-T Recommendation X.690 [3])
  * encoded value of the extension. The definition of an extension, as identified by
- * extnID shall include a definition of the syntax and semantics of the extension.
+ * extnID shall include a definition of the syntax and semantics of the extension.</p>
  *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SignPolExtn extends ASN1Object {
 
-    private ObjectIdentifier extnID;
-    private OctetString extnValue;
+	private ObjectIdentifier extnID;
+	private OctetString extnValue;
 
-    public ObjectIdentifier getExtnID() {
-        return extnID;
-    }
+	public ObjectIdentifier getExtnID() {
+		return extnID;
+	}
 
-    public void setExtnID(ObjectIdentifier extnID) {
-        this.extnID = extnID;
-    }
+	public void setExtnID(ObjectIdentifier extnID) {
+		this.extnID = extnID;
+	}
 
-    public OctetString getExtnValue() {
-        return extnValue;
-    }
+	public OctetString getExtnValue() {
+		return extnValue;
+	}
 
-    public void setExtnValue(OctetString extnValue) {
-        this.extnValue = extnValue;
-    }
+	public void setExtnValue(OctetString extnValue) {
+		this.extnValue = extnValue;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
 
-        this.extnID = new ObjectIdentifier();
-        this.extnID.parse(derSequence.getObjectAt(0).toASN1Primitive());
+		this.extnID = new ObjectIdentifier();
+		this.extnID.parse(derSequence.getObjectAt(0).toASN1Primitive());
 
-        this.extnValue = new OctetString();
-        this.extnValue.parse(derSequence.getObjectAt(1).toASN1Primitive());
-    }
-
+		this.extnValue = new OctetString();
+		this.extnValue.parse(derSequence.getObjectAt(1).toASN1Primitive());
+	}
 }

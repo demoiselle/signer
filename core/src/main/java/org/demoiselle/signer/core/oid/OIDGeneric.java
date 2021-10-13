@@ -55,11 +55,9 @@ import sun.security.util.DerValue;
 import sun.security.x509.OtherName;
 
 /**
- *
  * Generic Class for treatment of some attributes of certificates of ICP-BRASIL,
  * for: Individual (Pessoa Física) of the Business Entity (Pessoa Jurídica) and Equipment.
  * In accordance with the standards defined in DOC-ICP-04 v2.0 dated 04/18/2006.
- *
  */
 @SuppressWarnings("restriction")
 public class OIDGeneric {
@@ -77,11 +75,10 @@ public class OIDGeneric {
 	/**
 	 * Instance for OIDGeneric.
 	 *
-	 * @param data
-	 *            Set of bytes with the contents of the certificate.
+	 * @param data Set of bytes with the contents of the certificate.
 	 * @return Object GenericOID
 	 * @throws IOException exception of input/output
-	 * @throws Exception general exception
+	 * @throws Exception   general exception
 	 */
 	public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
 		is = new ASN1InputStream(data);
@@ -109,7 +106,7 @@ public class OIDGeneric {
 			}
 		}
 
-		String className =  getPackageName()+ oid.getId().replaceAll("[.]", "_");
+		String className = getPackageName() + oid.getId().replaceAll("[.]", "_");
 		OIDGeneric oidGenerico;
 		try {
 			oidGenerico = (OIDGeneric) Class.forName(className).newInstance();
@@ -143,12 +140,10 @@ public class OIDGeneric {
 	}
 
 	/**
-	 *
-	 * @param der
-	 *            Content of Certificate on sun.security.util.DerValue format
+	 * @param der Content of Certificate on sun.security.util.DerValue format
 	 * @return OIDGenerico current instance
 	 * @throws IOException input/output exception
-	 * @throws Exception general exception
+	 * @throws Exception   general exception
 	 */
 	public static OIDGeneric getInstance(DerValue der) throws IOException, Exception {
 		OtherName on = new OtherName(der);
@@ -177,9 +172,7 @@ public class OIDGeneric {
 	}
 
 	/**
-	 *
-	 * @param fields
-	 *            Fields of a certificate
+	 * @param fields Fields of a certificate
 	 */
 	protected void initialize(Object[] fields) {
 
@@ -194,7 +187,6 @@ public class OIDGeneric {
 	}
 
 	/**
-	 *
 	 * @return set of OID on String format
 	 */
 	public String getOid() {
@@ -202,7 +194,6 @@ public class OIDGeneric {
 	}
 
 	/**
-	 *
 	 * @return content on String format
 	 */
 	public String getData() {

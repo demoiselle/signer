@@ -48,146 +48,153 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * and attributes, along with any constraints on attributes that may be included
  * in the electronic signature.
  *
- *
+ * <pre>
  * CommitmentRule ::= SEQUENCE {
- * 			selCommitmentTypes  {@link SelectedCommitmentTypes},
- * 			signerAndVeriferRules [0] {@link SignerAndVerifierRules} OPTIONAL,
- * 			signingCertTrustCondition [1] {@link SigningCertTrustCondition} OPTIONAL,
- * 			timeStampTrustCondition [2] {@link TimestampTrustCondition} OPTIONAL,
- * 			attributeTrustCondition [3] {@link AttributeTrustCondition} OPTIONAL,
- *			algorithmConstraintSet [4] {@link AlgorithmConstraintSet} OPTIONAL,
- *			signPolExtensions [5] {@link SignPolExtensions} OPTIONAL }
+ *     selCommitmentTypes  {@link SelectedCommitmentTypes},
+ *     signerAndVeriferRules [0] {@link SignerAndVerifierRules} OPTIONAL,
+ *     signingCertTrustCondition [1] {@link SigningCertTrustCondition} OPTIONAL,
+ *     timeStampTrustCondition [2] {@link TimestampTrustCondition} OPTIONAL,
+ *     attributeTrustCondition [3] {@link AttributeTrustCondition} OPTIONAL,
+ *     algorithmConstraintSet [4] {@link AlgorithmConstraintSet} OPTIONAL,
+ *     signPolExtensions [5] {@link SignPolExtensions} OPTIONAL
+ * }
+ * </pre>
  *
  * @author 07721825741
+ *
+ * @see ASN1Object
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERTaggedObject
  */
 public class CommonRules extends ASN1Object {
 
-    private SignerAndVerifierRules signerAndVeriferRules;
-    private SigningCertTrustCondition signingCertTrustCondition;
-    private TimestampTrustCondition timeStampTrustCondition;
-    private AttributeTrustCondition attributeTrustCondition;
-    private AlgorithmConstraintSet algorithmConstraintSet;
-    private SignPolExtensions signPolExtensions;
+	private SignerAndVerifierRules signerAndVeriferRules;
+	private SigningCertTrustCondition signingCertTrustCondition;
+	private TimestampTrustCondition timeStampTrustCondition;
+	private AttributeTrustCondition attributeTrustCondition;
+	private AlgorithmConstraintSet algorithmConstraintSet;
+	private SignPolExtensions signPolExtensions;
 
-    public SignerAndVerifierRules getSignerAndVeriferRules() {
-        return signerAndVeriferRules;
-    }
+	public SignerAndVerifierRules getSignerAndVeriferRules() {
+		return signerAndVeriferRules;
+	}
 
-    public void setSignerAndVeriferRules(
-            SignerAndVerifierRules signerAndVeriferRules) {
-        this.signerAndVeriferRules = signerAndVeriferRules;
-    }
+	public void setSignerAndVeriferRules(
+		SignerAndVerifierRules signerAndVeriferRules) {
+		this.signerAndVeriferRules = signerAndVeriferRules;
+	}
 
-    public SigningCertTrustCondition getSigningCertTrustCondition() {
-        return signingCertTrustCondition;
-    }
+	public SigningCertTrustCondition getSigningCertTrustCondition() {
+		return signingCertTrustCondition;
+	}
 
-    public void setSigningCertTrustCondition(
-            SigningCertTrustCondition signingCertTrustCondition) {
-        this.signingCertTrustCondition = signingCertTrustCondition;
-    }
+	public void setSigningCertTrustCondition(
+		SigningCertTrustCondition signingCertTrustCondition) {
+		this.signingCertTrustCondition = signingCertTrustCondition;
+	}
 
-    public TimestampTrustCondition getTimeStampTrustCondition() {
-        return timeStampTrustCondition;
-    }
+	public TimestampTrustCondition getTimeStampTrustCondition() {
+		return timeStampTrustCondition;
+	}
 
-    public void setTimeStampTrustCondition(
-            TimestampTrustCondition timeStampTrustCondition) {
-        this.timeStampTrustCondition = timeStampTrustCondition;
-    }
+	public void setTimeStampTrustCondition(
+		TimestampTrustCondition timeStampTrustCondition) {
+		this.timeStampTrustCondition = timeStampTrustCondition;
+	}
 
-    public AttributeTrustCondition getAttributeTrustCondition() {
-        return attributeTrustCondition;
-    }
+	public AttributeTrustCondition getAttributeTrustCondition() {
+		return attributeTrustCondition;
+	}
 
-    public void setAttributeTrustCondition(
-            AttributeTrustCondition attributeTrustCondition) {
-        this.attributeTrustCondition = attributeTrustCondition;
-    }
+	public void setAttributeTrustCondition(
+		AttributeTrustCondition attributeTrustCondition) {
+		this.attributeTrustCondition = attributeTrustCondition;
+	}
 
-    public AlgorithmConstraintSet getAlgorithmConstraintSet() {
-        return algorithmConstraintSet;
-    }
+	public AlgorithmConstraintSet getAlgorithmConstraintSet() {
+		return algorithmConstraintSet;
+	}
 
-    public void setAlgorithmConstraintSet(
-            AlgorithmConstraintSet algorithmConstraintSet) {
-        this.algorithmConstraintSet = algorithmConstraintSet;
-    }
+	public void setAlgorithmConstraintSet(
+		AlgorithmConstraintSet algorithmConstraintSet) {
+		this.algorithmConstraintSet = algorithmConstraintSet;
+	}
 
-    public SignPolExtensions getSignPolExtensions() {
-        return signPolExtensions;
-    }
+	public SignPolExtensions getSignPolExtensions() {
+		return signPolExtensions;
+	}
 
-    public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
-        this.signPolExtensions = signPolExtensions;
-    }
+	public void setSignPolExtensions(SignPolExtensions signPolExtensions) {
+		this.signPolExtensions = signPolExtensions;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        int total = derSequence.size();
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		int total = derSequence.size();
 
-        if (total > 0) {
-            for (int i = 0; i < total; i++) {
-                ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
-                if (object instanceof DERTaggedObject) {
-                    DERTaggedObject derTaggedObject = (DERTaggedObject) object;
-                    TAG tag = TAG.getTag(derTaggedObject.getTagNo());
-                    switch (tag) {
-                        case signerAndVeriferRules:
-                            this.signerAndVeriferRules = new SignerAndVerifierRules();
-                            this.signerAndVeriferRules.parse(object);
-                            break;
-                        case signingCertTrustCondition:
-                            this.signingCertTrustCondition = new SigningCertTrustCondition();
-                            this.signingCertTrustCondition.parse(object);
-                            break;
-                        case timeStampTrustCondition:
-                            this.timeStampTrustCondition = new TimestampTrustCondition();
-                            this.timeStampTrustCondition.parse(object);
-                            break;
-                        case attributeTrustCondition:
-                            this.attributeTrustCondition = new AttributeTrustCondition();
-                            this.attributeTrustCondition.parse(object);
-                            break;
-                        case algorithmConstraintSet:
-                            this.algorithmConstraintSet = new AlgorithmConstraintSet();
-                            this.algorithmConstraintSet.parse(object);
-                            break;
-                        case signPolExtensions:
-                            this.signPolExtensions = new SignPolExtensions();
-                            this.signPolExtensions.parse(object);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        }
-    }
+		if (total > 0) {
+			for (int i = 0; i < total; i++) {
+				ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
+				if (object instanceof DERTaggedObject) {
+					DERTaggedObject derTaggedObject = (DERTaggedObject) object;
+					TAG tag = TAG.getTag(derTaggedObject.getTagNo());
+					switch (tag) {
+						case signerAndVeriferRules:
+							this.signerAndVeriferRules = new SignerAndVerifierRules();
+							this.signerAndVeriferRules.parse(object);
+							break;
+						case signingCertTrustCondition:
+							this.signingCertTrustCondition = new SigningCertTrustCondition();
+							this.signingCertTrustCondition.parse(object);
+							break;
+						case timeStampTrustCondition:
+							this.timeStampTrustCondition = new TimestampTrustCondition();
+							this.timeStampTrustCondition.parse(object);
+							break;
+						case attributeTrustCondition:
+							this.attributeTrustCondition = new AttributeTrustCondition();
+							this.attributeTrustCondition.parse(object);
+							break;
+						case algorithmConstraintSet:
+							this.algorithmConstraintSet = new AlgorithmConstraintSet();
+							this.algorithmConstraintSet.parse(object);
+							break;
+						case signPolExtensions:
+							this.signPolExtensions = new SignPolExtensions();
+							this.signPolExtensions.parse(object);
+							break;
+						default:
+							break;
+					}
+				}
+			}
+		}
+	}
 
-    enum TAG {
+	enum TAG {
 
-        signerAndVeriferRules(0),
-        signingCertTrustCondition(1),
-        timeStampTrustCondition(2),
-        attributeTrustCondition(3),
-        algorithmConstraintSet(4),
-        signPolExtensions(5);
+		signerAndVeriferRules(0),
+		signingCertTrustCondition(1),
+		timeStampTrustCondition(2),
+		attributeTrustCondition(3),
+		algorithmConstraintSet(4),
+		signPolExtensions(5);
 
-        private final int value;
+		private final int value;
 
-        private TAG(int value) {
-            this.value = value;
-        }
+		TAG(int value) {
+			this.value = value;
+		}
 
-        public static TAG getTag(int value) {
-            for (TAG tag : TAG.values()) {
-                if (tag.value == value) {
-                    return tag;
-                }
-            }
-            return null;
-        }
-    }
+		public static TAG getTag(int value) {
+			for (TAG tag : TAG.values()) {
+				if (tag.value == value) {
+					return tag;
+				}
+			}
+			return null;
+		}
+	}
 }

@@ -60,11 +60,12 @@ import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file (ACcompactado.zip) stored on user home folder,
- * that was previous downloaded by ICPBrasilOnLineSerproProviderCA or ICPBrasilOnLineITIProviderCA.  
- *  *
+ * FIXME each provider should be independent of any other
+ * Get the ICP-BRASIL's Trusted Certificate Authority Chain from file
+ * (ACcompactado.zip) stored on user home folder, that was previous
+ * downloaded by {@link ICPBrasilOnLineSerproProviderCA} or
+ * {@link ICPBrasilOnLineITIProviderCA}.
  */
-
 public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 	public static final String PATH_HOME_USER = System.getProperty("user.home");
@@ -77,12 +78,11 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	public static final Path FULL_PATH_HASH = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, FILENAME_HASH);
 
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilUserHomeProviderCA.class);
-	private static MessagesBundle chainMessagesBundle = new MessagesBundle();
+	private static final MessagesBundle chainMessagesBundle = new MessagesBundle();
 
 	/**
 	 * Main method for read trusted Certificate Authorities Chain
 	 */
-	
 	@Override
 	public Collection<X509Certificate> getCAs() {
 
@@ -97,7 +97,8 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	}
 
 	/**
-	 * Load file from file system and read Certificate Authorities Chain 
+	 * Load file from file system and read Certificate Authorities Chain
+	 *
 	 * @param fileZip file to read from
 	 * @return Collection&lt;X509Certificate&gt;
 	 */
@@ -105,7 +106,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 		LOGGER.debug(chainMessagesBundle.getString("info.loading.from.file", fileZip.toString()));
 
-		Collection<X509Certificate> result = new HashSet<X509Certificate>();
+		Collection<X509Certificate> result = new HashSet<>();
 		long timeBefore = 0;
 		long timeAfter = 0;
 		try {
@@ -120,14 +121,14 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				result = this.getFromZip(inputStream);
 
 			} else {
-				LOGGER.error(chainMessagesBundle.getString("error.filenotfound.userhome",fileZip.toString()));
-				throw new Exception(chainMessagesBundle.getString("error.filenotfound.userhome",fileZip.toString()));
+				LOGGER.error(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
+				throw new Exception(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
 			}
 
 			timeAfter = System.currentTimeMillis();
 		} catch (Throwable error) {
 			timeAfter = System.currentTimeMillis();
-			LOGGER.warn(chainMessagesBundle.getString("error.throwable")+error.getMessage());
+			LOGGER.warn(chainMessagesBundle.getString("error.throwable") + error.getMessage());
 		} finally {
 			LOGGER.debug(chainMessagesBundle.getString("info.time.file.userhome", timeAfter - timeBefore));
 		}
@@ -135,7 +136,8 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	}
 
 	/**
-	 *  Verify if folder exists, otherwise will create it
+	 * Verify if folder exists, otherwise will create it
+	 *
 	 * @return Path
 	 * @throws IOException exception
 	 */
@@ -148,12 +150,12 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 		}
 
 		return finalFolder;
-
 	}
 
 	/**
-	 * get all Certificate Authorities stored on file 
-	 * @param zip input stream to read from 
+	 * get all Certificate Authorities stored on file
+	 *
+	 * @param zip input stream to read from
 	 * @return Collection&lt;X509Certificate&gt;
 	 * @throws RuntimeException exception
 	 */
@@ -174,16 +176,15 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 						ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
 						out.close();
 						X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X509")
-								.generateCertificate(is);
+							.generateCertificate(is);
 						is.close();
 						result.add(certificate);
 					}
-				}catch (CertificateException error) {
+				} catch (CertificateException error) {
 					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate"));
 				}
-				
 			}
-		}  catch (IOException error) {
+		} catch (IOException error) {
 			LOGGER.error(chainMessagesBundle.getString("error.stream"));
 			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
@@ -196,6 +197,5 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	@Override
 	public String getName() {
 		return chainMessagesBundle.getString("info.provider.name.userhome", FULL_PATH_ZIP);
-
 	}
 }

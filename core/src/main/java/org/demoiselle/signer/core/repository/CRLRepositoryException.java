@@ -39,21 +39,20 @@ package org.demoiselle.signer.core.repository;
 
 /**
  * to do unchecked
- *
  */
 public class CRLRepositoryException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public CRLRepositoryException() {
-        super();
-    }
+	public CRLRepositoryException() {
+		super();
+	}
 
-    public CRLRepositoryException(String message) {
-        super(message);
-    }
+	public CRLRepositoryException(String message) {
+		super(message);
+	}
 
-    public CRLRepositoryException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public CRLRepositoryException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

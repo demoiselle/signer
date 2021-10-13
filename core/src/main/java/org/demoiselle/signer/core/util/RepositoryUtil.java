@@ -50,150 +50,148 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
- *  connections utilities for CRL (Certificate Revocation list)
- *
+ * connections utilities for CRL (Certificate Revocation list)
  */
 public class RepositoryUtil {
 
-    private static Logger logger = LoggerFactory.getLogger(RepositoryUtil.class);
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private static Logger logger = LoggerFactory.getLogger(RepositoryUtil.class);
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 	private static int byteWritten;
 	private static int byteWritten2;
 
 	/**
 	 * Digest to MD5
+	 *
 	 * @param url source url
 	 * @return MD5 digest
 	 */
-    public static String urlToMD5(String url) {
-        try {
-            String ret = "";
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            md.update(url.getBytes(),0,url.length());
-       		for (byte b : md.digest()) ret = ret + String.format("%02x", b);
-            return ret;
-        } catch (NoSuchAlgorithmException e) {
-        	logger.error(e.getMessage());
-            return null;
-        }
-    }
+	public static String urlToMD5(String url) {
+		try {
+			String ret = "";
+			MessageDigest md = MessageDigest.getInstance("MD5");
+			md.update(url.getBytes(), 0, url.length());
+			for (byte b : md.digest()) ret = ret + String.format("%02x", b);
+			return ret;
+		} catch (NoSuchAlgorithmException e) {
+			logger.error(e.getMessage());
+			return null;
+		}
+	}
 
-    /**
-     *
-     * @param sUrl source url
-     * @param destinationFile destination file
-     */
-    public static void saveURL(String sUrl, File destinationFile) {
-        URL url;
-        byte[] buf;
-        int ByteRead;
+	/**
+	 * @param sUrl            source url
+	 * @param destinationFile destination file
+	 */
+	public static void saveURL(String sUrl, File destinationFile) {
+		URL url;
+		byte[] buf;
+		int ByteRead;
 		setByteWritten(0);
-        BufferedOutputStream outStream = null;
-        URLConnection uCon = null;
-        InputStream is = null;
-        try {
-        	logger.info(coreMessagesBundle.getString("info.file.destination",destinationFile));
-        	url = new URL(sUrl);
-            uCon = url.openConnection();
-            uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
-            is = uCon.getInputStream();
-            outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
-            buf = new byte[1024];
-            while ((ByteRead = is.read(buf)) != -1) {
-                outStream.write(buf, 0, ByteRead);
-                setByteWritten(getByteWritten() + ByteRead);
-            }
-            outStream.flush();
-            if (destinationFile.length() <= 0){
-            	if (!destinationFile.delete()) {
-                    logger.warn(coreMessagesBundle.getString("error.file.remove", destinationFile));
-                }
-            }
-        } catch (MalformedURLException e) {
-        	logger.error(coreMessagesBundle.getString("error.malformed.url",sUrl));
-            throw new CertificateValidatorException(coreMessagesBundle.getString("error.malformed.url",sUrl), e);
-        } catch (FileNotFoundException e) {
-        	logger.error(coreMessagesBundle.getString("error.file.not.found",sUrl));
-            throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found",sUrl), e);
-        } catch (IOException e) {
-            logger.error(coreMessagesBundle.getString("error.crl.open.connection",sUrl) + e.getMessage());
-            throw new CertificateValidatorException(coreMessagesBundle.getString("error.io", e.getMessage()), e);
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-                if (outStream != null) {
-                    outStream.close();
-                }
-            } catch (Throwable e) {
-            	logger.error(coreMessagesBundle.getString("error.crl.close.connection",sUrl));
-                throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection",sUrl), e);
-            }
-        }
-    }
+		BufferedOutputStream outStream = null;
+		URLConnection uCon = null;
+		InputStream is = null;
+		try {
+			logger.info(coreMessagesBundle.getString("info.file.destination", destinationFile));
+			url = new URL(sUrl);
+			uCon = url.openConnection();
+			uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
+			is = uCon.getInputStream();
+			outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
+			buf = new byte[1024];
+			while ((ByteRead = is.read(buf)) != -1) {
+				outStream.write(buf, 0, ByteRead);
+				setByteWritten(getByteWritten() + ByteRead);
+			}
+			outStream.flush();
+			if (destinationFile.length() <= 0) {
+				if (!destinationFile.delete()) {
+					logger.warn(coreMessagesBundle.getString("error.file.remove", destinationFile));
+				}
+			}
+		} catch (MalformedURLException e) {
+			logger.error(coreMessagesBundle.getString("error.malformed.url", sUrl));
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.malformed.url", sUrl), e);
+		} catch (FileNotFoundException e) {
+			logger.error(coreMessagesBundle.getString("error.file.not.found", sUrl));
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found", sUrl), e);
+		} catch (IOException e) {
+			logger.error(coreMessagesBundle.getString("error.crl.open.connection", sUrl) + e.getMessage());
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.io", e.getMessage()), e);
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+				if (outStream != null) {
+					outStream.close();
+				}
+			} catch (Throwable e) {
+				logger.error(coreMessagesBundle.getString("error.crl.close.connection", sUrl));
+				throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection", sUrl), e);
+			}
+		}
+	}
 
-    /**
-     *
-     * @param listURL url list
-     * @return valid url list
-     */
-    public static List<String> filterValidURLs(List<String> listURL) {
-        List<String> newURLlist = new ArrayList<String>();
-        for (String sURL : listURL) {
-            if (validateURL(sURL)) {
-                newURLlist.add(sURL);
-                // break;
-            }
-        }
-        return newURLlist;
-    }
+	/**
+	 * @param listURL url list
+	 * @return valid url list
+	 */
+	public static List<String> filterValidURLs(List<String> listURL) {
+		List<String> newURLlist = new ArrayList<String>();
+		for (String sURL : listURL) {
+			if (validateURL(sURL)) {
+				newURLlist.add(sURL);
+				// break;
+			}
+		}
+		return newURLlist;
+	}
 
-    private static boolean validateURL(String sUrl) {
-        URL url;
-        byte[] buf;
-        int ByteRead;
+	private static boolean validateURL(String sUrl) {
+		URL url;
+		byte[] buf;
+		int ByteRead;
 		setByteWritten2(0);
-        URLConnection uCon = null;
-        InputStream is = null;
-        try {
-            url = new URL(sUrl);
-            uCon = url.openConnection();
-            uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
-            is = uCon.getInputStream();
-            buf = new byte[1024];
-            while ((ByteRead = is.read(buf)) != -1) {
-                setByteWritten2(getByteWritten2() + ByteRead);
-            }
-        } catch (MalformedURLException e) {
-        	logger.error(e.getMessage());
-            return false;
-        } catch (FileNotFoundException e) {
-        	logger.error(e.getMessage());
-            return false;
-        } catch (IOException e) {
-        	logger.error(e.getMessage());
-            return false;
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (Throwable e) {
-            	logger.error(coreMessagesBundle.getString("error.crl.close.connection",sUrl)+e.getMessage());
-                throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection",sUrl), e);
-            }
-        }
+		URLConnection uCon = null;
+		InputStream is = null;
+		try {
+			url = new URL(sUrl);
+			uCon = url.openConnection();
+			uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
+			is = uCon.getInputStream();
+			buf = new byte[1024];
+			while ((ByteRead = is.read(buf)) != -1) {
+				setByteWritten2(getByteWritten2() + ByteRead);
+			}
+		} catch (MalformedURLException e) {
+			logger.error(e.getMessage());
+			return false;
+		} catch (FileNotFoundException e) {
+			logger.error(e.getMessage());
+			return false;
+		} catch (IOException e) {
+			logger.error(e.getMessage());
+			return false;
+		} finally {
+			try {
+				if (is != null) {
+					is.close();
+				}
+			} catch (Throwable e) {
+				logger.error(coreMessagesBundle.getString("error.crl.close.connection", sUrl) + e.getMessage());
+				throw new CertificateValidatorException(coreMessagesBundle.getString("error.crl.close.connection", sUrl), e);
+			}
+		}
 
-        return true;
-    }
+		return true;
+	}
 
 	public static int getByteWritten() {
 		return byteWritten;
@@ -210,5 +208,4 @@ public class RepositoryUtil {
 	public static void setByteWritten2(int byteWritten2) {
 		RepositoryUtil.byteWritten2 = byteWritten2;
 	}
-
 }

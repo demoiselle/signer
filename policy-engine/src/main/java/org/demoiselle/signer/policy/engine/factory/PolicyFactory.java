@@ -37,14 +37,6 @@
 
 package org.demoiselle.signer.policy.engine.factory;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
@@ -58,639 +50,596 @@ import org.demoiselle.signer.policy.engine.util.XMLUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
- *
- *  Factory for the digital signature policies defined by ICP-BRASIL
- *
- *  http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
- *
+ * FIXME move to policy.engine package?
+ * FIXME should we value https over http to get policies?
+ * Factory for the digital signature policies defined by ICP-BRASIL.
+ * Consulte
+ * <a href="http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital">
+ * portal do ITI</a> para detalhes.
  */
 public class PolicyFactory {
 
-    public static final PolicyFactory instance = new PolicyFactory();
+	public static final PolicyFactory instance = new PolicyFactory();
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PolicyFactory.class);
-    private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final Logger LOGGER = LoggerFactory.getLogger(PolicyFactory.class);
+	private static final MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
 
-    public static PolicyFactory getInstance() {
-        return PolicyFactory.instance;
-    }
+	public static PolicyFactory getInstance() {
+		return PolicyFactory.instance;
+	}
 
-    /**
-     * Load policies on CAdES and PAdES format
-     * @param policy
-     * @return
-     */
-    public SignaturePolicy loadPolicy(Policies policy) {
-        SignaturePolicy signaturePolicy = new SignaturePolicy();
-        InputStream is = this.getClass().getResourceAsStream(policy.getFile());
-        ASN1Primitive primitive = this.readANS1FromStream(is);
-        signaturePolicy.parse(primitive);
-        signaturePolicy.setSignPolicyURI(policy.getUrl());
-        return signaturePolicy;
-    }
-    /**
-     *
-     * 	@param policy
-     * @return
-     * @throws ParserConfigurationException
-     * @throws SAXException
-     * @throws IOException
-     */
+	/**
+	 * Load policies on CAdES and PAdES format.
+	 *
+	 * @param policy The policy to load.
+	 * @return The corresponding {@link SignaturePolicy}.
+	 */
+	public SignaturePolicy loadPolicy(Policies policy) {
+		SignaturePolicy signaturePolicy = new SignaturePolicy();
+		InputStream is = this.getClass().getResourceAsStream(policy.getFile());
+		ASN1Primitive primitive = this.readANS1FromStream(is);
+		signaturePolicy.parse(primitive);
+		signaturePolicy.setSignPolicyURI(policy.getUrl());
+		return signaturePolicy;
+	}
 
-    public Document loadXMLPolicy(Policies policy)  {
-    	SignaturePolicy signaturePolicy = new SignaturePolicy();
-        InputStream is = this.getClass().getResourceAsStream(policy.getFile());
-        Document policyXML = XMLUtil.loadXMLDocument(is);
-        signaturePolicy.setSignPolicyURI(policy.getUrl());
-        return policyXML;
-    }
+	/**
+	 * @param policy The policy to load.
+	 * @return The corresponding {@link Document}.
+	 */
+	public Document loadXMLPolicy(Policies policy) {
+		InputStream is = this.getClass().getResourceAsStream(policy.getFile());
+		// FIXME from now on should goes to core loadDocumentFromInputStream
+		return XMLUtil.loadXMLDocument(is);
+	}
 
-
-    /**
+	/**
 	 * @return LPA ICP Brasil signature policy v1
-     * @deprecated  Politics DISCONTINUED
-     */
+	 * @deprecated Politics DISCONTINUED
+	 */
+	@Deprecated
+	public LPA loadLPA() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.LPA();
+		InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.LPAV1.getFile());
+		ASN1Primitive primitive = this.readANS1FromStream(is);
+		listaPoliticaAssinatura.parse(primitive);
+		return listaPoliticaAssinatura;
+	}
 
-    @Deprecated
-    public LPA loadLPA() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.LPA();
-        InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.LPAV1.getFile());
-        ASN1Primitive primitive = this.readANS1FromStream(is);
-        listaPoliticaAssinatura.parse(primitive);
-        return listaPoliticaAssinatura;
-    }
-
-
-    /**
+	/**
 	 * @return LPA ICP Brasil signature policy v2
-     * @deprecated   Politics DISCONTINUED 28/11/2016
-     */
+	 * @deprecated Politics DISCONTINUED 28/11/2016
+	 */
+	@Deprecated
+	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAv2() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.LPAV2.getFile());
+		ASN1Primitive primitive = this.readANS1FromStream(is);
+		listaPoliticaAssinatura.parse(primitive);
+		return listaPoliticaAssinatura;
+	}
 
-    @Deprecated
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAv2() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.LPAV2.getFile());
-        ASN1Primitive primitive = this.readANS1FromStream(is);
-        listaPoliticaAssinatura.parse(primitive);
-        return listaPoliticaAssinatura;
-    }
+	/**
+	 * Load signature policy for CAdES standard (PKCS)
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA ICP Brasil signature policy v2
+	 */
+	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdES() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.CAdES.getFile());
+		ASN1Primitive primitive = this.readANS1FromStream(is);
+		listaPoliticaAssinatura.parse(primitive);
+		return listaPoliticaAssinatura;
+	}
 
-    /**
-     * Load signature policy for CAdES standard (PKCS)
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA ICP Brasil signature policy v2
-     */
+	/**
+	 * Load signature policy for PAdES standard (PDF)
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA ICP Brasil signature policy v2
+	 */
+	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdES() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.PAdES.getFile());
+		ASN1Primitive primitive = this.readANS1FromStream(is);
+		listaPoliticaAssinatura.parse(primitive);
+		return listaPoliticaAssinatura;
+	}
 
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdES() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.CAdES.getFile());
-        ASN1Primitive primitive = this.readANS1FromStream(is);
-        listaPoliticaAssinatura.parse(primitive);
-        return listaPoliticaAssinatura;
-    }
+	/**
+	 * Load signature policy for XAdES (XML) standard
+	 *
+	 * @return ICP Brasil signature policy v2
+	 */
 
-    /**
-     *  Load signature policy for PAdES standard (PDF)
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA ICP Brasil signature policy v2
-     */
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdES() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.PAdES.getFile());
-        ASN1Primitive primitive = this.readANS1FromStream(is);
-        listaPoliticaAssinatura.parse(primitive);
-        return listaPoliticaAssinatura;
-    }
+	public Document loadLPAXAdES() {
+		InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.XAdES.getFile());
+		return XMLUtil.loadXMLDocument(is);
+	}
 
-    /**
-     *  Load signature policy for XAdES (XML) standard
-     * @return ICP Brasil signature policy v2
-     */
-
-    public Document loadLPAXAdES() {
-         InputStream is = this.getClass().getResourceAsStream(ListOfSubscriptionPolicies.XAdES.getFile());
-         return XMLUtil.loadXMLDocument(is);
-    }
-
-
-    /**
-     * Load signature policy for CAdES standard (PKCS) from local repository
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
-     */
-
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESLocal() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        InputStream is;
+	/**
+	 * Load signature policy for CAdES standard (PKCS) from local repository
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+	 */
+	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESLocal() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		InputStream is;
 		try {
 			ConfigurationRepo config = ConfigurationRepo.getInstance();
 			Path pathLPA = Paths.get(config.getLpaPath(), "LPA_CAdES.der");
 			LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
 			is = new FileInputStream(pathLPA.toString());
 			ASN1Primitive primitive = this.readANS1FromStream(is);
-	        listaPoliticaAssinatura.parse(primitive);
-	        return listaPoliticaAssinatura;
+			listaPoliticaAssinatura.parse(primitive);
+			return listaPoliticaAssinatura;
 		} catch (Exception e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
 			listaPoliticaAssinatura = loadLPACAdESUrl();
 		}
-		if (listaPoliticaAssinatura != null){
+		if (listaPoliticaAssinatura != null) {
 			return listaPoliticaAssinatura;
-		}else{
+		} else {
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_CAdES.der"));
-
 		}
-    }
+	}
 
-    /**
-     *  Load signature policy for PAdES standard (PDF) from local repository
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
-     */
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdESLocal() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        InputStream is;
-        try {
-        	ConfigurationRepo config = ConfigurationRepo.getInstance();
-        	Path pathLPA = Paths.get(config.getLpaPath(), "LPA_PAdES.der");
-        	LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
-        	is = new FileInputStream(pathLPA.toString());
+	/**
+	 * Load signature policy for PAdES standard (PDF) from local repository
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+	 */
+	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdESLocal() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		InputStream is;
+		try {
+			ConfigurationRepo config = ConfigurationRepo.getInstance();
+			Path pathLPA = Paths.get(config.getLpaPath(), "LPA_PAdES.der");
+			LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
+			is = new FileInputStream(pathLPA.toString());
 			ASN1Primitive primitive = this.readANS1FromStream(is);
-	        listaPoliticaAssinatura.parse(primitive);
-	        return listaPoliticaAssinatura;
+			listaPoliticaAssinatura.parse(primitive);
+			return listaPoliticaAssinatura;
 		} catch (Exception e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 			listaPoliticaAssinatura = loadLPAPAdESUrl();
 		}
-        if (listaPoliticaAssinatura != null){
+		if (listaPoliticaAssinatura != null) {
 			return listaPoliticaAssinatura;
-		}else{
+		} else {
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_PAdES.der"));
 		}
+	}
 
+	/**
+	 * FIXME core should take care of file, URL and similar things used over and over again
+	 * Load signature policy for XAdES (XML) standard from local repository
+	 *
+	 * @return load XML file as Document.
+	 */
+	public Document loadLPAXAdESLocal() {
 
-    }
-
-    /**
-     *  Load signature policy for XAdES (XML) standard from local repository
-     * @return
-     */
-
-    public Document loadLPAXAdESLocal() {
-
-    	InputStream is= null;
-    	Document localLPAXML = null;
+		InputStream is;
+		Document localLPAXML;
 		try {
 			ConfigurationRepo config = ConfigurationRepo.getInstance();
 			Path pathLPA = Paths.get(config.getLpaPath(), "LPA_XAdES.xml");
 			LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", pathLPA));
 			is = new FileInputStream(pathLPA.toString());
 			localLPAXML = XMLUtil.loadXMLDocument(is);
-	        return localLPAXML;
+			return localLPAXML;
 		} catch (Exception e) {
 			LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
 			localLPAXML = loadLPAXAdESUrl();
 		}
-		if (localLPAXML != null){
+		if (localLPAXML != null) {
 			return localLPAXML;
-		}else{
+		} else {
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.found", "LPA_XAdES.xml"));
-
 		}
+	}
 
-    }
+	/**
+	 * Load signature policy for CAdES standard (PKCS) from url
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+	 */
+	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESUrl() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		String conURL = ListOfSubscriptionPolicies.CAdES_ITI_URL.getUrl();
+		try {
 
-
-    /**
-     * Load signature policy for CAdES standard (PKCS) from url
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
-     */
-
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPACAdESUrl() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        String conURL = ListOfSubscriptionPolicies.CAdES_ITI_URL.getUrl();
-        try{
-
-        	LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
-        	InputStream is = Downloads.getInputStreamFromURL(conURL);
-        	ASN1Primitive primitive = this.readANS1FromStream(is);
-            listaPoliticaAssinatura.parse(primitive);
-            is.close();
-            if (!LPARepository.saveLocalLPA(conURL, "LPA_CAdES.der")){
-            	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
-            	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-            }
-        }catch(RuntimeException ex){
-        	LOGGER.error(ex.getMessage());
-        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-        	listaPoliticaAssinatura = loadLocalLPACAdESUrl();
-        	return listaPoliticaAssinatura;
-
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url", conURL));
+			InputStream is = Downloads.getInputStreamFromURL(conURL);
+			ASN1Primitive primitive = this.readANS1FromStream(is);
+			listaPoliticaAssinatura.parse(primitive);
+			is.close();
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_CAdES.der")) {
+				LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
+				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+			}
+		} catch (IOException | RuntimeException ex) {
+			LOGGER.error(ex.getMessage());
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			listaPoliticaAssinatura = loadLocalLPACAdESUrl();
 			return listaPoliticaAssinatura;
+
 		}
 
-        return listaPoliticaAssinatura;
+		return listaPoliticaAssinatura;
+	}
 
-    }
-    /**
-     *
-     * Load signature policy for CAdES standard (PKCS) from local url
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
-     */
-    private org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLocalLPACAdESUrl(){
-    	org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-    	String conURL = ListOfSubscriptionPolicies.CAdES_LOCAL_URL.getUrl();
-        try{
-        	LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
-        	InputStream is = Downloads.getInputStreamFromURL(conURL);
-        	ASN1Primitive primitive = this.readANS1FromStream(is);
-            listaPoliticaAssinatura.parse(primitive);
-            is.close();
-            if (!LPARepository.saveLocalLPA(conURL, "LPA_CAdES.der")){
-            	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
-            	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-            }
-        }catch(RuntimeException ex1){
-        	LOGGER.error(ex1.getMessage());
-        	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+	/**
+	 * Load signature policy for CAdES standard (PKCS) from local url
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+	 */
+	private org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLocalLPACAdESUrl() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		String conURL = ListOfSubscriptionPolicies.CAdES_LOCAL_URL.getUrl();
+		try {
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url", conURL));
+			InputStream is = Downloads.getInputStreamFromURL(conURL);
+			ASN1Primitive primitive = this.readANS1FromStream(is);
+			listaPoliticaAssinatura.parse(primitive);
+			is.close();
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_CAdES.der")) {
+				LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_CAdES.der"));
+				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+			}
+		} catch (RuntimeException ex1) {
+			LOGGER.error(ex1.getMessage());
+			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		} catch (IOException e1) {
 			LOGGER.error(e1.getMessage());
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
-    	return listaPoliticaAssinatura;
-    }
+		return listaPoliticaAssinatura;
+	}
 
-    /**
-     *  Load signature policy for PAdES standard (PDF) from url
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
-     */
-    public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdESUrl() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        InputStream is;
-        String conURL = ListOfSubscriptionPolicies.PAdES_ITI_URL.getUrl();
+	/**
+	 * Load signature policy for PAdES standard (PDF) from url
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+	 */
+	public org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLPAPAdESUrl() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		InputStream is;
+		String conURL = ListOfSubscriptionPolicies.PAdES_ITI_URL.getUrl();
 		try {
-			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url", conURL));
 			is = Downloads.getInputStreamFromURL(conURL);
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 			is.close();
-			if (!LPARepository.saveLocalLPA(conURL, "LPA_PAdES.der")){
-	        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_PAdES.der"));
-	        	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-	        	}
-	        listaPoliticaAssinatura.parse(primitive);
-		} catch (RuntimeException e) {
-			LOGGER.error(e.getMessage());
-			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-			listaPoliticaAssinatura = loadLocalLPAPAdESUrl();
-			return listaPoliticaAssinatura;
-		} catch (IOException e) {
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_PAdES.der")) {
+				LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_PAdES.der"));
+				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+			}
+			listaPoliticaAssinatura.parse(primitive);
+		} catch (IOException | RuntimeException e) {
 			LOGGER.error(e.getMessage());
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			listaPoliticaAssinatura = loadLocalLPAPAdESUrl();
 			return listaPoliticaAssinatura;
 		}
-		 return listaPoliticaAssinatura;
-    }
+		return listaPoliticaAssinatura;
+	}
 
-    /**
-     *  Load signature policy for PAdES standard (PDF) from local
-     * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
-     */
-    private org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLocalLPAPAdESUrl() {
-        org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
-        InputStream is;
-        String conURL = ListOfSubscriptionPolicies.PAdES_LOCAL_URL.getUrl();
+	/**
+	 * Load signature policy for PAdES standard (PDF) from local
+	 *
+	 * @return org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA
+	 */
+	private org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA loadLocalLPAPAdESUrl() {
+		org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA listaPoliticaAssinatura = new org.demoiselle.signer.policy.engine.asn1.icpb.v2.LPA();
+		InputStream is;
+		String conURL = ListOfSubscriptionPolicies.PAdES_LOCAL_URL.getUrl();
 		try {
-			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url", conURL));
 			is = Downloads.getInputStreamFromURL(conURL);
 			ASN1Primitive primitive = this.readANS1FromStream(is);
 			is.close();
-			if (!LPARepository.saveLocalLPA(conURL, "LPA_PAdES.der")){
-	        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_PAdES.der"));
-	        	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-	        	}
-	        listaPoliticaAssinatura.parse(primitive);
-		} catch (RuntimeException e) {
-			LOGGER.error(e.getMessage());
-			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-		} catch (IOException e) {
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_PAdES.der")) {
+				LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_PAdES.der"));
+				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+			}
+			listaPoliticaAssinatura.parse(primitive);
+		} catch (IOException | RuntimeException e) {
 			LOGGER.error(e.getMessage());
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
-		 return listaPoliticaAssinatura;
-    }
+		return listaPoliticaAssinatura;
+	}
 
+	/**
+	 * Load signature policy for XAdES (XML) standard from url
+	 *
+	 * @return fake.
+	 */
+	public Document loadLPAXAdESUrl() {
 
-    /**
-     *  Load signature policy for XAdES (XML) standard from url
-     *
-     */
+		Document localLPAXML;
+		String conURL = ListOfSubscriptionPolicies.XAdES_ITI_URL.getUrl();
 
-    public Document loadLPAXAdESUrl() {
-
-        Document localLPAXML = null;
-        String conURL = ListOfSubscriptionPolicies.XAdES_ITI_URL.getUrl();
-
-        try{
-        	LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
-        	InputStream is = Downloads.getInputStreamFromURL(conURL);
-        	localLPAXML = XMLUtil.loadXMLDocument(is);
-            is.close();
-            if (!LPARepository.saveLocalLPA(conURL, "LPA_XAdES.xml")){
-            	LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
-            	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-            }
-        }catch(RuntimeException ex){
-        	LOGGER.error(ex.getMessage());
-        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-        	localLPAXML = loadLocalLPAXAdESUrl();
-        	return localLPAXML;
-
-		} catch (IOException e) {
-			LOGGER.error(e.getMessage());
+		try {
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url", conURL));
+			InputStream is = Downloads.getInputStreamFromURL(conURL);
+			localLPAXML = XMLUtil.loadXMLDocument(is);
+			is.close();
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_XAdES.xml")) {
+				LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
+				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+			}
+		} catch (IOException | RuntimeException ex) {
+			LOGGER.error(ex.getMessage());
 			LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 			localLPAXML = loadLocalLPAXAdESUrl();
 			return localLPAXML;
 		}
+		return localLPAXML;
+	}
 
-        return localLPAXML;
+	/**
+	 * Load signature policy for XAdES (XML) standard from local url
+	 *
+	 * @return fake.
+	 */
+	public Document loadLocalLPAXAdESUrl() {
 
-    }
-
-    /**
-     *  Load signature policy for XAdES (XML) standard from local url
-     */
-
-    public Document loadLocalLPAXAdESUrl() {
-
-        InputStream is;
-        Document localLPAXML = null;
-        String conURL = ListOfSubscriptionPolicies.XAdES_LOCAL_URL.getUrl();
+		InputStream is;
+		Document localLPAXML;
+		String conURL = ListOfSubscriptionPolicies.XAdES_LOCAL_URL.getUrl();
 		try {
-			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url",conURL));
+			LOGGER.info(policyMessagesBundle.getString("info.lpa.load.url", conURL));
 			is = Downloads.getInputStreamFromURL(conURL);
 			localLPAXML = XMLUtil.loadXMLDocument(is);
 			is.close();
-			if (!LPARepository.saveLocalLPA(conURL, "LPA_XAdES.xml")){
-	        	LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
-	        	throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-	        	}
-		} catch (RuntimeException e) {
-			LOGGER.error(e.getMessage());
-			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
-		} catch (IOException e) {
+			if (!LPARepository.saveLocalLPA(conURL, "LPA_XAdES.xml")) {
+				LOGGER.error(policyMessagesBundle.getString("error.lpa.not.saved", "LPA_XAdES.xml"));
+				throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
+			}
+		} catch (IOException | RuntimeException e) {
 			LOGGER.error(e.getMessage());
 			throw new RuntimeException(policyMessagesBundle.getString("error.lpa.not.saved", conURL));
 		}
-		 return localLPAXML;
+		return localLPAXML;
+	}
 
-    }
-
-    private ASN1Primitive readANS1FromStream(InputStream is) {
-        ASN1InputStream asn1is = new ASN1InputStream(is);
-        ASN1Primitive primitive = null;
-        try {
-            primitive = asn1is.readObject();
-        } catch (IOException error) {
+	private ASN1Primitive readANS1FromStream(InputStream is) {
+		ASN1InputStream asn1is = new ASN1InputStream(is);
+		ASN1Primitive primitive = null;
+		try {
+			primitive = asn1is.readObject();
+		} catch (IOException error) {
 			LOGGER.error("Error reading stream.", error);
-            throw new RuntimeException(error);
-        } finally {
-            try {
-                asn1is.close();
-            } catch (IOException error) {
-            	LOGGER.error(error.getMessage());
-                throw new RuntimeException(error);
-            }
-        }
-        return primitive;
-    }
+			// FIXME we should use an appropriate exception (specific one)
+			throw new RuntimeException(error);
+		} finally {
+			try {
+				asn1is.close();
+			} catch (IOException error) {
+				LOGGER.error(error.getMessage());
+				// FIXME it has some side effects
+				throw new RuntimeException(error);
+			}
+		}
+		return primitive;
+	}
 
-    /**
-     *
-     * Policies available on the ITI website.
-     * http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
-     *
-     */
-    public enum Policies {
+	/**
+	 * FIXME this is not consistent with other similar issues. Should all use the same strategy?
+	 * FIXME use https instead of http
+	 * Policies available on the ITI website.
+	 * http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
+	 */
+	public enum Policies {
 
+		AD_RB_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB.der"),
+		AD_RB_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v1_1.der"),
+		AD_RB_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_0.der"),
+		AD_RB_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_1.der"),
+		AD_RB_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.der"),
+		AD_RB_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.der"),
 
-        AD_RB_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RB.der"),
-        AD_RB_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v1_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v1_1.der"),
-        AD_RB_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_0.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_0.der"),
-        AD_RB_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_1.der"),
-        AD_RB_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.der"),
-        AD_RB_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.der",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.der"),
+		AD_RT_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT.der"),
+		AD_RT_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v1_1.der"),
+		AD_RT_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_0.der"),
+		AD_RT_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_1.der"),
+		AD_RT_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.der"),
+		AD_RT_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.der"),
 
+		AD_RV_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV.der"),
+		AD_RV_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v1_1.der"),
+		AD_RV_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_0.der"),
+		AD_RV_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_1.der"),
+		AD_RV_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_2.der"),
+		AD_RV_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_3.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.der"),
 
-        AD_RT_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT.der"),
-        AD_RT_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v1_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v1_1.der"),
-        AD_RT_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_0.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_0.der"),
-        AD_RT_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_1.der"),
-        AD_RT_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.der"),
-        AD_RT_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.der",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.der"),
+		AD_RC_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC.der"),
+		AD_RC_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v1_1.der"),
+		AD_RC_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_0.der"),
+		AD_RC_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_1.der"),
+		AD_RC_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_2.der"),
+		AD_RC_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_3.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.der"),
 
-        AD_RV_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RV.der"),
-        AD_RV_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v1_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v1_1.der"),
-        AD_RV_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_0.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_0.der"),
-        AD_RV_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_1.der"),
-        AD_RV_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_2.der"),
-        AD_RV_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_3.der",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.der"),
+		AD_RA_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA.der"),
+		AD_RA_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v1_1.der"),
+		AD_RA_CADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v1_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v1_2.der"),
+		AD_RA_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_0.der"),
+		AD_RA_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_1.der"),
+		AD_RA_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_2.der"),
+		AD_RA_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_3.der"),
+		AD_RA_CADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.der",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.der"),
 
-        AD_RC_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RC.der"),
-        AD_RC_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v1_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v1_1.der"),
-        AD_RC_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_0.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_0.der"),
-        AD_RC_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_1.der"),
-        AD_RC_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_2.der"),
-        AD_RC_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_3.der",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.der"),
+		// FORMATO XAdES
 
-        AD_RA_CADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RA.der"),
-        AD_RA_CADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v1_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v1_1.der"),
-        AD_RA_CADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v1_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v1_2.der"),
-        AD_RA_CADES_2_0("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_0.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_0.der"),
-        AD_RA_CADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_1.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_1.der"),
-        AD_RA_CADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_2.der"),
-        AD_RA_CADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.der",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_3.der"),
-        AD_RA_CADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.der",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.der"),
+		AD_RB_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_1.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_1.xml"),
+		AD_RB_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.xml"),
+		AD_RB_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.xml"),
+		AD_RB_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_4.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_4.xml"),
 
-       // FORMATO XAdES
+		AD_RT_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_1.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_1.xml"),
 
-        AD_RB_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_1.xml",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_1.xml"),
-        AD_RB_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_2.xml",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_2.xml"),
-        AD_RB_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_3.xml",
-                        		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.xml"),
-        AD_RB_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_4.xml",
-                                		"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_4.xml"),
+		AD_RT_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_2.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.xml"),
+		AD_RT_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.xml"),
+		AD_RT_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_4.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_4.xml"),
 
-        AD_RT_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_1.xml",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_1.xml"),
+		AD_RV_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_2.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_2.xml"),
+		AD_RV_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_3.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.xml"),
+		AD_RV_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_4.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_4.xml"),
 
-        AD_RT_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_2.xml",
-        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.xml"),
-        AD_RT_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.xml",
-                		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.xml"),
-        AD_RT_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_4.xml",
-                        		"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_4.xml"),
+		AD_RC_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_3.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.xml"),
+		AD_RC_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_4.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_4.xml"),
 
-        AD_RV_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_2.xml",
-           		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_2.xml"),
-   		AD_RV_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_3.xml",
-                   		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.xml"),
-        AD_RV_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_4.xml",
-                           		"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_4.xml"),
+		AD_RA_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_3.xml"),
 
-        AD_RC_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_3.xml",
-                        "http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.xml"),
-        AD_RC_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_4.xml",
-                                "http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_4.xml"),
+		AD_RA_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.xml"),
 
-        AD_RA_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.xml",
-                   		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_3.xml"),
+		// FORMATO PAdES
 
-        AD_RA_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.xml",
-                           		"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.xml"),
+		AD_RB_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_0.der"),
+		AD_RB_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_1.der"),
 
-        // FORMATO PAdES
+		AD_RT_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_0.der"),
+		AD_RT_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_1.der"),
 
-        AD_RB_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_0.der",
-                		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_0.der"),
-        AD_RB_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_1.der",
-                        		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_1.der"),
+		AD_RC_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_0.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_0.der"),
+		AD_RC_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_1.der"),
+		AD_RC_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_2.der"),
 
-        AD_RT_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_0.der",
-                		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_0.der"),
-        AD_RT_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_1.der",
-                        		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_1.der"),
-
-   		AD_RC_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_0.der",
-                        "http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_0.der"),
-        AD_RC_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_1.der",
-                                "http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_1.der"),
-        AD_RC_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_2.der",
-                                        "http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_2.der"),
-
-        AD_RA_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_1.der",
-                		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_1.der"),
-        AD_RA_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_2.der",
-        		"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_2.der");
-
-
-        private Policies(String file, String url) {
-        	this.file = file;
-            this.url = url;
-        }
-
-        private String file;
-
-        public String getFile() {
-            return file;
-        }
-
-        private String url;
-
-        public String getUrl() {
-        	return url;
-        }
-    }
+		AD_RA_PADES_1_1("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_1.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_1.der"),
+		AD_RA_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_2.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_2.der");
 
 
-    /**
-     *
-     * List of policies:
-     *  http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
-     *  http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
-     *
-     */
-    public enum ListOfSubscriptionPolicies {
+		Policies(String file, String url) {
+			this.file = file;
+			this.url = url;
+		}
 
-    	// In Signer component
-        LPAV1("/org/demoiselle/signer/policy/engine/artifacts/LPA.der"),
-        LPAV2("/org/demoiselle/signer/policy/engine/artifacts/LPAv2.der"),
-        CAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_CAdES.der"),
-        XAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_XAdES.xml"),
-        PAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_PAdES.der"),
+		private final String file;
 
-        // deprecated
-        LPAV1_URL("http://politicas.icpbrasil.gov.br/LPA.der"),
-        LPAV2_URL("http://politicas.icpbrasil.gov.br/LPAv2.der"),
+		public String getFile() {
+			return file;
+		}
 
+		private final String url;
 
-        CAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades()),
-        CAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades_sha()),
-        XAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades()),
-        XAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades_sha()),
-        PAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_pades()),
-        PAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_pades_sha()),
-        CAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_cades()),
-        CAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_cades_sha()),
-        XAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades()),
-        XAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades_sha()),
-        PAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades()),
-        PAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades_sha());
+		public String getUrl() {
+			return url;
+		}
+	}
 
+	/**
+	 * List of policies:
+	 * http://www.iti.gov.br/icp-brasil/certificados/190-repositorio/artefatos-de-assinatura-digital
+	 * http://iti.gov.br/repositorio/84-repositorio/133-artefatos-de-assinatura-digital
+	 */
+	public enum ListOfSubscriptionPolicies {
 
-        private String url;
-        private String file;
+		// In Signer component
+		LPAV1("/org/demoiselle/signer/policy/engine/artifacts/LPA.der"),
+		LPAV2("/org/demoiselle/signer/policy/engine/artifacts/LPAv2.der"),
+		CAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_CAdES.der"),
+		XAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_XAdES.xml"),
+		PAdES("/org/demoiselle/signer/policy/engine/artifacts/LPA_PAdES.der"),
 
+		// deprecated
+		LPAV1_URL("http://politicas.icpbrasil.gov.br/LPA.der"),
+		LPAV2_URL("http://politicas.icpbrasil.gov.br/LPAv2.der"),
 
-        private ListOfSubscriptionPolicies(String file) {
-            this.file = file;
-            this.url = file;
-        }
+		CAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades()),
+		CAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_cades_sha()),
+		XAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades()),
+		XAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_xades_sha()),
+		PAdES_ITI_URL(PolicyEngineConfig.getInstance().getUrl_iti_lpa_pades()),
+		PAdES_ITI_URL_SHA(PolicyEngineConfig.getInstance().getUrl_iti_lpa_pades_sha()),
+		CAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_cades()),
+		CAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_cades_sha()),
+		XAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades()),
+		XAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_xades_sha()),
+		PAdES_LOCAL_URL(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades()),
+		PAdES_LOCAL_URL_SHA(PolicyEngineConfig.getInstance().getUrl_local_lpa_pades_sha());
 
-//        private ListOfSubscriptionPolicies(String file, String url) {
-//        	this.file = file;
-//            this.url = url;
-//        }
+		private final String url;
+		private final String file;
 
-        public String getUrl() {
-            return url;
-        }
+		ListOfSubscriptionPolicies(String file) {
+			this.file = file;
+			this.url = file;
+		}
 
-        public String getFile() {
-            return file;
-        }
-    }
+		public String getUrl() {
+			return url;
+		}
 
-
-
+		public String getFile() {
+			return file;
+		}
+	}
 }

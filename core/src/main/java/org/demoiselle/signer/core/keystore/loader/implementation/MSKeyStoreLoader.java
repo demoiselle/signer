@@ -66,7 +66,7 @@ import org.slf4j.LoggerFactory;
 public class MSKeyStoreLoader implements KeyStoreLoader {
 
 	private static final Logger logger = LoggerFactory
-			.getLogger(MSKeyStoreLoader.class);
+		.getLogger(MSKeyStoreLoader.class);
 	protected static final String MS_PROVIDER = "SunMSCAPI";
 	protected static final String MS_TYPE = "Windows-MY";
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
@@ -80,7 +80,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 	public KeyStore getKeyStore() {
 		try {
 			KeyStore result = KeyStore.getInstance(MSKeyStoreLoader.MS_TYPE,
-					MSKeyStoreLoader.MS_PROVIDER);
+				MSKeyStoreLoader.MS_PROVIDER);
 			result.load(null, null);
 			fixAliases(result);
 			// verifica se tem acesso a chave, caso contrario pode ser CNG e acessará via driver
@@ -90,9 +90,9 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 			}
 			return result;
 		} catch (KeyStoreException | NoSuchProviderException | IOException
-				| NoSuchAlgorithmException | CertificateException ex) {
+			| NoSuchAlgorithmException | CertificateException ex) {
 			throw new KeyStoreLoaderException(
-					coreMessagesBundle.getString("error.load.mscapi"), ex);
+				coreMessagesBundle.getString("error.load.mscapi"), ex);
 		}
 	}
 
@@ -110,7 +110,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 			e = ks.aliases();
 			while (e.hasMoreElements()) {
 				alias = e.nextElement();
-				if(ks.isKeyEntry(alias)) {
+				if (ks.isKeyEntry(alias)) {
 					isKeyEntry = true;
 				}
 
@@ -121,6 +121,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 		}
 		return isKeyEntry;
 	}
+
 	/**
 	 * Implementation of the boundary method to avoid duplicate certificates, as
 	 * described in <http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6672015>
@@ -137,7 +138,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 			field.setAccessible(true);
 			keyStoreVeritable = (KeyStoreSpi) field.get(keyStore);
 
-			/**
+			/*
 			 * Atualização 26/07/2016: o bug 6672015 foi agrupado no bug 6483657
 			 * e resolvido na build 101 do Java 1.8.
 			 * (http://bugs.java.com/bugdatabase/view_bug.do?bug_id=6483657)
@@ -148,13 +149,13 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 				return;
 
 			if ("sun.security.mscapi.KeyStore$MY".equals(keyStoreVeritable
-					.getClass().getName())) {
+				.getClass().getName())) {
 				Collection<?> entries;
 				String alias, hashCode;
 				X509Certificate[] certificates;
 
 				field = keyStoreVeritable.getClass().getEnclosingClass()
-						.getDeclaredField("entries");
+					.getDeclaredField("entries");
 				field.setAccessible(true);
 				entries = (Collection<?>) field.get(keyStoreVeritable);
 
@@ -175,7 +176,7 @@ public class MSKeyStoreLoader implements KeyStoreLoader {
 				}
 			}
 		} catch (IllegalAccessException | IllegalArgumentException
-				| NoSuchFieldException | SecurityException ex) {
+			| NoSuchFieldException | SecurityException ex) {
 			logger.info(ex.getMessage());
 			ex.printStackTrace();
 		}

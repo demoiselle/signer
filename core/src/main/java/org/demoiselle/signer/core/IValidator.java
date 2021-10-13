@@ -44,7 +44,7 @@ import java.security.cert.X509Certificate;
 
 /**
  *
- * define a method to validate a java.security.cert.X509Certificate
+ * Define a method to validate a {@link X509Certificate}.
  *
  */
 public interface IValidator {
@@ -54,9 +54,5 @@ public interface IValidator {
 	 * @param x509 java.security.cert.X509Certificate
 	 * @throws CertificateValidatorException when validation fails
 	 */
-    public void validate(X509Certificate x509) throws CertificateValidatorException, CertificateValidatorCRLException;
-
-
-
-
+	void validate(X509Certificate x509) throws CertificateValidatorException, CertificateValidatorCRLException;
 }

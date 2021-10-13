@@ -1,88 +1,88 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-	<artifactId>parent</artifactId>
-	<packaging>pom</packaging>
-	<modelVersion>4.0.0</modelVersion>
+    <artifactId>parent</artifactId>
+    <packaging>pom</packaging>
+    <modelVersion>4.0.0</modelVersion>
 
-	<name>Demoiselle Signer Parent</name>
-	<description>Parent artifact for Demoiselle Signer</description>
-	<url>http://signer.demoiselle.io</url>
+    <name>Demoiselle Signer Parent</name>
+    <description>Parent artifact for Demoiselle Signer</description>
+    <url>https://www.frameworkdemoiselle.gov.br</url>
 
-	<parent>
-		<groupId>org.demoiselle.signer</groupId>
-		<artifactId>build</artifactId>
-		<version>4.0.0-SNAPSHOT</version>
-		<relativePath>../</relativePath>
-	</parent>
+    <parent>
+        <groupId>org.demoiselle.signer</groupId>
+        <artifactId>build</artifactId>
+        <version>4.0.0-SNAPSHOT</version>
+    </parent>
 
-	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>org.demoiselle.signer</groupId>
-				<artifactId>bom</artifactId>
-				<scope>import</scope>
-				<type>pom</type>
-				<version>${project.parent.version}</version>
-			</dependency>
-		</dependencies>
-	</dependencyManagement>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.demoiselle.signer</groupId>
+                <artifactId>bom</artifactId>
+                <scope>import</scope>
+                <type>pom</type>
+                <version>${project.parent.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
-	<properties>
-		<license.header>../licence-lgpl</license.header>
-	</properties>
+    <properties>
+        <license.header>../licence-lgpl</license.header>
+    </properties>
+
+    <!-- Dependencias -->
+    <dependencies>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcmail-jdk15on</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <archive>
+                        <index>true</index>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                        </manifest>
+                        <manifestEntries>
+                            <Permissions>all-permissions</Permissions>
+                            <Caller-Allowable-Codebase>*</Caller-Allowable-Codebase>
+                            <Codebase>*</Codebase>
+                            <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
+                            <Trusted-Library>true</Trusted-Library>
+                            <Bundle-RequiredExecutionEnvironment>JavaSE-1.6, JavaSE-1.7
+                            </Bundle-RequiredExecutionEnvironment>
+                            <Implementation-Vendor-Id>org.demoiselle</Implementation-Vendor-Id>
+                            <Implementation-Version>${project.parent.version}</Implementation-Version>
+                            <Specification-Vendor>Demoiselle.org</Specification-Vendor>
+                            <Implementation-Vendor>Demoiselle.org</Implementation-Vendor>
+                            <Bundle-Version>${project.parent.version}</Bundle-Version>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+
+        </plugins>
 
 
-	<!-- Dependencias -->
-	<dependencies>
-		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<scope>test</scope>
-		</dependency>
-
-		<dependency>
-			<groupId>org.bouncycastle</groupId>
-			<artifactId>bcmail-jdk15on</artifactId>
-		</dependency>
-	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<version>3.0.2</version>
-				<configuration>
-					<archive>
-						<index>true</index>
-						<manifest>
-							<addClasspath>true</addClasspath>
-						</manifest>
-						<manifestEntries>
-							<Permissions>all-permissions</Permissions>
-							<Caller-Allowable-Codebase>*</Caller-Allowable-Codebase>
-							<Codebase>*</Codebase>
-							<Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
-							<Trusted-Library>true</Trusted-Library>
-							<Bundle-RequiredExecutionEnvironment>JavaSE-1.6, JavaSE-1.7</Bundle-RequiredExecutionEnvironment>
-							<Implementation-Vendor-Id>org.demoiselle</Implementation-Vendor-Id>
-							<Implementation-Version>${project.parent.version}</Implementation-Version>
-							<Specification-Vendor>Demoiselle.org</Specification-Vendor>
-							<Implementation-Vendor>Demoiselle.org</Implementation-Vendor>
-							<Bundle-Version>${project.parent.version}</Bundle-Version>
-						</manifestEntries>
-					</archive>
-				</configuration>
-			</plugin>
-
-		</plugins>
-
-
-	</build>
+    </build>
 
 </project>

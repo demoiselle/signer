@@ -34,14 +34,13 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.xades;
 
 /**
- * 
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
- *
+ * @author Fabiano Kuss &lt;fabiano.kuss@serpro.gov.br&gt;
  */
-public enum SignaturePack{
+public enum SignaturePack {
 
 	ENVELOPED, DETACHED
 

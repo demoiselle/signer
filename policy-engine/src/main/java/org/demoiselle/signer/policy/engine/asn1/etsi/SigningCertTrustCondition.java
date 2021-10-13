@@ -42,43 +42,48 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
- * The SigningCertTrustCondition field identifies trust conditions for certificate
- * path processing used to validate the  signing certificate.
+ * The SigningCertTrustCondition field identifies trust conditions
+ * for certificate path processing used to validate the  signing
+ * certificate.
  *
- * 	SigningCertTrustCondition ::= SEQUENCE {
- * 					signerTrustTrees {@link CertificateTrustTrees},
- * 					signerRevReq {@link CertRevReq}
- * 	}
+ * <pre>
+ * SigningCertTrustCondition ::= SEQUENCE {
+ *     signerTrustTrees {@link CertificateTrustTrees},
+ *     signerRevReq {@link CertRevReq}
+ * }
+ * </pre>
  *
+ * @see ASN1Sequence
+ * @see ASN1Primitive
  */
 public class SigningCertTrustCondition extends ASN1Object {
 
-    private CertificateTrustTrees signerTrustTrees;
-    private CertRevReq signerRevReq;
+	private CertificateTrustTrees signerTrustTrees;
+	private CertRevReq signerRevReq;
 
-    public CertificateTrustTrees getSignerTrustTrees() {
-        return signerTrustTrees;
-    }
+	public CertificateTrustTrees getSignerTrustTrees() {
+		return signerTrustTrees;
+	}
 
-    public void setSignerTrustTrees(CertificateTrustTrees signerTrustTrees) {
-        this.signerTrustTrees = signerTrustTrees;
-    }
+	public void setSignerTrustTrees(CertificateTrustTrees signerTrustTrees) {
+		this.signerTrustTrees = signerTrustTrees;
+	}
 
-    public CertRevReq getSignerRevReq() {
-        return signerRevReq;
-    }
+	public CertRevReq getSignerRevReq() {
+		return signerRevReq;
+	}
 
-    public void setSignerRevReq(CertRevReq signerRevReq) {
-        this.signerRevReq = signerRevReq;
-    }
+	public void setSignerRevReq(CertRevReq signerRevReq) {
+		this.signerRevReq = signerRevReq;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        this.signerTrustTrees = new CertificateTrustTrees();
-        this.signerTrustTrees.parse(derSequence.getObjectAt(0).toASN1Primitive());
-        this.signerRevReq = new CertRevReq();
-        this.signerRevReq.parse(derSequence.getObjectAt(1).toASN1Primitive());
-    }
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		this.signerTrustTrees = new CertificateTrustTrees();
+		this.signerTrustTrees.parse(derSequence.getObjectAt(0).toASN1Primitive());
+		this.signerRevReq = new CertRevReq();
+		this.signerRevReq.parse(derSequence.getObjectAt(1).toASN1Primitive());
+	}
 
 }

@@ -137,8 +137,8 @@ public class XMLSignerTest {
 		try {
 
 			String xmlAsString = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" + "<raiz>\n"
-					+ " <documento>um documento</documento>\n" + " <conteudo>texto para assinar</conteudo>\n"
-					+ "</raiz>";
+				+ " <documento>um documento</documento>\n" + " <conteudo>texto para assinar</conteudo>\n"
+				+ "</raiz>";
 			KeyStore ks = null;
 
 			// window ou NeoID
@@ -323,7 +323,7 @@ public class XMLSignerTest {
 			// indicando o local do arquivo XML
 
 			Document docSigned = xmlSigner
-					.signEnveloped(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)));
+				.signEnveloped(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)));
 
 			String signedFile = fileName.replaceFirst(".xml$", "from_bytearray_rt_signed.xml");
 			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
@@ -448,87 +448,86 @@ public class XMLSignerTest {
 
 	}
 
-	 //@Test
-		public void testDetachedEnvelopedFromHash() {
+	//@Test
+	public void testDetachedEnvelopedFromHash() {
 
-			try {
-				KeyStore ks = null;
+		try {
+			KeyStore ks = null;
 
-				// window ou NeoID
-				ks = getKeyStoreTokenBySigner();
+			// window ou NeoID
+			ks = getKeyStoreTokenBySigner();
 
-				// arquivo
-				// ks = getKeyStoreFileBySigner();
+			// arquivo
+			// ks = getKeyStoreFileBySigner();
 
-				// token
-				// ks = getKeyStoreToken();
+			// token
+			// ks = getKeyStoreToken();
 
-				String fileName = "teste_assinatura.xml";
+			String fileName = "teste_assinatura.xml";
 
-				ClassLoader classLoader = getClass().getClassLoader();
+			ClassLoader classLoader = getClass().getClassLoader();
 
-				String alias = getAlias(ks);
-				XMLSigner xmlSigner = new XMLSigner();
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
 
-				// para token
-				xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+			// para token
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
 
-				// para arquivo
-				// quando certificado em arquivo, precisa informar a senha
-				// char[] senha = "teste".toCharArray();
-				// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			// para arquivo
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "teste".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 
-				xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
-				// para mudar a politica
-				//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
-				// indicando o local do arquivo XML
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica
+			//xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
 
-				java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
-				byte[] hash = md.digest(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)));
-				System.out.println(Base64.toBase64String(hash));
-				Document doc = xmlSigner.signDetachedEnveloped(hash);
-				String signedFile = fileName.replaceFirst(".xml$", "_rt_detached_fromhash_signed.xml");
-				OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
-				TransformerFactory tf = TransformerFactory.newInstance();
-				Transformer trans = tf.newTransformer();
-				trans.transform(new DOMSource(doc), new StreamResult(os));
+			java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-256");
+			byte[] hash = md.digest(IOUtils.toByteArray(classLoader.getResourceAsStream(fileName)));
+			System.out.println(Base64.toBase64String(hash));
+			Document doc = xmlSigner.signDetachedEnveloped(hash);
+			String signedFile = fileName.replaceFirst(".xml$", "_rt_detached_fromhash_signed.xml");
+			OutputStream os = new FileOutputStream("src/test/resources/" + signedFile);
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer trans = tf.newTransformer();
+			trans.transform(new DOMSource(doc), new StreamResult(os));
 
-			} catch (TransformerException e) {
-				e.printStackTrace();
-				assertFalse(true);
-			} catch (Throwable e) {
-				e.printStackTrace();
-				assertFalse(true);
-			}
-
-
+		} catch (TransformerException e) {
+			e.printStackTrace();
+			assertFalse(true);
+		} catch (Throwable e) {
+			e.printStackTrace();
+			assertFalse(true);
 		}
+
+
+	}
 
 	// Usa o Signer para leitura, funciona para windows e NeoID
-		private KeyStore getKeyStoreTokenBySigner() {
+	private KeyStore getKeyStoreTokenBySigner() {
 
-			try {
+		try {
 
-				KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-				KeyStore keyStore = keyStoreLoader.getKeyStore();
+			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+			KeyStore keyStore = keyStoreLoader.getKeyStore();
 
-				return keyStore;
+			return keyStore;
 
-			} catch (Exception e1) {
-				e1.printStackTrace();
-				return null;
-			} finally {
-			}
-
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		} finally {
 		}
+
+	}
 
 
 	/**
-	 *
 	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do
 	 * token.
 	 */
-	@SuppressWarnings({ "restriction", "unused" })
+	@SuppressWarnings({"restriction", "unused"})
 	private KeyStore getKeyStoreToken() {
 
 		try {
@@ -547,7 +546,7 @@ public class XMLSignerTest {
 			Security.addProvider(p);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
 			Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
-					new KeyStore.PasswordProtection("senha".toCharArray()));
+				new KeyStore.PasswordProtection("senha".toCharArray()));
 			KeyStore ks;
 			ks = builder.getKeyStore();
 
@@ -591,8 +590,8 @@ public class XMLSignerTest {
 			while (e.hasMoreElements()) {
 				alias = e.nextElement();
 				//System.out.println("alias..............: " + alias);
-			//	System.out.println("iskeyEntry" + ks.isKeyEntry(alias));
-			//	System.out.println("containsAlias" + ks.containsAlias(alias));
+				//	System.out.println("iskeyEntry" + ks.isKeyEntry(alias));
+				//	System.out.println("containsAlias" + ks.containsAlias(alias));
 				// System.out.println(""+ks.getKey(alias, null));
 				certificates = ks.getCertificateChain(alias);
 			}

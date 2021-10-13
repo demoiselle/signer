@@ -34,8 +34,8 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.core.ca.manager;
 
+package org.demoiselle.signer.core.ca.manager;
 
 public class CAManagerConfiguration {
 
@@ -55,14 +55,14 @@ public class CAManagerConfiguration {
 		String cachedProp = System.getenv(ENV_CACHED);
 		if (cachedProp == null || cachedProp.isEmpty()) {
 			cachedProp = (String) System.getProperties().get(CACHED);
-        	if (cachedProp == null || cachedProp.isEmpty()) {
-                setCached(true);                
-        	}else {
-        		setCached(Boolean.valueOf(cachedProp));
-        	}        	
-        } else {
-            setCached(Boolean.valueOf(cachedProp));
-        }
+			if (cachedProp == null || cachedProp.isEmpty()) {
+				setCached(true);
+			} else {
+				setCached(Boolean.valueOf(cachedProp));
+			}
+		} else {
+			setCached(Boolean.valueOf(cachedProp));
+		}
 	}
 
 	/**

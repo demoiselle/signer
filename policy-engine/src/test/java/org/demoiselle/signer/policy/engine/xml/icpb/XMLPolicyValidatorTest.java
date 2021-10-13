@@ -50,13 +50,12 @@ import org.xml.sax.SAXException;
 public class XMLPolicyValidatorTest {
 
 	@Test
-	public void testXMLPolicyValidator() throws ParserConfigurationException, SAXException, IOException {
-		
-		XMLPolicyValidator xMLPolicyValidator = 
-				new XMLPolicyValidator(PolicyFactory.getInstance().loadXMLPolicy(PolicyFactory.Policies.AD_RA_XADES_2_4));
+	public void testXMLPolicyValidator() {
+
+		XMLPolicyValidator xMLPolicyValidator =
+			new XMLPolicyValidator(PolicyFactory.getInstance().loadXMLPolicy(PolicyFactory.Policies.AD_RA_XADES_2_4));
 		assertTrue(xMLPolicyValidator.validate());
 		System.out.println(xMLPolicyValidator.getXmlSignaturePolicy().toString());
-		
 	}
 
 }

@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.ca.manager;
 
 import java.security.InvalidKeyException;
@@ -49,12 +50,12 @@ import java.security.cert.X509Certificate;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.security.auth.x500.X500Principal;
+
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Validate and Load trusted Certificate Authority chain
@@ -239,7 +240,7 @@ public class CAManager {
 				// Iterate this provider to create a Cert Chain
 				for (X509Certificate ac : acs) {
 					// If is CA issuer of certificate
-					X500Principal issuer = certificate.getIssuerX500Principal(); 
+					X500Principal issuer = certificate.getIssuerX500Principal();
 					if (issuer != null) {
 						String issuerName = certificate.getIssuerX500Principal().getName();
 						String certificateCnIssuer = this.getCN(issuerName);
@@ -279,7 +280,7 @@ public class CAManager {
 						}
 						if (ok) {
 							break;
-						}						
+						}
 					}
 
 				}
@@ -293,10 +294,10 @@ public class CAManager {
 					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
 				}
 			} catch (Exception error) {
-				LOGGER.warn(coreMessagesBundle.getString("error.no.ca", provider.getName()));				
+				LOGGER.warn(coreMessagesBundle.getString("error.no.ca", provider.getName()));
 			}
 		}
-		
+
 		if (!ok) {
 			LOGGER.error(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
 		}

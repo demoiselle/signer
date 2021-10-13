@@ -35,11 +35,11 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  *
  */
+
 package org.demoiselle.signer.core.factory;
 
 import org.demoiselle.signer.core.exception.SignerException;
 import org.demoiselle.signer.core.util.MessagesBundle;
-
 
 /**
  * Abstract factory that concentrates the reading of the configurations for

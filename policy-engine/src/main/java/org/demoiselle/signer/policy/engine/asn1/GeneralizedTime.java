@@ -46,16 +46,21 @@ import org.bouncycastle.asn1.ASN1Primitive;
 /**
  * Parse an org.bouncycastle.asn1.ASN1GeneralizedTime
  * to get it in java.util.Date format.
- * <p>
- * A GeneralizedTime is a time format in the ASN.1 notation.
- * It consists of a string value representing the calendar date, as defined in ISO 8601,
- * a time of day with an optional fractional seconds element and the optional local
- * time differential factor as defined in ISO 8601.
- * <p>
- * <p>
- * In contrast to the UTCTime class of ASN.1 the GeneralizedTime uses a four-digit representation
- * of the year to avoid possible ambiguity. Another difference is the possibility
- * to encode time information of any wanted precision via the fractional seconds element.
+ *
+ * <p>A GeneralizedTime is a time format in the ASN.1 notation.
+ * It consists of a string value representing the calendar date,
+ * as defined in ISO 8601, a time of day with an optional
+ * fractional seconds element and the optional local
+ * time differential factor as defined in ISO 8601.</p>
+ *
+ * <p>In contrast to the UTCTime class of ASN.1 the GeneralizedTime
+ * uses a four-digit representation of the year to avoid possible
+ * ambiguity. Another difference is the possibility to encode time
+ * information of any wanted precision via the fractional seconds
+ * element.</p>
+ *
+ * @see ASN1GeneralizedTime
+ * @see ASN1Primitive
  */
 public class GeneralizedTime extends ASN1Object {
 
@@ -80,5 +85,4 @@ public class GeneralizedTime extends ASN1Object {
 	public void setDate(Date date) {
 		this.date = date;
 	}
-
 }

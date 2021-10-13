@@ -39,21 +39,20 @@ package org.demoiselle.signer.core.repository;
 
 /**
  * to do unchecked
- *
  */
 public class CRLOldCertificateException extends RuntimeException {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    public CRLOldCertificateException() {
-        super();
-    }
+	public CRLOldCertificateException() {
+		super();
+	}
 
-    public CRLOldCertificateException(String message) {
-        super(message);
-    }
+	public CRLOldCertificateException(String message) {
+		super(message);
+	}
 
-    public CRLOldCertificateException(String message, Throwable cause) {
-        super(message, cause);
-    }
+	public CRLOldCertificateException(String message, Throwable cause) {
+		super(message, cause);
+	}
 }

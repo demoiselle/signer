@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute;
 
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
@@ -45,36 +46,34 @@ import java.security.cert.Certificate;
 import org.bouncycastle.asn1.cms.Attribute;
 
 /**
- *
- * CMS (rfc3852) defines some attributes that appear in digital signatures. 
- * There is a set of attributes that are required for the CAdES format. 
+ * CMS (rfc3852) defines some attributes that appear in digital signatures.
+ * There is a set of attributes that are required for the CAdES format.
  * Depending on the subscription policy, more attributes may be required.
  */
 public interface SignedOrUnsignedAttribute {
 
-    /**
-     * Performs the initial parameterization for attribute retrieval
-     *
-     * @param privateKey private key
-     * @param certificates certificate chain
-     * @param content set null if signing only hash
-     * @param signaturePolicy signature policy
-     * @param hash set null if signing content
-     */
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash);
+	/**
+	 * Performs the initial parameterization for attribute retrieval
+	 *
+	 * @param privateKey      private key
+	 * @param certificates    certificate chain
+	 * @param content         set null if signing only hash
+	 * @param signaturePolicy signature policy
+	 * @param hash            set null if signing content
+	 */
+	void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash);
 
-    /**
-     * OID value of the attribute. Ex: "1.12.2.54.94"
-     *
-     * @return OID of attribute
-     */
-    public String getOID();
+	/**
+	 * OID value of the attribute. Ex: "1.12.2.54.94"
+	 *
+	 * @return OID of attribute
+	 */
+	String getOID();
 
-    /**
-     * Represents the value of the attribute itself.
-     *
-     * @return Attribute value
-     */
-    public Attribute getValue() throws SignerException;
-
+	/**
+	 * Represents the value of the attribute itself.
+	 *
+	 * @return Attribute value
+	 */
+	Attribute getValue() throws SignerException;
 }

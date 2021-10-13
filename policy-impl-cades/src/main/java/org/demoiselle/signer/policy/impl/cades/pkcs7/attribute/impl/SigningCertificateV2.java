@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.PrivateKey;
@@ -63,21 +64,21 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.SignedAttribute;
 
 /**
  * ESS signing-certificate-v2 Attribute Definition
- * 
+ *
  * The ESS signing-certificate-v2 attribute is similar to the ESS
  * signing-certificate defined above, except that this attribute can be used
  * with hashing algorithms other than SHA-1.
- * 
+ *
  * The syntax of the signing-certificate-v2 attribute type of the ES is as
  * defined in "ESS Update: Adding CertID Algorithm Agility", RFC 5035 [15], and
  * further qualified in the present document.
- * 
+ *
  * The sequence of the policy information field is not used in the present
  * document.
- * 
+ *
  * This attribute shall be used in the same manner as defined above for the ESS
  * signing-certificate attribute.
- * 
+ *
  * The object identifier for this attribute is: id-aa-signingCertificateV2
  * OBJECT IDENTIFIER ::= { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1)
  * pkcs9(9) smime(16) id-aa(2) 47 } *
@@ -115,12 +116,12 @@ public class SigningCertificateV2 implements SignedAttribute {
 			IssuerSerial issuerSerial = new IssuerSerial(issuer, serialNumber);
 			AlgorithmIdentifier algId = new AlgorithmIdentifier(NISTObjectIdentifiers.id_sha256);// SHA-256
 			ESSCertIDv2 essCertIDv2 = new ESSCertIDv2(algId, certHash, issuerSerial);
-			
+
 			org.bouncycastle.asn1.ess.SigningCertificateV2  signingCertificateV2 = new org.bouncycastle.asn1.ess.SigningCertificateV2(essCertIDv2);
-			
+
 			return new Attribute(identifier, new DERSet(signingCertificateV2));
-			
-			
+
+
 		} catch (CertificateEncodingException ex) {
 			throw new SignerException(ex.getMessage());
 		}

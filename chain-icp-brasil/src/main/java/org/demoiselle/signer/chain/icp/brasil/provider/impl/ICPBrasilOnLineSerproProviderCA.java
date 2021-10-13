@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.chain.icp.brasil.provider.impl;
 
 import java.io.BufferedInputStream;
@@ -47,6 +48,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -64,22 +66,21 @@ import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain from
- * SERPRO's mirror URL http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip
-*/
-
+ * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain
+ * (<a href="http://repositorio.serpro.gov.br/icp-brasil/ACcompactado.zip">ACcompactado.zip</a>)
+ * from SERPRO's mirror URL.
+ */
 public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	private static final String STRING_URL_ZIP = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list();
 	private static final String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list_sha512();
-
 	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class);
-
 
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
 
 	/**
-	 *  return the address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.
+	 * return the address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.
+	 *
 	 * @return address (mirrored by SERPRO) where is located a compacted file that contains the chain of ICP-BRASIL's trusted Certificate Authority.
 	 */
 	public String getURLZIP() {
@@ -87,17 +88,21 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	}
 
 	/**
-	 *  return the address (mirrored by SERPRO) where is located a file that contains the hash code (SHA512)
-	 *  which corresponds to the file downloaded with {@link #getURLZIP()} .
+	 * return the address (mirrored by SERPRO) where is located a file that contains the hash code (SHA512)
+	 * which corresponds to the file downloaded with {@link #getURLZIP()} .
+	 *
 	 * @return address (mirrored by SERPRO) where is located a file that contains the hash code (SHA512)
-	 *  which corresponds to the file downloaded with {@link #getURLZIP()} .
+	 * which corresponds to the file downloaded with {@link #getURLZIP()} .
 	 */
 	public String getURLHash() {
 		return ICPBrasilOnLineSerproProviderCA.STRING_URL_HASH;
 	}
 
 	/**
-	 * Read Certificate Authority chain from file
+	 * Read Certificate Authority chain from local file.
+	 * Get fresh copy if needed.
+	 *
+	 * @return Collection of certificates from chain.
 	 */
 	@Override
 	public Collection<X509Certificate> getCAs() {
@@ -125,17 +130,14 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				if (!onlineHash.equals("")) {
 
 					// Gera o hash do arquivo local
+					// FIXME DigestImpl.convertToHex instead of DatatypeConverter.printHexBinary
 					String localZipHash = DatatypeConverter.printHexBinary(checksum(new File(pathZip.toString())));
 
 					// Pega SOMENTE o hash sem o nome do arquivo
 					String onlineHashWithouFilename = onlineHash.replace(ICPBrasilUserHomeProviderCA.FILENAME_ZIP, "")
-							.replaceAll(" ", "").replaceAll("\n", "");
+						.replaceAll(" ", "").replaceAll("\n", "");
 
-					if (onlineHashWithouFilename.equalsIgnoreCase(localZipHash)) {
-						useCache = true;
-					} else {
-						useCache = false;
-					}
+					useCache = onlineHashWithouFilename.equalsIgnoreCase(localZipHash);
 
 				} else {
 					LOGGER.warn(chainMessagesBundle.getString("error.hash.empty"));
@@ -146,8 +148,10 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			// salva localmente
 			if (!useCache) {
 				// Baixa um novo arquivo
-				LOGGER.debug(chainMessagesBundle.getString("info.file.downloading",getURLZIP() ));
+				LOGGER.debug(chainMessagesBundle.getString("info.file.downloading", getURLZIP()));
 				InputStream inputStreamZip = Downloads.getInputStreamFromURL(getURLZIP());
+
+				// FIXME fails if directory does not exist
 				Files.copy(inputStreamZip, pathZip, StandardCopyOption.REPLACE_EXISTING);
 				inputStreamZip.close();
 				LOGGER.debug(chainMessagesBundle.getString("info.sucess"));
@@ -158,30 +162,32 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			result = getFromZip(inputStreamZipReturn);
 			inputStreamZipReturn.close();
 
-			LOGGER.debug(chainMessagesBundle.getString("info.recovered.certs",result.size()));
+			LOGGER.debug(chainMessagesBundle.getString("info.recovered.certs", result.size()));
 
 		} catch (IOException e) {
-			LOGGER.warn(chainMessagesBundle.getString("error.recover.file")+e.getMessage());
+			LOGGER.warn(chainMessagesBundle.getString("error.recover.file") + e.getMessage());
 		} catch (Exception e) {
-			LOGGER.warn(chainMessagesBundle.getString("error.exception.recorver.chain")+e.getMessage());
+			LOGGER.warn(chainMessagesBundle.getString("error.exception.recorver.chain") + e.getMessage());
 		}
 
 		if (result != null) {
-			LOGGER.debug(chainMessagesBundle.getString("info.number.certificates.found",getName(), result.size()));
+			LOGGER.debug(chainMessagesBundle.getString("info.number.certificates.found", getName(), result.size()));
 		} else {
-			LOGGER.info(chainMessagesBundle.getString("info.none.certificates",getName()));
+			LOGGER.info(chainMessagesBundle.getString("info.none.certificates", getName()));
 		}
 
 		return result;
 	}
 
 	/**
-	 * calculte SHA-512 hash from downloaded file.
-	 * @param input file to read from
-	 * @return byte array with calculated hash
-	 * @throws IOException Exception
+	 * FIXME static
+	 * FIXME localize on core
+	 * Calculate SHA-512 hash from file.
+	 *
+	 * @param input file to read from.
+	 * @return byte array with calculated hash.
 	 */
-	public byte[] checksum(File input) throws IOException {
+	public byte[] checksum(File input) {
 		try (InputStream in = new FileInputStream(input)) {
 
 			MessageDigest digest = MessageDigest.getInstance("SHA-512");
@@ -191,14 +197,16 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 				digest.update(block, 0, length);
 			}
 			return digest.digest();
-		} catch (Exception e) {
+		} catch (IOException | NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 
 	/**
 	 * Get from SERPRO mirror repository
+	 *
 	 * @param zip Input stream to read from
 	 * @return Collection&lt;X509Certificate&gt;
 	 */
@@ -221,7 +229,8 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	}
 
 	/**
-	 *  get Chain from file stored on local user diretory
+	 * get Chain from file stored on local user diretory
+	 *
 	 * @param zip input stream to read from
 	 * @return Collection&lt;X509Certificate&gt;
 	 * @throws RuntimeException exception
@@ -243,21 +252,20 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 						ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
 						out.close();
 						X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X509")
-								.generateCertificate(is);
+							.generateCertificate(is);
 						is.close();
 						result.add(certificate);
 					}
 				} catch (CertificateException error) {
-					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate")+error.getMessage());
+					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate") + error.getMessage());
 				}
 			}
 		} catch (IOException error) {
-			LOGGER.error(chainMessagesBundle.getString("error.stream")+error.getMessage());
+			LOGGER.error(chainMessagesBundle.getString("error.stream") + error.getMessage());
 			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
 		return result;
 	}
-
 
 	/**
 	 * This provider Name
@@ -266,5 +274,4 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	public String getName() {
 		return chainMessagesBundle.getString("info.provider.name.serpro", getURLZIP());
 	}
-
 }

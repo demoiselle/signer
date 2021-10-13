@@ -67,17 +67,65 @@ public class Configuration {
 
 	private static final Logger logger = LoggerFactory.getLogger(Configuration.class);
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String KEY_JAVA_VERSION = "java.runtime.version";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String KEY_OS_NAME = "os.name";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String KEY_OS_VERSION = "os.version";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String VAR_PKCS11_CONFIG = "PKCS11_CONFIG_FILE";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String VAR_PKCS11_DRIVER = "PKCS11_DRIVER";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String CUSTOM_CONFIG_PATH = "user.home";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String CUSTOM_CONFIG_FILENAME = "drivers.config";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String FILE_SEPARATOR = "file.separator";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String MSCAPI_DISABLED = "mscapi.disabled";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String CONFIG_FILE_DIR = ".signer";
+
+	/**
+	 * Document constant.
+	 */
 	protected static final String CONFIG_FILE_PATH = "drivers.properties";
+
+	/**
+	 * Document constant.
+	 */
 	protected static boolean MSCAPI_ON = true;
 
 	private static final Configuration instance = new Configuration();
@@ -480,20 +528,20 @@ public class Configuration {
 
 	/**
 	 *
-	 * default is true
+	 * default is true.
 	 *
-	 * @return if MSCAPI is ON (true) or OFF (false)
+	 * @return if MSCAPI is ON (true) or OFF (false).
 	 */
 	public static boolean isMSCAPI_ON() {
 		return MSCAPI_ON;
 	}
 
 	/**
-	 * set MSCAPI to ON (true) or OFF (false)
-	 * @param mSCAPI_ON
+	 * set MSCAPI to ON (true) or OFF (false).
+	 * @param mSCAPI_ON the value to set.
+	 *
 	 */
 	public static void setMSCAPI_ON(boolean mSCAPI_ON) {
 		MSCAPI_ON = mSCAPI_ON;
 	}
-
 }

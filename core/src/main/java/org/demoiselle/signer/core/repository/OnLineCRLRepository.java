@@ -64,75 +64,75 @@ import org.slf4j.LoggerFactory;
  */
 public class OnLineCRLRepository implements CRLRepository {
 
-    private final Logger logger = LoggerFactory.getLogger(OnLineCRLRepository.class);
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-    private Proxy proxy;
+	private final Logger logger = LoggerFactory.getLogger(OnLineCRLRepository.class);
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private Proxy proxy;
 
-    public OnLineCRLRepository() {
-    	this.proxy = Proxy.NO_PROXY;
-    }
+	public OnLineCRLRepository() {
+		this.proxy = Proxy.NO_PROXY;
+	}
 
-    public OnLineCRLRepository(Proxy proxy) {
+	public OnLineCRLRepository(Proxy proxy) {
 		this.proxy = proxy;
 	}
 
 	@Override
-    public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {
+	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {
 
-        Collection<ICPBR_CRL> list = new ArrayList<ICPBR_CRL>();
-        try {
-            BasicCertificate cert = new BasicCertificate(certificate);
-            List<String> ListaURLCRL = cert.getCRLDistributionPoint();
+		Collection<ICPBR_CRL> list = new ArrayList<ICPBR_CRL>();
+		try {
+			BasicCertificate cert = new BasicCertificate(certificate);
+			List<String> ListaURLCRL = cert.getCRLDistributionPoint();
 
-            if (ListaURLCRL == null || ListaURLCRL.isEmpty()) {
-            	logger.error(coreMessagesBundle.getString("error.invalid.crl"));
-                throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl"));
-            }
+			if (ListaURLCRL == null || ListaURLCRL.isEmpty()) {
+				logger.error(coreMessagesBundle.getString("error.invalid.crl"));
+				throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl"));
+			}
 
-            ICPBR_CRL validCrl = null;
-            for (String URLCRL : ListaURLCRL) {
-                // Achou uma CRL válida
-                validCrl = getICPBR_CRL(URLCRL);
-                if (validCrl != null) {
-                    list.add(validCrl);
-                    logger.debug(coreMessagesBundle.getString("info.crl.found", URLCRL));
-                    break;
-                }
-            }
-            if (validCrl == null){
-            	logger.error(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
-            	throw new CRLRepositoryException(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
-            }
-        } catch (IOException e) {
-        	logger.error(coreMessagesBundle.getString("error.invalid.crl")+e.getMessage());
-            throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl") + e.getMessage());
-        }
-        return list;
-    }
+			ICPBR_CRL validCrl = null;
+			for (String URLCRL : ListaURLCRL) {
+				// Achou uma CRL válida
+				validCrl = getICPBR_CRL(URLCRL);
+				if (validCrl != null) {
+					list.add(validCrl);
+					logger.debug(coreMessagesBundle.getString("info.crl.found", URLCRL));
+					break;
+				}
+			}
+			if (validCrl == null) {
+				logger.error(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
+				throw new CRLRepositoryException(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
+			}
+		} catch (IOException e) {
+			logger.error(coreMessagesBundle.getString("error.invalid.crl") + e.getMessage());
+			throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl") + e.getMessage());
+		}
+		return list;
+	}
 
-    private ICPBR_CRL getICPBR_CRL(String uRLCRL) {
-        try {
-            URL url = new URL(uRLCRL);
-            URLConnection conexao = url.openConnection(proxy);
-            conexao.setConnectTimeout(5000);
-            conexao.setReadTimeout(5000);
-            DataInputStream inStream = new DataInputStream(conexao.getInputStream());
-            ICPBR_CRL icpbr_crl = new ICPBR_CRL(inStream);
-            inStream.close();
-            return icpbr_crl;
+	private ICPBR_CRL getICPBR_CRL(String uRLCRL) {
+		try {
+			URL url = new URL(uRLCRL);
+			URLConnection conexao = url.openConnection(proxy);
+			conexao.setConnectTimeout(5000);
+			conexao.setReadTimeout(5000);
+			DataInputStream inStream = new DataInputStream(conexao.getInputStream());
+			ICPBR_CRL icpbr_crl = new ICPBR_CRL(inStream);
+			inStream.close();
+			return icpbr_crl;
 
-        } catch (MalformedURLException e) {
-        	logger.error(coreMessagesBundle.getString("error.malformedURL", uRLCRL) + e.getMessage());
-        	throw new CRLRepositoryException(coreMessagesBundle.getString("error.malformedURL", uRLCRL) + e.getMessage());
-        } catch (IOException e) {
-            logger.error(coreMessagesBundle.getString("error.crl.connect", uRLCRL) + e.getMessage());
-            throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.connect", uRLCRL) + e.getMessage());
-        } catch (CRLException e) {
-        	logger.error(coreMessagesBundle.getString("error.crl.exception", uRLCRL) + e.getMessage());
-        	throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.exception", uRLCRL) + e.getMessage());
-        } catch (CertificateException e) {
-        	logger.error(coreMessagesBundle.getString("error.crl.certificate", uRLCRL) + e.getMessage());
-        	throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.certificate", uRLCRL) + e.getMessage());
-        }
-    }
+		} catch (MalformedURLException e) {
+			logger.error(coreMessagesBundle.getString("error.malformedURL", uRLCRL) + e.getMessage());
+			throw new CRLRepositoryException(coreMessagesBundle.getString("error.malformedURL", uRLCRL) + e.getMessage());
+		} catch (IOException e) {
+			logger.error(coreMessagesBundle.getString("error.crl.connect", uRLCRL) + e.getMessage());
+			throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.connect", uRLCRL) + e.getMessage());
+		} catch (CRLException e) {
+			logger.error(coreMessagesBundle.getString("error.crl.exception", uRLCRL) + e.getMessage());
+			throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.exception", uRLCRL) + e.getMessage());
+		} catch (CertificateException e) {
+			logger.error(coreMessagesBundle.getString("error.crl.certificate", uRLCRL) + e.getMessage());
+			throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.certificate", uRLCRL) + e.getMessage());
+		}
+	}
 }

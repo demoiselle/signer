@@ -49,90 +49,89 @@ import java.security.cert.X509Certificate;
  * Load X.509 Extension OIDs for
  * CRL_URL, SERIAL_NUMBER, ISSUER_DN, SUBJECT_DN, KEY_USAGE,
  * PATH_LENGTH, AUTHORITY_KEY_IDENTIFIER, SUBJECT_KEY_IDENTIFIER,
-* BEFORE_DATE, AFTER_DATE, CERTIFICATION_AUTHORITY
- *
+ * BEFORE_DATE, AFTER_DATE, CERTIFICATION_AUTHORITY
  */
 public class DefaultExtensionLoader implements IOIDExtensionLoader {
 
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    @Override
-    public void load(Object object, Field field, X509Certificate x509) {
-        if (field.isAnnotationPresent(DefaultExtension.class)) {
-            DefaultExtension annotation = field.getAnnotation(DefaultExtension.class);
+	@Override
+	public void load(Object object, Field field, X509Certificate x509) {
+		if (field.isAnnotationPresent(DefaultExtension.class)) {
+			DefaultExtension annotation = field.getAnnotation(DefaultExtension.class);
 
-            Object keyValue;
+			Object keyValue;
 
-            BasicCertificate basicCertificate = new BasicCertificate(x509);
+			BasicCertificate basicCertificate = new BasicCertificate(x509);
 
-            switch (annotation.type()) {
-                case CRL_URL:
-                    try {
-                        keyValue = basicCertificate.getCRLDistributionPoint();
-                    } catch (IOException e1) {
-                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field",field.getName()), e1);
-                    }
-                    break;
-                case SERIAL_NUMBER:
-                    keyValue = basicCertificate.getSerialNumber();
-                    break;
-                case ISSUER_DN:
-                    try {
-                        keyValue = basicCertificate.getCertificateIssuerDN().toString();
-                    } catch (IOException e1) {
-                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field",field.getName()), e1);
-                    }
-                    break;
-                case SUBJECT_DN:
-                    try {
-                        keyValue = basicCertificate.getCertificateSubjectDN().toString();
-                    } catch (IOException e1) {
-                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field",field.getName()), e1);
-                    }
-                    break;
-                case KEY_USAGE:
-                    keyValue = basicCertificate.getICPBRKeyUsage().toString();
-                    break;
-                case PATH_LENGTH:
-                    keyValue = basicCertificate.getPathLength();
-                    break;
-                case AUTHORITY_KEY_IDENTIFIER:
-                    try {
-                        keyValue = basicCertificate.getAuthorityKeyIdentifier();
-                    } catch (Exception e1) {
-                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
-                    }
-                    break;
+			switch (annotation.type()) {
+				case CRL_URL:
+					try {
+						keyValue = basicCertificate.getCRLDistributionPoint();
+					} catch (IOException e1) {
+						throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
+					}
+					break;
+				case SERIAL_NUMBER:
+					keyValue = basicCertificate.getSerialNumber();
+					break;
+				case ISSUER_DN:
+					try {
+						keyValue = basicCertificate.getCertificateIssuerDN().toString();
+					} catch (IOException e1) {
+						throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
+					}
+					break;
+				case SUBJECT_DN:
+					try {
+						keyValue = basicCertificate.getCertificateSubjectDN().toString();
+					} catch (IOException e1) {
+						throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
+					}
+					break;
+				case KEY_USAGE:
+					keyValue = basicCertificate.getICPBRKeyUsage().toString();
+					break;
+				case PATH_LENGTH:
+					keyValue = basicCertificate.getPathLength();
+					break;
+				case AUTHORITY_KEY_IDENTIFIER:
+					try {
+						keyValue = basicCertificate.getAuthorityKeyIdentifier();
+					} catch (Exception e1) {
+						throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
+					}
+					break;
 
-                case SUBJECT_KEY_IDENTIFIER:
-                    try {
-                        keyValue = basicCertificate.getSubjectKeyIdentifier();
-                    } catch (IOException e1) {
-                        throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
-                    }
-                    break;
+				case SUBJECT_KEY_IDENTIFIER:
+					try {
+						keyValue = basicCertificate.getSubjectKeyIdentifier();
+					} catch (IOException e1) {
+						throw new CertificateCoreException(coreMessagesBundle.getString("error.get.value.field", field.getName()), e1);
+					}
+					break;
 
-                case BEFORE_DATE:
-                    keyValue = basicCertificate.getBeforeDate();
-                    break;
-                case AFTER_DATE:
-                    keyValue = basicCertificate.getAfterDate();
-                    break;
-                case CERTIFICATION_AUTHORITY:
-                    keyValue = basicCertificate.isCACertificate();
-                    break;
+				case BEFORE_DATE:
+					keyValue = basicCertificate.getBeforeDate();
+					break;
+				case AFTER_DATE:
+					keyValue = basicCertificate.getAfterDate();
+					break;
+				case CERTIFICATION_AUTHORITY:
+					keyValue = basicCertificate.isCACertificate();
+					break;
 
-                default:
-                    throw new CertificateCoreException(coreMessagesBundle.getString("error.field.not.implemented",annotation.type()));
-            }
+				default:
+					throw new CertificateCoreException(coreMessagesBundle.getString("error.field.not.implemented", annotation.type()));
+			}
 
-            try {
-                field.setAccessible(true);
-                field.set(object, keyValue);
-            } catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
-                throw new CertificateCoreException(coreMessagesBundle.getString("error.load.value.field", field.getName()), e);
-            }
-        }
-    }
+			try {
+				field.setAccessible(true);
+				field.set(object, keyValue);
+			} catch (IllegalAccessException | IllegalArgumentException | SecurityException e) {
+				throw new CertificateCoreException(coreMessagesBundle.getString("error.load.value.field", field.getName()), e);
+			}
+		}
+	}
 
 }

@@ -42,10 +42,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TimeOut configurations
+ * TimeOut configurations.
  *
  * @author emerson.saito@serpro.gov.br
- *
  */
 public class TimeStampConfig {
 
@@ -53,85 +52,84 @@ public class TimeStampConfig {
 	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
 	/**
-     * System key to set timeout for timestamp connector
-     */
-    public static final String TIMESTAMP_TIMEOUT = "signer.timestamp.timeout";
-
-    /**
-     * System environment key to set timeout for timestamp connector
-     */
-    public static final String ENV_TIMESTAMP_TIMEOUT = "SIGNER_TIMESTAMP_TIMEOUT";
+	 * System key to set timeout for timestamp connector
+	 */
+	public static final String TIMESTAMP_TIMEOUT = "signer.timestamp.timeout";
 
 	/**
-     * System key to set how many times replay timestamp connector
-     */
-    public static final String TIMESTAMP_CONNECT_REPLAY = "signer.timestamp.connect_replay";
+	 * System environment key to set timeout for timestamp connector
+	 */
+	public static final String ENV_TIMESTAMP_TIMEOUT = "SIGNER_TIMESTAMP_TIMEOUT";
 
-    /**
-     * System environment key to set how many times replay timestamp connector
-     */
-    public static final String ENV_TIMESTAMP_CONNECT_REPLAY = "SIGNER_TIMESTAMP_CONNECT_REPLAY";
+	/**
+	 * System key to set how many times replay timestamp connector
+	 */
+	public static final String TIMESTAMP_CONNECT_REPLAY = "signer.timestamp.connect_replay";
+
+	/**
+	 * System environment key to set how many times replay timestamp connector
+	 */
+	public static final String ENV_TIMESTAMP_CONNECT_REPLAY = "SIGNER_TIMESTAMP_CONNECT_REPLAY";
 
 
-    public static TimeStampConfig instance = new TimeStampConfig();
+	public static TimeStampConfig instance = new TimeStampConfig();
 
-    // default is 30 seconds
-    private int timeOut =30000;
+	// default is 30 seconds
+	private int timeOut = 30000;
 
-    private int connectReplay= 3;
+	private int connectReplay = 3;
 
-    public static TimeStampConfig getInstance() {
-    	if (instance == null) {
-    		instance = new TimeStampConfig();
-    	}
-    	return instance;
-    }
+	public static TimeStampConfig getInstance() {
+		if (instance == null) {
+			instance = new TimeStampConfig();
+		}
+		return instance;
+	}
 
-    private TimeStampConfig() {
-    	try {
-    		String varTimeOut =  System.getenv(ENV_TIMESTAMP_TIMEOUT);
-            if (varTimeOut == null || varTimeOut.isEmpty()) {
-            	varTimeOut = (String) System.getProperties().get(TIMESTAMP_TIMEOUT);
-            	if (varTimeOut == null || varTimeOut.isEmpty()) {
-            		LOGGER.debug("DEFAULT");
-            		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
-            	}else {
-            		LOGGER.debug("key");
-            		setTimeOut(Integer.valueOf(varTimeOut));
-            	}
-            } else {
-            	LOGGER.debug("ENV");
-            	setTimeOut(Integer.valueOf(varTimeOut));
-            }
-    	}catch (Exception e) {
-    		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
+	private TimeStampConfig() {
+		try {
+			String varTimeOut = System.getenv(ENV_TIMESTAMP_TIMEOUT);
+			if (varTimeOut == null || varTimeOut.isEmpty()) {
+				varTimeOut = (String) System.getProperties().get(TIMESTAMP_TIMEOUT);
+				if (varTimeOut == null || varTimeOut.isEmpty()) {
+					LOGGER.debug("DEFAULT");
+					LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
+				} else {
+					LOGGER.debug("key");
+					setTimeOut(Integer.valueOf(varTimeOut));
+				}
+			} else {
+				LOGGER.debug("ENV");
+				setTimeOut(Integer.valueOf(varTimeOut));
+			}
+		} catch (Exception e) {
+			LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
 
 		}
-    	try {
-    		String varConnectReplay =  System.getenv(ENV_TIMESTAMP_CONNECT_REPLAY);
-            if (varConnectReplay == null || varConnectReplay.isEmpty()) {
-            	varConnectReplay = (String) System.getProperties().get(TIMESTAMP_CONNECT_REPLAY);
-            	if (varConnectReplay == null || varConnectReplay.isEmpty()) {
-            		LOGGER.debug("DEFAULT");
-            		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
-            	}else {
-            		LOGGER.debug("key");
-            		setConnectReplay(Integer.valueOf(varConnectReplay));
-            	}
-            } else {
-            	LOGGER.debug("ENV");
-            	setConnectReplay(Integer.valueOf(varConnectReplay));
-            }
-    	}catch (Exception e) {
-    		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
+		try {
+			String varConnectReplay = System.getenv(ENV_TIMESTAMP_CONNECT_REPLAY);
+			if (varConnectReplay == null || varConnectReplay.isEmpty()) {
+				varConnectReplay = (String) System.getProperties().get(TIMESTAMP_CONNECT_REPLAY);
+				if (varConnectReplay == null || varConnectReplay.isEmpty()) {
+					LOGGER.debug("DEFAULT");
+					LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
+				} else {
+					LOGGER.debug("key");
+					setConnectReplay(Integer.valueOf(varConnectReplay));
+				}
+			} else {
+				LOGGER.debug("ENV");
+				setConnectReplay(Integer.valueOf(varConnectReplay));
+			}
+		} catch (Exception e) {
+			LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
 
 		}
-    }
+	}
 
-    /**
-     *
-     * @return
-     */
+	/**
+	 * @return the timeout.
+	 */
 	public int getTimeOut() {
 		return timeOut;
 	}

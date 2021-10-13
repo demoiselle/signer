@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.validator;
 
 import java.security.cert.X509Certificate;
@@ -46,44 +47,42 @@ import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * 
  * check if a Certificate is out of date
- *
  */
 public class PeriodValidator implements IValidator {
 
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-	
-    @Override
-    public void validate(X509Certificate x509) throws CertificateValidatorException {
-        try {
-        	if (x509 != null){
-        		x509.checkValidity();
-        	}else{
-        		throw new CertificateValidatorException(coreMessagesBundle.getString("error.invalid.certificate"));
-        	}
-            
-        } catch (Exception e) {
-        	Format formatter = new SimpleDateFormat("dd.MM.yyyy"); 
-        	throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date", 
-            		formatter.format(x509.getNotBefore()), formatter.format(x509.getNotAfter())), e);
-        }
-    }
-    
-    public Date valDate(X509Certificate x509) throws CertificateValidatorException {
-        try {
-        	if (x509 != null){
-        		x509.checkValidity();        		
-        	}else{
-        		throw new CertificateValidatorException(coreMessagesBundle.getString("error.invalid.certificate"));
-        	}
-            
-        } catch (Exception e) {
-        	Format formatter = new SimpleDateFormat("dd.MM.yyyy"); 
-        	throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date", 
-            		formatter.format(x509.getNotBefore()), formatter.format(x509.getNotAfter())), e);
-        }
-        return x509.getNotAfter();
-    }
+
+	@Override
+	public void validate(X509Certificate x509) throws CertificateValidatorException {
+		try {
+			if (x509 != null) {
+				x509.checkValidity();
+			} else {
+				throw new CertificateValidatorException(coreMessagesBundle.getString("error.invalid.certificate"));
+			}
+
+		} catch (Exception e) {
+			Format formatter = new SimpleDateFormat("dd.MM.yyyy");
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date",
+				formatter.format(x509.getNotBefore()), formatter.format(x509.getNotAfter())), e);
+		}
+	}
+
+	public Date valDate(X509Certificate x509) throws CertificateValidatorException {
+		try {
+			if (x509 != null) {
+				x509.checkValidity();
+			} else {
+				throw new CertificateValidatorException(coreMessagesBundle.getString("error.invalid.certificate"));
+			}
+
+		} catch (Exception e) {
+			Format formatter = new SimpleDateFormat("dd.MM.yyyy");
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.certificate.out.date",
+				formatter.format(x509.getNotBefore()), formatter.format(x509.getNotAfter())), e);
+		}
+		return x509.getNotAfter();
+	}
 
 }

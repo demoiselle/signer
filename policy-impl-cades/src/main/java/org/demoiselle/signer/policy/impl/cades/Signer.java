@@ -47,116 +47,116 @@ import java.util.Date;
  */
 public interface Signer {
 
-    /**
-     * Indicates which Provider will be used.
-     *
-     * @param provider provider to be used
-     */
+	/**
+	 * Indicates which Provider will be used.
+	 *
+	 * @param provider provider to be used
+	 */
 	void setProvider(Provider provider);
 
-    /**
-     * Private key required for asymmetric cryptography
-     *
-     * @param privateKey private key to be used
-     */
+	/**
+	 * Private key required for asymmetric cryptography
+	 *
+	 * @param privateKey private key to be used
+	 */
 	void setPrivateKey(PrivateKey privateKey);
 
-    /**
-     * Public key needed for asymmetric cryptography
-     *
-     * @param publicKey public key to be used
-     */
+	/**
+	 * Public key needed for asymmetric cryptography
+	 *
+	 * @param publicKey public key to be used
+	 */
 	void setPublicKey(PublicKey publicKey);
 
-    /**
-     * Set a Signature Algorithm. Ex: SHA256withRSA
-     *
-     * @param algorithm algorithm to be used
-     */
+	/**
+	 * Set a Signature Algorithm. Ex: SHA256withRSA
+	 *
+	 * @param algorithm algorithm to be used
+	 */
 	void setAlgorithm(String algorithm);
 
-    /**
-     * Set an algorithm pre-defined in enumeration. Compatible with ICP-Brasil
-     *
-     * @param algorithm algorithm representation to be used
-     */
+	/**
+	 * Set an algorithm pre-defined in enumeration. Compatible with ICP-Brasil
+	 *
+	 * @param algorithm algorithm representation to be used
+	 */
 	void setAlgorithm(SignerAlgorithmEnum algorithm);
 
-    /**
-     * Generates a digital signature from a content and attaches this content on result file
-     * @param content content to be signed
-     * @return attached signature
-     */
+	/**
+	 * Generates a digital signature from a content and attaches this content on result file
+	 *
+	 * @param content content to be signed
+	 * @return attached signature
+	 */
 	byte[] doAttachedSign(byte[] content);
 
-    /**
-     *
-     * Generates a digital signature from a content,
-     * the result file does not contains the content that was signed
-     * @param content content to be signed
-     * @return detached signature
-     */
+	/**
+	 * Generates a digital signature from a content,
+	 * the result file does not contains the content that was signed
+	 *
+	 * @param content content to be signed
+	 * @return detached signature
+	 */
 	byte[] doDetachedSign(byte[] content);
 
-    /**
-     * Returns the provider.
-     *
-     * @return current provider
-     */
+	/**
+	 * Returns the provider.
+	 *
+	 * @return current provider
+	 */
 	Provider getProvider();
 
-    /**
-     * Returns the private key.
-     *
-     * @return current private key
-     */
+	/**
+	 * Returns the private key.
+	 *
+	 * @return current private key
+	 */
 	PrivateKey getPrivateKey();
 
-    /**
-     * Returns the algorithm to be used in the signature
-     *
-     * @return current algorithm
-     */
+	/**
+	 * Returns the algorithm to be used in the signature
+	 *
+	 * @return current algorithm
+	 */
 	String getAlgorithm();
 
-    /**
-     * Returns the public key.
-     *
-     * @return current public key
-     */
+	/**
+	 * Returns the public key.
+	 *
+	 * @return current public key
+	 */
 	PublicKey getPublicKey();
 
-    /**
-     *
-     * Generates a digital signature from a previous calculated hash for a content,
-     * the result file does not contains the original content that was signed
-     * @param hash hash to be signed
-     * @return detached PCKS7 signature
-     */
+	/**
+	 * Generates a digital signature from a previous calculated hash for a content,
+	 * the result file does not contains the original content that was signed
+	 *
+	 * @param hash hash to be signed
+	 * @return detached PCKS7 signature
+	 */
 	byte[] doHashSign(byte[] hash);
 
-    /**
-     * Private key required for sign timestamp request
-     *
-     * @param privateKey to be used for request timestamp
-     */
+	/**
+	 * Private key required for sign timestamp request
+	 *
+	 * @param privateKey to be used for request timestamp
+	 */
 	void setPrivateKeyForTimeStamp(PrivateKey privateKey);
 
-    /**
-     *
-     * @return privateKey to be used for request timestamp
-     */
+	/**
+	 * @return privateKey to be used for request timestamp
+	 */
 	PrivateKey getPrivateKeyForTimeStamp();
 
-    /**
-     * Data of end of Certificate use
-     * @return
-     */
+	/**
+	 * Data of end of Certificate use.
+	 *
+	 * @return Date of end certificate use.
+	 */
 	Date getNotAfterSignerCertificate();
 
-     /**
-	 *
+	/**
 	 * @return who perform the signature
 	 */
-	 String getSignatory() ;
+	String getSignatory();
 }

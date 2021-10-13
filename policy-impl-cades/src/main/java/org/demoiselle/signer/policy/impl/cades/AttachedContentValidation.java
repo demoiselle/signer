@@ -41,9 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *  Attached content and validation informations from Signature
- * @author emerson.saito@gmail.com
+ * Attached content and validation informations from Signature
  *
+ * @author emerson.saito@gmail.com
  */
 public class AttachedContentValidation {
 

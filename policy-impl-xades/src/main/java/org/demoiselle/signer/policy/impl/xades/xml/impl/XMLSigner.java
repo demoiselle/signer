@@ -92,20 +92,16 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 /**
- * 
- * 
  * This implementation is based in XAdEs standard, available in
  * https://www.w3.org/TR/XAdES/ and Brazilian digital signature standards
  * presented in
  * https://www.gov.br/iti/pt-br/centrais-de-conteudo/doc-icp-15-03-versao-7-4-req-das-pol-de-assin-dig-na-icp-brasil-pdf
- * 
- * @author Fabiano Kuss <fabiano.kuss@serpro.gov.br>
- * @author Emerson Saito <emerson.saito@serpro.gov.br>
  *
+ * @author Fabiano Kuss &lt;fabiano.kuss@serpro.gov.br&gt;
+ * @author Emerson Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
-
 public class XMLSigner implements Signer {
-	
+
 	public static final String XMLNS = "http://www.w3.org/2000/09/xmldsig#";
 	public static final String XMLNS_DS = "xmlns:ds";
 	public static final String XMLNS_XADES = "xmlns:xades";
@@ -123,19 +119,20 @@ public class XMLSigner implements Signer {
 	private String id = "id-" + System.currentTimeMillis();
 	private boolean detachedSignaturePack = false;
 	private String detachedFileName = null;
-	private PolicyFactory.Policies policy;	
+	private PolicyFactory.Policies policy;
 	private Date notAfterSignerCertificate;
 	private String signatureAlgorithm = "SHA256withRSA";
 	private String signatureDigest = "SHA-256";
+
 	public XMLSigner() {
 		this.policyOID = XMLPoliciesOID.AD_RB_XADES_2_4.getOID();
 		this.policy = PolicyUtils.getPolicyByOid(policyOID);
 	}
 
 	/**
-	 * To set another policy @see PolicyUtils
-	 * 
-	 * @param policyOID
+	 * To set another policy @see PolicyUtils.
+	 *
+	 * @param policyOID the policy OID.
 	 */
 	public void setPolicyId(String policyOID) {
 		this.policyOID = policyOID;
@@ -148,7 +145,7 @@ public class XMLSigner implements Signer {
 
 	public void setSignatureAlgorithm(String signatureAlgorithm) {
 		this.signatureAlgorithm = signatureAlgorithm;
-		setSignatureDigest(AlgorithmsValues.getdigestTosignature(signatureAlgorithm));		
+		setSignatureDigest(AlgorithmsValues.getdigestTosignature(signatureAlgorithm));
 	}
 
 	public String getSignatureDigest() {
@@ -160,13 +157,12 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Sign a XML file, from File Name and location. (ex:
-	 * signEnveloped(true,"/tmp/file.xml");
-	 * 
-	 * @param isFileLocation indicates the next parameter is a fileLocation
-	 * @param fileNameSource
-	 * @return
-	 * @throws XMLSignerException
+	 * Sign an XML file, from File Name and location.
+	 *
+	 * @param isFileLocation indicates the next parameter is a fileLocation.
+	 * @param fileNameSource the filename of content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(boolean isFileLocation, String fileNameSource) throws XMLSignerException {
 
@@ -184,54 +180,50 @@ public class XMLSigner implements Signer {
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.not.valid.file"));
 		}
 		Document varDocToSing = DocumentUtils.loadXMLDocument(fileNameSource);
-		
+
 		return this.signEnveloped(varDocToSing, null);
 	}
 
 	/**
-	 * 
-	 * Sign a XML file, from String that represents a XML document
-	 * 
-	 * @param xmlAsString
-	 * @return
-	 * @throws XMLSignerException
+	 * Sign a XML file, from String that represents a XML document.
+	 *
+	 * @param xmlAsString the XML content to sign.
+	 * @return the documento.
+	 * @throws XMLSignerException the failure
 	 */
 	public Document signEnveloped(String xmlAsString) throws XMLSignerException {
-
 		if (xmlAsString == null || xmlAsString.isEmpty()) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "String xmlAsString"));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.parameter.null", "String xmlAsString"));
+				xadesMessagesBundle.getString("error.xml.parameter.null", "String xmlAsString"));
 		}
 
 		return this.signEnveloped(DocumentUtils.loadXMLDocumentFromString(xmlAsString), null);
 	}
 
 	/**
-	 * 
 	 * Sign a XML file, from XML Document
-	 * 
-	 * @param docToSing
-	 * @return
-	 * @throws XMLSignerException
+	 *
+	 * @param docToSing the document to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(Document docToSing) throws XMLSignerException {
-
 		if (docToSing == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "Document docToSing"));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.parameter.null", "Document docToSing"));
+				xadesMessagesBundle.getString("error.xml.parameter.null", "Document docToSing"));
 		}
-		return this.signEnveloped(docToSing, null);
 
+		return this.signEnveloped(docToSing, null);
 	}
 
 	/**
-	 * Sign a XML file, from byte array that represents a XML document
-	 * 
-	 * @param content
-	 * @return
-	 * @throws XMLSignerException
+	 * Sign a XML file, from byte array that represents a XML document.
+	 *
+	 * @param content the content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(byte[] content) throws XMLSignerException {
 
@@ -241,32 +233,32 @@ public class XMLSigner implements Signer {
 		}
 
 		return this.signEnveloped(DocumentUtils.loadXMLDocument(content), null);
-
 	}
 
 	/**
-	 * Sign a XML file, from InputStream that represents a XML document
-	 * 
-	 * @param content
-	 * @return
-	 * @throws XMLSignerException
+	 * Sign a XML file, from InputStream that represents a XML document.
+	 *
+	 * @param content the content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signEnveloped(InputStream content) throws XMLSignerException {
 		if (content == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream  content"));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream  content"));
+				xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream  content"));
 		}
 		return this.signEnveloped(DocumentUtils.loadXMLDocument(content), null);
 
 	}
-	
+
 	/**
-	 * Generates a destached XML signature from byte array
-	 * @param isFile
-	 * @param fileNameToSign
-	 * @return
-	 * @throws XMLSignerException
+	 * Generates a destached XML signature from byte array.
+	 *
+	 * @param isFile the input stream.
+	 * @param fileNameToSign the filename of content to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signDetachedEnveloped(InputStream isFile, String fileNameToSign) throws XMLSignerException {
 
@@ -287,14 +279,13 @@ public class XMLSigner implements Signer {
 		}
 
 	}
-	
 
 	/**
-	 * Generates a destached XML signature from a File name and location
-	 * 
-	 * @param fileNameToSign
+	 * Generates a detached XML signature from a File name and location.
+	 *
+	 * @param fileNameToSign the filename of content to sign.
 	 * @return a Document with signature
-	 * @throws XMLSignerException
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signDetachedEnveloped(String fileNameToSign) throws XMLSignerException {
 
@@ -314,14 +305,15 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Generates a destached XML signature from byte array
-	 * @param content 
-	 * @param fileName
-	 * @return
-	 * @throws XMLSignerException
+	 * Generates a destached XML signature from byte array.
+	 *
+	 * @param content the content.
+	 * @param fileNameToSign the filename of document to sign.
+	 * @return the document.
+	 * @throws XMLSignerException the failure.
 	 */
 	public Document signDetachedEnveloped(byte[] content, String fileNameToSign) throws XMLSignerException {
-		
+
 		if (content == null || content.length <= 0) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] content"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] content"));
@@ -343,28 +335,24 @@ public class XMLSigner implements Signer {
 
 	}
 
-
 	/**
-	 * Generates a destached XML signature from hash byte array
-	 * @param content 
-	 * @param fileName
-	 * @return
-	 * @throws XMLSignerException
+	 * Generates a destached XML signature from hash byte array.
+	 *
+	 * @param hash the hash.
+	 * @return the documento.
+	 * @throws XMLSignerException the failure produced when signing.
 	 */
 	public Document signDetachedEnveloped(byte[] hash) throws XMLSignerException {
-		
+
 		if (hash == null || hash.length <= 0) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] hash"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] hash"));
 		}
-			this.detachedSignaturePack = true;
-			return this.signEnveloped(null, hash);
+		this.detachedSignaturePack = true;
+		return this.signEnveloped(null, hash);
 	}
-	
-	
-	
+
 	/**
-	 * 
 	 * @param docToSing
 	 * @param hashToSign
 	 * @return
@@ -383,7 +371,7 @@ public class XMLSigner implements Signer {
 		if (!xMLPolicyValidator.validate()) {
 			logger.error(xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
+				xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
 		}
 
 		if (this.certificateChain == null) {
@@ -416,17 +404,16 @@ public class XMLSigner implements Signer {
 		Element sigTag = (Element) doc.getElementsByTagName("ds:Signature").item(numSignatures);
 
 		Element objectTag = signedObject(certificate, doc);
-		
-		
+
 
 		Init.init();
-		Canonicalizer c14n =null;
+		Canonicalizer c14n = null;
 		try {
 			c14n = Canonicalizer.getInstance(CanonicalizationMethod.EXCLUSIVE_WITH_COMMENTS);
 		} catch (InvalidCanonicalizerException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+				xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 		}
 
 		byte[] canonicalized = null;
@@ -436,7 +423,7 @@ public class XMLSigner implements Signer {
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+				xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 		}
 
 		Element sigRefTag = createSignatureHashReference(doc, canonicalized);
@@ -447,7 +434,7 @@ public class XMLSigner implements Signer {
 		} catch (InvalidCanonicalizerException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+				xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 		}
 		byte[] dh;
 		try {
@@ -455,7 +442,7 @@ public class XMLSigner implements Signer {
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
+				xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 		}
 
 		Signature sig;
@@ -477,7 +464,7 @@ public class XMLSigner implements Signer {
 		} catch (SignatureException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
 			throw new XMLSignerException(
-					xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
+				xadesMessagesBundle.getString("error.xml.signature.exception", e.getMessage()));
 
 		}
 
@@ -510,7 +497,7 @@ public class XMLSigner implements Signer {
 		x509.appendChild(x509Certificate);
 
 		List<String> listMandetedUnsignedProperties = xMLPolicyValidator.getXmlSignaturePolicy().getXmlSignerRules()
-				.getMandatedUnsignedQProperties();
+			.getMandatedUnsignedQProperties();
 		if (listMandetedUnsignedProperties.size() > 0) {
 
 			if (getPrivateKeyToTimestamp() == null) {
@@ -532,7 +519,7 @@ public class XMLSigner implements Signer {
 
 	/**
 	 * get a Hash Digest for Certificate
-	 * 
+	 *
 	 * @param cert
 	 * @param algorithm
 	 * @return
@@ -545,14 +532,14 @@ public class XMLSigner implements Signer {
 			return Base64.toBase64String(digestValue);
 		} catch (Exception e) {
 			logger.error(xadesMessagesBundle.getString("error.cert.digest"));
-			throw new XMLSignerException(xadesMessagesBundle.getString("error.cert.digest",e.getMessage()));
+			throw new XMLSignerException(xadesMessagesBundle.getString("error.cert.digest", e.getMessage()));
 
 		}
 	}
 
 	/**
 	 * Add a Policy information
-	 * 
+	 *
 	 * @param doc
 	 * @return
 	 * @throws XMLSignerException
@@ -617,7 +604,7 @@ public class XMLSigner implements Signer {
 
 	/**
 	 * Create the SignedObject
-	 * 
+	 *
 	 * @param cert
 	 * @param doc
 	 * @return
@@ -686,7 +673,7 @@ public class XMLSigner implements Signer {
 		sigProp.appendChild(sigSigDataObjeProp);
 
 		Element sigDataObjFormat = doc.createElementNS(XAdESv1_3_2, "xades:DataObjectFormat");
-		sigDataObjFormat.setAttribute("ObjectReference", "#r"+id);
+		sigDataObjFormat.setAttribute("ObjectReference", "#r" + id);
 		sigSigDataObjeProp.appendChild(sigDataObjFormat);
 
 		/*
@@ -705,7 +692,7 @@ public class XMLSigner implements Signer {
 
 	/**
 	 * create the SignatureHashReference tag
-	 * 
+	 *
 	 * @param doc
 	 * @param signedTagData
 	 * @return
@@ -714,7 +701,7 @@ public class XMLSigner implements Signer {
 	private Element createSignatureHashReference(Document doc, byte[] signedTagData) throws XMLSignerException {
 
 		HashMap<String, String> param = new HashMap<String, String>();
-		param.put("id", "sigref"+id);
+		param.put("id", "sigref" + id);
 		param.put("type", Constants.SignedProperties);
 		param.put("uri", "#xades-" + id);
 		param.put("alg", "http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
@@ -737,7 +724,7 @@ public class XMLSigner implements Signer {
 
 	/**
 	 * create a Reference Tag
-	 * 
+	 *
 	 * @param doc
 	 * @param params
 	 * @return
@@ -762,7 +749,7 @@ public class XMLSigner implements Signer {
 				transAlg.setAttribute("Algorithm", params.get("transAlg1"));
 				transformsTag.appendChild(transAlg);
 			}
-			
+
 			if (params.containsKey("alg")) {
 				Element transformTag = doc.createElementNS(XMLNS, "ds:Transform");
 				transformTag.setAttribute("Algorithm", params.get("alg"));
@@ -773,7 +760,7 @@ public class XMLSigner implements Signer {
 					transformTag.appendChild(xPathTag);
 				}
 			}
-			
+
 			if (params.containsKey("transAlg2")) {
 				Element transAlg = doc.createElementNS(XMLNS, "ds:Transform");
 				transAlg.setAttribute("Algorithm", params.get("transAlg2"));
@@ -795,9 +782,8 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * 
 	 * Create a XML signature tag or file
-	 * 
+	 *
 	 * @param docToSign          XMLDocument to Sign
 	 * @param detachedHashToSign a calculated Hash to Sign on detachedPack
 	 * @return
@@ -822,7 +808,7 @@ public class XMLSigner implements Signer {
 		signatureTag.setAttributeNS("http://www.w3.org/2000/xmlns/", XMLNS_DS, XMLNS);
 		signatureTag.setAttributeNS("http://www.w3.org/2000/xmlns/", XMLNS_XADES, XAdESv1_3_2);
 		signatureTag.setAttribute("Id", id);
-		signatureTag.setIdAttribute("Id",true);
+		signatureTag.setIdAttribute("Id", true);
 
 		Element sigInfTag = bodyDoc.createElementNS(XMLNS, "ds:SignedInfo");
 		signatureTag.appendChild(sigInfTag);
@@ -840,7 +826,7 @@ public class XMLSigner implements Signer {
 		HashMap<String, String> param = new HashMap<String, String>();
 		//param.put("type", "");
 		param.put("uri", "");
-		param.put("id", "r-"+id);
+		param.put("id", "r-" + id);
 		param.put("text", "not(ancestor-or-self::ds:Signature)");
 		param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
 		param.put("digAlg", AlgorithmsValues.getSignatureDigest(getSignatureDigest()));
@@ -857,10 +843,10 @@ public class XMLSigner implements Signer {
 		} else {
 			Element docData = DocumentUtils.getDocumentData(bodyDoc);
 			byte[] docHash = DocumentUtils.getShaCanonizedValue(getSignatureDigest(), docData,
-					"http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
+				"http://www.w3.org/2001/10/xml-exc-c14n#WithComments");
 			//param.put("type", "");
 			param.put("uri", "");
-			param.put("id", "r"+id);
+			param.put("id", "r" + id);
 			param.put("text", "not(ancestor-or-self::ds:Signature)");
 			param.put("alg", "http://www.w3.org/TR/1999/REC-xpath-19991116");
 			param.put("digAlg", AlgorithmsValues.getSignatureDigest(getSignatureDigest()));
@@ -878,7 +864,7 @@ public class XMLSigner implements Signer {
 
 	/**
 	 * create the UnsignedProperties acording to Policy
-	 * 
+	 *
 	 * @param doc
 	 * @param parmProperties
 	 * @return
@@ -892,42 +878,42 @@ public class XMLSigner implements Signer {
 		for (String propertie : parmProperties) {
 			Element unsignedSignaturePropertie = null;
 			switch (propertie) {
-			case "SignatureTimeStamp":
-				unsignedSignaturePropertie = createSignatureTimeStampProperty(doc);
-				break;
-			case "CompleteCertificateRefs":
-				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-				throw new XMLSignerException(
+				case "SignatureTimeStamp":
+					unsignedSignaturePropertie = createSignatureTimeStampProperty(doc);
+					break;
+				case "CompleteCertificateRefs":
+					logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
+					throw new XMLSignerException(
 						xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-			// break;
-			case "CompleteRevocationRefs":
-				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-				throw new XMLSignerException(
+					// break;
+				case "CompleteRevocationRefs":
+					logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
+					throw new XMLSignerException(
 						xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-			// break;
-			case "SigAndRefsTimeStamp":
-				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-				throw new XMLSignerException(
+					// break;
+				case "SigAndRefsTimeStamp":
+					logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
+					throw new XMLSignerException(
 						xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-			// break;
-			case "CertificateValues":
-				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-				throw new XMLSignerException(
+					// break;
+				case "CertificateValues":
+					logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
+					throw new XMLSignerException(
 						xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-			// break;
-			case "RevocationValues":
-				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-				throw new XMLSignerException(
+					// break;
+				case "RevocationValues":
+					logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
+					throw new XMLSignerException(
 						xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-			// break;
-			case "ArchiveTimeStamp":
-				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-				throw new XMLSignerException(
+					// break;
+				case "ArchiveTimeStamp":
+					logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
+					throw new XMLSignerException(
 						xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-			// break;
-			default:
-				logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
-				throw new XMLSignerException(
+					// break;
+				default:
+					logger.error(xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
+					throw new XMLSignerException(
 						xadesMessagesBundle.getString("error.attribute.not.implemented", propertie));
 			}
 			unsignedSignatureProperties.appendChild(unsignedSignaturePropertie);
@@ -938,7 +924,7 @@ public class XMLSigner implements Signer {
 
 	/**
 	 * create the SignatureTimeStamp Property tag
-	 * 
+	 *
 	 * @param doc
 	 * @return
 	 */
@@ -951,7 +937,7 @@ public class XMLSigner implements Signer {
 		Element encapsulatedTimeStamp = doc.createElement("xades:EncapsulatedTimeStamp");
 		encapsulatedTimeStamp.setAttribute("Id", "TimeStamp" + id);
 		XMLTimeStampToken varXMLTimeStampToken = new XMLTimeStampToken(getPrivateKeyToTimestamp(),
-				getCertificateChainToTimestamp(), docSignature, null);
+			getCertificateChainToTimestamp(), docSignature, null);
 		String timeStampContent = Base64.toBase64String(varXMLTimeStampToken.getTimeStampToken());
 		encapsulatedTimeStamp.setTextContent(timeStampContent);
 		signatureTimeStamp.appendChild(encapsulatedTimeStamp);

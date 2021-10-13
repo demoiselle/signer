@@ -50,7 +50,7 @@ public class PKCS11Logout {
 
 	private static final Logger logger = LoggerFactory.getLogger(PKCS11Logout.class);
 
-	public boolean doLogout(){
+	public boolean doLogout() {
 		try {
 			for (Provider provider : Security.getProviders())
 				if (provider instanceof SunPKCS11)
@@ -61,6 +61,4 @@ public class PKCS11Logout {
 			return false;
 		}
 	}
-
-
 }

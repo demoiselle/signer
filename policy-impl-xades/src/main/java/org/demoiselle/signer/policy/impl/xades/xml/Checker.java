@@ -44,46 +44,37 @@ import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
 import org.w3c.dom.Document;
 
 /**
- * 
- * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
- *
+ * @author Emerson Sachio Saito &lt;emerson.saito@serpro.gov.br&gt;
  */
 public interface Checker {
-	
-	
-	abstract public boolean check(Document doc);
-	
-	abstract public boolean check(String xmlAsString);
-	
-	abstract public boolean check(boolean isFileLocation, String xmlSignedFile); 
-	
-	abstract public boolean check(byte[] docData);
-	
-	abstract public boolean check(InputStream isXMLFile);
 
-	abstract public boolean check(String signedContentFileName, String signatureFileName);
-	
-	abstract public boolean check(byte[] signedContent, byte[] signature);
-	
-	abstract public boolean check(InputStream isContent, InputStream isXMLSignature);
-	
-	
-	abstract public boolean checkHash(byte[] contentcHash, Document xmlSignature);
-	
-	abstract public boolean checkHash(byte[] contentcHash, byte[] xmlSignature);
-	
-	abstract public boolean checkHash(byte[] contentHash, String xmlSignature);
-	
-	abstract public boolean checkHash(InputStream isContent, Document xmlSignature);
-	
-	abstract public boolean checkHash(InputStream isContent, InputStream isXMLSignature);
-	
-	abstract public boolean checkHash(InputStream isContent, String xmlSignature);
-	
-	
-	
-	
-	abstract public List<XMLSignatureInformations> getSignaturesInfo(); 
-	
-	
+	boolean check(Document doc);
+
+	boolean check(String xmlAsString);
+
+	boolean check(boolean isFileLocation, String xmlSignedFile);
+
+	boolean check(byte[] docData);
+
+	boolean check(InputStream isXMLFile);
+
+	boolean check(String signedContentFileName, String signatureFileName);
+
+	boolean check(byte[] signedContent, byte[] signature);
+
+	boolean check(InputStream isContent, InputStream isXMLSignature);
+
+	boolean checkHash(byte[] contentcHash, Document xmlSignature);
+
+	boolean checkHash(byte[] contentcHash, byte[] xmlSignature);
+
+	boolean checkHash(byte[] contentHash, String xmlSignature);
+
+	boolean checkHash(InputStream isContent, Document xmlSignature);
+
+	boolean checkHash(InputStream isContent, InputStream isXMLSignature);
+
+	boolean checkHash(InputStream isContent, String xmlSignature);
+
+	List<XMLSignatureInformations> getSignaturesInfo();
 }

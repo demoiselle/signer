@@ -45,20 +45,23 @@ import org.demoiselle.signer.policy.impl.cades.Signer;
 public interface PCKS7Signer extends Signer {
 
 	/**
-	 *  Assign a Certificate for validate or generate a signature
+	 * Assign a Certificate for validate or generate a signature.
+	 *
 	 * @param certificate certificate to be used
 	 */
 	void setCertificates(Certificate[] certificate);
 
-    /**
-     * Assign a Policy for validate or generate a signature
-     * @param signaturePolicy Signature policy to be used
-     */
+	/**
+	 * Assign a Policy for validate or generate a signature.
+	 *
+	 * @param signaturePolicy Signature policy to be used
+	 */
 	void setSignaturePolicy(Policies signaturePolicy);
 
 
-    /**
-	 *  Assign a Certificate for get timeStamp
+	/**
+	 * Assign a Certificate for get timeStamp.
+	 *
 	 * @param certificates certificate to be used
 	 */
 	void setCertificatesForTimeStamp(Certificate[] certificates);

@@ -45,9 +45,7 @@ import java.net.URLConnection;
 import java.net.UnknownServiceException;
 
 /**
- *
  * Class to support downloads
- *
  */
 public class Downloads {
 
@@ -56,10 +54,13 @@ public class Downloads {
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 	/**
-	 * execute file download from defined URL
-	 * @param stringURL
-	 * @return InputStream
-	 * @throws RuntimeException
+	 * Get the input stream from provided address.
+	 *
+	 * @param stringURL sequence from with an {@link InputStream}
+	 *                  will be returned.
+	 *
+	 * @return the {@link InputStream} corresponding to the
+	 * other param.
 	 */
 	public static InputStream getInputStreamFromURL(final String stringURL) throws RuntimeException {
 		try {
@@ -76,6 +77,4 @@ public class Downloads {
 			throw new RuntimeException(coreMessagesBundle.getString("error.io"), error);
 		}
 	}
-
-
 }

@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2010 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -34,54 +34,35 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
-package org.demoiselle.signer.signature.policy.engine.factory;
 
-import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
-import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
+package org.demoiselle.signer.chain.icp.brasil.provider.impl;
+
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class PolicyFactoryTest {
+import java.security.cert.X509Certificate;
+import java.util.Collection;
 
-	private static final Logger logger = LoggerFactory.getLogger(PolicyFactoryTest.class);
+import static junit.framework.TestCase.assertNotNull;
+import static junit.framework.TestCase.assertTrue;
 
-	//@Test
-	public void testLoadPolicy() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		Policies[] policies = PolicyFactory.Policies.values();
+public class ICPBrasilUserHomeProviderCATest {
 
-		for (Policies policy : policies) {
-			// TODO - falta implentar policy para XADES
-			if (policy.toString().contains("CADES") || policy.toString().contains("PADES")) {
-				logger.info(factory.loadPolicy(policy).toString());
-			}
-		}
-	}
+	private final ICPBrasilUserHomeProviderCA provider =
+		new ICPBrasilUserHomeProviderCA();
 
-	/**
-	 * Test of loadLPA method, of class PolicyFactory.
-	 */
-	@SuppressWarnings("deprecation")
-	//@Test
-	public void testLoadLPA() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		logger.info(factory.loadLPA().toString());
-	}
-
-	/**
-	 * Test of loadLPAv2 method, of class PolicyFactory.
-	 */
-	@SuppressWarnings("deprecation")
-	//@Test
-	public void testLoadLPAv2() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		logger.info(factory.loadLPAv2().toString());
+	@Test
+	public void construtor() {
+		new ICPBrasilUserHomeProviderCA();
 	}
 
 	@Test
-	public void testLoadCades() {
-		PolicyFactory factory = PolicyFactory.getInstance();
-		logger.info(factory.loadLPACAdES().toString());
+	public void constantePublica() {
+		assertNotNull(ICPBrasilUserHomeProviderCA.PATH_HOME_USER);
+	}
+
+	@Test
+	public void obtemCertificados() {
+		Collection<X509Certificate> cas = provider.getCAs();
+		assertTrue(cas.size() > 100);
 	}
 }

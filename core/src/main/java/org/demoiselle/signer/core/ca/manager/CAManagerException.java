@@ -34,24 +34,25 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.core.ca.manager;
 
 /**
- * custom unchecked exceptions for package impl  
+ * custom unchecked exceptions for package impl
  */
 public class CAManagerException extends RuntimeException {
 
-    private static final long serialVersionUID = 6416422024286509896L;
+	private static final long serialVersionUID = 6416422024286509896L;
 
-    public CAManagerException() {
-        super();
-    }
+	public CAManagerException() {
+		super();
+	}
 
-    public CAManagerException(String message) {
-        super(message);
-    }
+	public CAManagerException(String message) {
+		super(message);
+	}
 
-    public CAManagerException(String message, Throwable error) {
-        super(message, error);
-    }
+	public CAManagerException(String message, Throwable error) {
+		super(message, error);
+	}
 }

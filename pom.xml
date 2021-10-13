@@ -1,293 +1,352 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<groupId>org.demoiselle.signer</groupId>
-	<artifactId>build</artifactId>
-	<packaging>pom</packaging>
-	<version>4.0.0-SNAPSHOT</version>
+    <groupId>org.demoiselle.signer</groupId>
+    <artifactId>build</artifactId>
+    <packaging>pom</packaging>
+    <version>4.0.0-SNAPSHOT</version>
 
-	<name>Demoiselle Signer Build</name>
-	<description>Demoiselle Framework's component for specifications of ICP-BRASIL Public Key Infrastructure (PKI) </description>
-	<url>http://signer.demoiselle.io</url>
+    <name>Demoiselle Signer Build</name>
+    <description>Demoiselle Framework's component for specifications of ICP-BRASIL Public Key Infrastructure (PKI)
+    </description>
+    <url>https://www.frameworkdemoiselle.gov.br</url>
 
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>9</version>
-	</parent>
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>9</version>
+    </parent>
 
-	<licenses>
-		<license>
-			<name>GNU Lesser General Public License, Version 3</name>
-			<url>http://www.gnu.org/licenses/lgpl-3.0.txt</url>
-		</license>
-	</licenses>
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
 
-	<organization>
-		<name>SERPRO - Serviço Federal de Processamento de Dados</name>
-		<url>http://www.serpro.gov.br</url>
-	</organization>
+    <organization>
+        <name>SERPRO - Serviço Federal de Processamento de Dados</name>
+        <url>https://www.serpro.gov.br</url>
+    </organization>
 
-	<developers>
+    <developers>
 
-		<developer>
-			<name>Ednara Oliveira Santos</name>
-			<email>ednaraoliveira@gmail.com</email>
-			<organization>SERPRO</organization>
-			<organizationUrl>http://www.serpro.gov.br</organizationUrl>
-		</developer>
-		<developer>
-			<name>Emerson Sachio Saito</name>
-			<email>emerson.saito@gmail.com</email>
-			<organization>SERPRO</organization>
-			<organizationUrl>http://www.serpro.gov.br</organizationUrl>
-		</developer>
-		<developer>
-			<name>Fabiano Sardenberg Kuss</name>
-			<email>fabiano.kuss@serpro.gov.br</email>
-			<organization>SERPRO</organization>
-			<organizationUrl>http://www.serpro.gov.br</organizationUrl>
-		</developer>
-		<developer>
-			<name>Humberto de Melo Pacheco</name>
-			<email>humberto.pacheco@serpro.gov.br</email>
-			<organization>SERPRO</organization>
-			<organizationUrl>http://www.serpro.gov.br</organizationUrl>
-		</developer>
-		<developer>
-			<name>José René Campanario</name>
-			<email>joserene.campa@gmail.com</email>
-			<organization>SERPRO</organization>
-			<organizationUrl>http://www.serpro.gov.br</organizationUrl>
-		</developer>
-		<developer>
-			<name>Julian Cesar dos Santos</name>
-			<email>juliancesar@gmail.com</email>
-			<organization>SERPRO</organization>
-			<organizationUrl>http://www.serpro.gov.br</organizationUrl>
-		</developer>
+        <developer>
+            <name>Ednara Oliveira Santos</name>
+            <email>ednaraoliveira@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+        <developer>
+            <name>Emerson Sachio Saito</name>
+            <email>emerson.saito@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+        <developer>
+            <name>Fabiano Sardenberg Kuss</name>
+            <email>fabiano.kuss@serpro.gov.br</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+        <developer>
+            <name>Humberto de Melo Pacheco</name>
+            <email>humberto.pacheco@serpro.gov.br</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+        <developer>
+            <name>José René Campanario</name>
+            <email>joserene.campa@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+        <developer>
+            <name>Julian Cesar dos Santos</name>
+            <email>juliancesar@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
 
-		<developer>
-			<name>Vanderson Botelho da Silva</name>
-			<email>botelhojp@gmail.com</email>
-			<organization>SERPRO</organization>
-			<organizationUrl>http://www.serpro.gov.br</organizationUrl>
-		</developer>
+        <developer>
+            <name>Vanderson Botelho da Silva</name>
+            <email>botelhojp@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
 
-	</developers>
-
-
-	<modules>
-		<module>bom</module>
-		<module>parent</module>
-		<module>core</module>
-		<module>cryptography</module>
-		<module>chain-icp-brasil</module>
-		<module>chain-icp-brasil-homolog</module>
-		<module>chain-serpro-neosigner</module>
-		<module>policy-engine</module>
-		<module>policy-impl-cades</module>
-		<module>timestamp</module>
-		<module>policy-impl-xades</module>		
-		<module>policy-impl-pades</module>
-	</modules>
-
-	<properties>
-		<license.header>./licence-lgpl</license.header>
-		<project.alias>signer</project.alias>
-		<java.version>1.7</java.version>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
-		<project.scm.id>github</project.scm.id>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<github.global.server>github</github.global.server>
-		<release.goals>deploy</release.goals>
-	</properties>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
-				<configuration>
-					<showDeprecation>true</showDeprecation>
-					<source>${maven.compiler.source}</source>
-					<target>${maven.compiler.target}</target>
-					<encoding>UTF-8</encoding>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.6</version>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-source-plugin</artifactId>
-				<version>2.2.1</version>
-				<executions>
-					<execution>
-						<id>attach-sources</id>
-						<goals>
-							<goal>jar-no-fork</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.10.4</version>
-				<executions>
-					<execution>
-						<id>attach-javadocs</id>
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-release-plugin</artifactId>
-				<version>2.4.2</version>
-				
-				<configuration>
-					<autoVersionSubmodules>true</autoVersionSubmodules>
-					<preparationGoals>clean install</preparationGoals>
-					<goals>${release.goals}</goals>
-					<goal>${release.goals}</goal>
-				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-gitexe</artifactId>
-						<version>1.8.1</version>
-					</dependency>
-					<dependency>
-						<groupId>org.apache.maven.scm</groupId>
-						<artifactId>maven-scm-provider-git-commons</artifactId>
-						<version>1.8.1</version>
-					</dependency>
-				</dependencies>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-scm-plugin</artifactId>
-				<version>1.4</version>
-			</plugin>
-
-		</plugins>
-</build>
-<pluginRepositories>
-    <pluginRepository>
-      <id>central</id>
-      <name>Central Repository</name>
-      <url>https://repo.maven.apache.org/maven2</url>
-    </pluginRepository>
-    
-    <pluginRepository>
-			<id>sonatype-nexus-releases</id>
-			<name>Sonatype Nexus Snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</pluginRepository>
-
-		<pluginRepository>
-			<id>nexus-jboss-org</id>
-			<name>JBoss Maven Repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
-			
-		</pluginRepository>
-
-		<pluginRepository>
-			<id>repo1-maven-org</id>
-			<url>https://repo1.maven.org/maven2/</url>
-		</pluginRepository>
-		<pluginRepository>
-			<id>repo-maven-apache-org</id>
-			<url>https://repo.maven.apache.org/maven2</url>
-		</pluginRepository> 
-
-  </pluginRepositories>
-  
-	<reporting>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<reportSets>
-					<reportSet><!-- by default, id = "default" -->
-						<reports><!-- select non-aggregate reports -->
-							<report>javadoc</report>
-							<report>test-javadoc</report>
-						</reports>
-					</reportSet>
-					<reportSet><!-- aggregate reportSet, to define in poms having modules -->
-						<id>aggregate</id>
-						<inherited>false</inherited><!-- don't run aggregate in child modules -->
-						<reports>
-							<report>aggregate</report>
-						</reports>
-					</reportSet>
-				</reportSets>
-			</plugin>
-
-		</plugins>
-	</reporting>
+    </developers>
 
 
-	<scm>
-		<connection>scm:git:https://github.com/demoiselle/${project.alias}.git</connection>
-		<developerConnection>scm:git:https://github.com/demoiselle/${project.alias}.git</developerConnection>
-		<url>https://github.com/demoiselle/${project.alias}</url>
-		<tag>HEAD</tag>
-	</scm>
+    <modules>
+        <module>bom</module>
+        <module>parent</module>
+        <module>core</module>
+        <module>cryptography</module>
+        <module>chain-icp-brasil</module>
+        <module>chain-icp-brasil-homolog</module>
+        <module>chain-serpro-neosigner</module>
+        <module>policy-engine</module>
+        <module>policy-impl-cades</module>
+        <module>timestamp</module>
+        <module>policy-impl-xades</module>
+        <module>policy-impl-pades</module>
+    </modules>
 
-	<distributionManagement>
+    <properties>
+        <license.header>./licence-lgpl</license.header>
+        <project.alias>signer</project.alias>
+        <java.version>1.7</java.version>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+        <project.scm.id>github</project.scm.id>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <github.global.server>github</github.global.server>
+        <release.goals>deploy</release.goals>
+    </properties>
 
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <showDeprecation>true</showDeprecation>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.6</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <source>1.7</source>
+                    <links>
+                        <link>https://docs.oracle.com/javase/7/docs/api/</link>
+                    </links>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>aggregate</id>
+                        <goals>
+                            <goal>aggregate</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${basedir}/target/html</outputDirectory>
+                            <reportOutputDirectory>${basedir}/target/html</reportOutputDirectory>
+                            <overview>${basedir}/parent/overview.html</overview>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>2.4.2</version>
 
-		<repository>
-			<id>sonatype-nexus-staging</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
+                <configuration>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                    <preparationGoals>clean install</preparationGoals>
+                    <goals>${release.goals}</goals>
+                    <goal>${release.goals}</goal>
+                </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-gitexe</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.apache.maven.scm</groupId>
+                        <artifactId>maven-scm-provider-git-commons</artifactId>
+                        <version>1.8.1</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-plugin</artifactId>
+                <version>1.4</version>
+            </plugin>
 
-	<repositories>
-		<repository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype Nexus Snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			</repository>
-		<repository>
-			<id>sonatype-nexus-releases</id>
-			<name>Sonatype Nexus Releases</name>
-			<url>https://oss.sonatype.org/content/repositories/releases</url>	
-		</repository>
+        </plugins>
+    </build>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <name>Central Repository</name>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
 
-		<repository>
-			<id>nexus-jboss-org</id>
-			<name>JBoss Maven Repository</name>
-			<url>http://repository.jboss.org/nexus/content/groups/public</url>
-			
-		</repository>
+        <pluginRepository>
+            <id>sonatype-nexus-releases</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </pluginRepository>
 
-		<repository>
-			<id>repo1-maven-org</id>
-			<url>https://repo1.maven.org/maven2</url>
-		</repository>
-		<repository>
-			<id>repo-maven-apache-org</id>
-			<url>https://repo.maven.apache.org/maven2</url>
-			
-		</repository>
+        <pluginRepository>
+            <id>nexus-jboss-org</id>
+            <name>JBoss Maven Repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
 
-	</repositories>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>repo1-maven-org</id>
+            <url>https://repo1.maven.org/maven2/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>repo-maven-apache-org</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+
+    </pluginRepositories>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9</version>
+                <reportSets>
+                    <reportSet><!-- by default, id = "default" -->
+                        <reports><!-- select non-aggregate reports -->
+                            <report>javadoc</report>
+                            <report>test-javadoc</report>
+                        </reports>
+                    </reportSet>
+                    <reportSet><!-- aggregate reportSet, to define in poms having modules -->
+                        <id>aggregate</id>
+                        <inherited>false</inherited><!-- don't run aggregate in child modules -->
+                        <reports>
+                            <report>aggregate</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+
+        </plugins>
+    </reporting>
+
+    <profiles>
+        <profile>
+            <!-- mvn javadoc:aggregate -P aggregated    -->
+            <!-- Output: target/html/apidocs/index.html -->
+            <id>aggregated</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>3.3.1</version>
+                        <configuration>
+                            <source>1.7</source>
+                            <links>
+                                <link>https://docs.oracle.com/javase/7/docs/api/</link>
+                                <link>https://javadoc.io/doc/org.bouncycastle/bcprov-jdk15on/1.69/</link>
+                            </links>
+                            <outputDirectory>${basedir}/target/html</outputDirectory>
+                            <reportOutputDirectory>${basedir}/target/html</reportOutputDirectory>
+                            <overview>${basedir}/parent/overview.html</overview>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>aggregate</id>
+                                <goals>
+                                    <goal>aggregate</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+    <scm>
+        <connection>scm:git:https://github.com/demoiselle/${project.alias}.git</connection>
+        <developerConnection>scm:git:https://github.com/demoiselle/${project.alias}.git</developerConnection>
+        <url>https://github.com/demoiselle/${project.alias}</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+
+        <snapshotRepository>
+            <id>sonatype-nexus-snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <repositories>
+        <repository>
+            <id>sonatype-nexus-snapshots</id>
+            <name>Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
+        <repository>
+            <id>sonatype-nexus-releases</id>
+            <name>Sonatype Nexus Releases</name>
+            <url>https://oss.sonatype.org/content/repositories/releases</url>
+        </repository>
+
+        <repository>
+            <id>nexus-jboss-org</id>
+            <name>JBoss Maven Repository</name>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+
+        </repository>
+
+        <repository>
+            <id>repo1-maven-org</id>
+            <url>https://repo1.maven.org/maven2</url>
+        </repository>
+        <repository>
+            <id>repo-maven-apache-org</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+
+        </repository>
+
+    </repositories>
 
 </project>

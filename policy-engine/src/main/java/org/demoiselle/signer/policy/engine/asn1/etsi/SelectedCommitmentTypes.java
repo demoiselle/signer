@@ -45,38 +45,42 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
  * If the SelectedCommitmentTypes indicates "empty" then this rule applied when a commitment type
- *  is not present(i.e. the type of commitment is indicated in the semantics of the message).
- *   Otherwise, the electronic signature shall contain a commitment type indication
- *    that shall fit one of the commitments types that are mentioned in CommitmentType
- *
+ * is not present(i.e. the type of commitment is indicated in the semantics of the message).
+ * Otherwise, the electronic signature shall contain a commitment type indication
+ * that shall fit one of the commitments types that are mentioned in CommitmentType
+ * <pre>
  * SelectedCommitmentTypes ::= SEQUENCE OF CHOICE {
- * 													empty NULL,
- * 													recognizedCommitmentType {@link CommitmentType}
- * 							 }
+ *   empty NULL,
+ *   recognizedCommitmentType {@link CommitmentType}
+ * }
+ * </pre>
  *
+ * @see ASN1Primitive
+ * @see ASN1Sequence
+ * @see DERNull
+ * @see DERSequence
  */
 public class SelectedCommitmentTypes extends ASN1Object {
 
-    private CommitmentType recognizedCommitmentType;
+	private CommitmentType recognizedCommitmentType;
 
-    public CommitmentType getRecognizedCommitmentType() {
-        return recognizedCommitmentType;
-    }
+	public CommitmentType getRecognizedCommitmentType() {
+		return recognizedCommitmentType;
+	}
 
-    public void setRecognizedCommitmentType(CommitmentType recognizedCommitmentType) {
-        this.recognizedCommitmentType = recognizedCommitmentType;
-    }
+	public void setRecognizedCommitmentType(CommitmentType recognizedCommitmentType) {
+		this.recognizedCommitmentType = recognizedCommitmentType;
+	}
 
-    @Override
-    public void parse(ASN1Primitive derObject) {
-        ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-        ASN1Primitive object = derSequence.getObjectAt(0).toASN1Primitive();
-        if (object instanceof DERNull) {
-            this.recognizedCommitmentType = null;
-        } else if (object instanceof DERSequence) {
-            this.recognizedCommitmentType = new CommitmentType();
-            this.recognizedCommitmentType.parse(object);
-        }
-    }
-
+	@Override
+	public void parse(ASN1Primitive derObject) {
+		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
+		ASN1Primitive object = derSequence.getObjectAt(0).toASN1Primitive();
+		if (object instanceof DERNull) {
+			this.recognizedCommitmentType = null;
+		} else if (object instanceof DERSequence) {
+			this.recognizedCommitmentType = new CommitmentType();
+			this.recognizedCommitmentType.parse(object);
+		}
+	}
 }

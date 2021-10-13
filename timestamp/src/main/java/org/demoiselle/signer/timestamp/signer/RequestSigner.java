@@ -45,6 +45,7 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
@@ -64,69 +65,68 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Timestamp request, signed.
- *
- * @author 07721825741
  */
 public class RequestSigner {
 
-    private static final Logger logger = LoggerFactory.getLogger(RequestSigner.class);
-    private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
+	private static final Logger logger = LoggerFactory.getLogger(RequestSigner.class);
+	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
-    /**
-     * Signs a time stamp request
-     *
-     * @param privateKey private key to sign with
-     * @param certificates certificate chain
-     * @param request request to be signed
-     * @return The signed request
-     */
-    public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request, String algorithm) {
-        try {
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.sign.request"));
-            Security.addProvider(new BouncyCastleProvider());
+	/**
+	 * Signs a time stamp request.
+	 *
+	 * @param privateKey   private key to sign with.
+	 * @param certificates certificate chain.
+	 * @param request      request to be signed.
+	 * @param algorithm the algorithm to be used.
+	 * @return The signed request
+	 */
+	public byte[] signRequest(PrivateKey privateKey, Certificate[] certificates, byte[] request, String algorithm) {
+		try {
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.sign.request"));
+			Security.addProvider(new BouncyCastleProvider());
 
-            X509Certificate signCert = (X509Certificate) certificates[0];
-            List<X509Certificate> certList = new ArrayList<>();
-            certList.add(signCert);
+			X509Certificate signCert = (X509Certificate) certificates[0];
+			List<X509Certificate> certList = new ArrayList<>();
+			certList.add(signCert);
 
-            // setup the generator
-            CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
-            String varAlgorithm = null;
-            if (algorithm != null && !algorithm.isEmpty()){
-            	varAlgorithm = algorithm;
-            }else{
+			// setup the generator
+			CMSSignedDataGenerator generator = new CMSSignedDataGenerator();
+			String varAlgorithm = null;
+			if (algorithm != null && !algorithm.isEmpty()) {
+				varAlgorithm = algorithm;
+			} else {
 
-            	// If is WINDOWS, is ONLY WORKS with SHA256
+				// If is WINDOWS, is ONLY WORKS with SHA256
 				if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
 					logger.debug(timeStampMessagesBundle.getString("info.timestamp.winhash"));
 
 					varAlgorithm = "SHA256withRSA";
-				}else{
+				} else {
 					logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));
 					varAlgorithm = "SHA512withRSA";
 				}
 
-            }
+			}
 
-            SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder().build(varAlgorithm, privateKey, signCert);
-            generator.addSignerInfoGenerator(signerInfoGenerator);
+			SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder().build(varAlgorithm, privateKey, signCert);
+			generator.addSignerInfoGenerator(signerInfoGenerator);
 
-            Store<?> certStore = new JcaCertStore(certList);
-            generator.addCertificates(certStore);
+			Store<?> certStore = new JcaCertStore(certList);
+			generator.addCertificates(certStore);
 
 //            Store crlStore = new JcaCRLStore(crlList);
 //            generator.addCRLs(crlStore);
-            // Create the signed data object
-            CMSTypedData data = new CMSProcessableByteArray(request);
-            CMSSignedData signed = generator.generate(data, true);
-            logger.debug(timeStampMessagesBundle.getString("info.timestamp.sign.request.end"));
-            return signed.getEncoded();
+			// Create the signed data object
+			CMSTypedData data = new CMSProcessableByteArray(request);
+			CMSSignedData signed = generator.generate(data, true);
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.sign.request.end"));
+			return signed.getEncoded();
 
-        } catch (CMSException | IOException | OperatorCreationException | CertificateEncodingException ex) {
-            logger.error("signRequest:"+ex.getMessage());
-            throw new CertificateCoreException(ex.getMessage());
-        }
+		} catch (CMSException | IOException | OperatorCreationException | CertificateEncodingException ex) {
+			logger.error("signRequest:" + ex.getMessage());
+			throw new CertificateCoreException(ex.getMessage());
+		}
 
-    }
+	}
 
 }

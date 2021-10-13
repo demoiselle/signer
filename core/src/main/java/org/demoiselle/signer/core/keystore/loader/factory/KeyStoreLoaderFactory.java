@@ -44,6 +44,7 @@ import org.demoiselle.signer.core.keystore.loader.implementation.DriverKeyStoreL
 import org.demoiselle.signer.core.keystore.loader.implementation.FileSystemKeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.core.util.MessagesBundle;
+
 import java.io.File;
 import java.io.InputStream;
 
@@ -51,101 +52,93 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * factory fo an instance of KeyStoreLoader
+ *
  * @see org.demoiselle.signer.core.keystore.loader.KeyStoreLoader
  */
 public class KeyStoreLoaderFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(KeyStoreLoaderFactory.class);
+	private static final Logger logger = LoggerFactory.getLogger(KeyStoreLoaderFactory.class);
 
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    /**
-    *
-    * Method responsible for fabricating an instance of KeyStoreLoader based on PKCS#11.
-    * Usually this method builds chargers based on the environment settings.
-    * You can manufacture instances oriented to windows or linux environment, or else based on the JVM version. <br>
-    *
-    * @return {@link KeyStoreLoader}
-    */
-    public static KeyStoreLoader factoryKeyStoreLoader() {
+	/**
+	 * Method responsible for fabricating an instance of KeyStoreLoader based on PKCS#11.
+	 * Usually this method builds chargers based on the environment settings.
+	 * You can manufacture instances oriented to windows or linux environment, or else based on the JVM version. <br>
+	 *
+	 * @return {@link KeyStoreLoader}
+	 */
+	public static KeyStoreLoader factoryKeyStoreLoader() {
 
-        logger.debug(coreMessagesBundle.getString("info.keystore.no.parameter"));
-        if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-            logger.debug(coreMessagesBundle.getString("info.keystore.ms"));
-            if (Configuration.getInstance().isMSCapiDisabled() || !Configuration.isMSCAPI_ON()) {
-                logger.debug(coreMessagesBundle.getString("info.keystore.ms.pkcs11"));
-                return new DriverKeyStoreLoader();
-            } else {
-                logger.debug(coreMessagesBundle.getString("info.keystore.mscapi"));
-                return new MSKeyStoreLoader();
-            }
-        } else {
-            logger.debug(coreMessagesBundle.getString("info.keystore.pkcs11"));
-            return new DriverKeyStoreLoader();
-        }
-    }
+		logger.debug(coreMessagesBundle.getString("info.keystore.no.parameter"));
+		if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			logger.debug(coreMessagesBundle.getString("info.keystore.ms"));
+			if (Configuration.getInstance().isMSCapiDisabled() || !Configuration.isMSCAPI_ON()) {
+				logger.debug(coreMessagesBundle.getString("info.keystore.ms.pkcs11"));
+				return new DriverKeyStoreLoader();
+			} else {
+				logger.debug(coreMessagesBundle.getString("info.keystore.mscapi"));
+				return new MSKeyStoreLoader();
+			}
+		} else {
+			logger.debug(coreMessagesBundle.getString("info.keystore.pkcs11"));
+			return new DriverKeyStoreLoader();
+		}
+	}
 
-    /**
-     * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
-     *
-     * @param file containing keystore
-     * @return {@link KeyStoreLoader}
-     */
-    public static KeyStoreLoader factoryKeyStoreLoader(File file) {
-        return new FileSystemKeyStoreLoader(file);
-    }
+	/**
+	 * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
+	 *
+	 * @param file containing keystore
+	 * @return {@link KeyStoreLoader}
+	 */
+	public static KeyStoreLoader factoryKeyStoreLoader(File file) {
+		return new FileSystemKeyStoreLoader(file);
+	}
 
 
-    /**
-     * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
-     *
-     * @param InputStrean containing keystore
-     * @return {@link KeyStoreLoader}
-     */
-    public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream) {
-        return new FileSystemKeyStoreLoader(inputStream);
-    }
+	/**
+	 * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
+	 *
+	 * @param inputStream containing keystore
+	 * @return {@link KeyStoreLoader}
+	 */
+	public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream) {
+		return new FileSystemKeyStoreLoader(inputStream);
+	}
 
-    /**
-     *
-     *
-     *
-     */
+	/**
+	 * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
+	 *
+	 * @param inputStream containing keystore
+	 * @param type        type of keystore (maybe PKCS12 or JKS
+	 * @return {@link KeyStoreLoader}
+	 */
+	public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream, String type) {
+		return new FileSystemKeyStoreLoader(inputStream, type);
+	}
 
-    /**
-     * Method that create an instance of AbstractKeyStoreLoader for handling of standard KeyStore PKCS#12.
-     *
-     * @param InputStrean containing keystore
-     * @param type type of keystore (maybe PKCS12 or JKS
-     * @return {@link KeyStoreLoader}
-     */
-    public static KeyStoreLoader factoryKeyStoreLoader(InputStream inputStream, String type) {
-        return new FileSystemKeyStoreLoader(inputStream, type);
-    }
+	/**
+	 * Method responsible for fabricating an instance of AbstractKeyStoreLoader based on a class passed as parameter.
+	 * Represents an extension point of the component, which allows the application to implement its own KeyStore loading method.
+	 *
+	 * @param clazz class to instantiate from
+	 * @return {@link KeyStoreLoader}
+	 */
+	public static KeyStoreLoader factoryKeyStoreLoader(Class<? extends KeyStoreLoader> clazz) {
 
-    /**
-     * Method responsible for fabricating an instance of AbstractKeyStoreLoader based on a class passed as parameter.
-     * Represents an extension point of the component, which allows the application to implement its own KeyStore loading method.
-     *
-     * @param clazz class to instantiate from
-     *
-     * @return {@link KeyStoreLoader}
-     */
-    public static KeyStoreLoader factoryKeyStoreLoader(Class<? extends KeyStoreLoader> clazz) {
+		if (clazz == null) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.parm.clazz.null"));
+		}
+		KeyStoreLoader result = null;
 
-        if (clazz == null) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.parm.clazz.null"));
-        }
-        KeyStoreLoader result = null;
+		try {
+			result = clazz.newInstance();
 
-        try {
-            result = clazz.newInstance();
-
-        } catch (IllegalAccessException | InstantiationException error) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.class.instance",clazz.getCanonicalName()));
-        }
-        return result;
-    }
+		} catch (IllegalAccessException | InstantiationException error) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.class.instance", clazz.getCanonicalName()));
+		}
+		return result;
+	}
 }

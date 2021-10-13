@@ -38,88 +38,79 @@
 package org.demoiselle.signer.core.oid;
 
 /**
- *      * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
-     * <b> * </b> Date of birth of the holder on "DDMMAAAA" format<br>
-     * <B> * </b> The Brazilian IRS Individuals Registry called CPF <br>
-     * <B> * </b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
-     * <B> * </b> the Brazilian ID number called RG <br>
-     * <B> * </b> the initials of the issuing agency of the ID (RG) <br>
-     * <B> * </b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
-
- *
+ * * Has some "ICP-BRASIL Pessoa Fisica" attributes<br>
+ * <b> * </b> Date of birth of the holder on "DDMMAAAA" format<br>
+ * <B> * </b> The Brazilian IRS Individuals Registry called CPF <br>
+ * <B> * </b> Brazilian Social Identity Number - NIS (PIS, PASEP or CI) <br>
+ * <B> * </b> the Brazilian ID number called RG <br>
+ * <B> * </b> the initials of the issuing agency of the ID (RG) <br>
+ * <B> * </b> UF (Initials for a Brasilian state) of the issuing agency of the RG <br>
  */
 public class OID_2_16_76_1_3_1 extends OIDGeneric {
 
-    public static final String OID = "2.16.76.1.3.1";
+	public static final String OID = "2.16.76.1.3.1";
 
-    protected static final Object FIELDS[] = {"birthDate", 8, "cpf", 11, "nis", 11, "rg", 15, "UfIssuingAgencyRg", 6};
+	protected static final Object FIELDS[] = {"birthDate", 8, "cpf", 11, "nis", 11, "rg", 15, "UfIssuingAgencyRg", 6};
 
-    public OID_2_16_76_1_3_1() {
-    }
+	public OID_2_16_76_1_3_1() {
+	}
 
-    @Override
-    public void initialize() {
-        super.initialize(FIELDS);
-    }
+	@Override
+	public void initialize() {
+		super.initialize(FIELDS);
+	}
 
-    /**
-     *
-     * @return Date of birth of holder the certificate in ddMMyyyy format
-     */
-    public String getBirthDate() {
-        return properties.get("birthDate");
-    }
+	/**
+	 * @return Date of birth of holder the certificate in ddMMyyyy format
+	 */
+	public String getBirthDate() {
+		return properties.get("birthDate");
+	}
 
-    /**
-     *
-     * @return the Brazilian IRS Individuals Registry number called CPF
-     */
-    public String getCPF() {
-        return properties.get("cpf");
-    }
+	/**
+	 * @return the Brazilian IRS Individuals Registry number called CPF
+	 */
+	public String getCPF() {
+		return properties.get("cpf");
+	}
 
-    /**
-     *
-     * @return Brazilian Social Identification number of the responsible - initials are: NIS
-     */
-    public String getNIS() {
-        return properties.get("nis");
-    }
+	/**
+	 * @return Brazilian Social Identification number of the responsible - initials are: NIS
+	 */
+	public String getNIS() {
+		return properties.get("nis");
+	}
 
-    /**
-     *
-     * @return the Brazilian ID number (called RG), of the certificate's holder
-     */
-    public String getRg() {
-        return properties.get("rg");
-    }
+	/**
+	 * @return the Brazilian ID number (called RG), of the certificate's holder
+	 */
+	public String getRg() {
+		return properties.get("rg");
+	}
 
-    /**
-     *
-     * @return the initials of the issuing agency of the Brazilian ID (RG)
-     */
-    public String getIssuingAgencyRg() {
-        String s = properties.get("UfIssuingAgencyRg").trim();
-        int len = s.trim().length();
-        String retIssuingAgencyRg = null;
-        if (len > 0) {
-            retIssuingAgencyRg = s.substring(0, len - 2);
-        }
-        return retIssuingAgencyRg;
-    }
+	/**
+	 * @return the initials of the issuing agency of the Brazilian ID (RG)
+	 */
+	public String getIssuingAgencyRg() {
+		String s = properties.get("UfIssuingAgencyRg").trim();
+		int len = s.trim().length();
+		String retIssuingAgencyRg = null;
+		if (len > 0) {
+			retIssuingAgencyRg = s.substring(0, len - 2);
+		}
+		return retIssuingAgencyRg;
+	}
 
-    /**
-     *
-     * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
-     */
-    public String getUfIssuingAgencyRg() {
-        String s = properties.get("UfIssuingAgencyRg").trim();
-        int len = s.trim().length();
-        String retUfIssuingAgencyRg = null;
-        if (len > 0) {
-            retUfIssuingAgencyRg = s.substring(len - 2, len);
-        }
-        return retUfIssuingAgencyRg;
-    }
-
+	/**
+	 * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
+	 */
+	public String getUfIssuingAgencyRg() {
+		String s = properties.get("UfIssuingAgencyRg").trim();
+		int len = s.trim().length();
+		String retUfIssuingAgencyRg = null;
+		if (len > 0) {
+			retUfIssuingAgencyRg = s.substring(len - 2, len);
+		}
+		return retUfIssuingAgencyRg;
+	}
 }

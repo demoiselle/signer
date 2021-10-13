@@ -38,10 +38,7 @@
 package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 /**
- *
- * OID for SignPolicyId defined on policy
- *
+ * OID for SignPolicyId defined on policy.
  */
 public class SignPolicyId extends ObjectIdentifier {
-
 }

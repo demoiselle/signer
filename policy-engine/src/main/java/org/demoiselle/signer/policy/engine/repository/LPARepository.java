@@ -52,9 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * Class to persist LPA file on local directory
- *
  */
 public class LPARepository {
 
@@ -62,14 +60,13 @@ public class LPARepository {
 	private static final Logger LOGGER = LoggerFactory.getLogger(LPARepository.class);
 
 	/**
-	 *
+	 * FIXME function to download and persist content from URL should goes to core, only LPA details stay here
 	 * to save file on user local directory
 	 *
 	 * @param urlConLPA Url for get the LPA file
-	 * @param lpaName the name of file to be saved
+	 * @param lpaName   the name of file to be saved
 	 * @return true if file was saved
 	 */
-
 	public static boolean saveLocalLPA(final String urlConLPA, final String lpaName) {
 		ConfigurationRepo config = ConfigurationRepo.getInstance();
 		try {
@@ -101,7 +98,6 @@ public class LPARepository {
 			return true;
 		}
 	}
-
 }
 
 

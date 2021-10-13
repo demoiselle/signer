@@ -34,6 +34,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.io.IOException;
@@ -55,14 +56,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *  * 
+ *  *
  *  It is defined as a ContentInfo([CMS]) and SHALL encapsulate a signed data content type.
- *   
+ *
  *   	TimeStampToken ::= ContentInfo
  *        -- contentType is id-signedData ([CMS])
  *        -- content is SignedData ([CMS])
- *        
- *        
+ *
+ *
  *       id-aa-timeStampToken OBJECT IDENTIFIER ::= { iso(1) member-body(2)
  *          us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) aa(2) 14 }
  *

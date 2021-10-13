@@ -44,13 +44,7 @@ import org.demoiselle.signer.timestamp.Timestamp;
  */
 public interface TimeStampPAdESSigner {
 
-	abstract public Timestamp checkTimeStampPDFWithContent(byte[] timeStamp, byte[] content);
+	Timestamp checkTimeStampPDFWithContent(byte[] timeStamp, byte[] content);
 
-
-	abstract public Timestamp checkTimeStampPDFWithHash(byte[] timeStamp, byte[] hash) ;
-
-
-
-
-
+	Timestamp checkTimeStampPDFWithHash(byte[] timeStamp, byte[] hash);
 }

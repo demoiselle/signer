@@ -1,4 +1,4 @@
 /**
- * Package root of the project
+ * Documentation of package (put it here)
  */
 package org.demoiselle.signer.policy.impl.pades;

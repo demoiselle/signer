@@ -57,7 +57,6 @@ public class XMLToSignature {
 		LinkedList<String> validatorErrors,
 		LinkedList<String> validatorWarnins) {
 
-
 		SignatureInformations sigInf = new SignatureInformations();
 
 		sigInf.setChain(chain);

@@ -42,35 +42,31 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- *
  * ICP-BRASIL's definitions of distinguished name (DN)
- *
  */
 public class ICPBR_DN extends Properties {
 
-    private static final long serialVersionUID = 1L;
-    private String dn = null;
+	private static final long serialVersionUID = 1L;
+	private String dn = null;
 
-    /**
-     *
-     * @param dn distinguished name (DN)
-     * @throws IOException exception
-     */
-    public ICPBR_DN(String dn) throws IOException {
-        super();
-        this.dn = dn;
-        ByteArrayInputStream bis = new ByteArrayInputStream(dn.replaceAll(",", "\n").getBytes());
-        load(bis);
-        bis.close();
-    }
+	/**
+	 * @param dn distinguished name (DN)
+	 * @throws IOException exception
+	 */
+	public ICPBR_DN(String dn) throws IOException {
+		super();
+		this.dn = dn;
+		ByteArrayInputStream bis = new ByteArrayInputStream(dn.replaceAll(",", "\n").getBytes());
+		load(bis);
+		bis.close();
+	}
 
-    /**
-     *
-     * @return String string representation
-     */
-    @Override
-    public String toString() {
-        return dn;
-    }
+	/**
+	 * @return String string representation
+	 */
+	@Override
+	public String toString() {
+		return dn;
+	}
 
 }

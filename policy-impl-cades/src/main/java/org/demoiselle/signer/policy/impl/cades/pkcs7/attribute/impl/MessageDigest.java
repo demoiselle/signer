@@ -34,11 +34,13 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.Certificate;
+
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERSet;
@@ -50,43 +52,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
- * Generates a digest of a content, according to the algorithm defined in the policy.
- * If the attribute hash was setted on initialized method, it will be used instead of calculating from the content.
- *
+ * Generates a digest of a content, according to the algorithm
+ * defined in the policy. If the attribute hash was setted on
+ * initialized method, it will be used instead of calculating
+ * from the content.
  */
 public class MessageDigest implements SignedAttribute {
 
-    private static final Logger logger = LoggerFactory.getLogger(MessageDigest.class);
-    private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.pkcs_9_at_messageDigest ;
-    private byte[] content = null;
-    private SignaturePolicy signaturePolicy = null;
-    private byte[] hash = null;
+	private static final Logger logger = LoggerFactory.getLogger(MessageDigest.class);
+	private final ASN1ObjectIdentifier identifier = PKCSObjectIdentifiers.pkcs_9_at_messageDigest;
+	private byte[] content = null;
+	private SignaturePolicy signaturePolicy = null;
+	private byte[] hash = null;
 
-    @Override
-    public String getOID() {
-        return identifier.getId();
-    }
+	@Override
+	public String getOID() {
+		return identifier.getId();
+	}
 
-    @Override
-    public Attribute getValue() {
-        try {
-        	if (this.hash == null){
-        		java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
-        		this.hash = md.digest(content);
-        	}
-             return new Attribute(identifier, new DERSet(new DEROctetString(this.hash)));            
-        } catch (NoSuchAlgorithmException ex) {
-            logger.info(ex.getMessage());
-            return null;
-        }
-        
-    }
+	@Override
+	public Attribute getValue() {
+		try {
+			if (this.hash == null) {
+				java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
+				this.hash = md.digest(content);
+			}
+			return new Attribute(identifier, new DERSet(new DEROctetString(this.hash)));
+		} catch (NoSuchAlgorithmException ex) {
+			logger.info(ex.getMessage());
+			return null;
+		}
+	}
 
-    @Override
-    public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
-        this.content = content;
-        this.signaturePolicy = signaturePolicy;
-        this.hash = hash;
-    }
+	@Override
+	public void initialize(PrivateKey privateKey, Certificate[] certificates, byte[] content, SignaturePolicy signaturePolicy, byte[] hash) {
+		this.content = content;
+		this.signaturePolicy = signaturePolicy;
+		this.hash = hash;
+	}
 }

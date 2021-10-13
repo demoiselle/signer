@@ -42,12 +42,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- *
- *  Custom Messages Bundle implementation to allows parameterization
- *
+ * Custom Messages Bundle implementation to allows parameterization
  */
 public class MessagesBundle {
-
 
 	private String bundleName = "messages";
 	private static ResourceBundle resouceBundle;
@@ -60,9 +57,7 @@ public class MessagesBundle {
 		MessagesBundle.setResouceBundle(ResourceBundle.getBundle(this.bundleName));
 	}
 
-
 	/**
-	 *
 	 * @param parmBundleName name for a .properties file
 	 */
 	public MessagesBundle(String parmBundleName) {
@@ -89,7 +84,7 @@ public class MessagesBundle {
 	/**
 	 * example: getString("key.propertie.name", parm1, parm2 )
 	 *
-	 * @param key name of key to read from
+	 * @param key    name of key to read from
 	 * @param params values to interpolate result
 	 * @return value associated with key, interpolated by params
 	 */

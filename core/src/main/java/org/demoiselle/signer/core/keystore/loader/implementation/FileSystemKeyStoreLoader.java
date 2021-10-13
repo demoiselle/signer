@@ -52,83 +52,83 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Implementing KeyStore loading based on PKCS12 or JKS standards
- *
  */
 public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 
-    private static final String FILE_TYPE_PKCS12 = "PKCS12";
-    private static final String FILE_TYPE_JKS = "JKS";
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-    private static final Logger logger = LoggerFactory.getLogger(FileSystemKeyStoreLoader.class);
-    private File fileKeyStore = null;
-    private InputStream  inputStreamKeyStore = null;
-    private String type = FILE_TYPE_PKCS12;
+	private static final String FILE_TYPE_PKCS12 = "PKCS12";
+	private static final String FILE_TYPE_JKS = "JKS";
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private static final Logger logger = LoggerFactory.getLogger(FileSystemKeyStoreLoader.class);
+	private File fileKeyStore = null;
+	private InputStream inputStreamKeyStore = null;
+	private String type = FILE_TYPE_PKCS12;
 
-    /**
-     * Class constructor that checks whether the specified parameter exists and whether it is a file.
-     *
-     * @param file File representing a KeyStore of type PKCS12 or JKS
-     */
-    public FileSystemKeyStoreLoader(File file) {
+	/**
+	 * Class constructor that checks whether the specified parameter exists and whether it is a file.
+	 *
+	 * @param file File representing a KeyStore of type PKCS12 or JKS
+	 */
+	public FileSystemKeyStoreLoader(File file) {
 
-        if (file == null || !file.exists() || !file.isFile()) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.file.invalid"));
-        }
+		if (file == null || !file.exists() || !file.isFile()) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.file.invalid"));
+		}
 
-        this.setFileKeyStore(file);
+		this.setFileKeyStore(file);
 
-    }
+	}
 
-    /**
-     *  Class constructor that checks whether the specified parameters exists and whether they are valid.
-     * 	@param inputStream
-     * @param type
-     */
-    public FileSystemKeyStoreLoader(InputStream  inputStream, String type) {
+	/**
+	 * Class constructor that checks whether the specified
+	 * parameters exist and whether they are valid.
+	 *
+	 * @param inputStream the input.
+	 * @param type the type.
+	 */
+	public FileSystemKeyStoreLoader(InputStream inputStream, String type) {
 
-        if (inputStream == null) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));
-        }
-        if (type == null || type.isEmpty()) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));
-        }
-        if (!type.equalsIgnoreCase("PKCS12") && !type.equalsIgnoreCase("JKS")) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));
-        }
-        this.setInputStreamKeyStore(inputStream);
-        this.setType(type);
-    }
+		if (inputStream == null) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));
+		}
+		if (type == null || type.isEmpty()) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));
+		}
+		if (!type.equalsIgnoreCase("PKCS12") && !type.equalsIgnoreCase("JKS")) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.type.invalid"));
+		}
+		this.setInputStreamKeyStore(inputStream);
+		this.setType(type);
+	}
 
-    /**
-     *  Class constructor for default type PKCS12, that checks whether the specified parameter exists .
-     * 	@param inputStream
-     *
-     */
-    public FileSystemKeyStoreLoader(InputStream  inputStream) {
+	/**
+	 * Class constructor for default type PKCS12, that checks
+	 * whether the specified parameter exists.
+	 *
+	 * @param inputStream the input.
+	 */
+	public FileSystemKeyStoreLoader(InputStream inputStream) {
 
-        if (inputStream == null) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));
-        }
+		if (inputStream == null) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.input.stream.invalid"));
+		}
 
-        this.setInputStreamKeyStore(inputStream);
-        this.setType(FILE_TYPE_PKCS12);
-    }
+		this.setInputStreamKeyStore(inputStream);
+		this.setType(FILE_TYPE_PKCS12);
+	}
 
-    /**
-     *
-     * @return PCKS12 or JKS keystore file.
-     */
-    public File getFileKeyStore() {
-        return fileKeyStore;
-    }
+	/**
+	 * @return PCKS12 or JKS keystore file.
+	 */
+	public File getFileKeyStore() {
+		return fileKeyStore;
+	}
 
-    public void setFileKeyStore(File fileKeyStore) {
-        this.fileKeyStore = fileKeyStore;
-    }
-
+	public void setFileKeyStore(File fileKeyStore) {
+		this.fileKeyStore = fileKeyStore;
+	}
 
 
-    public InputStream getInputStreamKeyStore() {
+	public InputStream getInputStreamKeyStore() {
 		return inputStreamKeyStore;
 	}
 
@@ -145,101 +145,98 @@ public class FileSystemKeyStoreLoader implements KeyStoreLoader {
 	}
 
 	/**
-     * Attempts to load the KeyStore first in the PKCS12 pattern.
-     * If this is not possible, it will store the received exception and
-     * then attempt to load a KeyStore into the JKS standard.
-     * Failing in both attempts, it will throw an exception.
-     *
-     * @param pinNumber pin
-     * @return keystore
-     */
-    public KeyStore getKeyStore(String pinNumber) {
+	 * Attempts to load the KeyStore first in the PKCS12 pattern.
+	 * If this is not possible, it will store the received exception and
+	 * then attempt to load a KeyStore into the JKS standard.
+	 * Failing in both attempts, it will throw an exception.
+	 *
+	 * @param pinNumber pin
+	 * @return keystore
+	 */
+	public KeyStore getKeyStore(String pinNumber) {
 
-        logger.info("FileSystemKeyStoreLoader.getKeyStore()");
+		logger.info("FileSystemKeyStoreLoader.getKeyStore()");
 
-        KeyStore result = null;
-        if (this.fileKeyStore !=null ) {
-            //String extensao = fileKeyStore.getName().substring(fileKeyStore.getName().lastIndexOf("."), fileKeyStore.getName().length());
-            if (fileKeyStore.getName().endsWith("p12") || fileKeyStore.getName().endsWith("pfx")){
-            	try {
-                    result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_PKCS12);
-                } catch (Throwable throwable) {
-                        throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass",fileKeyStore.getName()), throwable);
-                    }
-            }else{if (fileKeyStore.getName().endsWith("jks")){
-            		try{
-                        result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_JKS);
-                    } catch (Throwable error) {
-                        throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass",fileKeyStore.getName()), error);
-                    }
-            	}else{
-            		throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.unknow.format",fileKeyStore.getName()));
-            	}
-            }
+		KeyStore result = null;
+		if (this.fileKeyStore != null) {
+			//String extensao = fileKeyStore.getName().substring(fileKeyStore.getName().lastIndexOf("."), fileKeyStore.getName().length());
+			if (fileKeyStore.getName().endsWith("p12") || fileKeyStore.getName().endsWith("pfx")) {
+				try {
+					result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_PKCS12);
+				} catch (Throwable throwable) {
+					throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass", fileKeyStore.getName()), throwable);
+				}
+			} else {
+				if (fileKeyStore.getName().endsWith("jks")) {
+					try {
+						result = this.getKeyStoreWithType(pinNumber, FILE_TYPE_JKS);
+					} catch (Throwable error) {
+						throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass", fileKeyStore.getName()), error);
+					}
+				} else {
+					throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.unknow.format", fileKeyStore.getName()));
+				}
+			}
 
-        }else {
-        	try {
-        			result = this.getKeyStoreWithTypeFromInputStream(pinNumber);
+		} else {
+			try {
+				result = this.getKeyStoreWithTypeFromInputStream(pinNumber);
 
-            } catch (Throwable throwable) {
-                    throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass"), throwable);
-                }
+			} catch (Throwable throwable) {
+				throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keyStore.pass"), throwable);
+			}
 
-        }
-        return result;
-    }
+		}
+		return result;
+	}
 
-    /**
-     * Not implemented, use getKeyStore (pinNumer)
-     *
-     * @return NULL
-     */
-    @Override
-    public KeyStore getKeyStore() {
-    	logger.error("Nao implementado");
-        return null;
-    }
+	/**
+	 * Not implemented, use getKeyStore (pinNumer)
+	 *
+	 * @return NULL
+	 */
+	@Override
+	public KeyStore getKeyStore() {
+		logger.error("Nao implementado");
+		return null;
+	}
 
-    /**
-     *
-     * @param pinNumber pin
-     * @param keyStoreType PKSC12 or JKS
-     * @return keystore
-     */
-    private KeyStore getKeyStoreWithType(String pinNumber, String keyStoreType) {
-        KeyStore result = null;
-        try {
-            result = KeyStore.getInstance(keyStoreType);
-            char[] pwd = pinNumber == null ? null : pinNumber.toCharArray();
-            InputStream is = new FileInputStream(this.fileKeyStore);
-            result.load(is, pwd);
-        } catch (Throwable error) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.from.file"), error);
-        }
-        return result;
-    }
+	/**
+	 * @param pinNumber    pin
+	 * @param keyStoreType PKSC12 or JKS
+	 * @return keystore
+	 */
+	private KeyStore getKeyStoreWithType(String pinNumber, String keyStoreType) {
+		KeyStore result = null;
+		try {
+			result = KeyStore.getInstance(keyStoreType);
+			char[] pwd = pinNumber == null ? null : pinNumber.toCharArray();
+			InputStream is = new FileInputStream(this.fileKeyStore);
+			result.load(is, pwd);
+		} catch (Throwable error) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.from.file"), error);
+		}
+		return result;
+	}
 
-    /**
-     *
-     * @param pinNumber pin
-     * @return keystore
-     */
-    private KeyStore getKeyStoreWithTypeFromInputStream(String pinNumber) {
-        KeyStore result = null;
-        try {
-            result = KeyStore.getInstance(this.type);
-            char[] pwd = pinNumber == null ? null : pinNumber.toCharArray();
-            result.load(this.inputStreamKeyStore, pwd);
-        } catch (Throwable error) {
-            throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.from.inputstream"), error);
-        }
-        return result;
-    }
+	/**
+	 * @param pinNumber pin
+	 * @return keystore
+	 */
+	private KeyStore getKeyStoreWithTypeFromInputStream(String pinNumber) {
+		KeyStore result = null;
+		try {
+			result = KeyStore.getInstance(this.type);
+			char[] pwd = pinNumber == null ? null : pinNumber.toCharArray();
+			result.load(this.inputStreamKeyStore, pwd);
+		} catch (Throwable error) {
+			throw new KeyStoreLoaderException(coreMessagesBundle.getString("error.keystore.from.inputstream"), error);
+		}
+		return result;
+	}
 
 	@Override
 	public void setCallbackHandler(CallbackHandler callback) {
 		// TODO Auto-generated method stub
-
 	}
-
 }

@@ -48,39 +48,37 @@ import org.demoiselle.signer.core.repository.CRLRepositoryFactory;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * 
  * to verify if a certificate is Repealed.
- *
  */
 public class CRLValidator implements IValidator {
-	
-    private final CRLRepository crlRepository;
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    public CRLValidator() {
-        crlRepository = CRLRepositoryFactory.factoryCRLRepository();
-    }
+	private final CRLRepository crlRepository;
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    @Override
-    public void validate(X509Certificate x509) throws CertificateValidatorCRLException, CertificateRevocationException {
-    	if (x509 != null){
-    		Collection<ICPBR_CRL> crls = null;
-    		try {
-    			 crls = crlRepository.getX509CRL(x509);
+	public CRLValidator() {
+		crlRepository = CRLRepositoryFactory.factoryCRLRepository();
+	}
+
+	@Override
+	public void validate(X509Certificate x509) throws CertificateValidatorCRLException, CertificateRevocationException {
+		if (x509 != null) {
+			Collection<ICPBR_CRL> crls = null;
+			try {
+				crls = crlRepository.getX509CRL(x509);
 			} catch (Exception e) {
 				throw new CertificateValidatorCRLException(e.getMessage());
 			}
-    		
-            if (crls == null || crls.isEmpty()) {
-                throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl"));
-            }
-            for (ICPBR_CRL icpbr_crl : crls) {
-                if (icpbr_crl.getCRL().isRevoked(x509)) {
-                    throw new CertificateRevocationException(coreMessagesBundle.getString("error.certificate.repelead"));
-                }
-            }	
-    	}else{
-    		throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.invalid.certificate"));
-    	}
-    }
+
+			if (crls == null || crls.isEmpty()) {
+				throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl"));
+			}
+			for (ICPBR_CRL icpbr_crl : crls) {
+				if (icpbr_crl.getCRL().isRevoked(x509)) {
+					throw new CertificateRevocationException(coreMessagesBundle.getString("error.certificate.repelead"));
+				}
+			}
+		} else {
+			throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.invalid.certificate"));
+		}
+	}
 }

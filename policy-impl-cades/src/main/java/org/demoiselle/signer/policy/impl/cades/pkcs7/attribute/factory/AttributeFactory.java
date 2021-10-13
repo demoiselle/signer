@@ -39,6 +39,7 @@
  * ou escreva para a Fundação do Software Livre (FSF) Inc.,
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
+
 package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.factory;
 
 import org.demoiselle.signer.core.util.MessagesBundle;
@@ -50,34 +51,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 
- * Manufacture for the construction of signed and unsigned attributes 
- *
+ * Manufacture for the construction of signed and unsigned attributes.
  */
 public class AttributeFactory {
 
-    private static final Logger logger = LoggerFactory.getLogger(AttributeFactory.class);
-    public static final AttributeFactory instance = new AttributeFactory();
-    private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
+	private static final Logger logger = LoggerFactory.getLogger(AttributeFactory.class);
+	public static final AttributeFactory instance = new AttributeFactory();
+	private static MessagesBundle cadesMessagesBundle = new MessagesBundle();
 
-    public static AttributeFactory getInstance() {
-        return AttributeFactory.instance;
-    }
+	public static AttributeFactory getInstance() {
+		return AttributeFactory.instance;
+	}
 
-    public SignedOrUnsignedAttribute factory(String attributeOID) {
-        //logger.info(cadesMessagesBundle.getString("info.search.oid", attributeOID));
-        ServiceLoader<SignedOrUnsignedAttribute> loader = ServiceLoader.load(SignedOrUnsignedAttribute.class);
-        if (loader != null) {
-            for (SignedOrUnsignedAttribute attribute : loader) {
-                if (attribute.getOID().equalsIgnoreCase(attributeOID)) {
-                    //logger.info(cadesMessagesBundle.getString("info.return.oid", attribute.getClass().getName()));
-                    return attribute;
-                }
-            }
-        } else {
-            logger.error(cadesMessagesBundle.getString("info.oid.not.found", attributeOID));
-        }
-        return null;
-    }
-
+	public SignedOrUnsignedAttribute factory(String attributeOID) {
+		//logger.info(cadesMessagesBundle.getString("info.search.oid", attributeOID));
+		ServiceLoader<SignedOrUnsignedAttribute> loader = ServiceLoader.load(SignedOrUnsignedAttribute.class);
+		if (loader != null) {
+			for (SignedOrUnsignedAttribute attribute : loader) {
+				if (attribute.getOID().equalsIgnoreCase(attributeOID)) {
+					//logger.info(cadesMessagesBundle.getString("info.return.oid", attribute.getClass().getName()));
+					return attribute;
+				}
+			}
+		} else {
+			logger.error(cadesMessagesBundle.getString("info.oid.not.found", attributeOID));
+		}
+		return null;
+	}
 }

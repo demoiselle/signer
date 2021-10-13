@@ -49,65 +49,64 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
 
 /**
  * Class with utility methods for the time stamp component.
- * @author 07721825741
  */
 public class Utils {
 
-    /**
-     * Transforms int to Big Endian according to specification RFC 3161
-     *
-     * @param value
-     * @return
-     */
-    public static byte[] intToByteArray(int value) {
-        byte buffer[] = new byte[4];
+	/**
+	 * Transforms int to Big Endian according to specification RFC 3161.
+	 *
+	 * @param value the int value.
+	 * @return corresponding bytes of int.
+	 */
+	public static byte[] intToByteArray(int value) {
+		byte buffer[] = new byte[4];
 
-        // PROTOCOL RFC 3161 - format big-endian of JVM
-        buffer[0] = (byte) (value >> 24 & 0xff);
-        buffer[1] = (byte) (value >> 16 & 0xff);
-        buffer[2] = (byte) (value >> 8 & 0xff);
-        buffer[3] = (byte) (value & 0xff);
+		// PROTOCOL RFC 3161 - format big-endian of JVM
+		buffer[0] = (byte) (value >> 24 & 0xff);
+		buffer[1] = (byte) (value >> 16 & 0xff);
+		buffer[2] = (byte) (value >> 8 & 0xff);
+		buffer[3] = (byte) (value & 0xff);
 
-        return buffer;
-    }
+		return buffer;
+	}
 
-    /**
-     * Loads the contents of a file from the disk
-     *
-     * @param parmFile Filename and path
-     * @return The array of bytes in the file
-     */
-    public static byte[] readContent(String parmFile) throws CertificateCoreException {
-        try {
-            File file = new File(parmFile);
-            InputStream is = new FileInputStream(file);
-            byte[] result = new byte[(int) file.length()];
-            is.read(result);
-            is.close();
-            return result;
-        } catch (FileNotFoundException ex) {
-            throw new CertificateCoreException(ex.getMessage(), ex.getCause());
-        } catch (IOException ex) {
-            throw new CertificateCoreException(ex.getMessage(), ex.getCause());
-        }
-    }
+	/**
+	 * Loads the contents of a file from the disk
+	 *
+	 * @param parmFile Filename and path
+	 * @return The array of bytes in the file
+	 */
+	public static byte[] readContent(String parmFile) throws CertificateCoreException {
+		try {
+			File file = new File(parmFile);
+			InputStream is = new FileInputStream(file);
+			byte[] result = new byte[(int) file.length()];
+			is.read(result);
+			is.close();
+			return result;
+		} catch (FileNotFoundException ex) {
+			throw new CertificateCoreException(ex.getMessage(), ex.getCause());
+		} catch (IOException ex) {
+			throw new CertificateCoreException(ex.getMessage(), ex.getCause());
+		}
+	}
 
-    /**
-     * Writes a set of bytes to a file on disk
-     *
-     * @param content Content to be written to disk
-     * @param parmFile Filename and path
-     * @throws CertificateCoreException
-     */
-    public static void writeContent(byte[] content, String parmFile) throws CertificateCoreException {
-        try {
-            File file = new File(parmFile);
-            OutputStream os = new FileOutputStream(file);
-            os.write(content);
-            os.flush();
-            os.close();
-        } catch (IOException ex) {
-            throw new CertificateCoreException(ex.getMessage(), ex.getCause());
-        }
-    }
+	/**
+	 * Writes a set of bytes to a file on disk
+	 *
+	 * @param content  Content to be written to disk
+	 * @param parmFile Filename and path
+	 * @throws CertificateCoreException fake.
+	 */
+	public static void writeContent(byte[] content, String parmFile) throws CertificateCoreException {
+		try {
+			File file = new File(parmFile);
+			OutputStream os = new FileOutputStream(file);
+			os.write(content);
+			os.flush();
+			os.close();
+		} catch (IOException ex) {
+			throw new CertificateCoreException(ex.getMessage(), ex.getCause());
+		}
+	}
 }

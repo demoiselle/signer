@@ -68,138 +68,137 @@ import org.slf4j.LoggerFactory;
 public class OffLineCRLRepository implements CRLRepository {
 
 	private final ConfigurationRepo config;
-    private final Logger logger = LoggerFactory.getLogger(OffLineCRLRepository.class);
-    private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private final Logger logger = LoggerFactory.getLogger(OffLineCRLRepository.class);
+	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
-    /**
-     * New Instance
-     */
-    public OffLineCRLRepository() {
-        config = ConfigurationRepo.getInstance();
-    }
+	/**
+	 * New Instance
+	 */
+	public OffLineCRLRepository() {
+		config = ConfigurationRepo.getInstance();
+	}
 
-    /**
-     *  Returns a CRL (Certificate Revoked List)  from a given authority of IPC-Brasil.
-     */
-    @Override
-    public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {
+	/**
+	 * Returns a CRL (Certificate Revoked List)  from a given authority of IPC-Brasil.
+	 */
+	@Override
+	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {
 
-        Collection<ICPBR_CRL> list = new ArrayList<ICPBR_CRL>();
-        try {
-            BasicCertificate cert = new BasicCertificate(certificate);
-            List<String> ListaURLCRL = cert.getCRLDistributionPoint();
+		Collection<ICPBR_CRL> list = new ArrayList<ICPBR_CRL>();
+		try {
+			BasicCertificate cert = new BasicCertificate(certificate);
+			List<String> ListaURLCRL = cert.getCRLDistributionPoint();
 
-            if (ListaURLCRL == null || ListaURLCRL.isEmpty()) {
-            	logger.error(coreMessagesBundle.getString("error.invalid.crl"));
-                throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl"));
-            }
+			if (ListaURLCRL == null || ListaURLCRL.isEmpty()) {
+				logger.error(coreMessagesBundle.getString("error.invalid.crl"));
+				throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl"));
+			}
 
-            ICPBR_CRL validCrl = null;
-            for (String URLCRL : ListaURLCRL) {
-                // Achou uma CRL válida
-            	validCrl = getICPBR_CRL(URLCRL);
-                if (validCrl != null) {
-                    list.add(validCrl);
-                    logger.debug(coreMessagesBundle.getString("info.crl.offline.found"));
-                    break;
-                }
-            }
-            if (validCrl == null){
-            	logger.error(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
-            	throw new CRLRepositoryException(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
-            }
+			ICPBR_CRL validCrl = null;
+			for (String URLCRL : ListaURLCRL) {
+				// Achou uma CRL válida
+				validCrl = getICPBR_CRL(URLCRL);
+				if (validCrl != null) {
+					list.add(validCrl);
+					logger.debug(coreMessagesBundle.getString("info.crl.offline.found"));
+					break;
+				}
+			}
+			if (validCrl == null) {
+				logger.error(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
+				throw new CRLRepositoryException(coreMessagesBundle.getString("error.validate.on.crl", ListaURLCRL));
+			}
 
-        } catch (IOException e) {
-        	logger.error(coreMessagesBundle.getString("error.invalid.crl")+ e.getMessage());
-            throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl")+ e.getMessage());
-        }
-        return list;
-    }
+		} catch (IOException e) {
+			logger.error(coreMessagesBundle.getString("error.invalid.crl") + e.getMessage());
+			throw new CRLRepositoryException(coreMessagesBundle.getString("error.invalid.crl") + e.getMessage());
+		}
+		return list;
+	}
 
-    /**
-     *
-     * @param uRLCRL a valid url address
-     * @return
-     */
-    private ICPBR_CRL getICPBR_CRL(String uRLCRL) {
+	/**
+	 * @param uRLCRL a valid url address
+	 * @return
+	 */
+	private ICPBR_CRL getICPBR_CRL(String uRLCRL) {
 
-        File fileCRL = null;
+		File fileCRL = null;
 
-        try {
-            ICPBR_CRL crl = null;
+		try {
+			ICPBR_CRL crl = null;
 
-            if (new File(config.getCrlPath()).mkdirs()) {
-                logger.debug(coreMessagesBundle.getString("info.creating.crl"));
-            } else {
-                logger.debug(coreMessagesBundle.getString("info.created.crl"));
-            }
+			if (new File(config.getCrlPath()).mkdirs()) {
+				logger.debug(coreMessagesBundle.getString("info.creating.crl"));
+			} else {
+				logger.debug(coreMessagesBundle.getString("info.created.crl"));
+			}
 
-            fileCRL = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(uRLCRL));
-            if (!fileCRL.exists()) {
-                RepositoryUtil.saveURL(uRLCRL, fileCRL);
-            }
+			fileCRL = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(uRLCRL));
+			if (!fileCRL.exists()) {
+				RepositoryUtil.saveURL(uRLCRL, fileCRL);
+			}
 
-            if (fileCRL.length() != 0) {
-                crl = new ICPBR_CRL(new FileInputStream(fileCRL));
-                if (crl.getCRL().getNextUpdate().before(new Date())) {
-                    // Se estiver expirado, atualiza com a CRL mais nova
-                    logger.info(coreMessagesBundle.getString("info.update.crl"));
-                    RepositoryUtil.saveURL(uRLCRL, fileCRL);
-                }
-            }else{
-            	if (!fileCRL.delete()) {
-                    logger.error(coreMessagesBundle.getString("error.file.remove", fileCRL));
-                }
-            }
-            return crl;
+			if (fileCRL.length() != 0) {
+				crl = new ICPBR_CRL(new FileInputStream(fileCRL));
+				if (crl.getCRL().getNextUpdate().before(new Date())) {
+					// Se estiver expirado, atualiza com a CRL mais nova
+					logger.info(coreMessagesBundle.getString("info.update.crl"));
+					RepositoryUtil.saveURL(uRLCRL, fileCRL);
+				}
+			} else {
+				if (!fileCRL.delete()) {
+					logger.error(coreMessagesBundle.getString("error.file.remove", fileCRL));
+				}
+			}
+			return crl;
 
-        } catch (FileNotFoundException e) {
-            addFileIndex(uRLCRL);
-            logger.error(coreMessagesBundle.getString("error.file.not.found", fileCRL));
-        } catch (CRLException e) {
-            addFileIndex(uRLCRL);
-            logger.error(coreMessagesBundle.getString("error.file.corrupted", fileCRL, e.getMessage()));
-            if (!fileCRL.delete()) {
-                logger.error(coreMessagesBundle.getString("error.file.remove", fileCRL));
-            }
-        } catch (CertificateException e) {
-            addFileIndex(uRLCRL);
-            logger.error(coreMessagesBundle.getString("error.crl.certificate", e.getMessage()));
-        }
-        return null;
-    }
+		} catch (FileNotFoundException e) {
+			addFileIndex(uRLCRL);
+			logger.error(coreMessagesBundle.getString("error.file.not.found", fileCRL));
+		} catch (CRLException e) {
+			addFileIndex(uRLCRL);
+			logger.error(coreMessagesBundle.getString("error.file.corrupted", fileCRL, e.getMessage()));
+			if (!fileCRL.delete()) {
+				logger.error(coreMessagesBundle.getString("error.file.remove", fileCRL));
+			}
+		} catch (CertificateException e) {
+			addFileIndex(uRLCRL);
+			logger.error(coreMessagesBundle.getString("error.crl.certificate", e.getMessage()));
+		}
+		return null;
+	}
 
-    /**
-     * When the crl file is not in the local repository, it must be registered in the index file.
-     *
-     * @param url CRL url to be registered on the index file
-     */
-    public void addFileIndex(String url) {
-        String fileNameCRL = RepositoryUtil.urlToMD5(url);
-        File fileIndex = new File(config.getCrlPath(), config.getCrlIndex());
-        if (!fileIndex.exists()) {
-            try {
-                File diretory = new File(config.getCrlPath());
-                diretory.mkdirs();
-                fileIndex.createNewFile();
-            } catch (Exception e) {
-            	logger.error(coreMessagesBundle.getString("error.file.index.create",fileIndex)+ e.getMessage());
-                throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.create",fileIndex), e);
-            }
-        }
-        Properties prop = new Properties();
-        try {
-            prop.load(new FileInputStream(fileIndex));
-        } catch (Exception e) {
-        	logger.error(coreMessagesBundle.getString("error.file.index.create",fileIndex)+e.getMessage());
-            throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.create",fileIndex), e);
-        }
-        prop.put(fileNameCRL, url);
-        try {
-            prop.store(new FileOutputStream(fileIndex), null);
-        } catch (Exception e) {
-        	logger.error(coreMessagesBundle.getString("error.file.index.create",fileIndex)+e.getMessage());
-            throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.create",fileIndex), e);
-        }
-    }
+	/**
+	 * When the crl file is not in the local repository, it must be registered in the index file.
+	 *
+	 * @param url CRL url to be registered on the index file
+	 */
+	public void addFileIndex(String url) {
+		String fileNameCRL = RepositoryUtil.urlToMD5(url);
+		File fileIndex = new File(config.getCrlPath(), config.getCrlIndex());
+		if (!fileIndex.exists()) {
+			try {
+				File diretory = new File(config.getCrlPath());
+				diretory.mkdirs();
+				fileIndex.createNewFile();
+			} catch (Exception e) {
+				logger.error(coreMessagesBundle.getString("error.file.index.create", fileIndex) + e.getMessage());
+				throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.create", fileIndex), e);
+			}
+		}
+		Properties prop = new Properties();
+		try {
+			prop.load(new FileInputStream(fileIndex));
+		} catch (Exception e) {
+			logger.error(coreMessagesBundle.getString("error.file.index.create", fileIndex) + e.getMessage());
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.create", fileIndex), e);
+		}
+		prop.put(fileNameCRL, url);
+		try {
+			prop.store(new FileOutputStream(fileIndex), null);
+		} catch (Exception e) {
+			logger.error(coreMessagesBundle.getString("error.file.index.create", fileIndex) + e.getMessage());
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.index.create", fileIndex), e);
+		}
+	}
 }

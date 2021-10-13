@@ -54,11 +54,13 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  */
 public enum CertInfoReq {
 
-    none(0), signerOnly(1), fullPath(2);
+    none(0),
+	signerOnly(1),
+	fullPath(2);
 
     private int value;
 
-    private CertInfoReq(int value) {
+    CertInfoReq(int value) {
         this.value = value;
     }
 

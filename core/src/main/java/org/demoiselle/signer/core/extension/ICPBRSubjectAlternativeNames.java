@@ -45,9 +45,7 @@ import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
 
 /**
- *
  * ICP-BRASIL's definitions of Subject Alternative Names
- *
  */
 public class ICPBRSubjectAlternativeNames {
 
@@ -58,9 +56,7 @@ public class ICPBRSubjectAlternativeNames {
 	private ICPBRCertificateEquipment icpBrCertEquipment = null;
 
 	/**
-	 *
-	 * @param certificate
-	 *            -&gt; X509Certificate
+	 * @param certificate -&gt; X509Certificate
 	 * @see java.security.cert.X509Certificate
 	 */
 	public ICPBRSubjectAlternativeNames(X509Certificate certificate) {
@@ -74,14 +70,13 @@ public class ICPBRSubjectAlternativeNames {
 			icpBrCertPJ = new ICPBRCertificatePJ(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_7());
 		} else if (ce.isCertificateEquipment()) {
 			icpBrCertEquipment = new ICPBRCertificateEquipment(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_8(),
-															   ce.getOID_2_5_29_17(), SN);
+				ce.getOID_2_5_29_17(), SN);
 			this.dns = ce.getDNS();
 		}
 		this.email = ce.getEmail();
 	}
 
 	/**
-	 *
 	 * @return boolean is PF
 	 */
 	public boolean isCertificatePF() {
@@ -89,7 +84,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @return ICPBRCertificatePF ICPBR Certificate PF
 	 * @see org.demoiselle.signer.core.extension.ICPBRCertificatePF
 	 */
@@ -98,7 +92,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @return boolean is PJ
 	 */
 	public boolean isCertificatePJ() {
@@ -106,7 +99,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @return ICPBRCertificatePJ ICPBR Certificate PJ
 	 * @see org.demoiselle.signer.core.extension.ICPBRCertificatePJ
 	 */
@@ -115,7 +107,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @return boolean is Equipment
 	 */
 	public boolean isCertificateEquipment() {
@@ -123,7 +114,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @return ICPBRCertificateEquipment ICPBR Certificate Equipment
 	 * @see org.demoiselle.signer.core.extension.ICPBRCertificateEquipment
 	 */
@@ -132,7 +122,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @return String email
 	 */
 	public String getEmail() {
@@ -140,7 +129,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @return String DNS for  ICPBR Certificate Equipment
 	 */
 	public String getDns() {
@@ -148,7 +136,6 @@ public class ICPBRSubjectAlternativeNames {
 	}
 
 	/**
-	 *
 	 * @param certificate
 	 * @return SerialNumber ("2.5.4.5") from Principal Certificate
 	 */
@@ -156,8 +143,9 @@ public class ICPBRSubjectAlternativeNames {
 		try {
 			X500Name x500name = new JcaX509CertificateHolder(certificate).getSubject();
 			RDN[] rdns = x500name.getRDNs();
-			for (int i=0; i< rdns.length; i++) {
-				if (rdns[i].getFirst().getType().getId().equals("2.5.4.5")) return rdns[i].getFirst().getValue().toString();
+			for (int i = 0; i < rdns.length; i++) {
+				if (rdns[i].getFirst().getType().getId().equals("2.5.4.5"))
+					return rdns[i].getFirst().getValue().toString();
 			}
 			return null;
 		} catch (CertificateEncodingException e) {

@@ -49,21 +49,19 @@ import javax.security.auth.callback.CallbackHandler;
 public interface KeyStoreLoader {
 
 	/**
-	 * 	@return KeyStore keystore
-	 *  @see java.security.KeyStore
+	 * @return KeyStore keystore
+	 * @see java.security.KeyStore
 	 */
 	KeyStore getKeyStore();
 
 	/**
-	 *
 	 * @param callback handler of callbacks, used to provide PIN entry
 	 * @see javax.security.auth.callback.CallbackHandler
 	 */
 	void setCallbackHandler(CallbackHandler callback);
 
 	/**
-	 *
-	 * @param pinNumber
+	 * @param pinNumber the personal identification number.
 	 * @return KeyStore keystore
 	 */
 	KeyStore getKeyStore(String pinNumber);
