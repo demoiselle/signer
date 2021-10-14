@@ -128,9 +128,9 @@ public class OffLineCRLRepository implements CRLRepository {
 			ICPBR_CRL crl = null;
 
 			if (new File(config.getCrlPath()).mkdirs()) {
-				logger.debug(coreMessagesBundle.getString("info.creating.crl"));
+				logger.debug(coreMessagesBundle.getString("info.creating.crl", config.getCrlPath()));
 			} else {
-				logger.debug(coreMessagesBundle.getString("info.created.crl"));
+				logger.debug(coreMessagesBundle.getString("info.created.crl", config.getCrlPath()));
 			}
 
 			fileCRL = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(uRLCRL));
@@ -148,6 +148,7 @@ public class OffLineCRLRepository implements CRLRepository {
 			} else {
 				if (!fileCRL.delete()) {
 					logger.error(coreMessagesBundle.getString("error.file.remove", fileCRL));
+					config.setOnline(true);
 				}
 			}
 			return crl;
@@ -155,14 +156,17 @@ public class OffLineCRLRepository implements CRLRepository {
 		} catch (FileNotFoundException e) {
 			addFileIndex(uRLCRL);
 			logger.error(coreMessagesBundle.getString("error.file.not.found", fileCRL));
+			config.setOnline(true);
 		} catch (CRLException e) {
 			addFileIndex(uRLCRL);
 			logger.error(coreMessagesBundle.getString("error.file.corrupted", fileCRL, e.getMessage()));
+			config.setOnline(true);
 			if (!fileCRL.delete()) {
 				logger.error(coreMessagesBundle.getString("error.file.remove", fileCRL));
 			}
 		} catch (CertificateException e) {
 			addFileIndex(uRLCRL);
+			config.setOnline(true);
 			logger.error(coreMessagesBundle.getString("error.crl.certificate", e.getMessage()));
 		}
 		return null;

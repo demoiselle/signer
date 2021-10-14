@@ -38,6 +38,7 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
@@ -65,6 +66,7 @@ import org.bouncycastle.cert.jcajce.JcaCertStore;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cms.CMSAbsentContent;
 import org.bouncycastle.cms.CMSAttributeTableGenerator;
+import org.bouncycastle.cms.CMSException;
 import org.bouncycastle.cms.CMSProcessableByteArray;
 import org.bouncycastle.cms.CMSSignedData;
 import org.bouncycastle.cms.CMSSignedDataGenerator;
@@ -77,9 +79,12 @@ import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.cms.SimpleAttributeTableGenerator;
 import org.bouncycastle.cms.jcajce.JcaSimpleSignerInfoGeneratorBuilder;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.util.Store;
 import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManager;
+import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
@@ -269,7 +274,7 @@ public class CAdESSigner implements PKCS7Signer {
 	}
 
 	private byte[] doSign(byte[] content, byte[] previewSignature) {
-		try {
+	
 			Security.addProvider(new BouncyCastleProvider());
 			if (this.certificateChain == null) {
 				logger.error(cadesMessagesBundle.getString("error.certificate.null"));
@@ -298,13 +303,30 @@ public class CAdESSigner implements PKCS7Signer {
 			// Caso seja co-assinatura ou contra-assinatura
 			// Importar todos os certificados da assinatura anterior
 			if (previewSignature != null && previewSignature.length > 0) {
-				cmsPreviewSignedData = new CMSSignedData(new CMSAbsentContent(), previewSignature);
+				try {
+					cmsPreviewSignedData = new CMSSignedData(new CMSAbsentContent(), previewSignature);
+				} catch (CMSException e) {
+					logger.error(e.getMessage());
+					throw new SignerException(e);
+				}
 				Collection<X509Certificate> previewCerts = this.getSignersCertificates(cmsPreviewSignedData);
 				//previewCerts.add(this.certificate);
 				certStore = previewCerts.toArray(new Certificate[]{});
 			}
-
-			setCertificateManager(new CertificateManager(this.certificate));
+			try {
+				setCertificateManager(new CertificateManager(this.certificate));
+			}catch (CertificateValidatorCRLException cvre) {
+				logger.warn(cvre.getMessage());
+				ConfigurationRepo config = ConfigurationRepo.getInstance();
+				config.setOnline(true);
+				try {
+					setCertificateManager(new CertificateManager(this.certificate));
+				}catch (CertificateValidatorCRLException cvre1) {
+					logger.error(cvre1.getMessage());
+					throw new SignerException(cvre1);
+				}
+			}
+			
 
 			// Recupera a lista de algoritmos da politica e o tamanho minimo da
 			// chave
@@ -433,15 +455,26 @@ public class CAdESSigner implements PKCS7Signer {
 			pv.validate();
 			// Realiza a assinatura do conteudo
 			CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
-			gen.addCertificates(this.generatedCertStore(certStore));
+			try {
+				gen.addCertificates(this.generatedCertStore(certStore));
+			} catch (CMSException e) {
+				logger.error(e.getMessage());
+				throw new SignerException(e);
+			}
 			String algorithmOID = algAndLength.getAlgID().getValue();
 
 			logger.debug(cadesMessagesBundle.getString("info.algorithm.id", algorithmOID));
-			SignerInfoGenerator signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder()
-				.setSignedAttributeGenerator(signedAttributeGenerator)
-				.setUnsignedAttributeGenerator(null)
-				.build(AlgorithmNames.getAlgorithmNameByOID(algorithmOID), this.pkcs1.getPrivateKey(),
-					this.certificate);
+			SignerInfoGenerator signerInfoGenerator;
+			try {
+				signerInfoGenerator = new JcaSimpleSignerInfoGeneratorBuilder()
+					.setSignedAttributeGenerator(signedAttributeGenerator)
+					.setUnsignedAttributeGenerator(null)
+					.build(AlgorithmNames.getAlgorithmNameByOID(algorithmOID), this.pkcs1.getPrivateKey(),
+						this.certificate);
+			} catch (CertificateEncodingException | OperatorCreationException e) {
+				logger.error(e.getMessage());
+				throw new SignerException(e);
+			}
 			gen.addSignerInfoGenerator(signerInfoGenerator);
 
 			CMSTypedData cmsTypedData;
@@ -453,7 +486,13 @@ public class CAdESSigner implements PKCS7Signer {
 			}
 
 			// Efetua a assinatura digital do conteúdo
-			CMSSignedData cmsSignedData = gen.generate(cmsTypedData, this.attached);
+			CMSSignedData cmsSignedData;
+			try {
+				cmsSignedData = gen.generate(cmsTypedData, this.attached);
+			} catch (CMSException e) {
+				logger.error(e.getMessage());
+				throw new SignerException(e);
+			}
 			setAttached(false);
 
 
@@ -501,6 +540,7 @@ public class CAdESSigner implements PKCS7Signer {
 						case "1.2.840.113549.1.9.16.2.25":
 							logger.debug("ets_escTimeStamp");
 							ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+						try {
 							outputStream.write(oSi.getSignature());
 							AttributeTable varUnsignedAttributes = oSi.getUnsignedAttributes();
 							Attribute varAttribute = varUnsignedAttributes.get(new ASN1ObjectIdentifier(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken.getId()));
@@ -527,11 +567,15 @@ public class CAdESSigner implements PKCS7Signer {
 							signedOrUnsignedAttribute.initialize(pkForEscTimeStamp, varCertificateChainEscTimeStamp, escTimeStampContent,
 								signaturePolicy, this.hash);
 							break;
+
+						} catch (IOException e) {
+							logger.error(e.getMessage());
+							throw new SignerException(e);
+						}
 						default:
 							signedOrUnsignedAttribute.initialize(this.pkcs1.getPrivateKey(), certificateChain, oSi.getSignature(),
 								signaturePolicy, this.hash);
 					}
-
 					unsignedAttributes.add(signedOrUnsignedAttribute.getValue());
 					AttributeTable unsignedAttributesTable = new AttributeTable(unsignedAttributes);
 					vNewSigners.remove(oSi);
@@ -548,9 +592,13 @@ public class CAdESSigner implements PKCS7Signer {
 			CMSSignedData oSignedData = cmsSignedData;
 			cmsSignedData = CMSSignedData.replaceSigners(oSignedData, oNewSignerInformationStore);
 
-			byte[] result = cmsSignedData.getEncoded();
-
-
+			byte[] result;
+			try {
+				result = cmsSignedData.getEncoded();
+			} catch (IOException e) {
+				logger.error(e.getMessage());
+				throw new SignerException(e);
+			}
 			String SN = certificate.getSerialNumber().toString() + "(" + certificate.getSerialNumber().toString(16).toUpperCase() + ")";
 			logger.debug(cadesMessagesBundle.getString("info.signed.by", certificate.getSubjectDN().toString().split(",")[0], SN));
 			setSignatory(certificate.getSubjectDN().toString().split(",")[0] + " " + SN);
@@ -558,10 +606,7 @@ public class CAdESSigner implements PKCS7Signer {
 			setNotAfterSignerCertificate(pV.valDate(this.certificate));
 			return result;
 
-		} catch (Exception ex) {
-			logger.error(ex.getMessage() + "\n cause:" + ex.getCause());
-			throw new SignerException(ex);
-		}
+		
 	}
 
 	@Override
