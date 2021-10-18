@@ -70,7 +70,7 @@ public class CRLValidator implements IValidator {
 			}
 
 			if (crls == null || crls.isEmpty()) {
-				throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl"));
+				throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl", "vazio ou nula"));
 			}
 			for (ICPBR_CRL icpbr_crl : crls) {
 				if (icpbr_crl.getCRL().isRevoked(x509)) {

@@ -185,7 +185,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				}
 			}
 		} catch (IOException error) {
-			LOGGER.error(chainMessagesBundle.getString("error.stream"));
+			LOGGER.error(chainMessagesBundle.getString("error.stream")+"\n"+error.getMessage());
 			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
 		return result;

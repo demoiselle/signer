@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ import java.util.List;
 
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FIXME rename to ICPBrasilKeystoreProviderCA for consistence
@@ -60,6 +63,7 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 public class ICPBrasilProviderCA implements ProviderCA {
 
 	private static MessagesBundle chainMessagesBundle = new MessagesBundle();
+	Logger LOGGER = LoggerFactory.getLogger(ICPBrasilProviderCA.class);
 
 	/**
 	 * read Certificate Authority chain from loaded keystore
@@ -76,7 +80,8 @@ public class ICPBrasilProviderCA implements ProviderCA {
 
 			}
 		} catch (KeyStoreException ex) {
-			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
+			LOGGER.error(chainMessagesBundle.getString("error.load.keystore", ex.getMessage()), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore", ex.getMessage()), ex);
 		}
 		return result;
 	}
@@ -88,16 +93,26 @@ public class ICPBrasilProviderCA implements ProviderCA {
 		KeyStore keyStore = null;
 		try {
 			InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
-			keyStore = KeyStore.getInstance("JKS");
+			keyStore = KeyStore.getInstance("JKS", "SUN");
+			//keyStore = KeyStore.getInstance("BKS", "BC");
+
 			keyStore.load(is, "changeit".toCharArray());
 		} catch (KeyStoreException ex) {
-			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore"), ex);
+			LOGGER.error(chainMessagesBundle.getString("error.load.keystore", ex.getMessage()), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore", ex.getMessage()), ex);
 		} catch (NoSuchAlgorithmException ex) {
-			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.no.algorithm"), ex);
+			LOGGER.error(chainMessagesBundle.getString("error.no.algorithm", ex.getMessage()), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.no.algorithm", ex.getMessage()), ex);
 		} catch (CertificateException ex) {
-			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.jks.certificate"), ex);
+			LOGGER.error(chainMessagesBundle.getString("error.jks.certificate", ex.getMessage()), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.jks.certificate", ex.getMessage()), ex);
 		} catch (IOException ex) {
-			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.io"), ex);
+			LOGGER.error(chainMessagesBundle.getString("error.io", ex.getMessage()), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.io", ex.getMessage()), ex);
+		} catch (NoSuchProviderException e) {
+			LOGGER.error(chainMessagesBundle.getString("error.load.provider", e.getMessage()));
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.provider", e.getMessage()));
+
 		}
 		return keyStore;
 	}

@@ -1,7 +1,7 @@
 Estes scripts foram criado para atualizar o arquivo com as cadeias da ICP-Brasil
 
 1 - Baixe o arquivo de:
-   http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactadox.zip
+   http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactado.zip
 
 2 - Crie o diretório /novascadeias e descompacte nele as cadeias do arquivo acima.
 

@@ -104,6 +104,7 @@ public class ChainICPBrasilConfig {
 		try {
 			setUrl_local_ac_list(bundle.getString("url_local_ac_list"));
 		} catch (MissingResourceException e) {
+			logger.error(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list")+"\n"+e.getMessage());
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list"));
 		}
 		return url_local_ac_list;
@@ -123,6 +124,7 @@ public class ChainICPBrasilConfig {
 		try {
 			setUrl_local_ac_list_sha512(bundle.getString("url_local_ac_list_sha512"));
 		} catch (MissingResourceException e) {
+			logger.error(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list_sha512")+"\n"+e.getMessage());
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_local_ac_list_sha512"));
 		}
 		return url_local_ac_list_sha512;
@@ -142,6 +144,7 @@ public class ChainICPBrasilConfig {
 		try {
 			setUrl_iti_ac_list(bundle.getString("url_iti_ac_list"));
 		} catch (MissingResourceException e) {
+			logger.error(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list")+"\n"+e.getMessage());
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list"));
 		}
 		return url_iti_ac_list;
@@ -161,6 +164,7 @@ public class ChainICPBrasilConfig {
 		try {
 			setUrl_iti_ac_list_sha512(bundle.getString("url_iti_ac_list_sha512"));
 		} catch (MissingResourceException e) {
+			logger.error(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list_sha512")+"\n"+e.getMessage());
 			throw new RuntimeException(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "url_iti_ac_list_sha512"));
 		}
 		return url_iti_ac_list_sha512;
@@ -180,7 +184,7 @@ public class ChainICPBrasilConfig {
 		try {
 			setLocal_dir(bundle.getString("local_dir"));
 		} catch (MissingResourceException e) {
-			logger.info(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "local_dir"));
+			logger.info(ChainICPBrasilMessagesBundle.getString("error.chain.ipcbrasil.config", "local_dir")+"\n"+e.getMessage());
 			// FIXME system file specific
 			local_dir = "/tmp";
 		}
