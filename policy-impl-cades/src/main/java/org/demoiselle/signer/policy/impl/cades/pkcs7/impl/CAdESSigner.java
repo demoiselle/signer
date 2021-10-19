@@ -323,7 +323,7 @@ public class CAdESSigner implements PKCS7Signer {
 					setCertificateManager(new CertificateManager(this.certificate));
 				}catch (CertificateValidatorCRLException cvre1) {
 					logger.error(cvre1.getMessage());
-					throw new SignerException(cvre1);
+					throw new SignerException(cvre1.getMessage());
 				}
 			}
 			
