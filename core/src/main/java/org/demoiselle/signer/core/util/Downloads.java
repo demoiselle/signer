@@ -70,11 +70,11 @@ public class Downloads {
 			connection.setReadTimeout(TIMEOUT_READ);
 			return connection.getInputStream();
 		} catch (MalformedURLException error) {
-			throw new RuntimeException(coreMessagesBundle.getString("error.malformedURL"), error);
+			throw new RuntimeException(coreMessagesBundle.getString("error.malformedURL", error.getMessage()), error);
 		} catch (UnknownServiceException error) {
-			throw new RuntimeException(coreMessagesBundle.getString("error.unknown.service"), error);
+			throw new RuntimeException(coreMessagesBundle.getString("error.unknown.service", error.getMessage()), error);
 		} catch (IOException error) {
-			throw new RuntimeException(coreMessagesBundle.getString("error.io"), error);
+			throw new RuntimeException(coreMessagesBundle.getString("error.io", error.getMessage()), error);
 		}
 	}
 }

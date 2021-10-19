@@ -122,7 +122,7 @@ public class RepositoryUtil {
 			logger.error(coreMessagesBundle.getString("error.file.not.found", sUrl));
 			throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found", sUrl), e);
 		} catch (IOException e) {
-			logger.error(coreMessagesBundle.getString("error.crl.open.connection", sUrl) + e.getMessage());
+			logger.error(coreMessagesBundle.getString("error.io", e.getMessage()));
 			throw new CertificateValidatorException(coreMessagesBundle.getString("error.io", e.getMessage()), e);
 		} finally {
 			try {
