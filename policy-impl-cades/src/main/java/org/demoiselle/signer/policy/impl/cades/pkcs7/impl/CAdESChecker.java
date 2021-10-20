@@ -170,7 +170,7 @@ public class CAdESChecker implements PKCS7Checker {
 				SignerInformationStore signerInfoStore = signerInfo.getCounterSignatures();
 
 				if (signerInfoStore.size() > 0) {
-					logger.info("Foi(ram) encontrada(s) " + signerInfoStore.size() + " contra-assinatura(s).");
+					logger.info(cadesMessagesBundle.getString("info.co.signature",signerInfoStore.size()));
 				}
 
 				@SuppressWarnings("unchecked")
@@ -185,11 +185,11 @@ public class CAdESChecker implements PKCS7Checker {
 				try {
 					cV.validate(varCert);
 				} catch (CertificateValidatorCRLException cvce) {
-					signatureInfo.getValidatorErrors().add(cvce.getMessage());
-					logger.debug(cvce.getMessage());
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.clr.not.access",cvce.getMessage()));
+					logger.debug(cadesMessagesBundle.getString("error.clr.not.access",cvce.getMessage()));
 				} catch (CertificateRevocationException cre) {
-					signatureInfo.getValidatorErrors().add(cre.getMessage());
-					logger.debug(cre.getMessage());
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.clr.not.access",cre.getMessage()));
+					logger.error(cadesMessagesBundle.getString("error.clr.not.access",cre.getMessage()));
 				}
 
 				PeriodValidator pV = new PeriodValidator();
@@ -443,7 +443,7 @@ public class CAdESChecker implements PKCS7Checker {
 			if (contentProcessable != null) {
 				varAttachedContentValidation.setExtractedContent((byte[]) contentProcessable.getContent());
 			} else {
-				logger.debug(cadesMessagesBundle.getString("error.get.content.empty"));
+				logger.debug(cadesMessagesBundle.getString("info.get.content.empty"));
 			}
 		} catch (Exception exception) {
 			logger.error(cadesMessagesBundle.getString("error.get.content.pkcs7") + exception.getMessage());
