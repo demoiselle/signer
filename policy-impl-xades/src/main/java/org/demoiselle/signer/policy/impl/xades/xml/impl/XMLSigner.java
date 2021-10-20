@@ -74,7 +74,10 @@ import org.apache.xml.security.c14n.CanonicalizationException;
 import org.apache.xml.security.c14n.Canonicalizer;
 import org.apache.xml.security.c14n.InvalidCanonicalizerException;
 import org.bouncycastle.util.encoders.Base64;
+import org.demoiselle.signer.core.CertificateManager;
 import org.demoiselle.signer.core.ca.manager.CAManager;
+import org.demoiselle.signer.core.exception.CertificateValidatorCRLException;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
@@ -394,6 +397,20 @@ public class XMLSigner implements Signer {
 		if (this.certificateChain.length < 3) {
 			logger.error(xadesMessagesBundle.getString("error.no.ca", this.certificate.getIssuerDN()));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.ca", this.certificate.getIssuerDN()));
+		}
+		
+		try {
+			new CertificateManager(this.certificate);
+		}catch (CertificateValidatorCRLException cvre) {
+			logger.warn(cvre.getMessage());
+			ConfigurationRepo config = ConfigurationRepo.getInstance();
+			config.setOnline(true);
+			try {
+				new CertificateManager(this.certificate);
+			}catch (CertificateValidatorCRLException cvre1) {
+				logger.error(cvre1.getMessage());
+				throw new CertificateValidatorCRLException(cvre1.getMessage());
+			}
 		}
 
 		PeriodValidator pV = new PeriodValidator();
