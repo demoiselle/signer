@@ -190,7 +190,7 @@ public class CertificateManager {
 		try {
 			object = clazz.newInstance();
 		} catch (IllegalAccessException | InstantiationException e) {
-			throw new CertificateCoreException(coreMessagesBundle.getString("error.new.instace", clazz.getName()), e);
+			throw new CertificateCoreException(coreMessagesBundle.getString("error.new.instance", clazz.getName()), e);
 		}
 		load(object);
 		return object;
