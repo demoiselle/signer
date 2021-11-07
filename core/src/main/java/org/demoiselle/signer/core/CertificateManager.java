@@ -155,7 +155,7 @@ public class CertificateManager {
 	}
 
 	/**
-	 * Load a java.security.cert.X509Certificate
+	 * Load a {@link X509Certificate}.
 	 *
 	 * @param object destiny of load operation
 	 */
