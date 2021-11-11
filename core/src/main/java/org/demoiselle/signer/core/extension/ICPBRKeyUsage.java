@@ -40,7 +40,7 @@ package org.demoiselle.signer.core.extension;
 import java.security.cert.X509Certificate;
 
 /**
- * ICP-BRASIL's definitions of Key Usage
+ * ICP-BRASIL's definitions of Key Usage.
  */
 public class ICPBRKeyUsage {
 

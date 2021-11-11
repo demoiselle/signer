@@ -46,7 +46,7 @@ import java.lang.annotation.Target;
 import org.demoiselle.signer.core.OIDExtension;
 
 /**
- * Java Annotation to identify DefaultExtension.
+ * Annotation to identify default extension.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

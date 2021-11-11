@@ -42,7 +42,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * ICP-BRASIL's definitions of distinguished name (DN)
+ * ICP-BRASIL's definitions of Distinguished Name (DN).
  */
 public class ICPBR_DN extends Properties {
 

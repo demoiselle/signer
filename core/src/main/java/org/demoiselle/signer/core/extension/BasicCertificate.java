@@ -71,7 +71,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Basic Certificate information based on ICP-BRASIL (PKI) definitions
+ * Basic Certificate information based on ICP-BRASIL (PKI) definitions.
+ *
+ * @see CertificateExtra
  */
 public class BasicCertificate {
 
