@@ -1,83 +1,113 @@
 <?xml version='1.0' encoding="utf-8"?>
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+]>
 <book lang="pt">
-   
-    <!-- prefácio -->
-    <preface>
-        <title>Sobre o Demoiselle Signer</title>
-        <para>
-            O Demoiselle Signer é um componente para facilitar a geração de assinatura digital. 
-            O componente implementa o padrão de assinatura conforme as política da ICP-Brasil, de acordo com as 
-            <ulink url="http://www.iti.gov.br/legislacao/documentos-principais">resoluções da ICP-BrasiL</ulink>.
-        </para>
-        <para>
-        	O componente é sub-dividido em módulos de acordo com suas funcionalidades:
-        	<itemizedlist>
-        		
-    			<listitem>
-    				<para><emphasis role="bold">core: </emphasis>fornece  as interfaces basicas de todas as funcionalidades, como acesso ao certificado (token, arquivo), operações de carregamento e validações de certificado e API para extraçao de dados de um certificado ICPBrasil</para>
-	    		</listitem>
-	    		<listitem>
-    				<para><emphasis role="bold">policy-impl-CAdES: </emphasis>permite geração e validação de assinaturas digitais (conforme uma política) no formato CAdES</para>
-	    		</listitem>
-	    		<listitem>
-    				<para><emphasis role="bold">policy-impl-PAdES: </emphasis>permite geração e validação de assinaturas digitais (conforme uma política) no formato PBAD-PAdES</para>
-	    		</listitem>
-    			<listitem>
-    				<para><emphasis role="bold">policy-engine: </emphasis>mecanismo para carregamento das políticas de assinaturas definidas pela ICP-BRASIL</para>
-	    		</listitem>
+
+	<!-- prefácio -->
+	<preface>
+		<title>Sobre o Demoiselle Signer</title>
+		<para>
+			O Demoiselle Signer é um componente para facilitar a geração e a validação de assinaturas digitais. 
+            O componente está implementado em conformidade com as políticas da ICP-Brasil. Consulte as
+			<ulink url="http://www.iti.gov.br/legislacao/documentos-principais">resoluções da ICP-Brasil</ulink>
+			para detalhes.
+		</para>
+		<para>
+			O componente é sub-dividido em módulos de acordo com suas funcionalidades:
+			<itemizedlist>
+
 				<listitem>
-    				<para><emphasis role="bold">chain-icp-brasil: </emphasis>possui funcionalidade para montagem das cadeias de autoridades certificadores ICPBrasil válidas</para>
-	    		</listitem>    			
-    			<listitem>
-    				<para><emphasis role="bold">timestamp: </emphasis>disponibiliza as funcionalidades para obtenção de carimbos de tempo (fornecidos por uma autoridade de carimbo de tempo)</para>
-	    		</listitem>
-	    		<listitem>
-    				<para><emphasis role="bold">cryptography: </emphasis>provê funcionalidades de criptografia</para>
-	    		</listitem>
-	    		<listitem>
-    				<para><emphasis role="bold">Integração WEB: </emphasis>solução indicada para acesso aos certificados do usuário</para>
-	    		</listitem>
-    		</itemizedlist>
-        </para>
-        <para>
-        	Funcionalidades ainda não implementadas no componente:
-        	<itemizedlist>
-    			<listitem>
-    				<para>Assinatura no padrão XAdES (assinatura em XML)</para>
-	    		</listitem>
-    		</itemizedlist>
-        </para>
-	<note>
-	Caso queira baixar uma versão desta documentação em formato PDF clique <para><ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.7.0.pdf">aqui:</ulink></para> </note>
-        
-    </preface>
+					<para>
+						<emphasis role="bold">core: </emphasis>
+						fornece  as interfaces básicas de todas as funcionalidades, como acesso ao certificado (token, arquivo), operações de carregamento e validações de certificado e API para extraçao de dados de um certificado ICP-Brasil.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">policy-impl-CAdES: </emphasis>
+						permite geração e validação de assinaturas digitais (conforme uma política) no formato CAdES.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">policy-impl-PAdES: </emphasis>
+						permite geração e validação de assinaturas digitais (conforme uma política) no formato PBAD-PAdES.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">policy-engine: </emphasis>
+						mecanismo para carregamento das políticas de assinaturas definidas pela ICP-Brasil.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">chain-ICP-Brasil: </emphasis>
+						possui funcionalidade para montagem das cadeias de autoridades certificadores ICP-Brasil válidas.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">timestamp: </emphasis>
+						disponibiliza as funcionalidades para obtenção de carimbos de tempo (fornecidos por uma autoridade de carimbo de tempo).
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">cryptography: </emphasis>
+						provê funcionalidades de criptografia.
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">Integração WEB: </emphasis>
+						solução indicada para acesso aos certificados do usuário.
+					</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<para>
+			Funcionalidades ainda não implementadas no componente:
+			<itemizedlist>
+				<listitem>
+					<para>Assinatura no padrão XAdES (assinatura em XML).</para>
+				</listitem>
+			</itemizedlist>
+		</para>
+		<note>
+			Caso queira baixar uma versão desta documentação em formato PDF clique
+			<para>
+				<ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.7.0.pdf">aqui:</ulink>
+			</para>
+		</note>
 
-    <!-- índice -->
-    <toc />
+	</preface>
 
-    <!-- partes -->
-    
-    <!-- Core -->
-    <xi:include href="core/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <!-- CAdES -->
-    <xi:include href="policy-impl-cades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- índice -->
+	<toc />
+
+	<!-- partes -->
+
+	<!-- Core -->
+	<xi:include href="core/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- CAdES -->
+	<xi:include href="policy-impl-cades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- Policy Engine -->
 	<!-- PAdES -->
-    <xi:include href="policy-impl-pades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	
-    <xi:include href="policy-engine/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <!-- Chain ICP Brasil -->
-    <xi:include href="chain-icp-brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <!-- TimeStamp -->
-    <xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <!-- Crytography -->
-    <xi:include href="cryptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />    
+	<xi:include href="policy-impl-pades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<xi:include href="policy-engine/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- Chain ICP Brasil -->
+	<xi:include href="chain-ICP-Brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- TimeStamp -->
+	<xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<!-- Crytography -->
+	<xi:include href="cryptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- Chain Homologação SERPRO -->
-    <xi:include href="chain-icp-brasil-homolog/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    <xi:include href="web-integration/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-    
+	<xi:include href="chain-ICP-Brasil-homolog/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="web-integration/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
 	<xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 </book>

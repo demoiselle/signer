@@ -38,7 +38,7 @@
 package org.demoiselle.signer.core.extension;
 
 /**
- * Enuns for oid extensios.
+ * Enums for oid extensions.
  */
 public enum ICPBrasilExtensionType {
 
