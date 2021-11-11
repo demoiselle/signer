@@ -42,8 +42,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- *
- *  Custom Messages Bundle implementation to allows parameterization
+ * Custom Messages Bundle implementation to allows parameterization.
  *
  */
 public class MessagesBundle {

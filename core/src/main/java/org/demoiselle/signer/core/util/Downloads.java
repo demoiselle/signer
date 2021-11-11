@@ -45,7 +45,7 @@ import java.net.URLConnection;
 import java.net.UnknownServiceException;
 
 /**
- * Class to support downloads
+ * Offer download service.
  */
 public class Downloads {
 

@@ -57,7 +57,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * connections utilities for CRL (Certificate Revocation list)
+ * Utilities related to CRL (Certificate Revocation list).
  */
 public class RepositoryUtil {
 
@@ -67,7 +67,7 @@ public class RepositoryUtil {
 	private static int byteWritten2;
 
 	/**
-	 * Digest to MD5
+	 * Digest to hexadecimal MD5.
 	 *
 	 * @param url source url
 	 * @return MD5 digest

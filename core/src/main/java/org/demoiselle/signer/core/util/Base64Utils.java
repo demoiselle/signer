@@ -45,7 +45,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Facilities for Base64 operations
+ * Facilities for Base64 operations.
  */
 public class Base64Utils {
 
