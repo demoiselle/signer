@@ -177,62 +177,62 @@ public class Configuration {
 		map.put("TokenOuSmartCard_25_birdID", winRoot.concat("/Program Files/Assistente Desktop birdID/resources/extraResources/windows/x64/vault-pkcs11.dll"));
 		// Certificado em Nuvem SERPRO NEOID - Windows
 		map.put("TokenOuSmartCard_26_neoid", winRoot.concat("/system32/SerproPkcs11.dll"));
-
-
+		map.put("TokenOuSmartCard_27_dexton_32", winRoot.concat("/system32/DXSafePKCS11.dll"));
+		map.put("TokenOuSmartCard_28_dexton_64", winRoot.concat("/system32/DXSafePKCS11.dll"));
+		
 
 		// ------------ Linux ------------
-		map.put("TokenOuSmartCard_27_safesign_ou_gd", "/usr/lib/libaetpkss.so");
-		map.put("TokenOuSmartCard_28_alladin", "/usr/lib/libgpkcs11.so");
-		map.put("TokenOuSmartCard_29_lutzbehnke", "/usr/lib/libgpkcs11.so.2");
+		map.put("TokenOuSmartCard_29_safesign_ou_gd", "/usr/lib/libaetpkss.so");
+		map.put("TokenOuSmartCard_30_alladin", "/usr/lib/libgpkcs11.so");
+		map.put("TokenOuSmartCard_31_lutzbehnke", "/usr/lib/libgpkcs11.so.2");
 		// Token Verde do Serpro
-		map.put("TokenOuSmartCard_30_pronova", "/usr/lib/libepsng_p11.so");
-		map.put("TokenOuSmartCard_31_pronova", "/usr/local/ngsrv/libepsng_p11.so.1");
+		map.put("TokenOuSmartCard_32_pronova", "/usr/lib/libepsng_p11.so");
+		map.put("TokenOuSmartCard_33_pronova", "/usr/local/ngsrv/libepsng_p11.so.1");
 		// Token Azul do Serpro
-		map.put("TokenOuSmartCard_32_safenet", "/usr/lib/libeTPkcs11.so");
-		map.put("TokenOuSmartCard_33_safenet", "/usr/lib/libeToken.so");
+		map.put("TokenOuSmartCard_34_safenet", "/usr/lib/libeTPkcs11.so");
+		map.put("TokenOuSmartCard_35_safenet", "/usr/lib/libeToken.so");
 
-		map.put("TokenOuSmartCard_34_safeweb_cis", "/usr/lib/libcmP11.so");
-		map.put("TokenOuSmartCard_35_safenet", "/usr/lib/libwdpkcs.so");
-		map.put("TokenOuSmartCard_36_safenet_64", "/usr/local/lib64/libwdpkcs.so");
-		map.put("TokenOuSmartCard_37_safenet", "/usr/local/lib/libwdpkcs.so");
+		map.put("TokenOuSmartCard_36_safeweb_cis", "/usr/lib/libcmP11.so");
+		map.put("TokenOuSmartCard_37_safenet", "/usr/lib/libwdpkcs.so");
+		map.put("TokenOuSmartCard_38_safenet_64", "/usr/local/lib64/libwdpkcs.so");
+		map.put("TokenOuSmartCard_39_safenet_local", "/usr/local/lib/libwdpkcs.so");
 		// Token Branco do Serpro
-		map.put("TokenOuSmartCard_38_watchdata_ICP", "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so");
-		map.put("TokenOuSmartCard_39_watchdata", "/usr/lib/watchdata/lib/libwdpkcs.so");
-		map.put("TokenOuSmartCard_40_watchdata_opt", "/opt/watchdata/lib64/libwdpkcs.so");
+		map.put("TokenOuSmartCard_40_watchdata_ICP", "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so");
+		map.put("TokenOuSmartCard_41_watchdata", "/usr/lib/watchdata/lib/libwdpkcs.so");
+		map.put("TokenOuSmartCard_42_watchdata_opt", "/opt/watchdata/lib64/libwdpkcs.so");
 
-		map.put("TokenOuSmartCard_41_opensc", "/usr/lib/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_42_opensc", "/usr/lib/pkcs11/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_43_pronova", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
-		map.put("TokenOuSmartCard_44_Oberthur", "/usr/local/AWP/lib/libOcsCryptoki.so");
-		map.put("TokenOuSmartCard_45_safenet", "/usr/lib/libscmccid.so");
+		map.put("TokenOuSmartCard_43_opensc_lib", "/usr/lib/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_44_opensc", "/usr/lib/pkcs11/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_45_pronova", "/usr/local/ngsrv/libepsng_p11.so.1.2.2");
+		map.put("TokenOuSmartCard_46_Oberthur", "/usr/local/AWP/lib/libOcsCryptoki.so");
+		map.put("TokenOuSmartCard_47_safenet_ccid", "/usr/lib/libscmccid.so");
 		// Certificado em Nuvem SERPRO NEOID - Linux
-		map.put("TokenOuSmartCard_46_neoid", "/usr/lib/libneoidp11.so");
+		map.put("TokenOuSmartCard_48_neoid", "/usr/lib/libneoidp11.so");
 		// Token Azul do Serpro
-		map.put("TokenOuSmartCard_47_safenet_64", "/usr/lib64/libeToken.so");
-		map.put("TokenOuSmartCard_48_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0");
-		map.put("TokenOuSmartCard_49_opensc64", "/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_50_opensc64", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_51_opensc", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
-		map.put("TokenOuSmartCard_52_opensc", "/usr/lib/opensc/opensc­pkcs11.so");
-		map.put("TokenOuSmartCard_53_birdid", "/opt/Assistente Desktop birdID/resources/extraResources/linux/x64/vault-pkcs11.so");
+		map.put("TokenOuSmartCard_49_safenet_lib64", "/usr/lib64/libeToken.so");
+		map.put("TokenOuSmartCard_50_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0");
+		map.put("TokenOuSmartCard_51_opensc64", "/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_52_opensc64_pkcs11", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
+		map.put("TokenOuSmartCard_53_opensc_lib", "/usr/lib/opensc/opensc­pkcs11.so");
+		map.put("TokenOuSmartCard_54_birdid", "/opt/Assistente Desktop birdID/resources/extraResources/linux/x64/vault-pkcs11.so");
 
 		// ------------ Mac ------------
 		// Token Branco do Serpro
-		map.put("TokenOuSmartCard_54_watchdata", "//usr//lib//libwdpkcs.dylib");
-		map.put("TokenOuSmartCard_55_watchdata", "//usr//local//lib//libwdpkcs.dylib");
-		map.put("TokenOuSmartCard_56_watchdataBB",	"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
+		map.put("TokenOuSmartCard_55_watchdata", "//usr//lib//libwdpkcs.dylib");
+		map.put("TokenOuSmartCard_56_watchdata_local", "//usr//local//lib//libwdpkcs.dylib");
+		map.put("TokenOuSmartCard_57_watchdataBB",	"//Applications//WatchKey USB Token Admin Tool.app//Contents//MacOS//lib//libWDP11_BR_GOV.dylib");
 
-		map.put("TokenOuSmartCard_57_safenet", "//usr//local//lib//libetpkcs11.dylib");
-		map.put("TokenOuSmartCard_58_safenet",	"//usr//local//lib//libaetpkss.dylib");
-		map.put("TokenOuSmartCard_59_GD",	"//Applications/tokenadmin.app/Contents/Frameworks/libaetpkss.dylib");
-		map.put("TokenOuSmartCard_60_safenet", "//Library//Frameworks//eToken.framework//Versions//A//libeToken.dylib");
-		map.put("TokenOuSmartCard_61_CertSign_desktopID", "//usr//local//lib//libdesktopID_Provider.dylib");
-		map.put("TokenOuSmartCard_62_gdBurty_Mac",	"//Applications//tokenadmin.app//Contents//Frameworks//libaetpkss.dylib");
+		map.put("TokenOuSmartCard_58_safenet_libetpkcs11", "//usr//local//lib//libetpkcs11.dylib");
+		map.put("TokenOuSmartCard_59_safenet_libaetpkss",	"//usr//local//lib//libaetpkss.dylib");
+		map.put("TokenOuSmartCard_60_GD",	"//Applications/tokenadmin.app/Contents/Frameworks/libaetpkss.dylib");
+		map.put("TokenOuSmartCard_61_safenet", "//Library//Frameworks//eToken.framework//Versions//A//libeToken.dylib");
+		map.put("TokenOuSmartCard_62_CertSign_desktopID", "//usr//local//lib//libdesktopID_Provider.dylib");
+		map.put("TokenOuSmartCard_63_gdBurty_Mac",	"//Applications//tokenadmin.app//Contents//Frameworks//libaetpkss.dylib");
 		// Certificado em Nuvem SERPRO NEOID - MacOS
-		map.put("TokenOuSmartCard_63_neoid",	"//Applications//NeoID Desktop.app//Contents//Java//tools//macos//libneoidp11.dylib");
+		map.put("TokenOuSmartCard_64_neoid",	"//Applications//NeoID Desktop.app//Contents//Java//tools//macos//libneoidp11.dylib");
 
-		map.put("TokenOuSmartCard_64_certisign_desktopid",	"//usr/local//lib//libdesktopID_Provider.dylib");
-		map.put("TokenOuSmartCard_65_birdID",	"//Applications//Assistente Desktop birdID.app//Contents//resources/extraResources//osx//x64//vault-pkcs11.dylib");
+		map.put("TokenOuSmartCard_65_certisign_desktopid",	"//usr/local//lib//libdesktopID_Provider.dylib");
+		map.put("TokenOuSmartCard_66_birdID",	"//Applications//Assistente Desktop birdID.app//Contents//resources/extraResources//osx//x64//vault-pkcs11.dylib");
 
 
 
