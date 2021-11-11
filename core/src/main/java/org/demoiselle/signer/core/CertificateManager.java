@@ -155,7 +155,7 @@ public class CertificateManager {
 	}
 
 	/**
-	 * Load a java.security.cert.X509Certificate
+	 * Load a {@link X509Certificate}.
 	 *
 	 * @param object destiny of load operation
 	 */
@@ -190,7 +190,7 @@ public class CertificateManager {
 		try {
 			object = clazz.newInstance();
 		} catch (IllegalAccessException | InstantiationException e) {
-			throw new CertificateCoreException(coreMessagesBundle.getString("error.new.instace", clazz.getName()), e);
+			throw new CertificateCoreException(coreMessagesBundle.getString("error.new.instance", clazz.getName()), e);
 		}
 		load(object);
 		return object;

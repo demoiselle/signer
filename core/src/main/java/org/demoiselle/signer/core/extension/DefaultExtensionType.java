@@ -38,9 +38,7 @@
 package org.demoiselle.signer.core.extension;
 
 /**
- * Enuns for extensios oid: CRL_URL, SERIAL_NUMBER, ISSUER_DN, SUBJECT_DN, KEY_USAGE,
- * PATH_LENGTH, AUTHORITY_KEY_IDENTIFIER, SUBJECT_KEY_IDENTIFIER,
- * BEFORE_DATE, AFTER_DATE, CERTIFICATION_AUTHORITY
+ * Enums for extensions.
  */
 public enum DefaultExtensionType {
 

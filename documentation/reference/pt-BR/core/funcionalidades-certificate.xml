@@ -1,6 +1,7 @@
 <?xml version='1.0' encoding="utf-8"?>
-<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
-   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN" "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" [
+
+]>
 <chapter id="certificate-funcionalidades">
 
     <title>Funcionalidades relativas ao Certificado</title>
@@ -15,45 +16,57 @@
         . A validação ocorre no momento da instanciação do objeto CertificateManager. Segue abaixo a criação do CertificateManager.
     </para>
 
-    <programlisting role="JAVA"><![CDATA[CertificateManager cm = new CertificateManager(x509);]]></programlisting>
+    <programlisting role="JAVA">
+        <![CDATA[CertificateManager cm = new CertificateManager(x509);]]>
+    </programlisting>
 
     <para>
         É possível desativar o carregamento dos validadores mudando a instrução para:
     </para>
 
-    <programlisting role="JAVA"><![CDATA[CertificateManager cm = new CertificateManager(x509, false);]]></programlisting>
+    <programlisting role="JAVA">
+        <![CDATA[CertificateManager cm = new CertificateManager(x509, false);]]>
+    </programlisting>
 
     <para>
         Caso seja necessário implementar os próprios validadores de certificado basta mudar a instrução para:
     </para>
 
-    <programlisting role="JAVA"><![CDATA[
+    <programlisting role="JAVA">
+        <![CDATA[
 /* Neste caso os validadores padrao tambem serao carregados. */
-CertificateManager cm = new CertificateManager(x509, validator1, validator2, validatorN);]]></programlisting>
+CertificateManager cm = new CertificateManager(x509, validator1, validator2, validatorN);]]>
+    </programlisting>
 
     <para>
         ou
     </para>
 
-    <programlisting role="JAVA"><![CDATA[
+    <programlisting role="JAVA">
+        <![CDATA[
 /* Neste caso os validadores padrao nao serao carregados. */
-CertificateManager cm = new CertificateManager(x509, false, validator1, validator2, validatorN);]]></programlisting>
+CertificateManager cm = new CertificateManager(x509, false, validator1, validator2, validatorN);]]>
+    </programlisting>
 
     <para>
         É possível também criar um CertificateManager e passar um arquivo do tipo PEM que represente um objeto X509Certificate, conforme mostrado abaixo.
     </para>
 
-    <programlisting role="JAVA"><![CDATA[
+    <programlisting role="JAVA">
+        <![CDATA[
 File certFile = new File("certificado.pem");
-CertificateManager cm = new CertificateManager(certFile);]]></programlisting>
+CertificateManager cm = new CertificateManager(certFile);]]>
+    </programlisting>
 
     <para>
         Também é possível criar um CertificateManager que carrege um certificado direto de um token.
     </para>
 
-    <programlisting role="JAVA"><![CDATA[
+    <programlisting role="JAVA">
+        <![CDATA[
 String pinNumer = "pinNumber do token";
-CertificateManager cm = new CertificateManager(pinNumber);]]></programlisting>
+CertificateManager cm = new CertificateManager(pinNumber);]]>
+    </programlisting>
 
     <section>
         <title>O Certificado Digital</title>
@@ -73,12 +86,13 @@ CertificateManager cm = new CertificateManager(pinNumber);]]></programlisting>
                 o seu OIDExtension. Para executar a carga das informações basta passar a classe/objeto para o CertificateManager.
             </para>
 
-            <programlisting role="JAVA"><![CDATA[class Cert {
+            <programlisting role="JAVA">
+                <![CDATA[class Cert {
 
     @ICPBrasilExtension(type=ICPBrasilExtensionType.CPF)
     private String cpf;
 
-    @ICPBrasilExtension(type=ICPBrasilExtensionType.NOME)
+    @ICPBrasilExtension(type=ICPBrasilExtensionType.NAME)
     private String nome;
 
     @DefaultExtension(type=DefaultExtensionType.CRL_URL)
@@ -96,14 +110,17 @@ CertificateManager cm = new CertificateManager(pinNumber);]]></programlisting>
         return crlURL;
     }
 
-}]]></programlisting>
+}]]>
+            </programlisting>
 
             <para>
                 Em seguida basta efetuar o carregamento da classe.
             </para>
 
-            <programlisting role="JAVA"><![CDATA[CertificateManager cm = new CertificateManager(x509);
-Cert cert = cm.load(Cert.class);]]></programlisting>
+            <programlisting role="JAVA">
+                <![CDATA[CertificateManager cm = new CertificateManager(x509);
+Cert cert = cm.load(Cert.class);]]>
+            </programlisting>
 
 
             <section>
@@ -219,43 +236,57 @@ Cert cert = cm.load(Cert.class);]]></programlisting>
                         <para>NIVEL_CERTIFICADO</para>
                     </listitem>
                 </itemizedlist>
-                <para> <note>
-                <para>Em computação, um identificador de objeto, do inglês object identifier (OID), é um identificador usado para nomear um objeto (comparar com URN).[1] Estruturalmente, um OID consiste de um nó em um espaço de nomes atribuído hierarquicamente, formalmente definido usando o padrão ASN.1 do ITU-T, x.690. Números sucessivos de nós, começando na raiz da árvore, identificam cada nó na árvore. Projetistas configuram novos nós registrando-os sob a autoridade de registro de nós.[2] A raiz da árvore contem os três seguintes arcos:</para>
-                <itemizedlist>
-                <listitem>I: ITU-T</listitem>
-                <listitem>II: ISO</listitem>
-                <listitem>III: conjunto-iso-itu-t</listitem>
-                </itemizedlist>
-                <para>Em programação de computador, um identificador de objeto geralmente toma a forma de um inteiro ou ponteiro específico de implementação que identifica unicamente um objeto. Entretanto, IDOs são uma abordagem específica para criação globalmente de identificadores de objeto únicos em um sistema distribuído.
+                <para>
+                    <note>
+                        <para>Em computação, um identificador de objeto, do inglês object identifier (OID), é um identificador usado para nomear um objeto (comparar com URN).[1] Estruturalmente, um OID consiste de um nó em um espaço de nomes atribuído hierarquicamente, formalmente definido usando o padrão ASN.1 do ITU-T, x.690. Números sucessivos de nós, começando na raiz da árvore, identificam cada nó na árvore. Projetistas configuram novos nós registrando-os sob a autoridade de registro de nós.[2] A raiz da árvore contem os três seguintes arcos:</para>
+                        <itemizedlist>
+                            <listitem>I: ITU-T</listitem>
+                            <listitem>II: ISO</listitem>
+                            <listitem>III: conjunto-iso-itu-t</listitem>
+                        </itemizedlist>
+                        <para>Em programação de computador, um identificador de objeto geralmente toma a forma de um inteiro ou ponteiro específico de implementação que identifica unicamente um objeto. Entretanto, IDOs são uma abordagem específica para criação globalmente de identificadores de objeto únicos em um sistema distribuído.
 Referências</para>
 
-					<itemizedlist>
-						<listitem><ulink url="https://standards.ieee.org/develop/regauth/tut/oid.pdf"> [1]</ulink> </listitem>
-						<listitem><ulink url="http://www.alvestrand.no/objectid"> [2]</ulink> </listitem>
-												
-					</itemizedlist>
-					<para font-size="10pt">  Fonte:  <ulink url=" https://pt.wikipedia.org/wiki/Identificador_de_objeto"> https://pt.wikipedia.org/wiki/Identificador_de_objeto</ulink></para>					
-                </note>
-                </para>                
+                        <itemizedlist>
+                            <listitem>
+                                <ulink url="https://standards.ieee.org/develop/regauth/tut/oid.pdf"> [1]</ulink>
+                            </listitem>
+                            <listitem>
+                                <ulink url="http://www.alvestrand.no/objectid"> [2]</ulink>
+                            </listitem>
+
+                        </itemizedlist>
+                        <para font-size="10pt">
+                            Fonte:
+                            <ulink url=" https://pt.wikipedia.org/wiki/Identificador_de_objeto"> https://pt.wikipedia.org/wiki/Identificador_de_objeto</ulink>
+                        </para>
+                    </note>
+                </para>
             </section>
         </section>
         <section>
             <title>Extração de Informações utilizando Classes</title>
             <para>
                 Uma outra maneira de obter os valores necessários do certificado é através das classes de apoio fornecidas pelo componente. Caso deseje obter apenas informações, básicas,
-                podemos utilizar a classe <classname>BasicCertificate</classname>.
+                podemos utilizar a classe
+                <classname>BasicCertificate</classname>
+                .
             </para>
             <para>
                 A seguir temos o exemplo de utilização, onde passamos um certificado para a classe e em seguida obtemos exibimos algumas informações no console.
             </para>
-            <programlisting linenumbering="true" role="JAVA"><![CDATA[BasicCertificate bc = new BasicCertificate(certificate);
+            <programlisting linenumbering="true" role="JAVA">
+                <![CDATA[BasicCertificate bc = new BasicCertificate(certificate);
 logger.log(Level.INFO, "Nome....................[{0}]", bc.getNome());
 logger.log(Level.INFO, "E-mail..................[{0}]", bc.getEmail());
 logger.log(Level.INFO, "Numero de serie.........[{0}]", bc.getSerialNumber());
-logger.log(Level.INFO, "Nivel do Certificado....[{0}]", bc.getNivelCertificado());]]></programlisting>
+logger.log(Level.INFO, "Nivel do Certificado....[{0}]", bc.getNivelCertificado());]]>
+            </programlisting>
 
             <para>
-                Para obter informações mais específicas de um certificado de um e-CPF, e-CNPJ ou de equipamento, devemos utilizar a classe <classname>CertificateExtra</classname>.
+                Para obter informações mais específicas de um certificado de um e-CPF, e-CNPJ ou de equipamento, devemos utilizar a classe
+                <classname>CertificateExtra</classname>
+                .
             </para>
 
             <para>
@@ -266,23 +297,29 @@ logger.log(Level.INFO, "Nivel do Certificado....[{0}]", bc.getNivelCertificado()
                 O exemplo a seguir recupera o CPF e o número RIC de um certificado digital do tipo e-CPF.
             </para>
 
-            <programlisting linenumbering="true" role="JAVA"><![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
+            <programlisting linenumbering="true" role="JAVA">
+                <![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
 logger.log(Level.INFO, "CPF.....................[{0}]", ce.getOID_2_16_76_1_3_1().getCPF());
-logger.log(Level.INFO, "RIC.....................[{0}]", ce.getOID_2_16_76_1_3_9().getRegistroDeIdentidadeCivil());]]></programlisting>
+logger.log(Level.INFO, "RIC.....................[{0}]", ce.getOID_2_16_76_1_3_9().getRegistroDeIdentidadeCivil());]]>
+            </programlisting>
 
             <para>
                 O exemplo a seguir recupera o CNPJ de um certificado digital do tipo e-CNPJ.
             </para>
 
-            <programlisting linenumbering="true" role="JAVA"><![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
-logger.log(Level.INFO, "CNPJ....................[{0}]", ce.getOID_2_16_76_1_3_3().getCNPJ());]]></programlisting>
+            <programlisting linenumbering="true" role="JAVA">
+                <![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
+logger.log(Level.INFO, "CNPJ....................[{0}]", ce.getOID_2_16_76_1_3_3().getCNPJ());]]>
+            </programlisting>
 
             <para>
                 O exemplo a seguir recupera o nome do responsável de um certificado digital do tipo Equipamento.
             </para>
 
-            <programlisting linenumbering="true" role="JAVA"><![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
-logger.log(Level.INFO, "Nome....................[{0}]", ce.getOID_2_16_76_1_3_2().getNome());]]></programlisting>
+            <programlisting linenumbering="true" role="JAVA">
+                <![CDATA[CertificateExtra ce = new CertificateExtra(certificate);
+logger.log(Level.INFO, "Nome....................[{0}]", ce.getOID_2_16_76_1_3_2().getNome());]]>
+            </programlisting>
         </section>
     </section>
 
@@ -331,10 +368,12 @@ logger.log(Level.INFO, "Nome....................[{0}]", ce.getOID_2_16_76_1_3_2(
                 nome do arquivos armazenado no file system, como no exemplo abaixo:
             </para>
 
-            <programlisting role="HTML"><![CDATA[
+            <programlisting role="HTML">
+                <![CDATA[
 73bc162ad833c4da45ea60ac8ac016cc=https\://thor.serpro.gov.br/LCR/LCRPRA1.crl
 75bc176ad833c4da05ea70ac8ac016ca=http\://ccd.serpro.gov.br/lcr/ACPRv1.crl
-43bc194ad833c4da95ea90ac8ac016cb=http\://ccd2.serpro.gov.br/lcr/ACPRv2.crl]]></programlisting>
+43bc194ad833c4da95ea90ac8ac016cb=http\://ccd2.serpro.gov.br/lcr/ACPRv2.crl]]>
+            </programlisting>
 
             <para>
                 O diretório e o nome do arquivo de índice devem ser configurados através de chaves informadas em variáveis de ambiente:
@@ -376,9 +415,11 @@ logger.log(Level.INFO, "Nome....................[{0}]", ce.getOID_2_16_76_1_3_2(
             </para>
 
 
-            <programlisting role="JAVA"><![CDATA[Configuration config = Configuration.getInstance();
+            <programlisting role="JAVA">
+                <![CDATA[Configuration config = Configuration.getInstance();
 config.setCrlIndex(".crl_index");
-config.setCrlPath("/tmp/crls/");]]></programlisting>
+config.setCrlPath("/tmp/crls/");]]>
+            </programlisting>
 
             <para>
                 Quando o arquivo de crl se encontra com data vencida ou não existe o arquivo no diretório, o repositório Offline realiza o download do arquivo de crl e o armazena no diretório de crl.
@@ -391,15 +432,18 @@ config.setCrlPath("/tmp/crls/");]]></programlisting>
             <title>Configuração</title>
 
             <para>
-                Para modificar o modo de uso do repositório (online ou offline) deve ser configurada a chave <emphasis>security.certificate.repository.online.</emphasis>
+                Para modificar o modo de uso do repositório (online ou offline) deve ser configurada a chave
+                <emphasis>security.certificate.repository.online.</emphasis>
             </para>
 
             <para>
                 O valor padrão é true, mas é possível modificar programaticamente conforme abaixo.
             </para>
 
-            <programlisting role="JAVA"><![CDATA[Configuration config = Configuration.getInstance();
-config.setOnline(false);]]></programlisting>
+            <programlisting role="JAVA">
+                <![CDATA[Configuration config = Configuration.getInstance();
+config.setOnline(false);]]>
+            </programlisting>
         </section>
     </section>
 </chapter>
