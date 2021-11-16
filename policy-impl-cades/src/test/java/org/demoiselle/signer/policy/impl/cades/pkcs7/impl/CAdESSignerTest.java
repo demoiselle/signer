@@ -48,6 +48,7 @@ import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
+import org.junit.Test;
 
 import java.io.*;
 import java.security.*;
@@ -148,12 +149,12 @@ public class CAdESSignerTest {
 
 
 			// informar o caminho e nome do arquivo
-			File filep12 = new File("/home/signer/Documentos/00NeoSigner/pf01.p12");
+			File filep12 = new File("/");
 
 
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
 			// Informar a senha
-			KeyStore keystore = loader.getKeyStore("teste");
+			KeyStore keystore = loader.getKeyStore("");
 			return keystore;
 
 		} catch (Exception e1) {
@@ -183,7 +184,7 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	//@Test
+	@Test
 	public void testSignDetached() {
 		try {
 

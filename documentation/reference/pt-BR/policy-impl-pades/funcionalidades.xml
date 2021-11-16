@@ -13,7 +13,7 @@
     </para>
     
     <para>     
-        Para as funções de VALIDAÇÃO temos a interface <literal>org.demoiselle.signer.policy.impl.cades.Checker</literal>
+        Para as funções de VALIDAÇÃO temos a interface <literal>org.demoiselle.signer.policy.impl.pades.PCKS7Checker</literal>
     </para>
 
     <para>

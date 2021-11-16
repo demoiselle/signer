@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="policy-impl-xades-configuracao">
+
+    <title>Configuração do Policy XAdES</title>
+
+    <section>
+        <title>Instalação do componente</title>
+                <para>
+            Para utilizar o componente <emphasis>policy-impl-xades</emphasis> num projeto Java, 
+            basta adicionar a sua dependência no arquivo <filename> pom.xml </filename>, conforme o seu gerenciador de projetos:
+        </para>
+        <para> <itemizedlist>
+        		<listitem>
+        		 <para><ulink url="https://maven.apache.org/">Apache-Maven</ulink></para>
+        		 <para>
+        		 	<programlisting ><![CDATA[
+        		<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>policy-impl-xades</artifactId>
+				<version>3.7.0</version>
+			</dependency>]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        			<listitem>
+        		 <para><ulink url="https://buildr.apache.org/">Apache Buildr</ulink></para>
+        		 <para>
+        		 	<programlisting ><![CDATA['org.demoiselle.signer:policy-impl-xades:jar:3.7.0']]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        		<listitem>
+        		 <para><ulink url="http://ant.apache.org/ivy/">Apache Ivy</ulink></para>
+        		 <para>
+        		 	<programlisting ><![CDATA[<dependency org="org.demoiselle.signer" name="policy-impl-xades" rev="3.7.0" />]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="http://docs.groovy-lang.org/latest/html/documentation/grape.html">Groovy Grape</ulink></para>
+        		 <para>
+        		 	<programlisting ><![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='policy-impl-xades', version='3.7.0'))]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="https://github.com/grails/grails-gradle-plugin">Gradle/Grails</ulink></para>
+        		 <para>
+        		 	<programlisting ><![CDATA[<dependency org="org.demoiselle.signer" name="policy-impl-xades" rev="3.7.0" />]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="http://www.scala-sbt.org/">Scala SBT</ulink></para>
+        		 <para>
+        		 	<programlisting ><![CDATA[libraryDependencies += "org.demoiselle.signer" % "policy-impl-xades" % "3.7.0"]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	<listitem>
+        		 <para><ulink url="https://leiningen.org/">Leiningen</ulink></para>
+        		 <para>
+        		 	<programlisting ><![CDATA[<[org.demoiselle.signer/policy-impl-xades "3.7.0"]]]>
+			</programlisting>
+        		 </para>
+        		</listitem>
+        	</itemizedlist>
+        </para>
+        
+		<para> Caso não esteja utilizando nenhum outro tipo de gerenciador (estava morando numa caverna nos últimos dez anos), pode baixar o .jar do repositório:
+		<para><ulink url="https://repo1.maven.org/maven2/org/demoiselle/signer/policy-impl-xades/">https://repo1.maven.org/maven2/org/demoiselle/signer/policy-impl-xades/</ulink></para>
+		 
+		</para>
+        
+    </section>
+
+</chapter>

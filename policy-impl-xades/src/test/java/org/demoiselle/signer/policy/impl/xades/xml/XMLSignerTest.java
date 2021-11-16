@@ -103,7 +103,7 @@ public class XMLSignerTest {
 
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica de Assinatura
-			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RB_XADES_2_4.getOID());
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
 
 
 			xmlSigner.setSignatureAlgorithm(Constants.SHA512withRSA);
@@ -413,8 +413,6 @@ public class XMLSignerTest {
 			String fileName = "teste_assinatura.xml";
 
 			ClassLoader classLoader = getClass().getClassLoader();
-			URL fileUri = classLoader.getResource(fileName);
-			File newFile = new File(fileUri.toURI());
 
 			String alias = getAlias(ks);
 			XMLSigner xmlSigner = new XMLSigner();

@@ -1,0 +1,25 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE part PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<part id="policy-impl-xades-master">
+
+	<title>Implementação das Políticas XAdES</title>
+
+	<partintro>
+		<para>
+			O componente
+			<emphasis>Policy-Impl-XAdES</emphasis> foi desenvolvido para atender às necessidades de assinatura digital no âmbito da ICP-Brasil.
+			 Conforme as políticas para o padrão <ulink url="http://politicas.icpbrasil.gov.br/LPA_XAdES.xml">PBAD-XAdES</ulink>.
+			 Esse padrão é utilizado para Assinaturas Digitais em Arquivos no formtao XML, conforme define o <ulink url="https://www.gov.br/iti/pt-br/assuntos/legislacao/instrucoes-normativas/IN032021_DOC_15.03_assinada.pdf"> DOC-ICP-15</ulink> da ICP-Brasil.
+			</para>
+			<para> 
+			 A validação dessas assinaturas pode ser feita através do Site: <ulink url="https://verificador.iti.gov.br/">https://verificador.iti.gov.br/</ulink> 
+			 ou utilizando o <ulink url="http://www.serpro.gov.br/assinador-digital/">Assinador SERPRO.</ulink> 
+			  
+		</para>
+	</partintro>
+	<!-- capítulos -->
+	<xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="funcionalidades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+</part>
+

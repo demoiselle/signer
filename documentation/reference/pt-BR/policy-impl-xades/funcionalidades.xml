@@ -1,0 +1,307 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="policy-impl-xades-funcionalidades">
+
+    <title id="title-policy-impl-xades-funcionalidades">Funcionalidades</title>
+    <para>
+        Este componente provê mecanismos de assinatura digital baseado nas normas ICP-Brasil e implementa mecanismos de assinatura digital no formato XML
+    </para>
+    <para>
+    O padrão <ulink url="https://www.w3.org/TR/XAdES/">xades</ulink> define o formato para assinatura.   
+            E a ICP-Brasil define um conjunto próprio  de informações básicas para as assinaturas digitais chamado <ulink url="https://www.gov.br/iti/pt-br/assuntos/repositorio/artefatos-de-assinatura-digital">PBAD</ulink>
+    </para>      
+    <para>     
+        A interface <literal>org.demoiselle.signer.policy.impl.xades.xml.Signer</literal>
+        provê as funcionalidades de Assinatura.
+    </para>
+    
+    <para>     
+        Para as funções de VALIDAÇÃO temos a interface <literal>org.demoiselle.signer.policy.impl.xades.xml.Checker</literal>
+    </para>
+
+    <para>
+        Este componente, até a presente versão, permite assinar no formato Enveloped (A Assinatura passa ser parte do documento) e Detached Envloped (Assinatura Desanexada). 
+    </para>
+
+   
+    <section id="policy-impl-xades-funcionalidades-assinar-enveloped">
+        <title>Assinatura Enveloped</title>
+        <para>
+            Para Assinar em XML Enveloped, a entrada deve ser um arquivo em formato XML.
+        </para>
+        <para>
+        <itemizedlist>            
+           	    <listitem>
+                    <para>
+                        <emphasis>Como entrada pode ser informado</emphasis>
+                    </para>
+                    <para>
+                        <segmentedlist>
+                            <seglistitem>Local do arquivo no sistema de arquivos</seglistitem>
+                            <seglistitem>String que representa o arquivo XML</seglistitem>
+                            <seglistitem>Um objeto da classe org.w3c.dom.Document</seglistitem>
+                            <seglistitem>InputStream</seglistitem>
+                            <seglistitem>ByteArray</seglistitem>
+                        </segmentedlist>
+                    </para>
+                 </listitem>
+            </itemizedlist>
+        </para>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a utilização do componente nesta funcionalidade
+        </para>
+
+        <programlisting role="JAVA"><![CDATA[
+        	Keystore ks = getKeyStoreTokenBySigner();
+     		File newFile = new File("caminho para o arquivo");
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para A3
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para A1
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "senha".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// o parâmentro true é para diferenciar do método que recebe uma String contendo um XML
+			Document doc = xmlSigner.signEnveloped(true, newFile.getPath());
+ 
+]]></programlisting>
+
+        <para>
+            A seguir temos um fragmento de código que demonstra a utilização do componente com informação da política de assinatura.
+             Neste caso podemos escolher uma das políticas (em vigor) que já acompanham o componente e referem-se à Assinatura Digital padrão XAdES.
+        </para>
+        <itemizedlist>
+            <listitem>
+                <literal>AD_RB_XADES_2_4</literal>
+                Refere-se à Assinatura Digital de Referência Básica versão 2.4;
+            </listitem>
+            <listitem>
+                <literal>AD_RT_XADES_2_4</literal>
+                Refere-se à Assinatura Digital de Referência Temporal (com carimbo de tempo) versão 2.4;
+            </listitem>
+        </itemizedlist>
+
+        <programlisting role="JAVA"><![CDATA[
+        	Keystore ks = getKeyStoreTokenBySigner();
+     		File newFile = new File("caminho para o arquivo");
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para A3
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para A1
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "senha".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			// para mudar a politica de Assinatura
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// indicando o local do arquivo XML
+			Document doc = xmlSigner.signEnveloped(true, newFile.getPath());
+
+]]></programlisting>
+
+
+        <important>
+            <para>
+                Caso não seja especificada nenhuma política, o componente assumirá a política padrão AD_RB_XADES_2_4.
+            </para>
+        </important>
+    </section>
+    
+   <section  id="policy-impl-xades-funcionalidades-assinatura-detached">
+        <title>
+            Geração de Assinatura XML do tipo Detached
+        </title>
+        <para>
+        	Podemos gerar uma assinatura em formato XML para qualquer tipo de Arquivo. Da mesmo forma que o padrão CAdES gera um arquivo separado (.p7s),
+        	neste caso teremos um arquivo no formato xml desanexado do contéudo assinado.
+        </para>
+        <para>Abaixo um trecho de código exemplo:</para>
+        
+        <programlisting role="JAVA"><![CDATA[
+			KeyStore ks =  getKeyStoreTokenBySigner();
+			File newFile = new File("caminho para o arquivo");
+			String alias = getAlias(ks);
+			XMLSigner xmlSigner = new XMLSigner();
+
+			// para A3
+			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
+
+			// para A1
+			// quando certificado em arquivo, precisa informar a senha
+			// char[] senha = "senha".toCharArray();
+			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+
+			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
+			Document doc = xmlSigner.signDetachedEnveloped(newFile.getPath());
+]]></programlisting>
+
+    </section> 		
+
+    <section id="policy-impl-xades-funcionalidades-validar">
+
+        <title>
+            Validação de assinatura XML - Enveloped
+        </title>
+
+        <para>
+      		A validação de uma Assinatura em XML consiste em enviar ao componente o arquivo XML que contém a Assinatura.
+        </para>
+        <para>
+        <itemizedlist>            
+           	    <listitem>
+                    <para>
+                        <emphasis>Como entrada pode ser informado</emphasis>
+                    </para>
+                    <para>
+                        <segmentedlist>
+                            <seglistitem>Local do arquivo no sistema de arquivos</seglistitem>
+                            <seglistitem>String que representa o arquivo XML</seglistitem>
+                            <seglistitem>Um objeto da classe org.w3c.dom.Document</seglistitem>
+                            <seglistitem>InputStream</seglistitem>
+                            <seglistitem>ByteArray</seglistitem>
+                        </segmentedlist>
+                    </para>
+                 </listitem>
+            </itemizedlist>
+        </para>
+        
+         <para>
+            A seguir temos um fragmento de código que demonstra a utilização do componente nesta funcionalidade
+        </para>
+        
+
+		<programlisting role="JAVA"><![CDATA[
+			File newFile = new File("caminho para o arquivo");
+			XMLChecker xadesChecker = new XMLChecker();
+			xadesChecker.check(true, newFile.getPath());
+			List<XMLSignatureInformations> results = new ArrayList<XMLSignatureInformations>();
+			results = xadesChecker.getSignaturesInfo();
+]]></programlisting>
+
+	<para>
+	 O retorno é um objeto do tipo org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations que possui os seguintes atributos
+	 </para>
+	 <programlisting role="JAVA"><![CDATA[
+public class SignatureInformations {
+
+	private LinkedList<X509Certificate> chain; // cadeia do certificado que gerou a assinatura 
+	private Date signDate;  // data do equipamento no momento da geração das assinatura (não tem validade legal)
+   	private Timestamp timeStampSigner = null; // Carimbo de tempo da assinatura, quando a politica utilizada permitir
+   	private XMLSignaturePolicy signaturePolicy; // Politica ICP-BRASIL usada para geração da assinatura
+   	private Date notAfter; // data de vencimento do certificado que produziu a assinatura
+	private LinkedList<String> validatorWarnins = new LinkedList<String>(); // Lista de avisos que por ventura possam ter sido encontrados na validação da assinatura
+	private LinkedList<String> validatorErrors = new LinkedList<String>();  // Lista de erros que por ventura possam ter sido encontrados na validação da assinatura
+	private boolean invalidSignature = false; // Se a assinatura é válida
+	private BasicCertificate icpBrasilcertificate = null; // Class que representa o certificado no padrão ICP-Brasil que produziu a Assinatura
+   	
+   	]]></programlisting>
+   	
+   	
+    </section>
+    <section  id="policy-impl-xades-funcionalidades-val-detached">
+        <title>
+            Validação de assinatura para XML Detached
+        </title>
+        <para>
+        	Na validação de uma assinatura XML Detached, temos além do arquivo .xml que contém a Assinautra temos outro arquivo com o conteúdo assinado. 
+            A seguir temos um fragmento de código que demonstra esta validação.
+        </para>
+        <programlisting role="JAVA"><![CDATA[
+			File newFile = new File("caminho até o contéudo assinado);
+			File newSignatureFile = new File("caminho até o XML com a Assinatura");
+			XMLChecker xadesChecker = new XMLChecker();
+			xadesChecker.check(newFile.getPath(), newSignatureFile.getPath());
+]]></programlisting>
+
+    </section>
+
+<section id="policy-impl-xades-funcionalidades-resultados-validacao">
+        <title>
+            Tratando os resultados da valiação
+        </title>
+        <para>
+        	Como é possível que um mesmo arquivo possa contar várias assinaturas, só será gerada exceção quando a assinatura ou o arquivo estiverem comprometidos
+        	Nos demais casos, o Demoiselle-Signer irá devolver o resultado numa lista de objetos XMLSignatureInformations.
+        	Essa classe contém os seguintes atributos:
+       	
+        	<para> 
+        	<itemizedlist>
+        		<listitem> <para> chain;</para> <para> Lista X509Certificate com a cadeia completa do certificado do Assinante</para>
+        		</listitem>
+        		<listitem> <para> signDate</para> <para>A data do equipamento onde foi gerada a assinatura, e serve apenas como referência, não tem nenhuma validade legal</para>
+        		</listitem>
+        		<listitem> <para> timeStampSigner </para> <para>É o carimbo do Tempo (Timestamp) incluído na Assinatura, é a prova legal da data e hora que a Assinatura foi gerada.</para>
+        		</listitem>
+        		<listitem> <para> signaturePolicy;</para> <para>A política (SignaturePolicy) que foi usada para gerar a Assinatura</para>
+        		</listitem>
+        		<listitem> <para> notAfter;</para> <para>A data de validade do Certificado do Assinante</para>
+        		</listitem>
+        		<listitem> <para> validatorWarnins </para> <para>Lista de Avisos. A assinatura pode estar correta mas não foi possível verificar algum atributo exigido por uma política da ICP-Brasil, que serão listados aqui</para>
+        		</listitem>
+        		<listitem> <para>validatorErrors </para> <para> Lista de Erros. A assinatura pode estar correta mas não foi possível verificar alguma condição de validação exigida pela ICP-Brasil</para>
+        		</listitem>
+        		<listitem> <para>invalidSignature </para> <para>valor booleano, que indica que Assinatura não está válida</para>
+        		</listitem>
+        		<listitem> <para>icpBrasilcertificate  </para> <para> BasicCertificate do Assinante</para>
+        		</listitem>
+        	</itemizedlist>
+        	</para> 
+        	Cabe ao sistema com base nos avisos ou erros, aceitar ou não a Assinatura. Apesar de existirem as políticas, qualquer tipo de Assinatura gerada com um certificado ICP-Brasil tem validade legal.
+            A seguir temos um fragmento de código que demonstra esta validação.
+        </para>
+        <programlisting role="JAVA"><![CDATA[
+        List<XMLSignatureInformations> results = new ArrayList<XMLSignatureInformations>();
+        results = xadesChecker.getSignaturesInfo();
+		if (!results.isEmpty()) {
+				for (XMLSignatureInformations sis : results) {
+					for (String valErr : sis.getValidatorErrors()) {
+						System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
+						System.err.println(valErr);
+					}
+
+					for (String valWarn : sis.getValidatorWarnins()) {
+						System.err.println("++++++++++++++ AVISOS ++++++++++++++++++");
+						System.err.println(valWarn);
+					}
+					if (sis.getSignaturePolicy() != null) {
+						System.out.println("------ Politica ----------------- ");
+						System.out.println(sis.getSignaturePolicy().toString());
+					}
+					BasicCertificate bc = sis.getIcpBrasilcertificate();
+					System.out.println(bc.toString());
+					if (bc.hasCertificatePF()) {
+						System.out.println(bc.getICPBRCertificatePF().getCPF());
+					}
+					if (bc.hasCertificatePJ()) {
+						System.out.println(bc.getICPBRCertificatePJ().getCNPJ());
+						System.out.println(bc.getICPBRCertificatePJ().getResponsibleCPF());
+					}
+					if (sis.getTimeStampSigner() != null) {
+						System.out.println(sis.getTimeStampSigner().toString());
+					}
+				}
+			}
+]]></programlisting>
+
+    </section>
+
+
+    <section id="policy-impl-xades-exemplos">
+    <note>
+    <para>No repositório do componente no GitHub há códigos de testes unitários para os exemplos acima,
+     <ulink url="https://github.com/demoiselle/signer/blob/master/policy-impl-xades/src/test/java/org/demoiselle/signer/policy/impl/xades/xml/XMLSignerTest.java">Assinar</ulink> 
+     e <ulink url="https://github.com/demoiselle/signer/blob/master/policy-impl-xades/src/test/java/org/demoiselle/signer/policy/impl/xades/xml/XMLCheckerTest.java">Validar</ulink>  </para>
+    </note>
+    </section>
+</chapter>

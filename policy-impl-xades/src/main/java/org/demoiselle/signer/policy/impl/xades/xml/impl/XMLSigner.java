@@ -256,7 +256,7 @@ public class XMLSigner implements Signer {
 	}
 
 	/**
-	 * Generates a destached XML signature from byte array.
+	 * Generates a destached XML signature from informed File.
 	 *
 	 * @param isFile the input stream.
 	 * @param fileNameToSign the filename of content to sign.
