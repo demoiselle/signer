@@ -28,7 +28,7 @@
         		<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>core</artifactId>
-				<version>3.7.0</version>
+				<version>4.0.0</version>
 			</dependency>]]>
 						</programlisting>
 					</para>
@@ -38,7 +38,7 @@
 						<ulink url="https://buildr.apache.org/">Apache Buildr</ulink>
 					</para>
 					<para>
-						<programlisting>'org.demoiselle.signer:core:jar:3.7.0'</programlisting>
+						<programlisting>'org.demoiselle.signer:core:jar:4.0.0'</programlisting>
 					</para>
 				</listitem>
 				<listitem>
@@ -47,7 +47,7 @@
 					</para>
 					<para>
 						<programlisting>
-							<![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="3.7.0" />]]>
+							<![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="4.0.0" />]]>
 						</programlisting>
 					</para>
 				</listitem>
@@ -56,7 +56,7 @@
 						<ulink url="http://docs.groovy-lang.org/latest/html/documentation/grape.html">Groovy Grape</ulink>
 					</para>
 					<para>
-						<programlisting>@Grapes(@Grab(group='org.demoiselle.signer', module='core', version='3.7.0')) </programlisting>
+						<programlisting>@Grapes(@Grab(group='org.demoiselle.signer', module='core', version='4.0.0')) </programlisting>
 					</para>
 				</listitem>
 				<listitem>
@@ -65,7 +65,7 @@
 					</para>
 					<para>
 						<programlisting>
-							<![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="3.7.0" />]]>
+							<![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="4.0.0" />]]>
 						</programlisting>
 					</para>
 				</listitem>
@@ -74,7 +74,7 @@
 						<ulink url="http://www.scala-sbt.org/">Scala SBT</ulink>
 					</para>
 					<para>
-						<programlisting>libraryDependencies += "org.demoiselle.signer" % "core" % "3.7.0"</programlisting>
+						<programlisting>libraryDependencies += "org.demoiselle.signer" % "core" % "4.0.0"</programlisting>
 					</para>
 				</listitem>
 				<listitem>
@@ -82,7 +82,7 @@
 						<ulink url="https://leiningen.org/">Leiningen</ulink>
 					</para>
 					<para>
-						<programlisting>[org.demoiselle.signer/core "3.7.0"]</programlisting>
+						<programlisting>[org.demoiselle.signer/core "4.0.0"]</programlisting>
 					</para>
 				</listitem>
 			</itemizedlist>

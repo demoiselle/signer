@@ -19,7 +19,7 @@
         		<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>chain-icp-brasil-homolog</artifactId>
-				<version>3.7.0</version>
+				<version>4.0.0</version>
 			</dependency>]]>
 			</programlisting>
         		 </para>
@@ -27,42 +27,42 @@
         			<listitem>
         		 <para><ulink url="https://buildr.apache.org/">Apache Buildr</ulink></para>
         		 <para>
-        		 	<programlisting ><![CDATA['org.demoiselle.signer:chain-icp-brasil-homolog:jar:3.7.0']]>
+        		 	<programlisting ><![CDATA['org.demoiselle.signer:chain-icp-brasil-homolog:jar:4.0.0']]>
 			</programlisting>
         		 </para>
         		</listitem>
         		<listitem>
         		 <para><ulink url="http://ant.apache.org/ivy/">Apache Ivy</ulink></para>
         		 <para>
-        		 	<programlisting ><![CDATA[<dependency org="org.demoiselle.signer" name="chain-icp-brasil-homolog" rev="3.7.0" />]]>
+        		 	<programlisting ><![CDATA[<dependency org="org.demoiselle.signer" name="chain-icp-brasil-homolog" rev="4.0.0" />]]>
 			</programlisting>
         		 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="http://docs.groovy-lang.org/latest/html/documentation/grape.html">Groovy Grape</ulink></para>
         		 <para>
-        		 	<programlisting ><![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='chain-icp-brasil-homolog', version='3.7.0'))]]>
+        		 	<programlisting ><![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='chain-icp-brasil-homolog', version='4.0.0'))]]>
 			</programlisting>
         		 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="https://github.com/grails/grails-gradle-plugin">Gradle/Grails</ulink></para>
         		 <para>
-        		 	<programlisting ><![CDATA[<dependency org="org.demoiselle.signer" name="chain-icp-brasil-homolog" rev="3.7.0" />]]>
+        		 	<programlisting ><![CDATA[<dependency org="org.demoiselle.signer" name="chain-icp-brasil-homolog" rev="4.0.0" />]]>
 			</programlisting>
         		 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="http://www.scala-sbt.org/">Scala SBT</ulink></para>
         		 <para>
-        		 	<programlisting ><![CDATA[libraryDependencies += "org.demoiselle.signer" % "chain-icp-brasil-homolog" % "3.7.0"]]>
+        		 	<programlisting ><![CDATA[libraryDependencies += "org.demoiselle.signer" % "chain-icp-brasil-homolog" % "4.0.0"]]>
 			</programlisting>
         		 </para>
         		</listitem>
         	<listitem>
         		 <para><ulink url="https://leiningen.org/">Leiningen</ulink></para>
         		 <para>
-        		 	<programlisting ><![CDATA[<[org.demoiselle.signer/chain-icp-brasil-homolog "3.7.0"]]]>
+        		 	<programlisting ><![CDATA[<[org.demoiselle.signer/chain-icp-brasil-homolog "4.0.0"]]]>
 			</programlisting>
         		 </para>
         		</listitem>

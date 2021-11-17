@@ -78,7 +78,7 @@
 		<note>
 			Caso queira baixar uma versão desta documentação em formato PDF clique
 			<para>
-				<ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-3.7.0.pdf">aqui:</ulink>
+				<ulink url="http://demoiselle.io/signer/docs/pdf/signer-reference-4.0.0.pdf">aqui:</ulink>
 			</para>
 		</note>
 
@@ -97,15 +97,19 @@
 	<!-- PAdES -->
 	<xi:include href="policy-impl-pades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
+	<!-- XAdES -->
+	<xi:include href="policy-impl-xades/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
 	<xi:include href="policy-engine/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- Chain ICP Brasil -->
-	<xi:include href="chain-ICP-Brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="chain-icp-brasil/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- TimeStamp -->
 	<xi:include href="timestamp/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- Crytography -->
 	<xi:include href="cryptography/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- Chain Homologação SERPRO -->
-	<xi:include href="chain-ICP-Brasil-homolog/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="chain-icp-brasil-homolog/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	
 	<xi:include href="web-integration/master.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 	<xi:include href="bookinfo.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />

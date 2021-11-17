@@ -25,7 +25,7 @@ gerenciador de projetos:
         		<dependency>
 				<groupId>org.demoiselle.signer</groupId>
 				<artifactId>timestamp</artifactId>
-				<version>3.7.0</version>
+				<version>4.0.0</version>
 			</dependency>]]>
 </programlisting>
 </para>
@@ -36,7 +36,7 @@ gerenciador de projetos:
 </para>
 <para>
 <programlisting >
-<![CDATA['org.demoiselle.signer:timestamp:jar:3.7.0']]>
+<![CDATA['org.demoiselle.signer:timestamp:jar:4.0.0']]>
 </programlisting>
 </para>
 </listitem>
@@ -46,7 +46,7 @@ gerenciador de projetos:
 </para>
 <para>
 <programlisting >
-<![CDATA[<dependency org="org.demoiselle.signer" name="timestamp" rev="3.7.0" />]]>
+<![CDATA[<dependency org="org.demoiselle.signer" name="timestamp" rev="4.0.0" />]]>
 </programlisting>
 </para>
 </listitem>
@@ -58,7 +58,7 @@ Grape</ulink>
 </para>
 <para>
 <programlisting >
-<![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='timestamp', version='3.7.0'))]]>
+<![CDATA[@Grapes(@Grab(group='org.demoiselle.signer', module='timestamp', version='4.0.0'))]]>
 </programlisting>
 </para>
 </listitem>
@@ -68,7 +68,7 @@ Grape</ulink>
 </para>
 <para>
 <programlisting >
-<![CDATA[<dependency org="org.demoiselle.signer" name="timestamp" rev="3.7.0" />]]>
+<![CDATA[<dependency org="org.demoiselle.signer" name="timestamp" rev="4.0.0" />]]>
 </programlisting>
 </para>
 </listitem>
@@ -78,7 +78,7 @@ Grape</ulink>
 </para>
 <para>
 <programlisting >
-<![CDATA[libraryDependencies += "org.demoiselle.signer" % "timestamp" % "3.7.0"]]>
+<![CDATA[libraryDependencies += "org.demoiselle.signer" % "timestamp" % "4.0.0"]]>
 </programlisting>
 </para>
 </listitem>
@@ -88,7 +88,7 @@ Grape</ulink>
 </para>
 <para>
 <programlisting >
-<![CDATA[<[org.demoiselle.signer/timestamp "3.7.0"]]]>
+<![CDATA[<[org.demoiselle.signer/timestamp "4.0.0"]]]>
 </programlisting>
 </para>
 </listitem>

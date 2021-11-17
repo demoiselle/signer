@@ -81,8 +81,8 @@
                 </para>
                     <programlisting role="JAVA"><![CDATA[...
                         ...
-                        org.demoiselle.signer.core.repository.Configuration config = org.demoiselle.signer.core.repository.Configuration.getInstance();
-		        		config.setLpaPath("/tmp/meudir/");
+                        org.demoiselle.signer.core.repository.ConfigurationRepo configRepo = org.demoiselle.signer.core.repository.ConfigurationRepo.getInstance();
+                        configRepo.setLpaPath("/tmp/meudir/");
                         ...]]></programlisting>
             </listitem>
             <listitem>
@@ -118,8 +118,8 @@
                 </para>
                     <programlisting role="JAVA"><![CDATA[...
                         ...
-                        org.demoiselle.signer.core.repository.Configuration config = org.demoiselle.signer.core.repository.Configuration.getInstance();
-                        config.setOnlineLPA(false);
+                        org.demoiselle.signer.core.repository.ConfigurationRepo configRepo = org.demoiselle.signer.core.repository.ConfigurationRepo.getInstance();
+                        configRepo.setOnlineLPA(false);
                         ...]]></programlisting>
             </listitem>
             <listitem>
@@ -193,6 +193,39 @@
                         ...]]></programlisting>
     </section>
     
+    <section>
+        <title>Timeout para download de LCRs (Lista de Certificados Revogados)</title>
+
+        <para> Para definir um limite de tempo para download das LCR , existem duas formas:</para>
+
+        <itemizedlist>
+            <listitem>
+                <para>
+                    <emphasis>Programaticamente</emphasis>
+                </para>
+                    <programlisting role="JAVA"><![CDATA[...
+                        ...
+                        org.demoiselle.signer.core.repository.ConfigurationRepo configRepo = org.demoiselle.signer.core.repository.ConfigurationRepo.getInstance();
+                        configRepo.setCrlTimeOut(10000); // Valor em milisegundos
+                        ...]]></programlisting>
+            </listitem>
+            <listitem>
+                <para>
+                    <emphasis>Setando variável de ambiente</emphasis>
+                </para>
+                <para>
+                    <segmentedlist>
+                        <seglistitem>signer.crl.connection.timeout</seglistitem>
+                    </segmentedlist>
+                </para>
+                <para> OU
+                    <segmentedlist>
+                        <seglistitem>SIGNER_CRL_CONNECTION_TIMEOUT</seglistitem>
+                    </segmentedlist>
+                </para>                
+            </listitem>
+        </itemizedlist>
+    </section>
     
     
 </chapter>

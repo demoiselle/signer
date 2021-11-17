@@ -10,8 +10,9 @@
 	<partintro>
 		<para>
 			O chain-icp-brasil-homolog fornece uma implementação para validação do conjunto de Autoridades de homologação emitidas pelo SERPRO.
-			O acionamento das funcionalidades é feito pelo componentes de geração e validação de assinaturas como o <emphasis>policy-impl-cades</emphasis> quando a dependência 
-			for incluída no arquivo POM.XML da aplicação. Conforme descrito abaixo:			 
+			O acionamento das funcionalidades é feito pelo componentes de geração e validação de assinaturas como o <emphasis>policy-impl-cades</emphasis>, 
+			<emphasis>policy-impl-pades</emphasis> e <emphasis>policy-impl-xades</emphasis> 
+			quando a dependência for incluída no arquivo POM.XML da aplicação. Conforme descrito abaixo:			 
 		</para>
 	</partintro>
 
