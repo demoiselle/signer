@@ -38,7 +38,7 @@
 package org.demoiselle.signer.core.exception;
 
 /**
- * Custom RuntimeException to do unchecked
+ * Main exception to identify exceptional condition at core.
  */
 public class CertificateCoreException extends RuntimeException {
 

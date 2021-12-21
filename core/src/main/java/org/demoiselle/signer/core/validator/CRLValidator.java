@@ -74,7 +74,7 @@ public class CRLValidator implements IValidator {
 			}
 			for (ICPBR_CRL icpbr_crl : crls) {
 				if (icpbr_crl.getCRL().isRevoked(x509)) {
-					throw new CertificateRevocationException(coreMessagesBundle.getString("error.certificate.repelead"));
+					throw new CertificateRevocationException(coreMessagesBundle.getString("error.certificate.repealed"));
 				}
 			}
 		} else {

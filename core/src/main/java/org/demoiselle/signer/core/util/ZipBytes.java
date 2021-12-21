@@ -51,7 +51,8 @@ import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Utility class for Compress and Decompress data
+ * FIXME @Deprecated ?
+ * Utility class for compress and decompress data.
  */
 public final class ZipBytes {
 

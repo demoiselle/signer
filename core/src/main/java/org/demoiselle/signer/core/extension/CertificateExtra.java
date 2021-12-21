@@ -59,11 +59,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Class Certificate Extra <br>
- * <br>
- * <p>
- * Extra Informations for ICP-BRASIL (DOC-ICP-04) Certificates. Abstracts the
- * rules to "PESSOA FISICA", "PESSOA JURIDICA" and "EQUIPAMENTO/APLICAÇÃO"
+ * Provide access to extra information for ICP-Brasil certificates.
+ *
+ * @see BasicCertificate
  */
 public class CertificateExtra {
 

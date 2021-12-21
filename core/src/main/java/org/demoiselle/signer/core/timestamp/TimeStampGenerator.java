@@ -43,8 +43,10 @@ import java.security.PrivateKey;
 import java.security.cert.Certificate;
 
 /**
- * Methods for generate a TimeStamp based on  Timestamping Authority (TSA) service
- * RFC 3161
+ * Methods for generate a TimeStamp based on
+ * Time Stamping Authority (TSA) service.
+ * See <a href="https://datatracker.ietf.org/doc/html/rfc3161">RFC 3161</a>
+ * for details.
  *
  * @author 07721825741
  */

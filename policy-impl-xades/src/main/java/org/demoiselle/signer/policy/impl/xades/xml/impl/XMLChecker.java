@@ -656,7 +656,7 @@ public class XMLChecker implements Checker {
 			validationErrors.add(cvce.getMessage());
 			logger.error(cvce.getMessage());
 		} catch (CertificateRevocationException cre) {
-			validationErrors.add(xadesMessagesBundle.getString("error.certificate.repelead", cre.getMessage()));
+			validationErrors.add(xadesMessagesBundle.getString("error.certificate.repealed", cre.getMessage()));
 			logger.error("certificado revogado");
 		}
 

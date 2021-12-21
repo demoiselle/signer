@@ -45,7 +45,9 @@ import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
 
 /**
- * Load X.509 Extension OIDs for
+ * Load X.509 Extension OIDs for ICP-Brasil's extensions.
+ *
+ * @see ICPBrasilExtensionType
  */
 public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
 

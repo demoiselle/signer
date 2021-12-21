@@ -42,7 +42,8 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_5;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_6;
 
 /**
- * Implemented Class for ICP-BRASIL (DOC-ICP-04) "PESSOA FISICA" Certificates.
+ * Implemented Class for ICP-BRASIL (DOC-ICP-04)
+ * "PESSOA FISICA" Certificates.
  *
  * @see ICPBRSubjectAlternativeNames
  */

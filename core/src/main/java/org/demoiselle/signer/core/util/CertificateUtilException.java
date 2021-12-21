@@ -38,7 +38,7 @@
 package org.demoiselle.signer.core.util;
 
 /**
- * To do unchecked
+ * Report exceptional condition on utilities.
  */
 public class CertificateUtilException extends RuntimeException {
 

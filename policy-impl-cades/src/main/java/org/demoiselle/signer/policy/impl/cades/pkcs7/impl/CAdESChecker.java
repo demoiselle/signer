@@ -185,11 +185,11 @@ public class CAdESChecker implements PKCS7Checker {
 				try {
 					cV.validate(varCert);
 				} catch (CertificateValidatorCRLException cvce) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.clr.not.access",cvce.getMessage()));
-					logger.debug(cadesMessagesBundle.getString("error.clr.not.access",cvce.getMessage()));
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.crl.not.access",cvce.getMessage()));
+					logger.debug(cadesMessagesBundle.getString("error.crl.not.access",cvce.getMessage()));
 				} catch (CertificateRevocationException cre) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.clr.not.access",cre.getMessage()));
-					logger.error(cadesMessagesBundle.getString("error.clr.not.access",cre.getMessage()));
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.crl.not.access",cre.getMessage()));
+					logger.error(cadesMessagesBundle.getString("error.crl.not.access",cre.getMessage()));
 				}
 
 				PeriodValidator pV = new PeriodValidator();

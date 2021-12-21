@@ -46,8 +46,8 @@ import java.lang.annotation.Target;
 import org.demoiselle.signer.core.OIDExtension;
 
 /**
- * Java Annotation to identify X509 Extension for
- * ICP-BRASIL's definitions of.
+ * Annotation to identify X509 Extension for
+ * ICP-BRASIL's definitions.
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

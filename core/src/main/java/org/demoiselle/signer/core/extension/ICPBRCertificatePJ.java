@@ -43,7 +43,8 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_4;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_7;
 
 /**
- * Implemented Class for ICP-BRASIL (DOC-ICP-04) "PESSOA JURIDICA" Certificates.
+ * Implemented Class for ICP-BRASIL (DOC-ICP-04)
+ * "PESSOA JURIDICA" Certificates.
  *
  * @see ICPBRSubjectAlternativeNames
  */
