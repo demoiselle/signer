@@ -4,7 +4,7 @@ for i in `cat config.ini`; do
    A=$(echo ${i} | cut -f 2 -d '=' | envsubst);
    export ${V}=${A};
 done;
-RESP='sim'
+RESP='yes'
 keytool -import -alias ${1} -keystore ${cacerts} -trustcacerts -file ${2} -storepass ${password}   << EOF
 ${RESP}
 EOF
