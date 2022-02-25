@@ -42,6 +42,8 @@ import java.security.Provider;
 import java.security.PublicKey;
 import java.util.Date;
 
+import org.bouncycastle.cms.CMSSignedData;
+
 /**
  * Basic specification for implementation of digital signatures in CADES format.
  */
@@ -92,13 +94,13 @@ public interface Signer {
 
 	/**
 	 * Generates a digital signature from a content,
-	 * the result file does not contains the content that was signed
+	 * the result does not contains the content that was signed
 	 *
 	 * @param content content to be signed
 	 * @return detached signature
 	 */
 	byte[] doDetachedSign(byte[] content);
-
+	
 	/**
 	 * Returns the provider.
 	 *
@@ -159,4 +161,73 @@ public interface Signer {
 	 * @return who perform the signature
 	 */
 	String getSignatory();
+	
+	/**
+	 * 
+	 * Prepare to Generates a digital signature from a content,
+	 * the result does not contains the content that was signed
+	 * On this step only signed attributes are generates
+	 * 
+	 * @param content
+	 * @return only signed attributes
+	 */
+	CMSSignedData prepareDetachedSign(byte[] content);
+	
+	
+	/**
+	 * Prepare to Generates a digital signature from a content and attaches this content on result
+	 * On this step only signed attributes are generates
+	 *
+	 * @param content content to be signed
+	 * @return only signed attributes for attached signature
+	 */
+	CMSSignedData prepareAttachedSign(byte[] content);
+
+	
+	
+	/**
+	 * Prepare to Generates a digital signature from a previous calculated hash for a content,
+	 * the result does not contains the original content that was signed
+	 * On this step only signed attributes are generates
+	 *
+	 * @param hash hash to be signed
+	 * @return only signed attributes for detached PCKS7 signature
+	 */
+	CMSSignedData prepareHashSign(byte[] hash);
+	
+	
+	
+	/**
+	 * 
+	 * Generates a digital signature from a content,
+	 * the result does not contains the content that was signed
+	 * On this step only signed attributes are generates
+	 * 
+	 * @param content
+	 * @return only signed attributes
+	 */
+	byte[] envelopDetachedSign(CMSSignedData signedData);
+	
+	
+	/**
+	 * Generates a digital signature from a content and attaches this content on result
+	 * On this step only signed attributes are generates
+	 *
+	 * @param content content to be signed
+	 * @return only signed attributes for attached signature
+	 */
+	byte[] envelopAttachedSign(CMSSignedData signedData);
+
+	
+	
+	/**
+	 * Generates a digital signature from a previous calculated hash for a content,
+	 * the result does not contains the original content that was signed
+	 * On this step only signed attributes are generates
+	 *
+	 * @param hash hash to be signed
+	 * @return only signed attributes for detached PCKS7 signature
+	 */
+	byte[] envelopHashSign(CMSSignedData signedData);
+	
 }

@@ -43,6 +43,7 @@ import java.security.PublicKey;
 import java.security.cert.Certificate;
 import java.util.Date;
 
+import org.bouncycastle.cms.CMSSignedData;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.impl.CAdESSigner;
@@ -162,5 +163,41 @@ public class PAdESSigner implements PCKS7Signer {
 	@Override
 	public String getSignatory() {
 		return cAdESSigner.getSignatory();
+	}
+
+	@Override
+	public CMSSignedData prepareDetachedSign(byte[] content) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CMSSignedData prepareAttachedSign(byte[] content) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public CMSSignedData prepareHashSign(byte[] hash) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public byte[] envelopDetachedSign(CMSSignedData signedData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public byte[] envelopAttachedSign(CMSSignedData signedData) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public byte[] envelopHashSign(CMSSignedData signedData) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
