@@ -774,14 +774,15 @@ public class CAdESSigner implements PKCS7Signer {
 
 	@Override
 	public CMSSignedData prepareAttachedSign(byte[] content) {
-		// TODO Auto-generated method stub
-		return null;
+		this.setAttached(true);
+		return prepareSignature(content, null);
 	}
 
 	@Override
 	public CMSSignedData prepareHashSign(byte[] hash) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		this.hash = hash;
+		return prepareSignature(null, null);
 	}
 
 	@Override
@@ -791,14 +792,12 @@ public class CAdESSigner implements PKCS7Signer {
 
 	@Override
 	public byte[] envelopAttachedSign(CMSSignedData signedData) {
-		// TODO Auto-generated method stub
-		return null;
+		return envelopSignature(signedData,null);
 	}
 
 	@Override
 	public byte[] envelopHashSign(CMSSignedData signedData) {
-		// TODO Auto-generated method stub
-		return null;
+		return envelopSignature(signedData,null);
 	}
 	
 /**
