@@ -680,14 +680,19 @@ public class XMLChecker implements Checker {
 		if (policyOID.contains("urn:oid:")) {
 			policyOID = policyOID.substring(policyOID.lastIndexOf(":") + 1, policyOID.length());
 		}
+		/*else {
+			validationErrors.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+			logger.error(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+			return null;
+		}*/
+		
 		Document policyDoc = PolicyFactory.getInstance().loadXMLPolicy(PolicyUtils.getPolicyByOid(policyOID));
 
 		XMLPolicyValidator xmlPolicyValidator = new XMLPolicyValidator(policyDoc);
 
 		if (!xmlPolicyValidator.validate()) {
-			logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
-			validationWaring
-				.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyDoc.getDocumentURI()));
+			logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+			validationWaring.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
 		}
 
 		List<XMLSignerAlgConstraint> listSignerAlgConstraint = xmlPolicyValidator.getXmlSignaturePolicy()

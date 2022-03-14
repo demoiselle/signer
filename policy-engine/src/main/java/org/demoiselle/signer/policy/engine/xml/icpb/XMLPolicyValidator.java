@@ -76,130 +76,99 @@ public class XMLPolicyValidator {
 	public boolean validate() {
 		boolean valid = false;
 
-		getXmlSignaturePolicy()
-			.setPolicyIssuerName(xsp.getElementsByTagName("pa:PolicyIssuerName").item(0).getTextContent());
-		getXmlSignaturePolicy().setIdentifier(xsp.getElementsByTagName("XAdES:Identifier").item(0).getTextContent());
-		getXmlSignaturePolicy()
-			.setFieldOfApplication(xsp.getElementsByTagName("pa:FieldOfApplication").item(0).getTextContent());
+		try {
+			getXmlSignaturePolicy()
+					.setPolicyIssuerName(xsp.getElementsByTagName("pa:PolicyIssuerName").item(0).getTextContent());
+			getXmlSignaturePolicy()
+					.setIdentifier(xsp.getElementsByTagName("XAdES:Identifier").item(0).getTextContent());
+			getXmlSignaturePolicy()
+					.setFieldOfApplication(xsp.getElementsByTagName("pa:FieldOfApplication").item(0).getTextContent());
 
-		NodeList paSignerRules = xsp.getElementsByTagName("pa:SignerRules");
-		XMLSignerRules xmlSignerRules = new XMLSignerRules();
-		for (int i = 0; i < paSignerRules.getLength(); i++) {
-			Element signerRule = (Element) paSignerRules.item(i);
-			NodeList signerRuleNodeList = signerRule.getChildNodes();
-			for (int j = 0; j < signerRuleNodeList.getLength(); j++) {
-				Element signerRuleChild = (Element) signerRuleNodeList.item(j);
-				String typeOfProperties = signerRuleChild.getNodeName();
-				NodeList signerRuleChildNodeList = signerRuleChild.getChildNodes();
-				for (int k = 0; k < signerRuleChildNodeList.getLength(); k++) {
-					if (typeOfProperties.equalsIgnoreCase("pa:MandatedSignedQProperties")) {
-						xmlSignerRules.getMandatedSignedQProperties()
-							.add(signerRuleChildNodeList.item(k).getTextContent());
-					}
-					if (typeOfProperties.equalsIgnoreCase("pa:MandatedUnsignedQProperties")) {
-						xmlSignerRules.getMandatedUnsignedQProperties()
-							.add(signerRuleChildNodeList.item(k).getTextContent());
+			NodeList paSignerRules = xsp.getElementsByTagName("pa:SignerRules");
+			XMLSignerRules xmlSignerRules = new XMLSignerRules();
+			for (int i = 0; i < paSignerRules.getLength(); i++) {
+				Element signerRule = (Element) paSignerRules.item(i);
+				NodeList signerRuleNodeList = signerRule.getChildNodes();
+				for (int j = 0; j < signerRuleNodeList.getLength(); j++) {
+					Element signerRuleChild = (Element) signerRuleNodeList.item(j);
+					String typeOfProperties = signerRuleChild.getNodeName();
+					NodeList signerRuleChildNodeList = signerRuleChild.getChildNodes();
+					for (int k = 0; k < signerRuleChildNodeList.getLength(); k++) {
+						if (typeOfProperties.equalsIgnoreCase("pa:MandatedSignedQProperties")) {
+							xmlSignerRules.getMandatedSignedQProperties()
+									.add(signerRuleChildNodeList.item(k).getTextContent());
+						}
+						if (typeOfProperties.equalsIgnoreCase("pa:MandatedUnsignedQProperties")) {
+							xmlSignerRules.getMandatedUnsignedQProperties()
+									.add(signerRuleChildNodeList.item(k).getTextContent());
+						}
 					}
 				}
 			}
-		}
-		getXmlSignaturePolicy().setXmlSignerRules(xmlSignerRules);
+			getXmlSignaturePolicy().setXmlSignerRules(xmlSignerRules);
 
-		NodeList algorithmConstraints = xsp.getElementsByTagName("pa:SignerAlgConstraints");
-		for (int i = 0; i < algorithmConstraints.getLength(); i++) {
-			Element algorithmConstraintElement = (Element) algorithmConstraints.item(i);
-			NodeList algorithmConstraintNodeList = algorithmConstraintElement.getChildNodes();
-			for (int j = 0; j < algorithmConstraintNodeList.getLength(); j++) {
-				Element algAndLength = (Element) algorithmConstraintNodeList.item(j);
-				NodeList algAndLengthNodeList = algAndLength.getChildNodes();
-				XMLSignerAlgConstraint xmlSignerAlgConstraint = new XMLSignerAlgConstraint();
-				for (int k = 0; k < algAndLengthNodeList.getLength(); k++) {
-					Node childNode = algAndLengthNodeList.item(k);
-					if (childNode.getNodeName().equalsIgnoreCase("pa:AlgId")) {
-						xmlSignerAlgConstraint.setAlgId(childNode.getTextContent());
+			NodeList algorithmConstraints = xsp.getElementsByTagName("pa:SignerAlgConstraints");
+			for (int i = 0; i < algorithmConstraints.getLength(); i++) {
+				Element algorithmConstraintElement = (Element) algorithmConstraints.item(i);
+				NodeList algorithmConstraintNodeList = algorithmConstraintElement.getChildNodes();
+				for (int j = 0; j < algorithmConstraintNodeList.getLength(); j++) {
+					Element algAndLength = (Element) algorithmConstraintNodeList.item(j);
+					NodeList algAndLengthNodeList = algAndLength.getChildNodes();
+					XMLSignerAlgConstraint xmlSignerAlgConstraint = new XMLSignerAlgConstraint();
+					for (int k = 0; k < algAndLengthNodeList.getLength(); k++) {
+						Node childNode = algAndLengthNodeList.item(k);
+						if (childNode.getNodeName().equalsIgnoreCase("pa:AlgId")) {
+							xmlSignerAlgConstraint.setAlgId(childNode.getTextContent());
+						}
+						if (childNode.getNodeName().equalsIgnoreCase("pa:MinKeyLength")) {
+							xmlSignerAlgConstraint.setMinKeyLength(childNode.getTextContent());
+						}
 					}
-					if (childNode.getNodeName().equalsIgnoreCase("pa:MinKeyLength")) {
-						xmlSignerAlgConstraint.setMinKeyLength(childNode.getTextContent());
-					}
+					getXmlSignaturePolicy().getXmlSignerAlgConstraintList().add(xmlSignerAlgConstraint);
+
 				}
-				getXmlSignaturePolicy().getXmlSignerAlgConstraintList().add(xmlSignerAlgConstraint);
-
 			}
-		}
 
-		String xspNotBefore = xsp.getElementsByTagName("pa:NotBefore").item(0).getTextContent();
-		String xspNotAfter = xsp.getElementsByTagName("pa:NotAfter").item(0).getTextContent();
-		String xspDateOfIssue = xsp.getElementsByTagName("pa:DateOfIssue").item(0).getTextContent();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-		Date xspNotBeforeDate = null;
-		Date xspNotAfterDate = null;
-		try {
-			getXmlSignaturePolicy().setDateOfIssue(sdf.parse(xspDateOfIssue));
-			xspNotBeforeDate = sdf.parse(xspNotBefore);
-			getXmlSignaturePolicy().setNotBefore(xspNotBeforeDate);
-			xspNotAfterDate = sdf.parse(xspNotAfter);
-			getXmlSignaturePolicy().setNotAfter(xspNotAfterDate);
+			String xspNotBefore = xsp.getElementsByTagName("pa:NotBefore").item(0).getTextContent();
+			String xspNotAfter = xsp.getElementsByTagName("pa:NotAfter").item(0).getTextContent();
+			String xspDateOfIssue = xsp.getElementsByTagName("pa:DateOfIssue").item(0).getTextContent();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+			Date xspNotBeforeDate = null;
+			Date xspNotAfterDate = null;
+			try {
+				getXmlSignaturePolicy().setDateOfIssue(sdf.parse(xspDateOfIssue));
+				xspNotBeforeDate = sdf.parse(xspNotBefore);
+				getXmlSignaturePolicy().setNotBefore(xspNotBeforeDate);
+				xspNotAfterDate = sdf.parse(xspNotAfter);
+				getXmlSignaturePolicy().setNotAfter(xspNotAfterDate);
 
-		} catch (ParseException e) {
-			LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-			throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-		}
+			} catch (ParseException e) {
+				LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+				throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+			}
 
-		Date actualDate = new GregorianCalendar().getTime();
-		if (actualDate.before(xspNotBeforeDate) || actualDate.after(xspNotAfterDate)) {
-			LOGGER.error(policyMessagesBundle.getString("error.policy.valid.period", sdf.format(xspNotBeforeDate),
-				sdf.format(xspNotAfterDate)));
-			throw new PolicyException(policyMessagesBundle.getString("error.policy.valid.period",
-				sdf.format(xspNotBeforeDate), sdf.format(xspNotAfterDate)));
-		}
-		PolicyFactory factory = PolicyFactory.getInstance();
-		Document tempLPAXML = factory.loadLPAXAdES();
-		setLPAXML(tempLPAXML);
-		String lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
-		Date lpaNextUpdateDate;
-		try {
-			lpaNextUpdateDate = sdf.parse(lpaNextUpdate);
-		} catch (ParseException e) {
-			LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-			throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-		}
-		if (actualDate.after(lpaNextUpdateDate)) {
-			LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(lpaNextUpdateDate)));
-			LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", config.getLpaPath()));
-			tempLPAXML = factory.loadLPAXAdESLocal();
-			if (tempLPAXML != null) {
-				lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
-				try {
-					lpaNextUpdateDate = sdf.parse(lpaNextUpdate);
-				} catch (ParseException e) {
-					LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-					throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-				}
-				if (actualDate.after(lpaNextUpdateDate)) {
-					LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",
-						config.getLpaPath() + "LPA_XAdES.xml", sdf.format(lpaNextUpdateDate)));
-					tempLPAXML = factory.loadLPAXAdESUrl();
-					if (tempLPAXML != null) {
-						lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
-						try {
-							lpaNextUpdateDate = sdf.parse(lpaNextUpdate);
-						} catch (ParseException e) {
-							LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-							throw new PolicyException(
-								policyMessagesBundle.getString("error.date.parser", e.getMessage()));
-						}
-						if (actualDate.after(lpaNextUpdateDate)) {
-							LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
-								sdf.format(lpaNextUpdateDate)));
-						} else {
-							setLPAXML(tempLPAXML);
-						}
-					}
-				} else {
-					setLPAXML(tempLPAXML);
-				}
-			} else {
-				tempLPAXML = factory.loadLPAXAdESUrl();
+			Date actualDate = new GregorianCalendar().getTime();
+			if (actualDate.before(xspNotBeforeDate) || actualDate.after(xspNotAfterDate)) {
+				LOGGER.error(policyMessagesBundle.getString("error.policy.valid.period", sdf.format(xspNotBeforeDate),
+						sdf.format(xspNotAfterDate)));
+				throw new PolicyException(policyMessagesBundle.getString("error.policy.valid.period",
+						sdf.format(xspNotBeforeDate), sdf.format(xspNotAfterDate)));
+			}
+			PolicyFactory factory = PolicyFactory.getInstance();
+			Document tempLPAXML = factory.loadLPAXAdES();
+			setLPAXML(tempLPAXML);
+			String lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
+			Date lpaNextUpdateDate;
+			try {
+				lpaNextUpdateDate = sdf.parse(lpaNextUpdate);
+			} catch (ParseException e) {
+				LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+				throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+			}
+			if (actualDate.after(lpaNextUpdateDate)) {
+				LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(lpaNextUpdateDate)));
+				LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", config.getLpaPath()));
+				tempLPAXML = factory.loadLPAXAdESLocal();
 				if (tempLPAXML != null) {
 					lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
 					try {
@@ -209,54 +178,92 @@ public class XMLPolicyValidator {
 						throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 					}
 					if (actualDate.after(lpaNextUpdateDate)) {
-						LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
-							sdf.format(lpaNextUpdateDate)));
+						LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",
+								config.getLpaPath() + "LPA_XAdES.xml", sdf.format(lpaNextUpdateDate)));
+						tempLPAXML = factory.loadLPAXAdESUrl();
+						if (tempLPAXML != null) {
+							lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
+							try {
+								lpaNextUpdateDate = sdf.parse(lpaNextUpdate);
+							} catch (ParseException e) {
+								LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+								throw new PolicyException(
+										policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+							}
+							if (actualDate.after(lpaNextUpdateDate)) {
+								LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
+										sdf.format(lpaNextUpdateDate)));
+							} else {
+								setLPAXML(tempLPAXML);
+							}
+						}
 					} else {
 						setLPAXML(tempLPAXML);
 					}
 				} else {
-					LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found"));
-				}
-			}
-		}
-
-		Element policyIdentifier = (Element) xsp.getElementsByTagName("XAdES:Identifier").item(0);
-		String textPolicyIdentifier = policyIdentifier.getTextContent();
-		NodeList listPolicyInfo = LPAXML.getElementsByTagName("lpa:PolicyInfo");
-
-		if (listPolicyInfo.getLength() > 0) {
-			for (int i = 0; i < listPolicyInfo.getLength(); i++) {
-				Element elementPolicyInfo = (Element) listPolicyInfo.item(i);
-				NodeList policyInfochildNodeList = elementPolicyInfo.getChildNodes();
-				for (int j = 0; j < policyInfochildNodeList.getLength(); j++) {
-					Element elementPolicyInfochild = (Element) policyInfochildNodeList.item(j);
-					Date policyRevogationDate = null;
-					if (elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:RevocationDate")) {
+					tempLPAXML = factory.loadLPAXAdESUrl();
+					if (tempLPAXML != null) {
+						lpaNextUpdate = tempLPAXML.getElementsByTagName("lpa:NextUpdate").item(0).getTextContent();
 						try {
-							policyRevogationDate = sdf.parse(elementPolicyInfochild.getTextContent());
+							lpaNextUpdateDate = sdf.parse(lpaNextUpdate);
 						} catch (ParseException e) {
 							LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 							throw new PolicyException(
-								policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+									policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 						}
-					}
-					String textPolicyOID = "";
-					if (elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:policyOIDurn")
-						|| elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:policyOID")) {
-						textPolicyOID = elementPolicyInfochild.getTextContent();
-					}
-					// Found a policy on LPA
-					if (textPolicyOID.equalsIgnoreCase(textPolicyIdentifier)) {
-						if (policyRevogationDate != null) {
-							LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",
-								sdf.format(policyRevogationDate)));
-							throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",
-								sdf.format(policyRevogationDate)));
+						if (actualDate.after(lpaNextUpdateDate)) {
+							LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
+									sdf.format(lpaNextUpdateDate)));
+						} else {
+							setLPAXML(tempLPAXML);
 						}
-						valid = true;
+					} else {
+						LOGGER.warn(policyMessagesBundle.getString("error.lpa.not.found"));
 					}
 				}
 			}
+
+			Element policyIdentifier = (Element) xsp.getElementsByTagName("XAdES:Identifier").item(0);
+			String textPolicyIdentifier = policyIdentifier.getTextContent();
+			NodeList listPolicyInfo = LPAXML.getElementsByTagName("lpa:PolicyInfo");
+
+			if (listPolicyInfo.getLength() > 0) {
+				for (int i = 0; i < listPolicyInfo.getLength(); i++) {
+					Element elementPolicyInfo = (Element) listPolicyInfo.item(i);
+					NodeList policyInfochildNodeList = elementPolicyInfo.getChildNodes();
+					for (int j = 0; j < policyInfochildNodeList.getLength(); j++) {
+						Element elementPolicyInfochild = (Element) policyInfochildNodeList.item(j);
+						Date policyRevogationDate = null;
+						if (elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:RevocationDate")) {
+							try {
+								policyRevogationDate = sdf.parse(elementPolicyInfochild.getTextContent());
+							} catch (ParseException e) {
+								LOGGER.error(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+								throw new PolicyException(
+										policyMessagesBundle.getString("error.date.parser", e.getMessage()));
+							}
+						}
+						String textPolicyOID = "";
+						if (elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:policyOIDurn")
+								|| elementPolicyInfochild.getNodeName().equalsIgnoreCase("lpa:policyOID")) {
+							textPolicyOID = elementPolicyInfochild.getTextContent();
+						}
+						// Found a policy on LPA
+						if (textPolicyOID.equalsIgnoreCase(textPolicyIdentifier)) {
+							if (policyRevogationDate != null) {
+								LOGGER.error(policyMessagesBundle.getString("error.policy.revocated",
+										sdf.format(policyRevogationDate)));
+								throw new PolicyException(policyMessagesBundle.getString("error.policy.revocated",
+										sdf.format(policyRevogationDate)));
+							}
+							valid = true;
+						}
+					}
+				}
+			}
+
+		} catch (Exception e) {
+			return valid;
 		}
 		return valid;
 	}

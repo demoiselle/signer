@@ -96,9 +96,14 @@ public class PolicyFactory {
 	 * @return The corresponding {@link Document}.
 	 */
 	public Document loadXMLPolicy(Policies policy) {
-		InputStream is = this.getClass().getResourceAsStream(policy.getFile());
-		// FIXME from now on should goes to core loadDocumentFromInputStream
-		return XMLUtil.loadXMLDocument(is);
+		try {
+			InputStream is = this.getClass().getResourceAsStream(policy.getFile());
+			// FIXME from now on should goes to core loadDocumentFromInputStream
+			return XMLUtil.loadXMLDocument(is);
+		}catch (Exception e) {
+			return null;
+		}
+		
 	}
 
 	/**
