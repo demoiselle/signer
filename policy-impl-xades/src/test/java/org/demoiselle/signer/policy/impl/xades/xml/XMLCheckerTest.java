@@ -40,6 +40,7 @@ package org.demoiselle.signer.policy.impl.xades.xml;
 import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
 import org.demoiselle.signer.policy.impl.xades.xml.impl.XMLChecker;
+import org.junit.Test;
 
 import java.io.File;
 import java.net.URL;
@@ -55,12 +56,13 @@ public class XMLCheckerTest {
 
 		try {
 
-			String fileName = "teste_assinatura_rt_signed.xml";
+			String fileName = "/";
+
 
 			//String fileName = "502420025_rb_signed_rb_signed.xml";
-			ClassLoader classLoader = getClass().getClassLoader();
-			URL fileUri = classLoader.getResource(fileName);
-			File newFile = new File(fileUri.toURI());
+			//ClassLoader classLoader = getClass().getClassLoader();
+			//URL fileUri = classLoader.getResource(fileName);
+			File newFile = new File(fileName);
 
 
 			// Cache LCR

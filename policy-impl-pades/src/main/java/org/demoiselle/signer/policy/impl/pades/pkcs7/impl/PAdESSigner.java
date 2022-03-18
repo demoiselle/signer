@@ -167,37 +167,42 @@ public class PAdESSigner implements PCKS7Signer {
 
 	@Override
 	public CMSSignedData prepareDetachedSign(byte[] content) {
-		// TODO Auto-generated method stub
-		return null;
+		return cAdESSigner.prepareDetachedSign(content);
 	}
 
+	
+	/*
+	 * Not for PAdES.
+	 * @param content
+	 * @return null
+	 */
 	@Override
 	public CMSSignedData prepareAttachedSign(byte[] content) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public CMSSignedData prepareHashSign(byte[] hash) {
-		// TODO Auto-generated method stub
-		return null;
+		return cAdESSigner.prepareHashSign(hash);
 	}
 
 	@Override
 	public byte[] envelopDetachedSign(CMSSignedData signedData) {
-		// TODO Auto-generated method stub
-		return null;
+		return cAdESSigner.envelopDetachedSign(signedData);
 	}
 
+	/*
+	 * Not for PAdES.
+	 * @param content
+	 * @return null
+	 */
 	@Override
 	public byte[] envelopAttachedSign(CMSSignedData signedData) {
-		// TODO Auto-generated method stub
 		return null;
 	}
-
+	
 	@Override
 	public byte[] envelopHashSign(CMSSignedData signedData) {
-		// TODO Auto-generated method stub
-		return null;
+		return cAdESSigner.envelopHashSign(signedData);
 	}
 }
