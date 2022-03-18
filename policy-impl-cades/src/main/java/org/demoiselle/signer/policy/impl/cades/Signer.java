@@ -168,7 +168,7 @@ public interface Signer {
 	 * the result does not contains the content that was signed
 	 * On this step only signed attributes are generates
 	 * 
-	 * @param content
+	 * @param content full content to sign
 	 * @return only signed attributes
 	 */
 	CMSSignedData prepareDetachedSign(byte[] content);
@@ -203,7 +203,7 @@ public interface Signer {
 	 * the result does not contains the content that was signed
 	 * On this step only signed attributes are generates
 	 * 
-	 * @param content
+	 * @param signedData signed attributes
 	 * @return only signed attributes
 	 */
 	byte[] envelopDetachedSign(CMSSignedData signedData);
@@ -213,7 +213,7 @@ public interface Signer {
 	 * Generates a digital signature from a content and attaches this content on result
 	 * On this step only signed attributes are generates
 	 *
-	 * @param content content to be signed
+	 * @param signedData signed attributes
 	 * @return only signed attributes for attached signature
 	 */
 	byte[] envelopAttachedSign(CMSSignedData signedData);
@@ -225,7 +225,7 @@ public interface Signer {
 	 * the result does not contains the original content that was signed
 	 * On this step only signed attributes are generates
 	 *
-	 * @param hash hash to be signed
+	 * @param signedData signed attributes
 	 * @return only signed attributes for detached PCKS7 signature
 	 */
 	byte[] envelopHashSign(CMSSignedData signedData);
