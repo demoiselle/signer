@@ -793,7 +793,7 @@ public class CAdESSigner implements PKCS7Signer {
 		return cmsSignedData;
 	}
 	
-	private byte[] envelopSignature (CMSSignedData cmsSignedData, byte[] previewSignature) {
+	public byte[] envelopSignature (CMSSignedData cmsSignedData, byte[] previewSignature) {
 
 		
 		// Consulta e adiciona os atributos não assinados//
