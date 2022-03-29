@@ -483,6 +483,16 @@ public class CAdESChecker implements PKCS7Checker {
 			return null;
 		}
 	}
+	
+	public List<SignatureInformations> checkSignatureByHashes(Map<String, byte[]> hashes, byte[] signedData) throws SignerException {
+		this.checkHash = true;
+		this.hashes.putAll(hashes);
+		if (this.check(null, signedData)) {
+			return this.getSignaturesInfo();
+		} else {
+			return null;
+		}
+	}
 
 	private void setSignaturePolicy(PolicyFactory.Policies signaturePolicy) {
 		this.setPolicyName(signaturePolicy.name());
