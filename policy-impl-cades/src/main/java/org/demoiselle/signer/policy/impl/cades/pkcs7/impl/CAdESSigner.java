@@ -921,6 +921,15 @@ public class CAdESSigner implements PKCS7Signer {
 		return result;
 	}
 	
+	/**
+	 * Recebe o conteúdo e uma assinatura prévia e prepara a tabela de atributos assináveis. Caso o conteúdo seja nulo, 
+	 * o hash do documento a ser assinado deve ser informado na propriedade this.hash. A tabela de atributos retornada
+	 * ainda precisará receber o atributo signingTime e ser reordenada antes que possa ser realizada a assinatura.
+	 * 
+	 * @param content Conteúdo que está sendo assinado, ou null
+	 * @param previewSignature Assinatura prévia do mesmo conteúdo, para copiar os certificados
+	 * @return
+	 */
 	public AttributeTable prepareSignedAttributes(byte[] content, byte[] previewSignature) {
 		Security.addProvider(new BouncyCastleProvider());
 		if (this.certificateChain == null) {
@@ -982,6 +991,12 @@ public class CAdESSigner implements PKCS7Signer {
 		return signedAttributesTable;
 	}
 
+	/**
+	 * Seleciona os algorítmos de hash e criptografia e também o tamanho mínimo da chave que será utilizada 
+	 * para realizar a assinatura.
+	 * 
+	 * @return
+	 */
 	public AlgAndLength prepareAlgAndLength() {
 		// Recupera a lista de algoritmos da politica e o tamanho minimo da
 		// chave
@@ -1039,6 +1054,9 @@ public class CAdESSigner implements PKCS7Signer {
 		return algAndLength;
 	}
 	
+	/**
+	 * Compõe a cadeia de confiança e a valida. Verifica, também, se a política está dentro do prazo de validade. 
+	 */
 	private void validateCertificatesAndPolicy() {
 		// Recupera o(s) certificado(s) de confianca para validacao
 		Collection<X509Certificate> trustedCAs = new HashSet<X509Certificate>();
@@ -1079,6 +1097,12 @@ public class CAdESSigner implements PKCS7Signer {
 		pv.validate();
 	}
 	
+	/**
+	 * Extrai a lista de certificados incluídos em um envelope PKCS#7 ou CMS
+	 * 
+	 * @param previewSignature
+	 * @return
+	 */
 	public Certificate[] extractCertificates(byte[] previewSignature) {
 		Certificate[] certStore = new Certificate[]{};
 

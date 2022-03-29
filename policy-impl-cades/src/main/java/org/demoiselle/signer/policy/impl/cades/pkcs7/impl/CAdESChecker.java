@@ -484,6 +484,13 @@ public class CAdESChecker implements PKCS7Checker {
 		}
 	}
 	
+	/**
+	 * Verifica a assinatura contra um mapa de hashes calculados a partir do mesmo conteúdo, mas usando algoritmos diferentes.
+	 * @param hashes Um mapa cujas chaves são os OID dos algoritimos e os valores são o resultado do cálculo do hash para o algoritmo em questão
+	 * @param signedData Um envelope PKCS#7 ou CMS
+	 * @return A lista de SignatureInformations encontradas
+	 * @throws SignerException
+	 */
 	public List<SignatureInformations> checkSignatureByHashes(Map<String, byte[]> hashes, byte[] signedData) throws SignerException {
 		this.checkHash = true;
 		this.hashes.putAll(hashes);
