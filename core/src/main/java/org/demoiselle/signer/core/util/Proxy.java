@@ -49,8 +49,8 @@ public final class Proxy {
 
 	private static String proxyEndereco = null;
 	private static String proxyPorta = null;
-	private static String proxyUsuario = null;
-	private static String proxySenha = null;
+	private static String proxyUsuario = "";
+	private static String proxySenha = "";
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 	private static final Logger LOGGER = Logger.getLogger(Proxy.class.getName());
 
