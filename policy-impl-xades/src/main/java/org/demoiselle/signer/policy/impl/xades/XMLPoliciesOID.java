@@ -44,36 +44,96 @@ package org.demoiselle.signer.policy.impl.xades;
  */
 public enum XMLPoliciesOID {
 
-	AD_RB_XADES_2_1("2.16.76.1.7.1.6.2.1"),
-	AD_RB_XADES_2_2("2.16.76.1.7.1.6.2.2"),
-	AD_RB_XADES_2_3("2.16.76.1.7.1.6.2.3"),
-	AD_RB_XADES_2_4("2.16.76.1.7.1.6.2.4"),
+	AD_RB_XADES_2_1("2.16.76.1.7.1.6.2.1", "AD_RB_XADES_2_1"),
+	AD_RB_XADES_2_2("2.16.76.1.7.1.6.2.2", "AD_RB_XADES_2_2"),
+	AD_RB_XADES_2_3("2.16.76.1.7.1.6.2.3", "AD_RB_XADES_2_3"),
+	AD_RB_XADES_2_4("2.16.76.1.7.1.6.2.4", "AD_RB_XADES_2_4"),
 
-	AD_RT_XADES_2_1("2.16.76.1.7.1.7.2.1"),
-	AD_RT_XADES_2_2("2.16.76.1.7.1.7.2.2"),
-	AD_RT_XADES_2_3("2.16.76.1.7.1.7.2.3"),
-	AD_RT_XADES_2_4("2.16.76.1.7.1.7.2.4"),
+	AD_RT_XADES_2_1("2.16.76.1.7.1.7.2.1", "AD_RT_XADES_2_1"),
+	AD_RT_XADES_2_2("2.16.76.1.7.1.7.2.2", "AD_RT_XADES_2_2"),
+	AD_RT_XADES_2_3("2.16.76.1.7.1.7.2.3", "AD_RT_XADES_2_3"),
+	AD_RT_XADES_2_4("2.16.76.1.7.1.7.2.4", "AD_RT_XADES_2_4"),
 
-	AD_RV_XADES_2_2("2.16.76.1.7.1.8.2.2"),
-	AD_RV_XADES_2_3("2.16.76.1.7.1.8.2.3"),
-	AD_RV_XADES_2_4("2.16.76.1.7.1.8.2.4"),
+	AD_RV_XADES_2_2("2.16.76.1.7.1.8.2.2", "AD_RV_XADES_2_2"),
+	AD_RV_XADES_2_3("2.16.76.1.7.1.8.2.3", "AD_RV_XADES_2_3"),
+	AD_RV_XADES_2_4("2.16.76.1.7.1.8.2.4", "AD_RV_XADES_2_4"),
 
-	AD_RC_XADES_2_3("2.16.76.1.7.1.9.2.3"),
-	AD_RC_XADES_2_4("2.16.76.1.7.1.9.2.4"),
+	AD_RC_XADES_2_3("2.16.76.1.7.1.9.2.3", "AD_RC_XADES_2_3"),
+	AD_RC_XADES_2_4("2.16.76.1.7.1.9.2.4", "AD_RC_XADES_2_4"),
 
-	AD_RA_XADES_2_3("2.16.76.1.7.1.10.2.3"),
-	AD_RA_XADES_2_4("2.16.76.1.7.1.10.2.4");
-
+	AD_RA_XADES_2_3("2.16.76.1.7.1.10.2.3", "AD_RA_XADES_2_3"),
+	AD_RA_XADES_2_4("2.16.76.1.7.1.10.2.4", "AD_RA_XADES_2_4");
 
 	private final String OID;
+	private final String policyName;
 
-	XMLPoliciesOID(String parmOID) {
+	XMLPoliciesOID(String parmOID, String parmPolicyName) {
 		this.OID = parmOID;
+		this.policyName = parmPolicyName;
 
 	}
 
 	public String getOID() {
 		return OID;
+	}
+
+	public String getPolicyName() {
+		return policyName;
+	}
+
+	public static String getPolicyNameByOID(String oid) {
+		switch (oid) {
+		case "2.16.76.1.7.1.6.2.1": {
+			return AD_RB_XADES_2_1.getPolicyName();
+		}
+		case "2.16.76.1.7.1.6.2.2": {
+			return AD_RB_XADES_2_2.getPolicyName();
+		}
+		case "2.16.76.1.7.1.6.2.3": {
+			return AD_RB_XADES_2_3.getPolicyName();
+		}
+		case "2.16.76.1.7.1.6.2.4": {
+			return AD_RB_XADES_2_4.getPolicyName();
+		}
+		case "2.16.76.1.7.1.7.2.1": {
+			return AD_RT_XADES_2_1.getPolicyName();
+		}
+		case "2.16.76.1.7.1.7.2.2": {
+			return AD_RT_XADES_2_2.getPolicyName();
+		}
+		case "2.16.76.1.7.1.7.2.3": {
+			return AD_RT_XADES_2_3.getPolicyName();
+		}
+		case "2.16.76.1.7.1.7.2.4": {
+			return AD_RT_XADES_2_4.getPolicyName();
+		}
+		case "2.16.76.1.7.1.8.2.2": {
+			return AD_RV_XADES_2_2.getPolicyName();
+		}
+		case "2.16.76.1.7.1.8.2.3": {
+			return AD_RV_XADES_2_3.getPolicyName();
+		}
+		case "2.16.76.1.7.1.8.2.4": {
+			return AD_RV_XADES_2_4.getPolicyName();
+		}
+		case "2.16.76.1.7.1.9.2.3": {
+			return AD_RC_XADES_2_3.getPolicyName();
+		}
+		case "2.16.76.1.7.1.9.2.4": {
+			return AD_RC_XADES_2_4.getPolicyName();
+		}
+
+		case "2.16.76.1.7.1.10.2.3": {
+			return AD_RA_XADES_2_3.getPolicyName();
+		}
+		case "2.16.76.1.7.1.10.2.4": {
+			return AD_RA_XADES_2_4.getPolicyName();
+		}
+		default: {
+			return AD_RB_XADES_2_4.getPolicyName();
+		}
+
+		}
 	}
 
 }

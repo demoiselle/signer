@@ -130,7 +130,7 @@ public class XMLSignaturePolicy {
 		//builder.append(policyMessagesBundle.getString("text.uri")).append(this.getSignPolicyURI()).append("\n");
 		//builder.append(policyMessagesBundle.getString("text.algo.hash")).append(this.getSignPolicyHashAlg().getAlgorithm().getValue()).append("\n");
 		//builder.append(policyMessagesBundle.getString("text.hash")).append(this.getSignPolicyHash().getValue()).append("\n");
-		builder.append(policyMessagesBundle.getString("text.oid")).append(this.getIdentifier()).append("\n");
+		builder.append(policyMessagesBundle.getString("text.oid")).append(this.getIdentifier()).append("\n");		
 		builder.append(policyMessagesBundle.getString("text.launch.date")).append(this.getDateOfIssue()).append("\n");
 		builder.append(policyMessagesBundle.getString("text.issuer")).append(this.getPolicyIssuerName()).append("\n");
 		builder.append(policyMessagesBundle.getString("text.application")).append(this.getFieldOfApplication()).append("\n");

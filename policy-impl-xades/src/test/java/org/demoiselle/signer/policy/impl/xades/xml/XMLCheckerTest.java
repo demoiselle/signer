@@ -38,6 +38,7 @@
 package org.demoiselle.signer.policy.impl.xades.xml;
 
 import org.demoiselle.signer.core.extension.BasicCertificate;
+import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
 import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
 import org.demoiselle.signer.policy.impl.xades.xml.impl.XMLChecker;
 import org.junit.Test;
@@ -56,13 +57,13 @@ public class XMLCheckerTest {
 
 		try {
 
-			String fileName = "/";
+			//String fileName = "/";
+			
 
-
-			//String fileName = "502420025_rb_signed_rb_signed.xml";
-			//ClassLoader classLoader = getClass().getClassLoader();
-			//URL fileUri = classLoader.getResource(fileName);
-			File newFile = new File(fileName);
+			String fileName = "teste_assinatura_rt_signed.xml";
+			ClassLoader classLoader = getClass().getClassLoader();
+			URL fileUri = classLoader.getResource(fileName);
+			File newFile = new File(fileUri.toURI());
 
 
 			// Cache LCR
@@ -91,8 +92,9 @@ public class XMLCheckerTest {
 
 						if (sis.getSignaturePolicy() != null) {
 							System.out.println("------ Politica ----------------- ");
-							System.out.println(sis.getSignaturePolicy().toString());
-
+							System.out.println(sis.getSignaturePolicy().getIdentifier());
+							String[] policyOIDArray = sis.getSignaturePolicy().getIdentifier().split(":");
+							System.out.println(XMLPoliciesOID.getPolicyNameByOID(policyOIDArray[2]));
 						}
 
 						BasicCertificate bc = sis.getIcpBrasilcertificate();

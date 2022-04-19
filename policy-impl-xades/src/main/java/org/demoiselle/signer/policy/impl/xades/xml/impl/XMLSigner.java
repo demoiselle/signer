@@ -126,6 +126,7 @@ public class XMLSigner implements Signer {
 	private Date notAfterSignerCertificate;
 	private String signatureAlgorithm = "SHA256withRSA";
 	private String signatureDigest = "SHA-256";
+	
 
 	public XMLSigner() {
 		this.policyOID = XMLPoliciesOID.AD_RB_XADES_2_4.getOID();
