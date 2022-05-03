@@ -298,8 +298,16 @@
     </profiles>
 
     <scm>
+    
+	
+    <!-- 
         <connection>scm:git:https://github.com/demoiselle/${project.alias}.git</connection>
         <developerConnection>scm:git:https://github.com/demoiselle/${project.alias}.git</developerConnection>
+      -->   
+        
+       <connection>scm:git:ssh://github.com/demoiselle/${project.alias}</connection>
+        <developerConnection>scm:git:ssh://github.com/demoiselle/${project.alias}</developerConnection>
+        
         <url>https://github.com/demoiselle/${project.alias}</url>
         <tag>HEAD</tag>
     </scm>
