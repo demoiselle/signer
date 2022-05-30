@@ -39,7 +39,7 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.DLTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
@@ -65,7 +65,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * @see ASN1Object
  * @see ASN1Primitive
  * @see ASN1Sequence
- * @see DERTaggedObject
+ * @see DLTaggedObject
  */
 public class CommonRules extends ASN1Object {
 
@@ -137,9 +137,9 @@ public class CommonRules extends ASN1Object {
 		if (total > 0) {
 			for (int i = 0; i < total; i++) {
 				ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
-				if (object instanceof DERTaggedObject) {
-					DERTaggedObject derTaggedObject = (DERTaggedObject) object;
-					TAG tag = TAG.getTag(derTaggedObject.getTagNo());
+				if (object instanceof DLTaggedObject) {
+					DLTaggedObject dlTaggedObject = (DLTaggedObject) object;
+					TAG tag = TAG.getTag(dlTaggedObject.getTagNo());
 					switch (tag) {
 						case signerAndVeriferRules:
 							this.signerAndVeriferRules = new SignerAndVerifierRules();
