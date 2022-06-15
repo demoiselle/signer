@@ -131,7 +131,8 @@ public class CAdESChecker implements PKCS7Checker {
 	 */
 
 	private boolean check(byte[] content, byte[] signedData) throws SignerException {
-		Security.addProvider(new BouncyCastleProvider());
+	    if(Security.getProvider("BC") == null)
+			Security.addProvider(new BouncyCastleProvider());
 		CMSSignedData cmsSignedData = null;
 		try {
 			if (content == null) {
