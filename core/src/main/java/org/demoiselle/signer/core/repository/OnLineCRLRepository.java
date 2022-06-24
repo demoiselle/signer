@@ -110,7 +110,7 @@ public class OnLineCRLRepository implements CRLRepository {
 		return list;
 	}
 
-	private ICPBR_CRL getICPBR_CRL(String uRLCRL) {
+	protected ICPBR_CRL getICPBR_CRL(String uRLCRL) {
 		try {
 			URL url = new URL(uRLCRL);
 			URLConnection conexao = url.openConnection(proxy);

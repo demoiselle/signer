@@ -37,6 +37,8 @@
 
 package org.demoiselle.signer.core.repository;
 
+import java.util.ServiceLoader;
+
 /**
  * Factory for repository list of revoked certificates.
  */
@@ -50,6 +52,13 @@ public class CRLRepositoryFactory {
 	 * @return CRLRepository
 	 */
 	public static CRLRepository factoryCRLRepository() {
+		
+		// If ServiceLoader finds a CRLRepository then return it
+		ServiceLoader<CRLRepository> loader = ServiceLoader.load(CRLRepository.class);
+		for (CRLRepository service : loader)
+			return service;
+		
+		// Or create a repository based on the configuration
 		ConfigurationRepo conf = ConfigurationRepo.getInstance();
 		if (conf.isOnline()) {
 			return new OnLineCRLRepository(conf.getProxy());
