@@ -43,8 +43,8 @@ import java.security.cert.X509Certificate;
 
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.DLTaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
@@ -129,7 +129,7 @@ public class CertificateTrustPoint extends ASN1Object {
 	@Override
 	public void parse(ASN1Primitive derObject) {
 		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-		DERSequence x509Sequence = (DERSequence) derSequence.getObjectAt(0).toASN1Primitive();
+		DLSequence x509Sequence = (DLSequence) derSequence.getObjectAt(0).toASN1Primitive();
 		try {
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(x509Sequence.getEncoded());
 			this.trustpoint = (X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(byteArrayInputStream);
@@ -142,9 +142,9 @@ public class CertificateTrustPoint extends ASN1Object {
 		if (total > 0) {
 			for (int i = 0; i < total; i++) {
 				ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
-				if (object instanceof DERTaggedObject) {
-					DERTaggedObject derTaggedObject = (DERTaggedObject) object;
-					TAG tag = TAG.getTag(derTaggedObject.getTagNo());
+				if (object instanceof DLTaggedObject) {
+					DLTaggedObject dlTaggedObject = (DLTaggedObject) object;
+					TAG tag = TAG.getTag(dlTaggedObject.getTagNo());
 					switch (tag) {
 						case pathLenConstraint:
 							this.pathLenConstraint = new PathLenConstraint();

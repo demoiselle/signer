@@ -43,6 +43,7 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERTaggedObject;
 import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.DLTaggedObject;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
 /**
@@ -75,8 +76,12 @@ public abstract class ASN1Object {
 		} else if (derObject instanceof DERSequence) {
 			sequence = (DERSequence) derObject;
 		} else if (derObject instanceof DLSequence) {
-
-			sequence = (DLSequence) derObject.toASN1Primitive();
+			sequence = (DLSequence) derObject;
+		} else if (derObject instanceof DLTaggedObject) {
+			ASN1Primitive object = ((DLTaggedObject) derObject).getObject();
+			if (object instanceof DLSequence) {
+				sequence = (DLSequence) object;
+			}
 		}
 		return sequence;
 	}
@@ -96,6 +101,11 @@ public abstract class ASN1Object {
 			}
 		} else if (derObject instanceof ASN1Enumerated) {
 			derEnumerated = (ASN1Enumerated) derObject;
+		} else if (derObject instanceof DLTaggedObject) {
+			ASN1Primitive object = ((DLTaggedObject) derObject).getObject();
+			if (object instanceof ASN1Enumerated) {
+				derEnumerated = (ASN1Enumerated) object;
+			}
 		}
 		return derEnumerated;
 	}

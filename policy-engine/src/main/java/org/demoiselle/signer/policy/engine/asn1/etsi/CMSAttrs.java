@@ -42,6 +42,7 @@ import java.util.Collection;
 
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.DERSequence;
+import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
@@ -70,7 +71,7 @@ public class CMSAttrs extends ASN1Object {
 
 	@Override
 	public void parse(ASN1Primitive derObject) {
-		DERSequence derSequence = (DERSequence) derObject;
+		DLSequence derSequence = (DLSequence) derObject;
 		int total = derSequence.size();
 		for (int i = 0; i < total; i++) {
 			ObjectIdentifier objectIdentifier = new ObjectIdentifier();
