@@ -179,7 +179,7 @@ public class Configuration {
 		map.put("TokenOuSmartCard_26_neoid", winRoot.concat("/system32/SerproPkcs11.dll"));
 		map.put("TokenOuSmartCard_27_dexton_32", winRoot.concat("/system32/DXSafePKCS11.dll"));
 		map.put("TokenOuSmartCard_28_dexton_64", winRoot.concat("/system32/DXSafePKCS11.dll"));
-		
+
 
 		// ------------ Linux ------------
 		map.put("TokenOuSmartCard_29_safesign_ou_gd", "/usr/lib/libaetpkss.so");
@@ -248,7 +248,7 @@ public class Configuration {
 		}
 
 		if (!successLoad) {
-			logger.error(coreMessagesBundle.getString("error.load.driver.null"));
+			logger.warn(coreMessagesBundle.getString("warn.load.driver.notfound"));
 		}
 
 		try {
