@@ -102,7 +102,7 @@ public class SignatureValidationPolicy extends ASN1Object {
 
 	public void parse(ASN1Primitive derObject) {
 		ASN1Sequence derSequence = ASN1Object.getDERSequence(derObject);
-		
+
 		this.signingPeriod = new SigningPeriod();
 		this.signingPeriod.parse(derSequence.getObjectAt(0).toASN1Primitive());
 
