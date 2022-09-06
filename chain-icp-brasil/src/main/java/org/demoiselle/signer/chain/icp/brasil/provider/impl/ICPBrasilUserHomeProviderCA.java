@@ -88,9 +88,10 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 
 		// verify if the FULL_PATH_FOLDER_SINGER exists
 		try {
+			LOGGER.debug(chainMessagesBundle.getString("info.ca.home"));
 			verifyZIPPath();
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOGGER.warn(chainMessagesBundle.getString("error.throwable") + e.getMessage());
 		}
 
 		return getFromLocalZip(FULL_PATH_ZIP);
@@ -121,7 +122,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 				result = this.getFromZip(inputStream);
 
 			} else {
-				LOGGER.error(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
+				LOGGER.warn(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
 				throw new Exception(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
 			}
 
@@ -181,7 +182,7 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 						result.add(certificate);
 					}
 				} catch (CertificateException error) {
-					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate"));
+					LOGGER.warn(chainMessagesBundle.getString("error.invalid.certificate"));
 				}
 			}
 		} catch (IOException error) {

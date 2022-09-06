@@ -91,6 +91,7 @@ public class ICPBrasilProviderCA implements ProviderCA {
 	 */
 	private KeyStore getKeyStore() {
 		KeyStore keyStore = null;
+		LOGGER.debug(chainMessagesBundle.getString("info.ca.component"));
 		try {
 			InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
 			keyStore = KeyStore.getInstance("JKS", "SUN");

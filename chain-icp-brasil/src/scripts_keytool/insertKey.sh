@@ -5,6 +5,6 @@ for i in `cat config.ini`; do
    export ${V}=${A};
 done;
 RESP='yes'
-keytool -import -alias ${1} -keystore ${cacerts} -trustcacerts -file ${2} -storepass ${password}   << EOF
+keytool -import -alias ${1} -keystore ${cacerts} -trustcacerts -file ${2} -storepass ${password} -noprompt  << EOF
 ${RESP}
 EOF

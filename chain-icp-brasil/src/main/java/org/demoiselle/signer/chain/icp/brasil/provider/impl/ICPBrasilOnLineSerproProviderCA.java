@@ -215,6 +215,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 		long timeBefore = 0;
 		long timeAfter = 0;
 		try {
+			LOGGER.debug(chainMessagesBundle.getString("info.ca.online"));
 			timeBefore = System.currentTimeMillis();
 			result = this.getFromZip(zip);
 			timeAfter = System.currentTimeMillis();
@@ -257,12 +258,12 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 						result.add(certificate);
 					}
 				} catch (CertificateException error) {
-					LOGGER.error(chainMessagesBundle.getString("error.invalid.certificate") + error.getMessage());
+					LOGGER.warn(chainMessagesBundle.getString("error.invalid.certificate") + localFile + error.getMessage());
 				}
 			}
 		} catch (IOException error) {
 			LOGGER.error(chainMessagesBundle.getString("error.stream") + error.getMessage());
-			throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
+			//throw new RuntimeException(chainMessagesBundle.getString("error.stream"), error);
 		}
 		return result;
 	}
