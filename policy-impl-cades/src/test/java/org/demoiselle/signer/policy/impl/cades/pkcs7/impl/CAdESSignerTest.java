@@ -38,6 +38,7 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import org.apache.commons.codec.binary.Base64;
+import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
@@ -155,7 +156,7 @@ public class CAdESSignerTest {
 
 			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
 			// Informar a senha
-			KeyStore keystore = loader.getKeyStore("");
+			KeyStore keystore = loader.getKeyStore("senha");
 			return keystore;
 
 		} catch (Exception e1) {
@@ -195,7 +196,7 @@ public class CAdESSignerTest {
 
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/";
+			String fileDirName = "/tmp/";
 			byte[] fileToSign;
 
 			fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
@@ -211,12 +212,12 @@ public class CAdESSignerTest {
 			//Proxy.setProxyPorta("3128");
 			//Proxy.setProxySenha("senha");
 			//Proxy.setProxyUsuario("usuario");
-			try {
-				Proxy.setProxy();
-			} catch (Exception e) {
+			//try {
+			//	Proxy.setProxy();
+			//} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			//	e.printStackTrace();
+			//}
 
 
 			// Para certificado NeoID e windows token
@@ -224,8 +225,10 @@ public class CAdESSignerTest {
 
 			//// Para certificado em arquivo A1
 			//KeyStore ks = getKeyStoreFileBySigner();
+			
 			// Keystore diferente para timestamp
 			//KeyStore ksToTS = getKeyStoreStreamBySigner();
+			
 			// Para certificado token Linux
 			//KeyStore ks = getKeyStoreToken();
 
@@ -245,13 +248,14 @@ public class CAdESSignerTest {
 
 			// para arquivo
 			// quando certificado em arquivo, precisa informar a senha
-			//char[] senha = "teste".toCharArray();
+			//char[] senha = "senha".toCharArray();
 			//signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 
 			// politica referencia básica sem carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			
 			// pode ser outro certificado para timestamp
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));
 			//signer.setPrivateKeyForTimeStamp((PrivateKey) ksToTS.getKey(aliasToTs, senhaTS));
@@ -270,9 +274,11 @@ public class CAdESSignerTest {
 			// Assinatura desatachada
 
 			// Cache de cadeia
-			//CAManagerConfiguration config = CAManagerConfiguration.getInstance();
-			//config.setCached(true);
-			//org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance().setCached(true);
+			CAManagerConfiguration config = CAManagerConfiguration.getInstance();
+			config.setCached(false);
+			System.out.println("CA Cache"+config.isCached());			
+			
+			//org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance().setCached(false);
 
 			// Cache LCR
 			//ConfigurationRepo config = ConfigurationRepo.getInstance();
