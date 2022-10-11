@@ -98,13 +98,34 @@ public class HomologacaoProviderCA implements ProviderCA {
 			InputStream AutoridadeCertificadoraSERPRORFBv5Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBv5Hom.crt");
 			InputStream AutoridadeCertificadoradoSERPROFinalSSL_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPROFinalSSL_Hom.crt");
 			InputStream AutoridadeCertificadoradoSERPROV2 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPROV2.crt");
-			
 			InputStream AutoridadeCertificadoradoSERPROFinalv6Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPROFinalv6Hom.crt");
 			InputStream AutoridadeCertificadoraSERPROv2HOM = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPROv2HOM.crt");
 			InputStream AutoridadeCertificadoraRaizHomdoSERPROv2 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizHomdoSERPROv2.crt");
+						
+			InputStream AutoridadeCertificadoradoSERPRORFBSSLv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPRORFBSSLv2-Hom.crt");
+			InputStream AutoridadeCertificadoraSERPRORFBv6_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBv6-Hom.crt");
+			InputStream AutoridadeCertificadoraSERPRORFBv5_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPRORFBv5-Hom.crt");
+			InputStream AutoridadeCertificadoradoSERPROFinalSSLv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSERPROFinalSSLv2-Hom.crt");
+			InputStream AutoridadeCertificadoraSEFAZCEv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSEFAZCEv2-Hom.crt");
+			InputStream AutoridadeCertificadoraSDIv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSDIv2-Hom.crt");
+			InputStream AutoridadeCertificadoraSAFE_IDBRASILv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSAFE-IDBRASILv2-Hom.crt");
+			InputStream AutoridadeCertificadoraPROCERTIv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraPROCERTIv2-Hom.crt");
+			InputStream AutoridadeCertificadoraPRIMECERTv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraPRIMECERTv2-Hom.crt");
+			InputStream AutoridadeCertificadoraINVIAv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraINVIAv2-Hom.crt");
+			InputStream AutoridadeCertificadoraINFOCOMEX_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraINFOCOMEX-Hom.crt");
+			InputStream AutoridadeCertificadoraSERPROv2_HOM = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraSERPROv2-HOM.crt");
+			InputStream AutoridadeCertificadoraCERTFYv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraCERTFYv2-Hom.crt");
+			InputStream AutoridadeCertificadoraBRASILCERTECv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraBRASILCERTECv2-Hom.crt");
+			InputStream AutoridadeCertificadoraALTERNATIVEv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraALTERNATIVEv2-Hom.crt");
+			InputStream AutoridadeCertificadoradoSEBRAERFBv2_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradoSEBRAERFBv2-Hom.crt");
+			InputStream AutoridadeCertificadoradaPresidenciadaRepublicav6_Hom = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradaPresidenciadaRepublicav6-Hom.crt");
+			InputStream AutoridadeCertificadoraRaizBrasileirav4 = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizBrasileirav4.crt");
+			InputStream AutoridadeCertificadoraMinisteriodasRelacoesExteriores_HO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraMinisteriodasRelacoesExteriores-HO.crt");
+			InputStream AutoridadeCertificadoraRaizdoSERPRO = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
+			InputStream AutoridadeCertificadoradeAutenticacaodaCAIXAHOM = HomologacaoProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoradeAutenticacaodaCAIXAHOM.crt");
 			
-					
 			
+				
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizBrasileirav10HML));
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPROSSLv3Hom));
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizBrasileirav10));
@@ -142,6 +163,27 @@ public class HomologacaoProviderCA implements ProviderCA {
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPROFinalv6Hom));
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPROv2HOM));
 			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizHomdoSERPROv2));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPRORFBSSLv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPRORFBv6_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPRORFBv5_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSERPROFinalSSLv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSEFAZCEv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSDIv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSAFE_IDBRASILv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraPROCERTIv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraPRIMECERTv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraINVIAv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraINFOCOMEX_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraSERPROv2_HOM));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraCERTFYv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraBRASILCERTECv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraALTERNATIVEv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradoSEBRAERFBv2_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradaPresidenciadaRepublicav6_Hom));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizBrasileirav4));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraMinisteriodasRelacoesExteriores_HO));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPRO));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoradeAutenticacaodaCAIXAHOM));
 
 
 		} catch (Throwable error) {
