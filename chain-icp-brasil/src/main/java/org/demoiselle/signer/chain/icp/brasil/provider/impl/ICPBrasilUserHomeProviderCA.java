@@ -54,10 +54,10 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-
-import org.apache.log4j.Logger;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * FIXME each provider should be independent of any other
@@ -77,7 +77,9 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	public static final Path FULL_PATH_ZIP = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, FILENAME_ZIP);
 	public static final Path FULL_PATH_HASH = Paths.get(PATH_HOME_USER, FOLDER_SIGNER, FILENAME_HASH);
 
-	private static final Logger LOGGER = Logger.getLogger(ICPBrasilUserHomeProviderCA.class);
+	//private static final Logger LOGGER = Logger.getLogger(ICPBrasilUserHomeProviderCA.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(ICPBrasilUserHomeProviderCA.class);
+	
 	private static final MessagesBundle chainMessagesBundle = new MessagesBundle();
 
 	/**

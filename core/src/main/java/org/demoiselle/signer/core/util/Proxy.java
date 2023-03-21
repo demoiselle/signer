@@ -40,7 +40,8 @@ package org.demoiselle.signer.core.util;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Configure proxy for networking.
@@ -52,7 +53,7 @@ public final class Proxy {
 	private static String proxyUsuario = "";
 	private static String proxySenha = "";
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-	private static final Logger LOGGER = Logger.getLogger(Proxy.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(Proxy.class.getName());
 
 	public Proxy() {
 	}

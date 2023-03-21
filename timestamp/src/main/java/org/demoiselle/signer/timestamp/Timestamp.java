@@ -43,7 +43,9 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.TimeZone;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.Store;
 import org.bouncycastle.util.encoders.Base64;
@@ -66,7 +68,7 @@ import org.demoiselle.signer.core.util.MessagesBundle;
  */
 public class Timestamp {
 
-	private final static Logger logger = Logger.getLogger(Timestamp.class.getName());
+	private final static Logger logger = LoggerFactory.getLogger(Timestamp.class.getName());
 	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
 	private TimeStampToken timeStampToken = null;

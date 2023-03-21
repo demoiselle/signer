@@ -44,11 +44,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * FIXME @Deprecated ?
@@ -56,7 +57,7 @@ import java.util.zip.ZipOutputStream;
  */
 public final class ZipBytes {
 
-	private static final Logger LOGGER = Logger.getLogger(ZipBytes.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(ZipBytes.class.getName());
 	private final static int BUFFER_SIZE = 4096;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
@@ -70,7 +71,7 @@ public final class ZipBytes {
 
 		try {
 			for (String fileName : files.keySet()) {
-				LOGGER.log(Level.INFO, coreMessagesBundle.getString("info.add.file.zip", fileName));
+				LOGGER.info(coreMessagesBundle.getString("info.add.file.zip", fileName));
 				zipOut.putNextEntry(new ZipEntry(fileName));
 				zipOut.write(files.get(fileName));
 				zipOut.setLevel(0);

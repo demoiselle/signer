@@ -58,12 +58,13 @@ import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import javax.xml.bind.DatatypeConverter;
-
-import org.apache.log4j.Logger;
 import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.core.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Get/Download the ICP-BRASIL's Trusted Certificate Authority Chain
@@ -74,7 +75,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 	private static final String STRING_URL_ZIP = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list();
 	private static final String STRING_URL_HASH = ChainICPBrasilConfig.getInstance().getUrl_local_ac_list_sha512();
-	private static final Logger LOGGER = Logger.getLogger(ICPBrasilOnLineSerproProviderCA.class);
+	Logger LOGGER = LoggerFactory.getLogger(ICPBrasilOnLineSerproProviderCA.class);
 
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
 

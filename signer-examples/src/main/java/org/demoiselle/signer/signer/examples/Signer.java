@@ -62,7 +62,7 @@ import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 
 public class Signer {
 
-	private static final Logger LOGGER = Logger.getLogger(Signer.class.getName());
+	private static final Logger LOGGER = LoggerFactory.getLogger(Signer.class.getName());
 
 	public static void main(String[] args) throws Throwable {
 
