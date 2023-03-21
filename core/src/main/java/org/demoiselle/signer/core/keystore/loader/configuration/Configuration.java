@@ -210,7 +210,8 @@ public class Configuration {
 		map.put("TokenOuSmartCard_48_neoid", "/usr/lib/libneoidp11.so");
 		// Token Azul do Serpro
 		map.put("TokenOuSmartCard_49_safenet_lib64", "/usr/lib64/libeToken.so");
-		map.put("TokenOuSmartCard_50_ePass2003", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0");
+		
+		map.put("TokenOuSmartCard_50_ePass2003_32", "/opt/ePass2003-Castle-20141128/i386/redist/libcastle.so.1.0.0");
 		map.put("TokenOuSmartCard_51_opensc64", "/usr/lib/x86_64-linux-gnu/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_52_opensc64_pkcs11", "/usr/lib/x86_64-linux-gnu/pkcs11/opensc-pkcs11.so");
 		map.put("TokenOuSmartCard_53_opensc_lib", "/usr/lib/opensc/opensc­pkcs11.so");
@@ -233,6 +234,7 @@ public class Configuration {
 
 		map.put("TokenOuSmartCard_65_certisign_desktopid",	"//usr/local//lib//libdesktopID_Provider.dylib");
 		map.put("TokenOuSmartCard_66_birdID",	"//Applications//Assistente Desktop birdID.app//Contents//resources/extraResources//osx//x64//vault-pkcs11.dylib");
+		map.put("TokenOuSmartCard_67_ePass2003_64", "/usr/lib/ePass2003-Linux-x64/x86_64/redist/libcastle.so.1.0.0");
 
 
 
