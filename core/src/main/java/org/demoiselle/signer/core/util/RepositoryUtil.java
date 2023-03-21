@@ -100,8 +100,11 @@ public class RepositoryUtil {
 		try {
 			logger.info(coreMessagesBundle.getString("info.file.destination", destinationFile));
 			url = new URL(sUrl);
-			uCon = url.openConnection();
-			uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
+			
+			ConfigurationRepo conf = ConfigurationRepo.getInstance();
+			uCon = url.openConnection(conf.getProxy());
+			uCon.setConnectTimeout(conf.getCrlTimeOut());
+			uCon.setReadTimeout(conf.getCrlTimeOut());
 			is = uCon.getInputStream();
 			outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
 			buf = new byte[1024];
@@ -163,8 +166,10 @@ public class RepositoryUtil {
 		InputStream is = null;
 		try {
 			url = new URL(sUrl);
-			uCon = url.openConnection();
-			uCon.setConnectTimeout(ConfigurationRepo.getInstance().getCrlTimeOut());
+			ConfigurationRepo conf = ConfigurationRepo.getInstance();
+			uCon = url.openConnection(conf.getProxy());
+			uCon.setConnectTimeout(conf.getCrlTimeOut());
+			uCon.setReadTimeout(conf.getCrlTimeOut());
 			is = uCon.getInputStream();
 			buf = new byte[1024];
 			while ((ByteRead = is.read(buf)) != -1) {

@@ -165,7 +165,9 @@ public class ConfigurationRepo {
 	 * System environment key set timeout for CRL url connection
 	 */
 	public static final String ENV_CRL_CONNECTION_TIMEOUT = "SIGNER_CRL_CONNECTION_TIMEOUT";
-
+	
+	
+	
 	public static ConfigurationRepo instance = new ConfigurationRepo();
 
 	/**
@@ -280,9 +282,10 @@ public class ConfigurationRepo {
 			String varCrlTimeOut = System.getenv(ENV_CRL_CONNECTION_TIMEOUT);
 			if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
 				varCrlTimeOut = (String) System.getProperties().get(CRL_CONNECTION_TIMEOUT);
-				if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {
+				if (varCrlTimeOut == null || varCrlTimeOut.isEmpty()) {					
 					LOGGER.debug("DEFAULT");
-					LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout", getCrlTimeOut()));
+					setCrlTimeOut(5000);
+					LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout", getCrlTimeOut()));					
 				} else {
 					LOGGER.debug("KEY");
 					setCrlTimeOut(Integer.valueOf(varCrlTimeOut));

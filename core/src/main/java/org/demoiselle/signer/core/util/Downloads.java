@@ -44,35 +44,36 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
 
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
+
 /**
  * Offer download service.
  */
 public class Downloads {
 
-	private static final int TIMEOUT_CONNECTION = 3000;
-	private static final int TIMEOUT_READ = 5000;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
 	/**
 	 * Get the input stream from provided address.
 	 *
-	 * @param stringURL sequence from with an {@link InputStream}
-	 *                  will be returned.
+	 * @param stringURL sequence from with an {@link InputStream} will be returned.
 	 *
-	 * @return the {@link InputStream} corresponding to the
-	 * other param.
+	 * @return the {@link InputStream} corresponding to the other param.
 	 */
 	public static InputStream getInputStreamFromURL(final String stringURL) throws RuntimeException {
 		try {
 			URL url = new URL(stringURL);
-			URLConnection connection = url.openConnection();
-			connection.setConnectTimeout(TIMEOUT_CONNECTION);
-			connection.setReadTimeout(TIMEOUT_READ);
+			URLConnection connection;
+			ConfigurationRepo conf = ConfigurationRepo.getInstance();
+			connection = url.openConnection(conf.getProxy());
+			connection.setConnectTimeout(conf.getCrlTimeOut());
+			connection.setReadTimeout(conf.getCrlTimeOut());
 			return connection.getInputStream();
 		} catch (MalformedURLException error) {
 			throw new RuntimeException(coreMessagesBundle.getString("error.malformedURL", error.getMessage()), error);
 		} catch (UnknownServiceException error) {
-			throw new RuntimeException(coreMessagesBundle.getString("error.unknown.service", error.getMessage()), error);
+			throw new RuntimeException(coreMessagesBundle.getString("error.unknown.service", error.getMessage()),
+					error);
 		} catch (IOException error) {
 			throw new RuntimeException(coreMessagesBundle.getString("error.io", error.getMessage()), error);
 		}

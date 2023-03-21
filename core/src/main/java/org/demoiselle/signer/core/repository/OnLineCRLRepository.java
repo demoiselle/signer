@@ -114,8 +114,9 @@ public class OnLineCRLRepository implements CRLRepository {
 		try {
 			URL url = new URL(uRLCRL);
 			URLConnection conexao = url.openConnection(proxy);
-			conexao.setConnectTimeout(5000);
-			conexao.setReadTimeout(5000);
+			ConfigurationRepo conf = ConfigurationRepo.getInstance();
+			conexao.setConnectTimeout(conf.getCrlTimeOut());
+			conexao.setReadTimeout(conf.getCrlTimeOut());
 			DataInputStream inStream = new DataInputStream(conexao.getInputStream());
 			ICPBR_CRL icpbr_crl = new ICPBR_CRL(inStream);
 			inStream.close();
