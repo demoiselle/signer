@@ -40,6 +40,7 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
+import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.junit.Ignore;
 
@@ -181,9 +182,17 @@ public class CAdESTimeStampSignerTest {
 			byte[] content = readContent(fileDirName);
 
 
-			// gera o hash do conteudo
-			java.security.MessageDigest md = java.security.MessageDigest
-				.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			String varSO = System.getProperty("os.name");
+			java.security.MessageDigest md = null;
+			if (varSO.contains("indows")) {
+				// gera o hash do conteudo
+				 md = java.security.MessageDigest
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());			
+			}else {
+				 md = java.security.MessageDigest
+						.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());				
+			}		
+				
 			byte[] hash = md.digest(content);
 
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
@@ -267,8 +276,18 @@ public class CAdESTimeStampSignerTest {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
 			byte[] content = readContent(fileContentDirName);
 			// gera o hash do conteudo
-			java.security.MessageDigest md = java.security.MessageDigest
-				.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			
+			java.security.MessageDigest md = null;
+			String varSO = System.getProperty("os.name");
+			if (varSO.contains("indows")) {
+				// gera o hash do conteudo
+				 md = java.security.MessageDigest
+					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());			
+			}else {
+				 md = java.security.MessageDigest
+						.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());				
+			}			
+			
 			byte[] hash = md.digest(content);
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 			Timestamp varTimeStamp = varCAdESTimeStampSigner.checkTimeStampWithHash(timeStampFile, hash);
