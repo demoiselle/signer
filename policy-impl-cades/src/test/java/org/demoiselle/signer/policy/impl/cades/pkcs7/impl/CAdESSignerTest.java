@@ -281,18 +281,18 @@ public class CAdESSignerTest {
 			//org.demoiselle.signer.core.ca.manager.CAManagerConfiguration.getInstance().setCached(false);
 
 			// Cache LCR
-			//ConfigurationRepo config = ConfigurationRepo.getInstance();
-			//config.setCrlIndex("crl_index");
-			//config.setCrlPath("/tmp/lcr_cache/");
-			//config.setOnline(false);
-			//config.setValidateLCR(false);
+			ConfigurationRepo configRepo = ConfigurationRepo.getInstance();
+			//configRepo.setCrlIndex("crl_index");
+			configRepo.setCrlPath("/tmp/lcr_cache/");
+			configRepo.setOnline(false);
+			//configRepo.setValidateLCR(false);
 
 
 			// Diretorio LPA
-			//ConfigurationRepo config = ConfigurationRepo.getInstance();
-			//config.setLpaPath("/home/signer/lpa/");
-			// LPA online
-			//config.setOnlineLPA(false);
+			//ConfigurationRepo configRepo = ConfigurationRepo.getInstance();
+			configRepo.setLpaPath("/tmp/lpa/");
+			// LPA cache
+			configRepo.setOnlineLPA(false);
 
 
 			TimeStampConfig tsConfig = TimeStampConfig.getInstance();
