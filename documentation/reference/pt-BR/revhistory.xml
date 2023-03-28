@@ -4,6 +4,34 @@
 
 <revhistory>
 
+	<revision>
+		<revnumber>4.2.0</revnumber>
+		<date>28/03/2023</date>
+		<authorinitials>ess</authorinitials>
+		<revremark>
+			<itemizedlist>
+				<listitem>
+					<ulink
+						url="https://github.com/demoiselle/signer/milestone/40?closed=1">Milestone 4.2.0</ulink>
+				</listitem>
+			</itemizedlist>
+		</revremark>
+	</revision>
+
+	<revision>
+		<revnumber>4.1.0</revnumber>
+		<date>03/08/2022</date>
+		<authorinitials>ess</authorinitials>
+		<revremark>
+			<itemizedlist>
+				<listitem>
+					<ulink
+						url="https://github.com/demoiselle/signer/milestone/39?closed=1">Milestone 4.1.0</ulink>
+				</listitem>
+			</itemizedlist>
+		</revremark>
+	</revision>
+
 
 	<revision>
 		<revnumber>4.0.0</revnumber>
