@@ -1,47 +1,34 @@
-<!--
- Demoiselle Framework
- Copyright (C) 2010 SERPRO
- ============================================================================
- This file is part of Demoiselle Framework.
-
- Demoiselle Framework is free software; you can redistribute it and/or
- modify it under the terms of the GNU Lesser General Public License version 3
- as published by the Free Software Foundation.
-
- This program is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- GNU General Public License for more details.
-
- You should have received a copy of the GNU Lesser General Public License version 3
- along with this program; if not,  see <http://www.gnu.org/licenses />
- or write to the Free Software Foundation, Inc., 51 Franklin Street,
- Fifth Floor, Boston, MA  02110-1301, USA.
- ============================================================================
- Este arquivo é parte do Framework Demoiselle.
-
- O Framework Demoiselle é um software livre; você pode redistribuí-lo e/ou
- modificá-lo dentro dos termos da GNU LGPL versão 3 como publicada pela Fundação
- do Software Livre (FSF).
-
- Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA
- GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou
- APLICAÇÃO EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português
- para maiores detalhes.
-
- Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título
- "LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses />
- ou escreva para a Fundação do Software Livre (FSF) Inc.,
- 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
--->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<!-- Demoiselle Framework Copyright (C) 2010 SERPRO ============================================================================ 
+	This file is part of Demoiselle Framework. Demoiselle Framework is free software; 
+	you can redistribute it and/or modify it under the terms of the GNU Lesser 
+	General Public License version 3 as published by the Free Software Foundation. 
+	This program is distributed in the hope that it will be useful, but WITHOUT 
+	ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS 
+	FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details. 
+	You should have received a copy of the GNU Lesser General Public License 
+	version 3 along with this program; if not, see <http://www.gnu.org/licenses 
+	/> or write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth 
+	Floor, Boston, MA 02110-1301, USA. ============================================================================ 
+	Este arquivo é parte do Framework Demoiselle. O Framework Demoiselle é um 
+	software livre; você pode redistribuí-lo e/ou modificá-lo dentro dos termos 
+	da GNU LGPL versão 3 como publicada pela Fundação do Software Livre (FSF). 
+	Este programa é distribuído na esperança que possa ser útil, mas SEM NENHUMA 
+	GARANTIA; sem uma garantia implícita de ADEQUAÇÃO a qualquer MERCADO ou APLICAÇÃO 
+	EM PARTICULAR. Veja a Licença Pública Geral GNU/LGPL em português para maiores 
+	detalhes. Você deve ter recebido uma cópia da GNU LGPL versão 3, sob o título 
+	"LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses 
+	/> ou escreva para a Fundação do Software Livre (FSF) Inc., 51 Franklin St, 
+	Fifth Floor, Boston, MA 02111-1301, USA. -->
+<project xmlns="http://maven.apache.org/POM/4.2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.2.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
-	
+
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>signer-reference</artifactId>
 	<packaging>jdocbook</packaging>
-	<version>4.0.0</version>
+	<version>4.2.0</version>
 
 	<parent>
 		<groupId>br.gov.frameworkdemoiselle</groupId>
@@ -54,6 +41,121 @@
 		Demoiselle Signer Reference Documentation
 	</description>
 
+	<repositories>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>sonatype-nexus-snapshots</id>
+			<name>Sonatype Nexus Snapshots</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>sonatype-nexus-releases</id>
+			<name>Sonatype Nexus Releases</name>
+			<url>https://oss.sonatype.org/content/repositories/releases</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>demoiselle.sourceforge.net-release</id>
+			<url>https://demoiselle.sourceforge.net/repository/release</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>false</enabled>
+			</releases>
+			<snapshots>
+				<enabled>true</enabled>
+			</snapshots>
+			<id>snapshot.sourceforge.net-release</id>
+			<url>https://demoiselle.sourceforge.net/repository/snapshot</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>nexus.jboss.org</id>
+			<name>JBoss Maven Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+		</repository>
+		<repository>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>prime-repo</id>
+			<name>Prime Technology Maven Repository</name>
+			<url>https://repository.primefaces.org</url>
+		</repository>
+		<repository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>nexus.jboss.org</id>
+			<name>JBoss Maven Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public</url>
+		</pluginRepository>
+		<pluginRepository>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>public-jboss</id>
+			<name>JBoss Public Maven Repository</name>
+			<url>https://repository.jboss.org/nexus/content/groups/public-jboss</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>demoiselle.sourceforge.net</id>
+			<name>Demoiselle Maven Repository</name>
+			<url>https://demoiselle.sourceforge.net/repository/release</url>
+		</pluginRepository>
+		<pluginRepository>
+			<id>snapshot.demoiselle.sourceforge.net</id>
+			<name>Demoiselle Maven Repository</name>
+			<url>https://demoiselle.sourceforge.net/repository/snapshot</url>
+		</pluginRepository>
+		<pluginRepository>
+			<releases>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+			<id>central</id>
+			<name>Central Repository</name>
+			<url>https://repo.maven.apache.org/maven2</url>
+		</pluginRepository>
+	</pluginRepositories>
+
+
 	<build>
 		<plugins>
 			<plugin>
@@ -62,44 +164,247 @@
 				<configuration>
 					<skip>true</skip>
 				</configuration>
+				<dependencies>
+					<dependency><!-- add support for ssh/scp -->
+						<groupId>org.apache.maven.wagon</groupId>
+						<artifactId>wagon-ssh</artifactId>
+						<version>1.0</version>
+					</dependency>
+				</dependencies>
 			</plugin>
+			<plugin>
+				<groupId>org.jboss.maven.plugins</groupId>
+				<artifactId>maven-jdocbook-plugin</artifactId>
+				<version>2.3.5</version>
+				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>default-bundle</id>
+						<phase>package</phase>
+						<goals>
+							<goal>bundle</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>/home/emerson/git/signer/documentation/reference</sourceDirectory>
+							<sourceDocumentName>master.xml</sourceDocumentName>
+							<masterTranslation>pt-BR</masterTranslation>
+							<imageResource>
+								<directory>/home/emerson/git/signer/documentation/reference/pt-BR</directory>
+								<includes>
+									<include>images/*.png</include>
+								</includes>
+							</imageResource>
+							<formats>
+							<!-- 
+								<format>
+									<formatName>pdf</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/pdf.xsl</stylesheetResource>
+									<finalName>signer-reference.pdf</finalName>
+								</format> -->
+								<format>
+									<formatName>html</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml.xsl</stylesheetResource>
+									<finalName>index.html</finalName>
+								</format>
+								<format>
+									<formatName>html_single</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml-single.xsl</stylesheetResource>
+									<finalName>index.html</finalName>
+								</format>
+							</formats>
+							<options>
+								<xmlTransformerType>saxon</xmlTransformerType>
+								<xincludeSupported>true</xincludeSupported>
+								<injectionDateFormat>dd/MM/yyyy</injectionDateFormat>
+								<docbookVersion>1.72.0</docbookVersion>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-generate</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>/home/emerson/git/signer/documentation/reference</sourceDirectory>
+							<sourceDocumentName>master.xml</sourceDocumentName>
+							<masterTranslation>pt-BR</masterTranslation>
+							<imageResource>
+								<directory>/home/emerson/git/signer/documentation/reference/pt-BR</directory>
+								<includes>
+									<include>images/*.png</include>
+								</includes>
+							</imageResource>
+							<formats>
+							<!-- 
+								<format>
+									<formatName>pdf</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/pdf.xsl</stylesheetResource>
+									<finalName>signer-reference.pdf</finalName>
+								</format> -->
+								<format>
+									<formatName>html</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml.xsl</stylesheetResource>
+									<finalName>index.html</finalName>
+								</format>
+								<format>
+									<formatName>html_single</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml-single.xsl</stylesheetResource>
+									<finalName>index.html</finalName>
+								</format>
+							</formats>
+							<options>
+								<xmlTransformerType>saxon</xmlTransformerType>
+								<xincludeSupported>true</xincludeSupported>
+								<injectionDateFormat>dd/MM/yyyy</injectionDateFormat>
+								<docbookVersion>1.72.0</docbookVersion>
+							</options>
+						</configuration>
+					</execution>
+					<execution>
+						<id>default-resources</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>resources</goal>
+						</goals>
+						<configuration>
+							<sourceDirectory>/home/emerson/git/signer/documentation/reference</sourceDirectory>
+							<sourceDocumentName>master.xml</sourceDocumentName>
+							<masterTranslation>pt-BR</masterTranslation>
+							<imageResource>
+								<directory>/home/emerson/git/signer/documentation/reference/pt-BR</directory>
+								<includes>
+									<include>images/*.png</include>
+								</includes>
+							</imageResource>
+							<formats>
+							<!-- 	<format>
+									<formatName>pdf</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/pdf.xsl</stylesheetResource>
+									<finalName>signer-reference.pdf</finalName>
+								</format> -->
+								<format>
+									<formatName>html</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml.xsl</stylesheetResource>
+									<finalName>index.html</finalName>
+								</format>
+								<format>
+									<formatName>html_single</formatName>
+									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml-single.xsl</stylesheetResource>
+									<finalName>index.html</finalName>
+								</format>
+							</formats>
+							<options>
+								<xmlTransformerType>saxon</xmlTransformerType>
+								<xincludeSupported>true</xincludeSupported>
+								<injectionDateFormat>dd/MM/yyyy</injectionDateFormat>
+								<docbookVersion>1.72.0</docbookVersion>
+							</options>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>br.gov.frameworkdemoiselle.documentation</groupId>
+						<artifactId>demoiselle-docbook-xslt</artifactId>
+						<version>2.0.2</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>br.gov.frameworkdemoiselle.documentation</groupId>
+						<artifactId>demoiselle-jdocbook-style</artifactId>
+						<version>2.0.2</version>
+						<type>jdocbook-style</type>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.jboss</groupId>
+						<artifactId>jbossorg-jdocbook-style</artifactId>
+						<version>1.1.1</version>
+						<type>pom</type>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.jboss.weld</groupId>
+						<artifactId>weld-docbook-xslt</artifactId>
+						<version>1.1.1-Beta5</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.jboss.seam</groupId>
+						<artifactId>seam-docbook-xslt</artifactId>
+						<version>1.1.0.GA</version>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.jboss.seam</groupId>
+						<artifactId>seam-jdocbook-style</artifactId>
+						<version>1.1.0.GA</version>
+						<type>jdocbook-style</type>
+						<scope>compile</scope>
+					</dependency>
+					<dependency>
+						<groupId>org.jboss</groupId>
+						<artifactId>jbossorg-jdocbook-style</artifactId>
+						<version>1.1.1</version>
+						<type>jdocbook-style</type>
+						<scope>compile</scope>
+					</dependency>
+				</dependencies>
+				<configuration>
+					<sourceDirectory>/home/emerson/git/signer/documentation/reference</sourceDirectory>
+					<sourceDocumentName>master.xml</sourceDocumentName>
+					<masterTranslation>pt-BR</masterTranslation>
+					<imageResource>
+						<directory>/home/emerson/git/signer/documentation/reference/pt-BR</directory>
+						<includes>
+							<include>images/*.png</include>
+						</includes>
+					</imageResource>
+					<formats>
+					<!-- 
+						<format>
+							<formatName>pdf</formatName>
+							<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/pdf.xsl</stylesheetResource>
+							<finalName>signer-reference.pdf</finalName>
+						</format> -->
+						<format>
+							<formatName>html</formatName>
+							<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml.xsl</stylesheetResource>
+							<finalName>index.html</finalName>
+						</format>
+						<format>
+							<formatName>html_single</formatName>
+							<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml-single.xsl</stylesheetResource>
+							<finalName>index.html</finalName>
+						</format>
+					</formats>
+					<options>
+						<xmlTransformerType>saxon</xmlTransformerType>
+						<xincludeSupported>true</xincludeSupported>
+						<injectionDateFormat>dd/MM/yyyy</injectionDateFormat>
+						<docbookVersion>1.72.0</docbookVersion>
+					</options>
+				</configuration>
+			</plugin>
+
 		</plugins>
+		<extensions>
+			<extension>
+				<groupId>org.apache.maven.wagon</groupId>
+				<artifactId>wagon-webdav-jackrabbit</artifactId>
+				<version>2.10</version>
+			</extension>
+		</extensions>
+
 	</build>
 
-	<repositories>
-		<repository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>Sonatype Nexus Snapshots</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>sonatype-nexus-releases</id>
-			<name>Sonatype Nexus Releases</name>
-			<url>https://oss.sonatype.org/content/repositories/releases</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
-<!--  	<distributionManagement>
-		<site>
-			<id>demoiselle.sourceforge.net</id>
-			<url>${site.url}</url>
-		</site>
-	</distributionManagement>-->
+	<!-- <distributionManagement> <site> <id>demoiselle.sourceforge.net</id> 
+		<url>${site.url}</url> </site> </distributionManagement> -->
 
 	<properties>
 		<project.context>signer/reference</project.context>
 	</properties>
-	
+
 </project>
