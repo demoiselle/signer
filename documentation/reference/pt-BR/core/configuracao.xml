@@ -27,7 +27,7 @@
 							<![CDATA[
         		<dependency>
 				<groupId>org.demoiselle.signer</groupId>
-				<artifactId>core</artifactId>
+				<artifactId>signer-core</artifactId>
 				<version>4.2.0</version>
 			</dependency>]]>
 						</programlisting>
@@ -38,7 +38,7 @@
 						<ulink url="https://buildr.apache.org/">Apache Buildr</ulink>
 					</para>
 					<para>
-						<programlisting>'org.demoiselle.signer:core:jar:4.2.0'</programlisting>
+						<programlisting>'org.demoiselle.signer:signer-core:jar:4.2.0'</programlisting>
 					</para>
 				</listitem>
 				<listitem>
@@ -47,7 +47,7 @@
 					</para>
 					<para>
 						<programlisting>
-							<![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="4.2.0" />]]>
+							<![CDATA[<dependency org="org.demoiselle.signer" name="signer-core" rev="4.2.0" />]]>
 						</programlisting>
 					</para>
 				</listitem>
@@ -56,7 +56,7 @@
 						<ulink url="http://docs.groovy-lang.org/latest/html/documentation/grape.html">Groovy Grape</ulink>
 					</para>
 					<para>
-						<programlisting>@Grapes(@Grab(group='org.demoiselle.signer', module='core', version='4.2.0')) </programlisting>
+						<programlisting>@Grapes(@Grab(group='org.demoiselle.signer', module='signer-core', version='4.2.0')) </programlisting>
 					</para>
 				</listitem>
 				<listitem>
@@ -65,7 +65,7 @@
 					</para>
 					<para>
 						<programlisting>
-							<![CDATA[<dependency org="org.demoiselle.signer" name="core" rev="4.2.0" />]]>
+							<![CDATA[<dependency org="org.demoiselle.signer" name="signer-core" rev="4.2.0" />]]>
 						</programlisting>
 					</para>
 				</listitem>
@@ -74,7 +74,7 @@
 						<ulink url="http://www.scala-sbt.org/">Scala SBT</ulink>
 					</para>
 					<para>
-						<programlisting>libraryDependencies += "org.demoiselle.signer" % "core" % "4.2.0"</programlisting>
+						<programlisting>libraryDependencies += "org.demoiselle.signer" % "signer-core" % "4.2.0"</programlisting>
 					</para>
 				</listitem>
 				<listitem>
@@ -82,7 +82,7 @@
 						<ulink url="https://leiningen.org/">Leiningen</ulink>
 					</para>
 					<para>
-						<programlisting>[org.demoiselle.signer/core "4.2.0"]</programlisting>
+						<programlisting>[org.demoiselle.signer/signer-core "4.2.0"]</programlisting>
 					</para>
 				</listitem>
 			</itemizedlist>
@@ -91,7 +91,7 @@
 		<para>
 			Caso não esteja utilizando nenhum outro tipo de gerenciador (estava morando numa caverna nos últimos dez anos), pode baixar o .jar do repositório:
 			<para>
-				<ulink url="https://repo1.maven.org/maven2/org/demoiselle/signer/core/">https://repo1.maven.org/maven2/org/demoiselle/signer/core/</ulink>
+				<ulink url="https://repo1.maven.org/maven2/org/demoiselle/signer/signer-core/">https://repo1.maven.org/maven2/org/demoiselle/signer/signer-core/</ulink>
 			</para>
 
 		</para>
