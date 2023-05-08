@@ -45,6 +45,8 @@ import java.net.URLConnection;
 import java.net.UnknownServiceException;
 
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Offer download service.
@@ -52,6 +54,7 @@ import org.demoiselle.signer.core.repository.ConfigurationRepo;
 public class Downloads {
 
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+	private static Logger logger = LoggerFactory.getLogger(Downloads.class);
 
 	/**
 	 * Get the input stream from provided address.
@@ -62,13 +65,27 @@ public class Downloads {
 	 */
 	public static InputStream getInputStreamFromURL(final String stringURL) throws RuntimeException {
 		try {
+			InputStream is = null;
 			URL url = new URL(stringURL);
 			URLConnection connection;
 			ConfigurationRepo conf = ConfigurationRepo.getInstance();
 			connection = url.openConnection(conf.getProxy());
 			connection.setConnectTimeout(conf.getCrlTimeOut());
 			connection.setReadTimeout(conf.getCrlTimeOut());
-			return connection.getInputStream();
+			
+			try {
+				is = connection.getInputStream();
+			} catch (IOException e) {
+				String newUrl = stringURL.replace("http://", "https://");
+				logger.info(newUrl);
+				url = new URL(newUrl);
+				connection = url.openConnection(conf.getProxy());
+				connection.setConnectTimeout(conf.getCrlTimeOut());
+				connection.setReadTimeout(conf.getCrlTimeOut());
+				is = connection.getInputStream();
+			}			
+			
+			return is; 
 		} catch (MalformedURLException error) {
 			throw new RuntimeException(coreMessagesBundle.getString("error.malformedURL", error.getMessage()), error);
 		} catch (UnknownServiceException error) {

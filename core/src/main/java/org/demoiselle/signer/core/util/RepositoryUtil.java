@@ -89,6 +89,7 @@ public class RepositoryUtil {
 	 * @param sUrl            source url
 	 * @param destinationFile destination file
 	 */
+	@SuppressWarnings("resource")
 	public static void saveURL(String sUrl, File destinationFile) {
 		URL url;
 		byte[] buf;
@@ -105,7 +106,18 @@ public class RepositoryUtil {
 			uCon = url.openConnection(conf.getProxy());
 			uCon.setConnectTimeout(conf.getCrlTimeOut());
 			uCon.setReadTimeout(conf.getCrlTimeOut());
-			is = uCon.getInputStream();
+			try {
+				is = uCon.getInputStream();
+			} catch (Exception e) {
+				String newUrl = sUrl.replace("http://", "https://");
+				logger.info(newUrl);
+				url = new URL(newUrl);
+				uCon = url.openConnection(conf.getProxy());
+				uCon.setConnectTimeout(conf.getCrlTimeOut());
+				uCon.setReadTimeout(conf.getCrlTimeOut());
+				is = uCon.getInputStream();
+			}
+				
 			outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
 			buf = new byte[1024];
 			while ((ByteRead = is.read(buf)) != -1) {
@@ -118,6 +130,7 @@ public class RepositoryUtil {
 					logger.warn(coreMessagesBundle.getString("error.file.remove", destinationFile));
 				}
 			}
+			is.close();
 		} catch (MalformedURLException e) {
 			logger.error(coreMessagesBundle.getString("error.malformed.url", sUrl));
 			throw new CertificateValidatorException(coreMessagesBundle.getString("error.malformed.url", sUrl), e);

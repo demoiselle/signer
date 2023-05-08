@@ -39,6 +39,7 @@ package org.demoiselle.signer.core.repository;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
@@ -113,11 +114,25 @@ public class OnLineCRLRepository implements CRLRepository {
 	protected ICPBR_CRL getICPBR_CRL(String uRLCRL) {
 		try {
 			URL url = new URL(uRLCRL);
-			URLConnection conexao = url.openConnection(proxy);
+			InputStream is;
+			URLConnection uCon = url.openConnection(proxy);
 			ConfigurationRepo conf = ConfigurationRepo.getInstance();
-			conexao.setConnectTimeout(conf.getCrlTimeOut());
-			conexao.setReadTimeout(conf.getCrlTimeOut());
-			DataInputStream inStream = new DataInputStream(conexao.getInputStream());
+			uCon.setConnectTimeout(conf.getCrlTimeOut());
+			uCon.setReadTimeout(conf.getCrlTimeOut());			
+			try {				
+				is = uCon.getInputStream();
+			} catch (IOException e) {
+				String newUrl = uRLCRL.replace("http://", "https://");
+				uRLCRL = newUrl;
+				logger.info(newUrl);
+				url = new URL(newUrl);
+				uCon = url.openConnection(conf.getProxy());
+				uCon.setConnectTimeout(conf.getCrlTimeOut());
+				uCon.setReadTimeout(conf.getCrlTimeOut());
+				is = uCon.getInputStream();
+			}			
+			
+			DataInputStream inStream = new DataInputStream(is);
 			ICPBR_CRL icpbr_crl = new ICPBR_CRL(inStream);
 			inStream.close();
 			return icpbr_crl;
