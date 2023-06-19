@@ -91,18 +91,18 @@ public class PolicyValidator {
 				listOfPolicies = tempListOfPolicies;
 				Date nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 				if (actualDate.after(nextUpdate)) {
-					LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
+					LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
 					LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", config.getLpaPath()));
 					tempListOfPolicies = factory.loadLPACAdESLocal();
 					if (tempListOfPolicies != null) {
 						nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 						if (actualDate.after(nextUpdate)) {
-							LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated", config.getLpaPath() + "LPA_CAdES.der", sdf.format(nextUpdate)));
+							LOGGER.debug(policyMessagesBundle.getString("error.policy.local.not.updated", config.getLpaPath() + "LPA_CAdES.der", sdf.format(nextUpdate)));
 							tempListOfPolicies = factory.loadLPACAdESUrl();
 							if (tempListOfPolicies != null) {
 								nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 								if (actualDate.after(nextUpdate)) {
-									LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
+									LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
 								} else {
 									listOfPolicies = tempListOfPolicies;
 								}
@@ -115,7 +115,7 @@ public class PolicyValidator {
 						if (tempListOfPolicies != null) {
 							nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 							if (actualDate.after(nextUpdate)) {
-								LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
+								LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
 							} else {
 								listOfPolicies = tempListOfPolicies;
 							}
@@ -142,18 +142,18 @@ public class PolicyValidator {
 					listOfPolicies = tempListOfPolicies;
 					Date nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 					if (actualDate.after(nextUpdate)) {
-						LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
-						LOGGER.info(policyMessagesBundle.getString("info.lpa.load.local"));
+						LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
+						LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local"));
 						tempListOfPolicies = factory.loadLPAPAdESLocal();
 						if (tempListOfPolicies != null) {
 							nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 							if (actualDate.after(nextUpdate)) {
-								LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated", config.getLpaPath() + "LPA_PAdES.der", sdf.format(nextUpdate)));
+								LOGGER.debug(policyMessagesBundle.getString("error.policy.local.not.updated", config.getLpaPath() + "LPA_PAdES.der", sdf.format(nextUpdate)));
 								tempListOfPolicies = factory.loadLPAPAdESUrl();
 								if (tempListOfPolicies != null) {
 									nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 									if (actualDate.after(nextUpdate)) {
-										LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
+										LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
 									} else {
 										listOfPolicies = tempListOfPolicies;
 									}
@@ -166,7 +166,7 @@ public class PolicyValidator {
 							if (tempListOfPolicies != null) {
 								nextUpdate = tempListOfPolicies.getNextUpdate().getDate();
 								if (actualDate.after(nextUpdate)) {
-									LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
+									LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(nextUpdate)));
 								} else {
 									listOfPolicies = tempListOfPolicies;
 								}
