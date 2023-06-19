@@ -43,6 +43,7 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 
 import java.lang.reflect.Field;
 import java.security.cert.X509Certificate;
+import java.util.Date;
 
 /**
  * Load X.509 Extension OIDs for ICP-Brasil's extensions.
@@ -164,10 +165,11 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
 							if (cert.hasCertificatePJ()) {
 								keyValue = cert.getICPBRCertificatePJ().getBirthDate();
 							} else {
+								keyValue = "";
 								if (cert.hasCertificateEquipment()) {
-									keyValue = cert.getICPBRCertificateEquipment().getBirthDate().toString();
-								} else {
-									keyValue = "";
+									Date bithDate = cert.getICPBRCertificateEquipment().getBirthDate();
+									if (bithDate != null)
+										keyValue = cert.getICPBRCertificateEquipment().getBirthDate().toString();
 								}
 							}
 						}
