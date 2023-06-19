@@ -166,7 +166,7 @@ public class XMLPolicyValidator {
 				throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 			}
 			if (actualDate.after(lpaNextUpdateDate)) {
-				LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(lpaNextUpdateDate)));
+				LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated", sdf.format(lpaNextUpdateDate)));
 				LOGGER.debug(policyMessagesBundle.getString("info.lpa.load.local", config.getLpaPath()));
 				tempLPAXML = factory.loadLPAXAdESLocal();
 				if (tempLPAXML != null) {
@@ -178,7 +178,7 @@ public class XMLPolicyValidator {
 						throw new PolicyException(policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 					}
 					if (actualDate.after(lpaNextUpdateDate)) {
-						LOGGER.warn(policyMessagesBundle.getString("error.policy.local.not.updated",
+						LOGGER.debug(policyMessagesBundle.getString("error.policy.local.not.updated",
 								config.getLpaPath() + "LPA_XAdES.xml", sdf.format(lpaNextUpdateDate)));
 						tempLPAXML = factory.loadLPAXAdESUrl();
 						if (tempLPAXML != null) {
@@ -191,7 +191,7 @@ public class XMLPolicyValidator {
 										policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 							}
 							if (actualDate.after(lpaNextUpdateDate)) {
-								LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
+								LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated",
 										sdf.format(lpaNextUpdateDate)));
 							} else {
 								setLPAXML(tempLPAXML);
@@ -212,7 +212,7 @@ public class XMLPolicyValidator {
 									policyMessagesBundle.getString("error.date.parser", e.getMessage()));
 						}
 						if (actualDate.after(lpaNextUpdateDate)) {
-							LOGGER.warn(policyMessagesBundle.getString("error.policy.not.updated",
+							LOGGER.debug(policyMessagesBundle.getString("error.policy.not.updated",
 									sdf.format(lpaNextUpdateDate)));
 						} else {
 							setLPAXML(tempLPAXML);
