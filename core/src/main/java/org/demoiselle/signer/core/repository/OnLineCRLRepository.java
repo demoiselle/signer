@@ -134,25 +134,19 @@ public class OnLineCRLRepository implements CRLRepository {
 			}			
 			
 			DataInputStream inStream = new DataInputStream(is);
-			ICPBR_CRL icpbr_crl = new ICPBR_CRL(inStream);
+			icpbr_crl = new ICPBR_CRL(inStream);
 			inStream.close();
-			
-
 		} catch (MalformedURLException e) {
-			logger.error(coreMessagesBundle.getString("error.malformedURL", uRLCRL) + e.getMessage());
-			//throw new CRLRepositoryException(coreMessagesBundle.getString("error.malformedURL", uRLCRL) + e.getMessage());
+			logger.error(coreMessagesBundle.getString("error.malformedURL", uRLCRL).concat(e.getMessage()));
 			icpbr_crl = null;
 		} catch (IOException e) {
-			logger.error(coreMessagesBundle.getString("error.crl.connect", uRLCRL) + e.getMessage());
-			//throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.connect", uRLCRL) + e.getMessage());
+			logger.error(coreMessagesBundle.getString("error.crl.connect", uRLCRL).concat(e.getMessage()));
 			icpbr_crl = null;
 		} catch (CRLException e) {
-			logger.error(coreMessagesBundle.getString("error.crl.exception", uRLCRL) + e.getMessage());
-			//throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.exception", uRLCRL) + e.getMessage());
+			logger.error(coreMessagesBundle.getString("error.crl.exception", uRLCRL).concat(e.getMessage()));
 			icpbr_crl = null;
 		} catch (CertificateException e) {
-			logger.error(coreMessagesBundle.getString("error.crl.certificate", uRLCRL) + e.getMessage());
-			//throw new CRLRepositoryException(coreMessagesBundle.getString("error.crl.certificate", uRLCRL) + e.getMessage());
+			logger.error(coreMessagesBundle.getString("error.crl.certificate", uRLCRL).concat(e.getMessage()));
 			icpbr_crl = null;
 		}
 		
