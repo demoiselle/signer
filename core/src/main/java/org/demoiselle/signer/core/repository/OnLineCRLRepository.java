@@ -133,7 +133,7 @@ public class OnLineCRLRepository implements CRLRepository {
 			}			
 			
 			DataInputStream inStream = new DataInputStream(is);
-			icpbr_crl = new ICPBR_CRL(inStream);
+			ICPBR_CRL icpbr_crl = new ICPBR_CRL(inStream);
 			inStream.close();
 			return icpbr_crl;
 
