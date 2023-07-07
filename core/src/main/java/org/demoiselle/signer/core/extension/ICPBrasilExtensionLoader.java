@@ -165,7 +165,13 @@ public class ICPBrasilExtensionLoader implements IOIDExtensionLoader {
 								keyValue = cert.getICPBRCertificatePJ().getBirthDate();
 							} else {
 								if (cert.hasCertificateEquipment()) {
-									keyValue = cert.getICPBRCertificateEquipment().getBirthDate().toString();
+									if (cert.getICPBRCertificateEquipment().getBirthDate() != null) {
+										keyValue = cert.getICPBRCertificateEquipment().getBirthDate().toString();
+									}else {
+										keyValue = "";
+									}
+										
+									
 								} else {
 									keyValue = "";
 								}
