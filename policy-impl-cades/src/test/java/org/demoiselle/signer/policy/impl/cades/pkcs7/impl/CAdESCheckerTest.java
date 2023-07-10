@@ -49,6 +49,7 @@ import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -65,7 +66,6 @@ import static org.junit.Assert.assertTrue;
 /**
  *
  */
-@Ignore
 @SuppressWarnings("unused")
 public class CAdESCheckerTest {
 
@@ -78,6 +78,8 @@ public class CAdESCheckerTest {
 		String fileToVerifyDirName = "/";
 		String fileSignatureDirName = "/";
 
+		
+		
 
 		byte[] fileToVerify;
 		byte[] signatureFile;

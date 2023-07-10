@@ -43,19 +43,19 @@ import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
-import org.demoiselle.signer.core.util.Proxy;
+//import org.demoiselle.signer.core.util.Proxy;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
-import org.junit.Test;
+//import org.junit.Test;
 
 import java.io.*;
 import java.security.*;
 import java.security.KeyStore.Builder;
-import java.security.cert.Certificate;
+//import java.security.cert.Certificate;
 import java.util.Enumeration;
 
 import static org.junit.Assert.assertTrue;
@@ -119,6 +119,7 @@ public class CAdESSignerTest {
 	}
 
 	// lê pelo InputStream
+	@SuppressWarnings("unused")
 	private KeyStore getKeyStoreStreamBySigner() {
 
 		try {
@@ -145,6 +146,7 @@ public class CAdESSignerTest {
 	 *
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private KeyStore getKeyStoreFileBySigner() {
 
 		try {
@@ -169,6 +171,7 @@ public class CAdESSignerTest {
 	 * Keytore a partir de MSCAPI
 	 */
 
+	@SuppressWarnings("unused")
 	private KeyStore getKeyStoreOnWindows() {
 		try {
 			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
@@ -354,16 +357,17 @@ public class CAdESSignerTest {
 			PKCS7Signer signer = PKCS7Factory.getInstance().factoryDefault();
 			signer.setCertificates(ks.getCertificateChain(alias));
 
+			String varSO = System.getProperty("os.name");
 			// gera o hash do arquivo
-			java.security.MessageDigest md = java.security.MessageDigest
+	/*		java.security.MessageDigest md = java.security.MessageDigest
 				.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 
 			// devido a uma restrição do token branco, no windws só funciona com 256
-			String varSO = System.getProperty("os.name");
+			
 			if (varSO.contains("indows")) {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			}
-
+*/
 			byte[] hash = Base64.decodeBase64("dvlpOKVdXfIrnWqTVRyMcElaRRcbSqXokpISZxawfoU\\u003d");
 
 			//String contentEncoded = Base64.encodeBase64String(fileToSign);
@@ -425,7 +429,7 @@ public class CAdESSignerTest {
 			byte[] fileToSign = readContent(fileDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			char[] senha = "senha".toCharArray();
+			//char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
 			//KeyStore ks = getKeyStoreToken();
@@ -499,7 +503,7 @@ public class CAdESSignerTest {
 			byte[] signatureFile = readContent(fileSignatureDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			char[] senha = "senha".toCharArray();
+		//	char[] senha = "senha".toCharArray();
 
 			// Para certificado em Neo Id e windows
 			KeyStore ks = getKeyStoreTokenBySigner();
@@ -572,7 +576,7 @@ public class CAdESSignerTest {
 			byte[] signatureFile = readContent(fileSignatureDirName);
 
 			// quando certificado em arquivo, precisa informar a senha
-			char[] senha = "senha".toCharArray();
+//			char[] senha = "senha".toCharArray();
 
 			// Para certificado em Neo Id e windows
 			//KeyStore ks = getKeyStoreTokenBySigner();
@@ -663,7 +667,7 @@ public class CAdESSignerTest {
 			System.out.println("Hash_Encoded" + hashEncoded);
 
 			// quando certificado em arquivo, precisa informar a senha
-			char[] senha = "senha".toCharArray();
+	//		char[] senha = "senha".toCharArray();
 
 			// Para certificado em Token
 			//KeyStore ks = getKeyStoreToken();
@@ -740,7 +744,7 @@ public class CAdESSignerTest {
 	private InputStream readStream(String parmFile) {
 		InputStream result = null;
 		try {
-			File file = new File(parmFile);
+		//	File file = new File(parmFile);
 			result = new FileInputStream(parmFile);
 		} catch (IOException ex) {
 			ex.printStackTrace();
@@ -749,17 +753,19 @@ public class CAdESSignerTest {
 	}
 
 	private String getAlias(KeyStore ks) {
-		Certificate[] certificates = null;
 		String alias = "";
-		Enumeration<String> e;
 		try {
+		
+		
+		Enumeration<String> e;
+		
 			e = ks.aliases();
 			while (e.hasMoreElements()) {
 				alias = e.nextElement();
 				System.out.println("alias..............: " + alias);
 				System.out.println("iskeyEntry" + ks.isKeyEntry(alias));
 				System.out.println("containsAlias" + ks.containsAlias(alias));
-				certificates = ks.getCertificateChain(alias);
+				//Certificate[] certificates = ks.getCertificateChain(alias);
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
