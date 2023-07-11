@@ -196,11 +196,11 @@
 							</imageResource>
 							<formats>
 							 
-								<format>
+							<!-- 	<format>
 									<formatName>pdf</formatName>
 									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/pdf.xsl</stylesheetResource>
 									<finalName>signer-reference.pdf</finalName>
-								</format> 
+								</format>--> 
 								<format>
 									<formatName>html</formatName>
 									<stylesheetResource>classpath:/xslt/br/gov/frameworkdemoiselle/xhtml.xsl</stylesheetResource>

@@ -32,7 +32,13 @@
 				<listitem>
 					<para>
 						<emphasis role="bold">policy-impl-PAdES: </emphasis>
-						permite geração e validação de assinaturas digitais (conforme uma política) no formato PBAD-PAdES.
+						permite geração e validação de assinaturas digitais (conforme uma política) no formato PBAD-PAdES (PDF).
+					</para>
+				</listitem>
+				<listitem>
+					<para>
+						<emphasis role="bold">policy-impl-XAdES: </emphasis>
+						permite geração e validação de assinaturas digitais (conforme uma política) no formato PBAD-XAdES (XML).
 					</para>
 				</listitem>
 				<listitem>
@@ -67,14 +73,6 @@
 				</listitem>
 			</itemizedlist>
 		</para>
-		<para>
-			Funcionalidades ainda não implementadas no componente:
-			<itemizedlist>
-				<listitem>
-					<para>Assinatura no padrão XAdES (assinatura em XML).</para>
-				</listitem>
-			</itemizedlist>
-		</para>
 		<note>
 			Caso queira baixar uma versão desta documentação em formato PDF clique
 			<para>
@@ -93,7 +91,7 @@
 	<xi:include href="core/core.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- CAdES -->
 	<xi:include href="policy-impl-cades/policy-impl-cades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
-	<!-- Policy Engine -->
+
 	<!-- PAdES -->
 	<xi:include href="policy-impl-pades/policy-impl-pades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
