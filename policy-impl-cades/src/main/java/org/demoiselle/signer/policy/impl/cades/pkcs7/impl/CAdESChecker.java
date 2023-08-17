@@ -51,7 +51,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
-
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
 import org.bouncycastle.asn1.cms.Attribute;
@@ -59,6 +58,7 @@ import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.cms.CMSAttributes;
 import org.bouncycastle.asn1.cms.ContentInfo;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
+import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
 import org.bouncycastle.cms.CMSException;
@@ -90,6 +90,7 @@ import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
+import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignerException;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Checker;
 import org.demoiselle.signer.timestamp.Timestamp;
@@ -138,8 +139,7 @@ public class CAdESChecker implements PKCS7Checker {
 			if (content == null) {
 				if (this.checkHash) {
 					cmsSignedData = new CMSSignedData(this.hashes, signedData);
-					this.checkHash = false;
-				} else {
+					} else {
 					cmsSignedData = new CMSSignedData(signedData);
 				}
 
@@ -362,9 +362,20 @@ public class CAdESChecker implements PKCS7Checker {
 			} catch (CMSException ex) {
 				// When file is mismatch with sign
 				if (ex instanceof CMSSignerDigestMismatchException) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
-					logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
+					
+					if(this.checkHash) {
+						for (AlgorithmIdentifier ai : cmsSignedData.getDigestAlgorithmIDs()) {
+							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch.digest"));
+							logger.info(cadesMessagesBundle.getString("error.signature.mismatch.digest",SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId()).getAlgorithm()));
+							throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch.digest",SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId()).getAlgorithm()), ex);	
+					    }						
+						
+					}else {
+						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
+						logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
+						throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
+					}
+					
 				} else {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
 					logger.info(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
@@ -485,6 +496,22 @@ public class CAdESChecker implements PKCS7Checker {
 		}
 	}
 	
+	
+	@Override
+	public List<SignatureInformations> checkSignatureByHash(byte[] calculatedHashContent, byte[] signedData) {
+		this.checkHash = true;
+		this.hashes.put(SignerAlgorithmEnum.SHA256withRSA
+				.getOIDAlgorithmHash(), calculatedHashContent);
+		this.hashes.put(SignerAlgorithmEnum.SHA512withRSA
+				.getOIDAlgorithmHash(), calculatedHashContent);
+		this.setHash(calculatedHashContent);
+		if (this.check(null, signedData)) {
+			return this.getSignaturesInfo();
+		} else {
+			return null;
+		}
+	}
+	
 	/**
 	 * Verifica a assinatura contra um mapa de hashes calculados a partir do mesmo conteúdo, mas usando algoritmos diferentes.
 	 * @param hashes Um mapa cujas chaves são os OID dos algoritimos e os valores são o resultado do cálculo do hash para o algoritmo em questão
@@ -541,4 +568,6 @@ public class CAdESChecker implements PKCS7Checker {
 	public void setHash(byte[] hash) {
 		this.hash = hash;
 	}
+
+	
 }

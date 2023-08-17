@@ -59,6 +59,11 @@ import org.demoiselle.signer.policy.impl.cades.pkcs1.PKCS1Signer;
  */
 public class PKCS1SignerImpl implements PKCS1Signer {
 
+	public PKCS1SignerImpl() {
+		super();
+
+	}
+
 	private Provider provider = null;
 	private PrivateKey privateKey = null;
 	private String algorithm = SignerAlgorithmEnum.SHA512withRSA.getAlgorithm();
@@ -75,7 +80,7 @@ public class PKCS1SignerImpl implements PKCS1Signer {
 	 *
 	 * @param content Content to be signed.
 	 */
-	private byte[] doSign(byte[] content) {
+	public byte[] doSign(byte[] content) {
 		if (content == null) {
 			throw new SignerException(cadesMessagesBundle.getString("error.value.null"));
 		}

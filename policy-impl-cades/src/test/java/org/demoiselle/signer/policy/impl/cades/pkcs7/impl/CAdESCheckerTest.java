@@ -258,10 +258,9 @@ public class CAdESCheckerTest {
 			// é necessário ter certeza do OID do Hash que foi gerada a
 			// assinatura (no windws por restrição do token branco, é 256.
 
-			md = java.security.MessageDigest
-					.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
+			//md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 
-			//md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
+			md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());
 
 			// gera o hash do arquivo que foi assinado
 			byte[] hash = md.digest(fileToVerify);
@@ -276,13 +275,15 @@ public class CAdESCheckerTest {
 
 
 			System.out.println("Efetuando a validacao da assinatura");
-			System.out.println("OID_hash"+ SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash());
+			//System.out.println("OID_hash"+ SignerAlgorithmEnum.SHA256withRSA.getOIDAlgorithmHash());
 			//System.out.println("OID_hash"+ SignerAlgorithmEnum.SHA512withRSA.getOIDAlgorithmHash());
 
-			List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA
-					.getOIDAlgorithmHash(), hash, signatureFile);
+			//List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA256withRSA
+			//		.getOIDAlgorithmHash(), hash, signatureFile);
 			//List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(SignerAlgorithmEnum.SHA512withRSA
 				//			.getOIDAlgorithmHash(), hash, signatureFile);
+			
+			List<SignatureInformations> signaturesInfo = checker.checkSignatureByHash(hash, signatureFile);
 			if (signaturesInfo != null) {
 				System.out.println("A assinatura foi validada.");
 				for (SignatureInformations si : signaturesInfo) {

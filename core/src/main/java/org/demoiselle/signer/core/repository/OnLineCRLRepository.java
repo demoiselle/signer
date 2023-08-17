@@ -123,6 +123,7 @@ public class OnLineCRLRepository implements CRLRepository {
 			try {				
 				is = uCon.getInputStream();
 			} catch (IOException e) {
+				logger.debug(e.getMessage());
 				String newUrl = uRLCRL.replace("http://", "https://");
 				uRLCRL = newUrl;
 				logger.info(newUrl);

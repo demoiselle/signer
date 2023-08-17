@@ -37,6 +37,16 @@
 
 package org.demoiselle.signer.policy.impl.pades.pkcs7.impl;
 
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSString;
@@ -47,22 +57,13 @@ import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.timestamp.Timestamp;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.Assert.assertTrue;
-
 public class PDFVerifyTest {
 
 	//@Test
 	public void testPDFVerify() {
 
-		String filePath = "/";
+		String filePath ="/";
+
 
 		List<SignatureInformations> results = new ArrayList<SignatureInformations>();
 		PDDocument document;
@@ -70,6 +71,8 @@ public class PDFVerifyTest {
 			document = PDDocument.load(new File(filePath));
 			List<SignatureInformations> result = null;
 
+			Integer rangeMax =0;
+			Integer fileLen=0;
 			for (PDSignature sig : document.getSignatureDictionaries()) {
 				COSDictionary sigDict = sig.getCOSObject();
 				COSString contents = (COSString) sigDict.getDictionaryObject(COSName.CONTENTS);
@@ -109,14 +112,21 @@ public class PDFVerifyTest {
 
 				//System.out.println("validando");
 				result = checker.checkDetachedSignature(buf, assinatura);
-
+		        int[] byteRange = sig.getByteRange();
+		        rangeMax = (byteRange[byteRange.length-2] + byteRange[byteRange.length-1]);
+		        fileLen = (int) new File(filePath).length();
+		        
 
 				if (result == null || result.isEmpty()) {
 					System.err.println("Erro ao validar");
-					//Erro
+					assertTrue(false);
 				}
 				results.addAll(checker.getSignaturesInfo());
 			}
+			if (fileLen > rangeMax) {
+	        	System.err.println("Erro! Foi identificado uma modificação incremental");
+	        	assertTrue(false);
+	        }
 
 			if (!results.isEmpty()) {
 

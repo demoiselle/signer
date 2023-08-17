@@ -82,4 +82,15 @@ public interface PKCS7Checker extends Checker {
 	 * @return List&lt;SignatureInformations&gt;
 	 */
 	List<SignatureInformations> getSignaturesInfo();
+	
+	
+	/**
+	 * Check a digital detached signature, informed by parameter signedData, based on calculated hash from content
+	 *
+	 * @param calculatedHashContent calculated hash
+	 * @param signedData            detached signature
+	 * @return List&lt;SignatureInformations&gt; list of signature informations
+	 */
+	List<SignatureInformations> checkSignatureByHash(byte[] calculatedHashContent, byte[] signedData);
+
 }
