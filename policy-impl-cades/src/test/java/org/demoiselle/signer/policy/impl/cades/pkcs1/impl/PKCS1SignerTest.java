@@ -27,7 +27,7 @@ import org.junit.Test;
 
 public class PKCS1SignerTest {
 
-	@Test
+	//@Test
 	public void testDoSign() {
 		try {
 
@@ -37,7 +37,7 @@ public class PKCS1SignerTest {
 
 			//
 			// String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/home/emerson/Downloads/teste_pgfn.pdf";
+			String fileDirName = "/";
 			byte[] fileToSign = readContent(fileDirName);
 
 			//fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");

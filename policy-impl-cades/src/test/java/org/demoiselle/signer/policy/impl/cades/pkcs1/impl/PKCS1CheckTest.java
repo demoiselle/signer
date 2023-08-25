@@ -16,12 +16,12 @@ import org.junit.Test;
 
 public class PKCS1CheckTest {
 
-	@Test
+	//@Test
 	public void testCheck() throws CertificateException {
 		PKCS1SignerImpl pkcs1 = new PKCS1SignerImpl();
 		
-		String fileToVerifyDirName = "/home/emerson/Downloads/teste_pgfn.pdf";
-		String fileSignature = "/home/emerson/Downloads/teste_pgfn.pdf_.p1s";
+		String fileToVerifyDirName = "";
+		String fileSignature = "";
 		byte[] content = readContent(fileToVerifyDirName); 
 		//String signatureBase64 ="IJy/ikXAVp/U2dQWlWZKZi1o0nI9ycRpJPq1utap1oUgBAAFAQIEA2UBSIZgCQYNMDEw";
 		//byte[] signature = Base64.decodeBase64(signatureBase64);
