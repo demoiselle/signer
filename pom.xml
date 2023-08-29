@@ -92,6 +92,7 @@
         <module>timestamp</module>
         <module>policy-impl-xades</module>
         <module>policy-impl-pades</module>
+         <module>chain-iti</module>
     </modules>
 
     <properties>
