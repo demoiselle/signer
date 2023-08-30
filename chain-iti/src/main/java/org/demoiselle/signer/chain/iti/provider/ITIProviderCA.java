@@ -65,28 +65,19 @@ public class ITIProviderCA implements ProviderCA {
 		try {
 
 			// CADEIAS de PRODUÇÃO
-			InputStream AutoridadeCertificadoraAssinadorSERPRORaiz =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraAssinadorSERPRORaiz.crt");
-			InputStream AutoridadeCertificadoraAssinadorSERPROFinal =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraAssinadorSERPROFinal.crt");
-			// CADEIAS de HOMOLOGAÇÃO
-			InputStream AutoridadeCertificadoraRaizdoSERPRO =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
-			InputStream AutoridadeCertificadoraFinaldoSERPRO =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");
-			// CADEIA geradas em software/Testes
-			InputStream AutoridadeCertificadoraRaizdoSERPROSoftware =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPROSoftware.crt");
-			InputStream AutoridadeCertificadoraFinaldoSERPROSoftware =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPROSoftware.crt");
-
+			InputStream AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1 =
+				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1.crt");
+			InputStream ACFinaldoGovernoFederaldoBrasilv1 =
+				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACFinaldoGovernoFederaldoBrasilv1.crt");
+			InputStream ACIntermediariadoGovernoFederaldoBrasilv1 =
+					ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACIntermediariadoGovernoFederaldoBrasilv1.crt");
+			
+			
 			logger.debug(chainMessagesBundle.getString("info.provider.name.serpro.neosigner"));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraAssinadorSERPRORaiz));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraAssinadorSERPROFinal));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPRO));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPRO));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoSERPROSoftware));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraFinaldoSERPROSoftware));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACFinaldoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACIntermediariadoGovernoFederaldoBrasilv1));
+			
 		} catch (Throwable error) {
 			logger.error(error.getMessage());
 			return null;
@@ -96,6 +87,6 @@ public class ITIProviderCA implements ProviderCA {
 	}
 
 	public String getName() {
-		return chainMessagesBundle.getString("info.provider.name.serpro.neosigner");
+		return chainMessagesBundle.getString("info.provider.name.iti.gov");
 	}
 }
