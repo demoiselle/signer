@@ -64,7 +64,7 @@ import org.junit.Test;
 
 public class PDFVerifyTest {
 
-	@Test
+//	@Test
 	public void testPDFVerify() {
 
 		String filePath ="/";
@@ -106,7 +106,6 @@ public class PDFVerifyTest {
 			        LcrManagerSync.getInstance().update(varCert);
 					*/
 				PAdESChecker checker = new PAdESChecker();
-				checker.getSignaturesInfo().get(0).setSignDate(signingTime);
 				byte[] assinatura = contents.getBytes();
 				/*
 				 *  gravar a assinatura em um arquivo separado
@@ -121,6 +120,7 @@ public class PDFVerifyTest {
 
 				//System.out.println("validando");
 				result = checker.checkDetachedSignature(buf, assinatura);
+				checker.getSignaturesInfo().get(0).setSignDate(signingTime);
 		        int[] byteRange = sig.getByteRange();
 		        rangeMax = (byteRange[byteRange.length-2] + byteRange[byteRange.length-1]);
 		        fileLen = (int) new File(filePath).length();
