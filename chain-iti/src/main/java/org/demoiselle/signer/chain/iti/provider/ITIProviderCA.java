@@ -38,6 +38,7 @@
 package org.demoiselle.signer.chain.iti.provider;
 
 import java.io.InputStream;
+import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -72,11 +73,11 @@ public class ITIProviderCA implements ProviderCA {
 			InputStream ACIntermediariadoGovernoFederaldoBrasilv1 =
 					ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACIntermediariadoGovernoFederaldoBrasilv1.crt");
 			
-			
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 			logger.debug(chainMessagesBundle.getString("info.provider.name.serpro.neosigner"));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACFinaldoGovernoFederaldoBrasilv1));
-			result.add((X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(ACIntermediariadoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(ACFinaldoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(ACIntermediariadoGovernoFederaldoBrasilv1));
 			
 		} catch (Throwable error) {
 			logger.error(error.getMessage());

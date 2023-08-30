@@ -40,6 +40,7 @@ package org.demoiselle.signer.core.extension;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.NoSuchProviderException;
 import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
@@ -62,8 +63,9 @@ public class ICPBR_CRL {
 	 * @param is InputStream
 	 * @throws CRLException         exception
 	 * @throws CertificateException exception
+	 * @throws NoSuchProviderException 
 	 */
-	public ICPBR_CRL(InputStream is) throws CRLException, CertificateException {
+	public ICPBR_CRL(InputStream is) throws CRLException, CertificateException, NoSuchProviderException {
 		this.x509crl = getInstance(is);
 	}
 
@@ -72,8 +74,9 @@ public class ICPBR_CRL {
 	 * @throws CRLException         exception
 	 * @throws CertificateException exception
 	 * @throws IOException          exception
+	 * @throws NoSuchProviderException 
 	 */
-	public ICPBR_CRL(byte[] data) throws CRLException, CertificateException, IOException {
+	public ICPBR_CRL(byte[] data) throws CRLException, CertificateException, IOException, NoSuchProviderException {
 		this.x509crl = getInstance(data);
 	}
 
@@ -83,9 +86,10 @@ public class ICPBR_CRL {
 	 * @throws CRLException         exception
 	 * @throws IOException          exception
 	 * @throws CertificateException exception
+	 * @throws NoSuchProviderException 
 	 * @see java.security.cert.X509CRL
 	 */
-	private X509CRL getInstance(byte[] data) throws CRLException, IOException, CertificateException {
+	private X509CRL getInstance(byte[] data) throws CRLException, IOException, CertificateException, NoSuchProviderException {
 		X509CRL crl = null;
 
 		try {
@@ -121,9 +125,10 @@ public class ICPBR_CRL {
 	 * @return X509CRL
 	 * @throws CRLException         exception
 	 * @throws CertificateException exception
+	 * @throws NoSuchProviderException 
 	 */
-	private X509CRL getInstance(InputStream is) throws CRLException, CertificateException {
-		CertificateFactory cf = CertificateFactory.getInstance("X509");
+	private X509CRL getInstance(InputStream is) throws CRLException, CertificateException, NoSuchProviderException {
+		CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
 		X509CRL crl = (X509CRL) cf.generateCRL(is);
 		return crl;
 	}

@@ -49,6 +49,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -253,10 +255,16 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 							out.write(b, 0, len);
 						ByteArrayInputStream is = new ByteArrayInputStream(out.toByteArray());
 						out.close();
-						X509Certificate certificate = (X509Certificate) CertificateFactory.getInstance("X509")
-							.generateCertificate(is);
-						is.close();
-						result.add(certificate);
+						X509Certificate certificate;
+						try {
+							Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+							certificate = (X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(is);
+							is.close();
+							result.add(certificate);
+						} catch (NoSuchProviderException e) {
+							LOGGER.warn(chainMessagesBundle.getString("error.invalid.certificate") + localFile + e.getMessage());
+						}
+						
 					}
 				} catch (CertificateException error) {
 					LOGGER.warn(chainMessagesBundle.getString("error.invalid.certificate") + localFile + error.getMessage());

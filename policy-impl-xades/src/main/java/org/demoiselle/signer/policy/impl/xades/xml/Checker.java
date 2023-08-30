@@ -38,9 +38,11 @@
 package org.demoiselle.signer.policy.impl.xades.xml;
 
 import java.io.InputStream;
+import java.security.NoSuchProviderException;
 import java.util.List;
 
 import org.demoiselle.signer.policy.impl.xades.XMLSignatureInformations;
+import org.demoiselle.signer.policy.impl.xades.XMLSignerException;
 import org.w3c.dom.Document;
 
 /**
@@ -48,33 +50,33 @@ import org.w3c.dom.Document;
  */
 public interface Checker {
 
-	boolean check(Document doc);
+	boolean check(Document doc) throws XMLSignerException, NoSuchProviderException;
 
-	boolean check(String xmlAsString);
+	boolean check(String xmlAsString) throws NoSuchProviderException;
 
-	boolean check(boolean isFileLocation, String xmlSignedFile);
+	boolean check(boolean isFileLocation, String xmlSignedFile) throws XMLSignerException, NoSuchProviderException;
 
-	boolean check(byte[] docData);
+	boolean check(byte[] docData) throws XMLSignerException, NoSuchProviderException;
 
-	boolean check(InputStream isXMLFile);
+	boolean check(InputStream isXMLFile) throws XMLSignerException, NoSuchProviderException;
 
-	boolean check(String signedContentFileName, String signatureFileName);
+	boolean check(String signedContentFileName, String signatureFileName) throws XMLSignerException, NoSuchProviderException;
 
-	boolean check(byte[] signedContent, byte[] signature);
+	boolean check(byte[] signedContent, byte[] signature) throws XMLSignerException, NoSuchProviderException;
 
-	boolean check(InputStream isContent, InputStream isXMLSignature);
+	boolean check(InputStream isContent, InputStream isXMLSignature) throws XMLSignerException, NoSuchProviderException;
 
-	boolean checkHash(byte[] contentcHash, Document xmlSignature);
+	boolean checkHash(byte[] contentcHash, Document xmlSignature) throws NoSuchProviderException;
 
-	boolean checkHash(byte[] contentcHash, byte[] xmlSignature);
+	boolean checkHash(byte[] contentcHash, byte[] xmlSignature) throws NoSuchProviderException, XMLSignerException;
 
-	boolean checkHash(byte[] contentHash, String xmlSignature);
+	boolean checkHash(byte[] contentHash, String xmlSignature) throws XMLSignerException, NoSuchProviderException;
 
-	boolean checkHash(InputStream isContent, Document xmlSignature);
+	boolean checkHash(InputStream isContent, Document xmlSignature) throws XMLSignerException, NoSuchProviderException;
 
-	boolean checkHash(InputStream isContent, InputStream isXMLSignature);
+	boolean checkHash(InputStream isContent, InputStream isXMLSignature) throws XMLSignerException, NoSuchProviderException;
 
-	boolean checkHash(InputStream isContent, String xmlSignature);
+	boolean checkHash(InputStream isContent, String xmlSignature) throws XMLSignerException, NoSuchProviderException;
 
 	List<XMLSignatureInformations> getSignaturesInfo();
 }

@@ -48,6 +48,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.security.NoSuchProviderException;
 import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -80,9 +81,10 @@ public class OffLineCRLRepository implements CRLRepository {
 
 	/**
 	 * Returns a CRL (Certificate Revoked List)  from a given authority of IPC-Brasil.
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {
+	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) throws NoSuchProviderException {
 
 		Collection<ICPBR_CRL> list = new ArrayList<ICPBR_CRL>();
 		try {
@@ -119,8 +121,9 @@ public class OffLineCRLRepository implements CRLRepository {
 	/**
 	 * @param uRLCRL a valid url address
 	 * @return
+	 * @throws NoSuchProviderException 
 	 */
-	private ICPBR_CRL getICPBR_CRL(String uRLCRL) {
+	private ICPBR_CRL getICPBR_CRL(String uRLCRL) throws NoSuchProviderException {
 
 		File fileCRL = null;
 

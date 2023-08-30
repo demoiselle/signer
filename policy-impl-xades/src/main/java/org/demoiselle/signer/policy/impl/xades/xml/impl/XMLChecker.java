@@ -43,6 +43,7 @@ import java.io.InputStream;
 import java.security.InvalidKeyException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PublicKey;
 import java.security.Security;
 import java.security.Signature;
@@ -129,9 +130,10 @@ public class XMLChecker implements Checker {
 	 *                       file
 	 * @param xmlSignedFile  path and name for XML file
 	 * @return fake.
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public boolean check(boolean isFileLocation, String xmlSignedFile) throws XMLSignerException {
+	public boolean check(boolean isFileLocation, String xmlSignedFile) throws XMLSignerException, NoSuchProviderException {
 
 		if (!isFileLocation) {
 			logger.error(xadesMessagesBundle.getString("error.xml.false.to.file"));
@@ -157,9 +159,10 @@ public class XMLChecker implements Checker {
 	 *
 	 * @param docData fake.
 	 * @return fake.
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public boolean check(byte[] docData) throws XMLSignerException {
+	public boolean check(byte[] docData) throws XMLSignerException, NoSuchProviderException {
 		if (docData == null || docData.length <= 0) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docData"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docData"));
@@ -173,9 +176,10 @@ public class XMLChecker implements Checker {
 	 * and signature
 	 *
 	 * @param doc document
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public boolean check(Document doc) throws XMLSignerException {
+	public boolean check(Document doc) throws XMLSignerException, NoSuchProviderException {
 		if (doc == null || doc.getChildNodes().getLength() <= 0) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "Document doc"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parameter.null", "Document doc"));
@@ -190,9 +194,10 @@ public class XMLChecker implements Checker {
 	 * @param signedContentFileName fake.
 	 * @param signatureFileName     fake.
 	 * @return fake.
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public boolean check(String signedContentFileName, String signatureFileName) throws XMLSignerException {
+	public boolean check(String signedContentFileName, String signatureFileName) throws XMLSignerException, NoSuchProviderException {
 
 		if (signedContentFileName == null || signedContentFileName.isEmpty()) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "String signedContentFileName"));
@@ -219,9 +224,10 @@ public class XMLChecker implements Checker {
 	 * @param signedContent a signed content in byte[] format
 	 * @param signature     the XML signature in byte[] format
 	 * @return fake.
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public boolean check(byte[] signedContent, byte[] signature) throws XMLSignerException {
+	public boolean check(byte[] signedContent, byte[] signature) throws XMLSignerException, NoSuchProviderException {
 
 		if (signedContent == null || signedContent.length <= 0) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] signedContent"));
@@ -240,9 +246,10 @@ public class XMLChecker implements Checker {
 	 *
 	 * @param isXMLFile fake.
 	 * @return fake.
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public boolean check(InputStream isXMLFile) throws XMLSignerException {
+	public boolean check(InputStream isXMLFile) throws XMLSignerException, NoSuchProviderException {
 		if (isXMLFile == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isXMLFile"));
 			throw new XMLSignerException(
@@ -258,9 +265,10 @@ public class XMLChecker implements Checker {
 	 * @param isContent      fake.
 	 * @param isXMLSignature fake.
 	 * @return fake.
+	 * @throws NoSuchProviderException 
 	 */
 	@Override
-	public boolean check(InputStream isContent, InputStream isXMLSignature) throws XMLSignerException {
+	public boolean check(InputStream isContent, InputStream isXMLSignature) throws XMLSignerException, NoSuchProviderException {
 		if (isContent == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isContent"));
 			throw new XMLSignerException(
@@ -280,7 +288,7 @@ public class XMLChecker implements Checker {
 	}
 
 	@Override
-	public boolean checkHash(byte[] contentHash, String xmlSignature) throws XMLSignerException {
+	public boolean checkHash(byte[] contentHash, String xmlSignature) throws XMLSignerException, NoSuchProviderException {
 
 		if (contentHash == null || contentHash.length <= 0) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] contentHash"));
@@ -296,7 +304,7 @@ public class XMLChecker implements Checker {
 	}
 
 	@Override
-	public boolean checkHash(InputStream isContent, Document xmlSignature) throws XMLSignerException {
+	public boolean checkHash(InputStream isContent, Document xmlSignature) throws XMLSignerException, NoSuchProviderException {
 
 		if (isContent == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isContent"));
@@ -318,7 +326,7 @@ public class XMLChecker implements Checker {
 	}
 
 	@Override
-	public boolean checkHash(InputStream isContent, InputStream isXMLSignature) throws XMLSignerException {
+	public boolean checkHash(InputStream isContent, InputStream isXMLSignature) throws XMLSignerException, NoSuchProviderException {
 		if (isContent == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isContent"));
 			throw new XMLSignerException(
@@ -338,7 +346,7 @@ public class XMLChecker implements Checker {
 	}
 
 	@Override
-	public boolean checkHash(InputStream isContent, String xmlSignature) throws XMLSignerException {
+	public boolean checkHash(InputStream isContent, String xmlSignature) throws XMLSignerException, NoSuchProviderException {
 		if (isContent == null) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "InputStream isContent"));
 			throw new XMLSignerException(
@@ -363,8 +371,10 @@ public class XMLChecker implements Checker {
 	 * @param docHash   fake.
 	 * @param signature fake.
 	 * @return fake.
+	 * @throws XMLSignerException 
+	 * @throws NoSuchProviderException 
 	 */
-	public boolean checkHash(byte[] docHash, byte[] signature) {
+	public boolean checkHash(byte[] docHash, byte[] signature) throws NoSuchProviderException, XMLSignerException {
 		if (docHash == null || docHash.length <= 0) {
 			logger.error(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docHash"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.xml.parameter.null", "byte[] docHash"));
@@ -383,8 +393,9 @@ public class XMLChecker implements Checker {
 	 *
 	 * @param xmlAsString fake.
 	 * @return fake.
+	 * @throws NoSuchProviderException 
 	 */
-	public boolean check(String xmlAsString) {
+	public boolean check(String xmlAsString) throws NoSuchProviderException {
 
 		if (xmlAsString == null || xmlAsString.isEmpty()) {
 			logger.error(xadesMessagesBundle.getString("error.xml.string.file.null", "String xmlAsString"));
@@ -401,8 +412,9 @@ public class XMLChecker implements Checker {
 	 * @param docData
 	 * @param signature
 	 * @return
+	 * @throws NoSuchProviderException 
 	 */
-	private boolean check(byte[] docData, Document signature) {
+	private boolean check(byte[] docData, Document signature) throws NoSuchProviderException {
 		isDetached = true;
 		boolean signatureOk = true;
 		verify(signature);
@@ -448,8 +460,9 @@ public class XMLChecker implements Checker {
 	 * @param docHash   the hahs.
 	 * @param signature the document.
 	 * @return {@code true} if checked ok.
+	 * @throws NoSuchProviderException 
 	 */
-	public boolean checkHash(byte[] docHash, Document signature) {
+	public boolean checkHash(byte[] docHash, Document signature) throws NoSuchProviderException {
 		isDetached = true;
 		boolean signatureOk = true;
 		verify(signature);
@@ -610,10 +623,11 @@ public class XMLChecker implements Checker {
 		return true;
 	}
 
-	private X509Certificate getCertificate(String x509Certificate) throws CertificateException {
+	private X509Certificate getCertificate(String x509Certificate) throws CertificateException, NoSuchProviderException {
 		byte encodedCert[] = Base64.decode(x509Certificate);
 		ByteArrayInputStream inputStream = new ByteArrayInputStream(encodedCert);
-		CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
+		Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		CertificateFactory certFactory = CertificateFactory.getInstance("X.509", "BC");
 		return (X509Certificate) certFactory.generateCertificate(inputStream);
 	}
 
@@ -776,7 +790,7 @@ public class XMLChecker implements Checker {
 		}
 	}
 
-	private boolean verify(Document doc) {
+	private boolean verify(Document doc) throws NoSuchProviderException {
 
 		Init.init();
 		boolean signatureOK = false;

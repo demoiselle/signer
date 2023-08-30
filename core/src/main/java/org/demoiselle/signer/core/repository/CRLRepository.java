@@ -38,6 +38,7 @@ software; you can redistribute it and/or
 
 package org.demoiselle.signer.core.repository;
 
+import java.security.NoSuchProviderException;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
 
@@ -53,7 +54,8 @@ public interface CRLRepository {
 	 *
 	 * @param certificate AC's certificate
 	 * @return List of ICPBR_CRL
+	 * @throws NoSuchProviderException 
 	 */
-	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate);
+	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) throws NoSuchProviderException;
 
 }
