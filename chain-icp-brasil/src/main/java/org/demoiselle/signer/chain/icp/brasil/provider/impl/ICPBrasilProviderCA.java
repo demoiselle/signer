@@ -43,6 +43,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -95,6 +96,7 @@ public class ICPBrasilProviderCA implements ProviderCA {
 		try {
 			InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
 			//keyStore = KeyStore.getInstance("JKS", "SUN");
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 			keyStore = KeyStore.getInstance("BKS", "BC");
 
 			keyStore.load(is, "changeit".toCharArray());
