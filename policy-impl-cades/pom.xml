@@ -34,21 +34,21 @@
             <artifactId>chain-icp-brasil-homolog</artifactId>
             <scope>test</scope>
         </dependency>
-        <!--Cadeias da plataforma de assinaturas do SERPRO
+        <!--Cadeias da plataforma de assinaturas do SERPRO -->
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-serpro-neosigner</artifactId>
             <scope>test</scope>
-        </dependency>-->
+        </dependency>
         
         
-        <!-- Cadeias ITI
+        <!-- Cadeias ITI -->
    
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-iti</artifactId>
             <scope>test</scope>
-        </dependency> -->
+        </dependency> 
         
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
@@ -63,8 +63,8 @@
             <artifactId>signer-timestamp</artifactId>
         </dependency>
      
-        <!-- versões mais novas não suportam Java 7 -->
-        <!-- <version>1.17</version> <scope>test</scope> </dependency> -->
+        <!-- A versão abaixo é a ultima para java7 -->
+
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>

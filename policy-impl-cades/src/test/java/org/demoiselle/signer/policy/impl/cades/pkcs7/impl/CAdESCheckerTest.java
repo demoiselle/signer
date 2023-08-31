@@ -77,7 +77,6 @@ public class CAdESCheckerTest {
 	public void testVerifyDetachedSignature() {
 		
 		
-		
 		String fileToVerifyDirName = "/";
 		String fileSignatureDirName = "/";
 
@@ -154,6 +153,10 @@ public class CAdESCheckerTest {
 					}
 					if (certificate.hasCertificatePJ()) {
 						System.out.println("CNPJ: "+certificate.getICPBRCertificatePJ().getCNPJ());
+					}
+					if (certificate.hasCertificateEquipment()) {
+						System.out.println("CNPJ: "+certificate.getICPBRCertificateEquipment().getCNPJ());
+						System.out.println("Responsável: "+certificate.getICPBRCertificateEquipment().getResponsibleName());
 					}
 				}
 				// Carimbo do tempo

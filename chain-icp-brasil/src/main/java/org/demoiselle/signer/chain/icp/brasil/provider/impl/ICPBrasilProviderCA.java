@@ -51,6 +51,7 @@ import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -96,9 +97,9 @@ public class ICPBrasilProviderCA implements ProviderCA {
 		try {
 			InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
 			//keyStore = KeyStore.getInstance("JKS", "SUN");
-			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			Security.addProvider(new BouncyCastleProvider());
 			keyStore = KeyStore.getInstance("BKS", "BC");
-
+			//keyStore = KeyStore.getInstance("PKCS12");
 			keyStore.load(is, "changeit".toCharArray());
 		} catch (KeyStoreException ex) {
 			LOGGER.error(chainMessagesBundle.getString("error.load.keystore", ex.getMessage()), ex);
@@ -112,9 +113,9 @@ public class ICPBrasilProviderCA implements ProviderCA {
 		} catch (IOException ex) {
 			LOGGER.error(chainMessagesBundle.getString("error.io", ex.getMessage()), ex);
 			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.io", ex.getMessage()), ex);
-		} catch (NoSuchProviderException e) {
-			LOGGER.error(chainMessagesBundle.getString("error.load.provider", e.getMessage()));
-			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.provider", e.getMessage()));
+		} catch (NoSuchProviderException ex) {
+			LOGGER.error(chainMessagesBundle.getString("error.io", ex.getMessage()), ex);
+			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.io", ex.getMessage()), ex);
 
 		}
 		return keyStore;
