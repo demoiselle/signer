@@ -44,6 +44,7 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
+import java.security.NoSuchProviderException;
 import java.security.cert.CRLException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -78,7 +79,7 @@ public class OnLineCRLRepository implements CRLRepository {
 	}
 
 	@Override
-	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) {
+	public Collection<ICPBR_CRL> getX509CRL(X509Certificate certificate) throws NoSuchProviderException {
 
 		Collection<ICPBR_CRL> list = new ArrayList<ICPBR_CRL>();
 		try {
@@ -111,7 +112,7 @@ public class OnLineCRLRepository implements CRLRepository {
 		return list;
 	}
 
-	protected ICPBR_CRL getICPBR_CRL(String uRLCRL) {
+	protected ICPBR_CRL getICPBR_CRL(String uRLCRL) throws NoSuchProviderException {
 		ICPBR_CRL icpbr_crl = null;
 		try {
 			URL url = new URL(uRLCRL);

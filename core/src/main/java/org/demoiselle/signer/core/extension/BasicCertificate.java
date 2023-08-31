@@ -130,7 +130,8 @@ public class BasicCertificate {
 	 * @throws Exception            exception
 	 */
 	private X509Certificate getCertificate(InputStream is) throws CertificateException, Exception {
-		CertificateFactory cf = CertificateFactory.getInstance("X509");
+		CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
+		
 		return (X509Certificate) cf.generateCertificate(is);
 	}
 

@@ -38,6 +38,7 @@
 package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 import java.io.ByteArrayInputStream;
+import java.security.Security;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
@@ -132,7 +133,10 @@ public class CertificateTrustPoint extends ASN1Object {
 		DERSequence x509Sequence = (DERSequence) derSequence.getObjectAt(0).toASN1Primitive();
 		try {
 			ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(x509Sequence.getEncoded());
-			this.trustpoint = (X509Certificate) CertificateFactory.getInstance("X509").generateCertificate(byteArrayInputStream);
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			 CertificateFactory fact = CertificateFactory.getInstance("X.509", "BC");
+			  X509Certificate x509Cert = (X509Certificate) fact.generateCertificate(byteArrayInputStream);
+			this.trustpoint = x509Cert;
 		} catch (Throwable error) {
 			error.printStackTrace();
 		}

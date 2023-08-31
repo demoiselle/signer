@@ -39,6 +39,7 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7.attribute.impl;
 
 import java.math.BigInteger;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.cert.CRLException;
 import java.security.cert.Certificate;
@@ -151,7 +152,12 @@ public class RevocationRefs implements UnsignedAttribute {
 			ArrayList<CrlValidatedID> crls = new ArrayList<CrlValidatedID>();
 			for (int ix = 0; ix < chainSize; ix++) {
 				X509Certificate cert = (X509Certificate) certificates[ix];
-				Collection<ICPBR_CRL> icpCrls = crlRepository.getX509CRL(cert);
+				Collection<ICPBR_CRL> icpCrls;
+				try {
+					icpCrls = crlRepository.getX509CRL(cert);
+				} catch (NoSuchProviderException e) {
+					throw new SignerException(e.getMessage());
+				}
 				for (ICPBR_CRL icpCrl : icpCrls) {
 					crls.add(makeCrlValidatedID(icpCrl.getCRL()));
 				}

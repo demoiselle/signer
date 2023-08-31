@@ -51,6 +51,7 @@ import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 //import org.junit.Test;
+import org.junit.Test;
 
 import java.io.*;
 import java.security.*;
@@ -199,12 +200,12 @@ public class CAdESSignerTest {
 
 			//
 			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
-			String fileDirName = "/tmp/";
+			String fileDirName = "/";
 			byte[] fileToSign;
 
-			fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
+			//fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
 			// se informar o fileDirName decomentar abaixo
-			//fileToSign = readContent(fileDirName);
+			fileToSign = readContent(fileDirName);
 
 
 			// MSCAPI off
@@ -257,7 +258,7 @@ public class CAdESSignerTest {
 			// politica referencia básica sem carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 			
 			// pode ser outro certificado para timestamp
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));

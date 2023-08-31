@@ -109,7 +109,11 @@
 				<artifactId>chain-serpro-neosigner</artifactId>
 				<version>${demoiselle.signer.version}</version>
 			</dependency>
-
+			<dependency>
+				<groupId>org.demoiselle.signer</groupId>
+				<artifactId>chain-iti</artifactId>
+				<version>${demoiselle.signer.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>

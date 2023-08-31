@@ -1,6 +1,7 @@
 package org.demoiselle.signer.core.repository;
 
 import java.net.Proxy;
+import java.security.NoSuchProviderException;
 import java.util.Date;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -29,7 +30,7 @@ public class CachedOnLineCRLRepository extends OnLineCRLRepository {
 	}
 
 	@Override
-	protected ICPBR_CRL getICPBR_CRL(String uRLCRL) {
+	protected ICPBR_CRL getICPBR_CRL(String uRLCRL) throws NoSuchProviderException {
 		ICPBR_CRL crl = map.get(uRLCRL);
 
 		if (crl == null) {

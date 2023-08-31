@@ -46,6 +46,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
+import java.security.NoSuchProviderException;
+import java.security.Security;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -90,11 +92,15 @@ public class CertificateLoaderImpl implements CertificateLoader {
 	public X509Certificate load(File file) {
 		try {
 			FileInputStream fileInput = new FileInputStream(file);
-			return (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(fileInput);
+			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			CertificateFactory cf = CertificateFactory.getInstance("X.509", "BC");
+			return (X509Certificate) cf.generateCertificate(fileInput);
 		} catch (FileNotFoundException e) {
 			throw new CertificateCoreException("FileNotFoundException", e);
 		} catch (CertificateException e) {
 			throw new CertificateCoreException("CertificateException", e);
+		} catch (NoSuchProviderException e) {
+			throw new CertificateCoreException("NoSuchProviderException", e);
 		}
 	}
 

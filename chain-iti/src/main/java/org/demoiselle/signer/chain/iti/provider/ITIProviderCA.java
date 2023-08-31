@@ -35,7 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.chain.serpro.neosigner.provider;
+package org.demoiselle.signer.chain.iti.provider;
 
 import java.io.InputStream;
 import java.security.Security;
@@ -50,12 +50,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides Certificate Authority chain of SERPRO's
+ * Provides Certificate Authority chain of ITI
+ * https://assinador.iti.br/assinatura/
+ * https://www.gov.br/governodigital/pt-br/assinatura-eletronica/saiba-como-importar-os-certificados-do-gov-br-no-adobe-acrobat-reader
+ * 
  */
-public class SerproNeoSignerProviderCA implements ProviderCA {
+public class ITIProviderCA implements ProviderCA {
 
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
-	private static final Logger logger = LoggerFactory.getLogger(SerproNeoSignerProviderCA.class);
+	private static final Logger logger = LoggerFactory.getLogger(ITIProviderCA.class);
 
 	@SuppressWarnings("finally")
 	public Collection<X509Certificate> getCAs() {
@@ -63,29 +66,19 @@ public class SerproNeoSignerProviderCA implements ProviderCA {
 		try {
 
 			// CADEIAS de PRODUÇÃO
-			InputStream AutoridadeCertificadoraAssinadorSERPRORaiz =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraAssinadorSERPRORaiz.crt");
-			InputStream AutoridadeCertificadoraAssinadorSERPROFinal =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraAssinadorSERPROFinal.crt");
-			// CADEIAS de HOMOLOGAÇÃO
-			InputStream AutoridadeCertificadoraRaizdoSERPRO =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
-			InputStream AutoridadeCertificadoraFinaldoSERPRO =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");
-			// CADEIA geradas em software/Testes
-			InputStream AutoridadeCertificadoraRaizdoSERPROSoftware =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPROSoftware.crt");
-			InputStream AutoridadeCertificadoraFinaldoSERPROSoftware =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPROSoftware.crt");
-
+			InputStream AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1 =
+				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1.crt");
+			InputStream ACFinaldoGovernoFederaldoBrasilv1 =
+				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACFinaldoGovernoFederaldoBrasilv1.crt");
+			InputStream ACIntermediariadoGovernoFederaldoBrasilv1 =
+					ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACIntermediariadoGovernoFederaldoBrasilv1.crt");
+			
 			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 			logger.debug(chainMessagesBundle.getString("info.provider.name.serpro.neosigner"));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraAssinadorSERPRORaiz));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraAssinadorSERPROFinal));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoSERPRO));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraFinaldoSERPRO));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoSERPROSoftware));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraFinaldoSERPROSoftware));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(ACFinaldoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(ACIntermediariadoGovernoFederaldoBrasilv1));
+			
 		} catch (Throwable error) {
 			logger.error(error.getMessage());
 			return null;
@@ -95,6 +88,6 @@ public class SerproNeoSignerProviderCA implements ProviderCA {
 	}
 
 	public String getName() {
-		return chainMessagesBundle.getString("info.provider.name.serpro.neosigner");
+		return chainMessagesBundle.getString("info.provider.name.iti.gov");
 	}
 }
