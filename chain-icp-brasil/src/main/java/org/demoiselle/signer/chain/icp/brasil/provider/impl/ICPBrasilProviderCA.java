@@ -95,12 +95,12 @@ public class ICPBrasilProviderCA implements ProviderCA {
 		KeyStore keyStore = null;
 		LOGGER.debug(chainMessagesBundle.getString("info.ca.component"));
 		try {
-			InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("icpbrasil.jks");
+			InputStream is = ICPBrasilProviderCA.class.getClassLoader().getResourceAsStream("cadeiasicpbrasil.bks");
 			//keyStore = KeyStore.getInstance("JKS", "SUN");
 			Security.addProvider(new BouncyCastleProvider());
 			keyStore = KeyStore.getInstance("BKS", "BC");
 			//keyStore = KeyStore.getInstance("PKCS12");
-			keyStore.load(is, "changeit".toCharArray());
+			keyStore.load(is, "serprosigner".toCharArray());
 		} catch (KeyStoreException ex) {
 			LOGGER.error(chainMessagesBundle.getString("error.load.keystore", ex.getMessage()), ex);
 			throw new ICPBrasilProviderCAException(chainMessagesBundle.getString("error.load.keystore", ex.getMessage()), ex);
