@@ -40,6 +40,7 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 import org.apache.commons.codec.binary.Base64;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
+import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
@@ -195,21 +196,25 @@ public class CAdESSignerTest {
 		try {
 
 			System.out.println("******** TESTANDO COM ARQUIVO *****************");
+			// MSCAPI off
+			//Configuration configSigner = Configuration.getInstance();
+			//configSigner.setMSCAPI_ON(false);
+			//configSigner.doConfiguration();
 
 			// INFORMAR o arquivo
 
 			//
-			//String fileDirName = "C:\\Users\\{usuario}\\arquivo_assinar";
+			//	String fileDirName = "C:\\Users\\usuario\\Documents";
+				
 			String fileDirName = "/";
 			byte[] fileToSign;
 
-			//fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
+			fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
 			// se informar o fileDirName decomentar abaixo
-			fileToSign = readContent(fileDirName);
+			//fileToSign = readContent(fileDirName);
 
 
-			// MSCAPI off
-			//org.demoiselle.signer.core.keystore.loader.configuration.Configuration.setMSCAPI_ON(false);
+			
 
 			// Setar Proxy
 			//Proxy.setProxyEndereco("localhost");
@@ -258,7 +263,7 @@ public class CAdESSignerTest {
 			// politica referencia básica sem carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 			
 			// pode ser outro certificado para timestamp
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));

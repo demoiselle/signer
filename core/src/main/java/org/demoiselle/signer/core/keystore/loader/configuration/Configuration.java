@@ -126,7 +126,7 @@ public class Configuration {
 	/**
 	 * Document constant.
 	 */
-	protected static boolean MSCAPI_ON = true;
+	private boolean MSCAPI_ON = true;
 
 	private static final Configuration instance = new Configuration();
 
@@ -142,8 +142,14 @@ public class Configuration {
 	 * bellow
 	 */
 	private Configuration() {
-		String winRoot = (System.getenv("SystemRoot") == null) ? ""
-				: System.getenv("SystemRoot").replaceAll("\\\\", "/");
+		if (instance == null) {
+			doConfiguration();
+		}
+	}
+
+	
+	public void doConfiguration() {
+		
 		SortedMap<String, String> map = new TreeMap<String, String>();
 
 		loadFromHomeFile(map);
@@ -151,6 +157,8 @@ public class Configuration {
 		// ------------ Windows ------------
 		if (getSO().toLowerCase().indexOf("indows") > 0) {
 			if (isMSCapiDisabled() || !isMSCAPI_ON()) {
+				String winRoot = (System.getenv("SystemRoot") == null) ? ""
+						: System.getenv("SystemRoot").replaceAll("\\\\", "/");
 				map.put("TokenOuSmartCard_00_Safesign_TokenePassNG2000", winRoot.concat("/system32/ngp11v211.dll"));
 				map.put("TokenOuSmartCard_01_safenet_Safesign_Perto", winRoot.concat("/system32/aetpkss1.dll"));
 				map.put("TokenOuSmartCard_02_gemalto", winRoot.concat("/system32/gclib.dll"));
@@ -274,9 +282,8 @@ public class Configuration {
 		} catch (Throwable error) {
 			logger.error(coreMessagesBundle.getString("error.load.driver.null"));
 		}
-
+		
 	}
-
 	/**
 	 * Method that returns the version of the JVM that is running the component.
 	 * Look for this information in the system properties.
@@ -544,7 +551,7 @@ public class Configuration {
 	 *
 	 * @return if MSCAPI is ON (true) or OFF (false).
 	 */
-	public static boolean isMSCAPI_ON() {
+	public  boolean isMSCAPI_ON() {
 		return MSCAPI_ON;
 	}
 
@@ -554,7 +561,7 @@ public class Configuration {
 	 * @param mSCAPI_ON the value to set.
 	 *
 	 */
-	public static void setMSCAPI_ON(boolean mSCAPI_ON) {
+	public  void setMSCAPI_ON(boolean mSCAPI_ON) {
 		MSCAPI_ON = mSCAPI_ON;
 	}
 }
