@@ -21,5 +21,9 @@
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>chain-icp-brasil</artifactId>
+        </dependency>
     </dependencies>
 </project>

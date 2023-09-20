@@ -21,5 +21,13 @@
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>chain-icp-brasil</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>chain-serpro-neosigner</artifactId>
+        </dependency>
     </dependencies>
 </project>
