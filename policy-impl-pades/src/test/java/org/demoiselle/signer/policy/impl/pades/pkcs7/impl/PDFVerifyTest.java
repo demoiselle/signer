@@ -44,9 +44,13 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.security.cert.X509Certificate;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.pdfbox.cos.COSBase;
 import org.apache.pdfbox.cos.COSDictionary;
 import org.apache.pdfbox.cos.COSName;
 import org.apache.pdfbox.cos.COSString;
@@ -56,11 +60,11 @@ import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
 import org.demoiselle.signer.timestamp.Timestamp;
-//import org.junit.Test;
+import org.junit.Test;
 
 public class PDFVerifyTest {
 
-	//@Test
+//	@Test
 	public void testPDFVerify() {
 
 		String filePath ="/";
@@ -77,6 +81,9 @@ public class PDFVerifyTest {
 			for (PDSignature sig : document.getSignatureDictionaries()) {
 				COSDictionary sigDict = sig.getCOSObject();
 				COSString contents = (COSString) sigDict.getDictionaryObject(COSName.CONTENTS);
+				
+				// Recuperando o SigningDate (Date with time-zone) atraves do dicionario M
+				Date signingTime = extractDateOfDictM(sigDict.getDictionaryObject(COSName.M));
 
 				byte[] buf = null;
 
@@ -113,10 +120,10 @@ public class PDFVerifyTest {
 
 				//System.out.println("validando");
 				result = checker.checkDetachedSignature(buf, assinatura);
+				checker.getSignaturesInfo().get(0).setSignDate(signingTime);
 		        int[] byteRange = sig.getByteRange();
 		        rangeMax = (byteRange[byteRange.length-2] + byteRange[byteRange.length-1]);
 		        fileLen = (int) new File(filePath).length();
-		        
 
 				if (result == null || result.isEmpty()) {
 					System.err.println("Erro ao validar");
@@ -134,7 +141,15 @@ public class PDFVerifyTest {
 				for (SignatureInformations sis : results) {
 					if (sis.isInvalidSignature()) {
 						System.err.println("Assinatura inválida");
+					}else {
+						System.out.println("Assinatura válida");
 					}
+					
+					if (sis.getSignDate() != null) {
+						System.out.println("Data da assinatura: " + sis.getSignDate());
+						System.out.println("Data da assinatura GMT: " + sis.getSignDateGMT());
+					}
+					
 					for (String valErr : sis.getValidatorErrors()) {
 						System.err.println("++++++++++++++ ERROS ++++++++++++++++++");
 						System.err.println(valErr);
@@ -211,6 +226,16 @@ public class PDFVerifyTest {
 			}
 		}
 	}
+	
+	public static Date extractDateOfDictM(COSBase cosNameM) throws ParseException {
+		String dateString = cosNameM.toString();
+		dateString = dateString.replaceAll("^COSString\\{D:|\\}$", "");
+		String gmt = "-"+dateString.split("-")[1].split("'")[0]+"00";
+		dateString = dateString.replaceFirst("-\\d{2}'\\d{2}'", gmt);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMddHHmmssZ");
+		Date date = formatter.parse(dateString);
+		return date;
+	}
 
 
 	//@Test
@@ -252,5 +277,3 @@ public class PDFVerifyTest {
 		}
 	}
 }
-
-
