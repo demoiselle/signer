@@ -19,16 +19,16 @@
 	"LICENCA.txt", junto com esse programa. Se não, acesse <http://www.gnu.org/licenses 
 	/> ou escreva para a Fundação do Software Livre (FSF) Inc., 51 Franklin St, 
 	Fifth Floor, Boston, MA 02111-1301, USA. -->
-<project xmlns="http://maven.apache.org/POM/4.2.1"
+<project xmlns="http://maven.apache.org/POM/4.3.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.2.1 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.3.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>signer-reference</artifactId>
 	<packaging>jdocbook</packaging>
-	<version>4.2.1</version>
+	<version>4.3.0</version>
 
 	<parent>
 		<groupId>br.gov.frameworkdemoiselle</groupId>
