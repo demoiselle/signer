@@ -35,7 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.chain.iti.provider;
+package org.demoiselle.signer.chain.iti.provider.hom;
 
 import java.io.InputStream;
 import java.security.Security;
@@ -50,35 +50,36 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides Certificate Authority chain of ITI
+ * Provides HOM Certificate Authority chain of ITI
  * https://assinador.iti.br/assinatura/
- * https://www.gov.br/governodigital/pt-br/assinatura-eletronica/saiba-como-importar-os-certificados-do-gov-br-no-adobe-acrobat-reader
- * http://repo.iti.br/docs/Cadeia_GovBr-der.p7b
+ * http://repo.iti.br/docs/Cadeia_GovBr-der-hom.p7b
  * 
  */
-public class ITIProviderCA implements ProviderCA {
+public class ITIProviderHOMCA implements ProviderCA {
 
 	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
-	private static final Logger logger = LoggerFactory.getLogger(ITIProviderCA.class);
+	private static final Logger logger = LoggerFactory.getLogger(ITIProviderHOMCA.class);
 
 	@SuppressWarnings("finally")
 	public Collection<X509Certificate> getCAs() {
 		List<X509Certificate> result = new ArrayList<X509Certificate>();
 		try {
 
-			// CADEIAS de PRODUÇÃO
-			InputStream AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1 =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1.crt");
-			InputStream ACFinaldoGovernoFederaldoBrasilv1 =
-				ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACFinaldoGovernoFederaldoBrasilv1.crt");
-			InputStream ACIntermediariadoGovernoFederaldoBrasilv1 =
-					ITIProviderCA.class.getClassLoader().getResourceAsStream("trustedca/ACIntermediariadoGovernoFederaldoBrasilv1.crt");
+			// CADEIAS de HOMOLOGAÇÃO
+			
+			
+			InputStream AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilHOM =
+				ITIProviderHOMCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilHOM.crt");
+			InputStream AutoridadeCertificadora1NiveldoGovernoFederaldoBrasilHOM =
+				ITIProviderHOMCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadora1NiveldoGovernoFederaldoBrasilHOM.crt");
+			InputStream AutoridadeCertificadora2NiveldoGovernoFederaldoBrasilHOM =
+					ITIProviderHOMCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadora2NiveldoGovernoFederaldoBrasilHOM.crt");
 			
 			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 			logger.debug(chainMessagesBundle.getString("info.provider.name.serpro.neosigner"));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilv1));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(ACFinaldoGovernoFederaldoBrasilv1));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(ACIntermediariadoGovernoFederaldoBrasilv1));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoGovernoFederaldoBrasilHOM));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadora1NiveldoGovernoFederaldoBrasilHOM));
+			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadora2NiveldoGovernoFederaldoBrasilHOM));
 			
 		} catch (Throwable error) {
 			logger.error(error.getMessage());
@@ -89,6 +90,6 @@ public class ITIProviderCA implements ProviderCA {
 	}
 
 	public String getName() {
-		return chainMessagesBundle.getString("info.provider.name.iti.gov");
+		return chainMessagesBundle.getString("info.provider.name.iti.gov.hom");
 	}
 }

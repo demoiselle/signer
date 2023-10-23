@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>chain-iti-homolog</artifactId>
+    <packaging>jar</packaging>
+
+    <name>ITI CA HOMOLOG</name>
+    <description>Prover cadeias de HOMOLOGAÇÃO para Assinaturas Digitais do ITI - https://assinador.iti.br/assinatura/</description>
+    <url>https://www.frameworkdemoiselle.gov.br</url>
+
+    <parent>
+        <groupId>org.demoiselle.signer</groupId>
+        <artifactId>parent</artifactId>
+        <relativePath>../parent</relativePath>
+        <version>4.3.1-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>signer-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>chain-icp-brasil-homolog</artifactId>
+        </dependency>
+    </dependencies>
+</project>
