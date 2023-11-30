@@ -44,6 +44,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.KeyStore;
+import java.security.KeyStore.Builder;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -66,8 +67,8 @@ import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 /**
- * Implementation of KeyStoreLoader based operating system drivers.
- * You must enter the driver file in the operating system and the API name.
+ * Implementation of KeyStoreLoader based operating system drivers. You must
+ * enter the driver file in the operating system and the API name.
  */
 public class DriverKeyStoreLoader implements KeyStoreLoader {
 
@@ -76,7 +77,6 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 	private CallbackHandler callback;
 	private Formatter formatter;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
-
 
 	/**
 	 * read the config file
@@ -127,24 +127,27 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 		ByteArrayInputStream confStream = new ByteArrayInputStream(pkcs11ConfigBytes);
 
 		try {
-			Constructor<?> construtor = Class.forName("sun.security.pkcs11.SunPKCS11").getConstructor(new Class[]{InputStream.class});
-			Provider pkcs11Provider = (Provider) construtor.newInstance(new Object[]{confStream});
+			Constructor<?> construtor = Class.forName("sun.security.pkcs11.SunPKCS11")
+					.getConstructor(new Class[] { InputStream.class });
+			Provider pkcs11Provider = (Provider) construtor.newInstance(new Object[] { confStream });
 			Security.addProvider(pkcs11Provider);
 			confStream.close();
-			Method login = Class.forName("sun.security.pkcs11.SunPKCS11").getMethod("login", new Class[]{Subject.class, CallbackHandler.class});
-			login.invoke(Security.getProvider(pkcs11Provider.getName()), new Object[]{null, this.callback});
+			Method login = Class.forName("sun.security.pkcs11.SunPKCS11").getMethod("login",
+					new Class[] { Subject.class, CallbackHandler.class });
+			login.invoke(Security.getProvider(pkcs11Provider.getName()), new Object[] { null, this.callback });
 			keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
 			keyStore.load(null, null);
 
-		} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException | InstantiationException
-			| NoSuchMethodException | SecurityException | InvocationTargetException | KeyStoreException | NoSuchAlgorithmException
-			| NoSuchProviderException | CertificateException ex) {
+		} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
+				| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException
+				| KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
 			if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
 				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
 			}
 
 			if (ex.getCause().toString().equals("javax.security.auth.login.LoginException")) {
-				//TODO  https://github.com/demoiselle/signer/pull/126 // if (ex.getCause() instanceof javax.security.auth.login.LoginException) {
+				// TODO https://github.com/demoiselle/signer/pull/126 // if (ex.getCause()
+				// instanceof javax.security.auth.login.LoginException) {
 				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
 			} else {
 				throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
@@ -164,17 +167,19 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 		KeyStore keyStore = null;
 
 		try {
-			Constructor<?> construtor = Class.forName("sun.security.pkcs11.SunPKCS11").getConstructor(new Class[]{String.class});
-			Provider pkcs11Provider = (Provider) construtor.newInstance(new Object[]{configFile});
+			Constructor<?> construtor = Class.forName("sun.security.pkcs11.SunPKCS11")
+					.getConstructor(new Class[] { String.class });
+			Provider pkcs11Provider = (Provider) construtor.newInstance(new Object[] { configFile });
 			Security.addProvider(pkcs11Provider);
-			Method login = Class.forName("sun.security.pkcs11.SunPKCS11").getMethod("login", new Class[]{Subject.class, CallbackHandler.class});
-			login.invoke(Security.getProvider(pkcs11Provider.getName()), new Object[]{null, this.callback});
+			Method login = Class.forName("sun.security.pkcs11.SunPKCS11").getMethod("login",
+					new Class[] { Subject.class, CallbackHandler.class });
+			login.invoke(Security.getProvider(pkcs11Provider.getName()), new Object[] { null, this.callback });
 			keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
 			keyStore.load(null, null);
 
 		} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
-			| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException
-			| KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
+				| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException
+				| KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
 			if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
 				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
 			}
@@ -194,7 +199,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 	 * @return keystore
 	 */
 	private KeyStore getKeyStoreFromDrivers() {
-		KeyStoreLoaderException error = new KeyStoreLoaderException(coreMessagesBundle.getString("error.no.driver.compatible"));
+		KeyStoreLoaderException error = new KeyStoreLoaderException(
+				coreMessagesBundle.getString("error.no.driver.compatible"));
 		Map<String, String> drivers = Configuration.getInstance().getDrivers();
 
 		if (drivers == null || drivers.isEmpty()) {
@@ -232,8 +238,26 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 
 	@Override
 	public KeyStore getKeyStore(String pinNumber) {
-		// TODO Auto-generated method stub
-		return null;
+		Map<String, String> drivers = Configuration.getInstance().getDrivers();
+		KeyStore ks = null;
+		for (Map.Entry<String, String> entry : drivers.entrySet()) {
+			try {
+				String pkcs11LibraryPath = entry.getValue();
+				StringBuilder buf = new StringBuilder();
+				buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
+				Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
+				Security.addProvider(p);
+				Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
+						new KeyStore.PasswordProtection(pinNumber.toCharArray()));
+				ks = builder.getKeyStore();
+				if (ks != null) {
+					return ks;
+				}
+			} catch (Exception e1) {
+				e1.printStackTrace();
+			}
+		}
+		return ks;
 	}
 
 }
