@@ -194,7 +194,7 @@ public class TimeStampOperator {
 
 			long tempo;
 			// Valor do timeout da verificacao de dados disponiveis para leitura
-			int timeOut = 3500;
+			int timeOut = org.demoiselle.signer.timestamp.configuration.TimeStampConfig.getInstance().getTimeOut();
 			// Verificando se os 4 bytes iniciais estao disponiveis para leitura
 			for (tempo = System.currentTimeMillis() + timeOut; inputStream.available() < 4 && System.currentTimeMillis() < tempo; ) {
 				try {
