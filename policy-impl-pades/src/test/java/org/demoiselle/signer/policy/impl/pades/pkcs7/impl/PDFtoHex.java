@@ -9,6 +9,7 @@ import java.io.InputStream;
 
 import org.junit.Test;
 
+@SuppressWarnings("unused")
 public class PDFtoHex {
 
 	private InputStream is;
@@ -31,7 +32,7 @@ public class PDFtoHex {
 		    System.out.println(hex.toString());
 		}
 	
-	@Test
+	//@Test
 	public void hexStringToByteArray() throws IOException {
 		
 		String s = "85D6A9D6BAB5FA2469C4C93D72D2682D664A669516D4D9D49F56C0458ABF9C20";

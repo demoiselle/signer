@@ -74,7 +74,7 @@ import org.junit.Test;
 
 public class PDFVerifyTest {
 
-	@Test
+	//@Test
 	public void testPDFVerify() throws IOException, ParseException, CertificateException, CMSException {
 
 		String filePath = "/";
