@@ -300,6 +300,7 @@ public class CAManager {
 
 		if (!ok) {
 			LOGGER.error(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
+			throw new CAManagerException(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
 		}
 		if (config.isCached() && !result.isEmpty()) {
 			CAManagerCache.getInstance().addCertificate(certificate, result);

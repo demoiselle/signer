@@ -337,19 +337,14 @@ public class CAdESChecker implements PKCS7Checker {
 						}
 					}
 				}
-
-				LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
-				// menor que 2 = autoAssinado
-				if (varChain.size() < 2) {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
-					logger.info(cadesMessagesBundle.getString("error.no.ca", varCert.getIssuerDN()));
-
-				}
-				for (X509Certificate cert : varChain) {
-					BasicCertificate signerCertificate = new BasicCertificate(cert);
-					if (!signerCertificate.isCACertificate()) {
-						signatureInfo.setIcpBrasilcertificate(signerCertificate);
-					}
+				BasicCertificate signerCertificate = new BasicCertificate(varCert);
+				signatureInfo.setIcpBrasilcertificate(signerCertificate);
+				LinkedList<X509Certificate> varChain = new LinkedList<X509Certificate>();
+				try {
+					varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(varCert);
+				}catch (Exception e) {
+					signatureInfo.getValidatorErrors().add(e.getMessage());
+					logger.info(e.getMessage());
 				}
 				signatureInfo.setSignDate(dataHora);
 				signatureInfo.setChain(varChain);

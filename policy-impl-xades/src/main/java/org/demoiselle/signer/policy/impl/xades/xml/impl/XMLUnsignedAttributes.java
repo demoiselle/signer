@@ -110,8 +110,6 @@ public class XMLUnsignedAttributes implements UnsignedAttributes {
 	public Document doUnsignedAttributes(Document doc) {
 		Init.init();
 
-		Init.init();
-
 		if (policy == null) {
 			logger.error(xadesMessagesBundle.getString("error.policy.not.informed"));
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.policy.not.informed"));

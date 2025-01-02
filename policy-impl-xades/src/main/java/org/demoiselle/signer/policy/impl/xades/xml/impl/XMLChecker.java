@@ -837,10 +837,14 @@ public class XMLChecker implements Checker {
 				}
 				if (cert != null) {
 					verifyCertificate(cert);
-					LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance()
-							.getCertificateChain(cert);
-					sigInf.setIcpBrasilcertificate(new BasicCertificate(cert));
-					sigInf.setChain(varChain);
+					try {
+						LinkedList<X509Certificate> varChain = (LinkedList<X509Certificate>) CAManager.getInstance().getCertificateChain(cert);
+						sigInf.setChain(varChain);
+					}catch (Exception e) {
+						//validationErrors.add(xadesMessagesBundle.getString("error.no.ca", cert.getIssuerDN()));
+						validationErrors.add(e.getMessage());
+					}
+					sigInf.setIcpBrasilcertificate(new BasicCertificate(cert));					
 					sigInf.setNotAfter(cert.getNotAfter());
 				}
 				Element objectTag = getSignatureElement("Object", signatureTag, false);
