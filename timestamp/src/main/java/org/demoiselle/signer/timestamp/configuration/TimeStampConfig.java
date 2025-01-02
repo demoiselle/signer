@@ -71,6 +71,25 @@ public class TimeStampConfig {
 	 */
 	public static final String ENV_TIMESTAMP_CONNECT_REPLAY = "SIGNER_TIMESTAMP_CONNECT_REPLAY";
 
+	/**
+	 * System environment key to set read time out for timestamp connector
+	 */
+	public static final String ENV_TIMESTAMP_READ_TIMEOUT = "SIGNER_TIMESTAMP_READ_TIMEOUT";
+
+	/**
+	 * System key to set read time out for timestamp connector
+	 */
+	public static final String TIMESTAMP_READ_TIMEOUT = "signer.timestamp.read.timeout";
+
+	/**
+	 * System environment key to set CLIENT_CREDENTIALS for timestamp connector
+	 */
+	public static final String ENV_TIMESTAMP_CLIENT_CREDENTIALS = "SIGNER_TIMESTAMP_CLIENT_CREDENTIALS";
+
+	/**
+	 * System key to set CLIENT_CREDENTIALS for timestamp connector
+	 */
+	public static final String TIMESTAMP_CLIENT_CREDENTIALS = "signer.timestamp.client.credentials";
 
 	public static TimeStampConfig instance = new TimeStampConfig();
 
@@ -78,6 +97,10 @@ public class TimeStampConfig {
 	private int timeOut = 30000;
 
 	private int connectReplay = 3;
+
+	private int readTimeOut = 10000;
+
+	private String clientCredentials = "";
 
 	public static TimeStampConfig getInstance() {
 		if (instance == null) {
@@ -112,7 +135,8 @@ public class TimeStampConfig {
 				varConnectReplay = (String) System.getProperties().get(TIMESTAMP_CONNECT_REPLAY);
 				if (varConnectReplay == null || varConnectReplay.isEmpty()) {
 					LOGGER.debug("DEFAULT");
-					LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
+					LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value",
+							getConnectReplay()));
 				} else {
 					LOGGER.debug("key");
 					setConnectReplay(Integer.valueOf(varConnectReplay));
@@ -124,6 +148,44 @@ public class TimeStampConfig {
 		} catch (Exception e) {
 			LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
 
+		}
+		try {
+			String varReadTimeOut = System.getenv(ENV_TIMESTAMP_READ_TIMEOUT);
+			if (varReadTimeOut == null || varReadTimeOut.isEmpty()) {
+				varReadTimeOut = (String) System.getProperties().get(TIMESTAMP_READ_TIMEOUT);
+				if (varReadTimeOut == null || varReadTimeOut.isEmpty()) {
+					LOGGER.debug("DEFAULT");
+					LOGGER.debug(
+							timeStampMessagesBundle.getString("info.timestamp.read.timeout.value", getReadTimeOut()));
+				} else {
+					LOGGER.debug("key");
+					setReadTimeOut(Integer.valueOf(varReadTimeOut));
+				}
+			} else {
+				LOGGER.debug("ENV");
+				setReadTimeOut(Integer.valueOf(varReadTimeOut));
+			}
+		} catch (Exception e) {
+			LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.read.timeout.value", getReadTimeOut()));
+		}
+		try {
+			String varClientCredentials = System.getenv(ENV_TIMESTAMP_CLIENT_CREDENTIALS);
+			if (varClientCredentials == null || varClientCredentials.isEmpty()) {
+				varClientCredentials = (String) System.getProperties().get(TIMESTAMP_CLIENT_CREDENTIALS);
+				if (varClientCredentials == null || varClientCredentials.isEmpty()) {
+					LOGGER.debug("DEFAULT");
+					LOGGER.debug(
+							timeStampMessagesBundle.getString("info.timestamp.client.credentials.value", getClientCredentials()));
+				} else {
+					LOGGER.debug("key");
+					setClientCredentials(varClientCredentials);
+				}
+			} else {
+				LOGGER.debug("ENV");
+				setClientCredentials(varClientCredentials);
+			}
+		} catch (Exception e) {
+			LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.client.credentials.value", getClientCredentials()));
 		}
 	}
 
@@ -138,7 +200,10 @@ public class TimeStampConfig {
 		this.timeOut = parmTimeOut;
 		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
 	}
-
+	/**
+	 * 
+	 * @return the connectReplay.
+	 */
 	public int getConnectReplay() {
 		return connectReplay;
 	}
@@ -146,5 +211,29 @@ public class TimeStampConfig {
 	public void setConnectReplay(int connectReplay) {
 		this.connectReplay = connectReplay;
 		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
+	}
+
+	/**
+	 * 
+	 * @return the readTimeOut.
+	 */
+	public int getReadTimeOut() {
+		return readTimeOut;
+	}
+
+	public void setReadTimeOut(int readTimeOut) {
+		this.readTimeOut = readTimeOut;
+	}
+
+	/**
+	 * 
+	 * @return the clientCredentials.
+	 */
+	public String getClientCredentials() {
+		return clientCredentials;
+	}
+
+	public void setClientCredentials(String clientCredentials) {
+		this.clientCredentials = clientCredentials;
 	}
 }

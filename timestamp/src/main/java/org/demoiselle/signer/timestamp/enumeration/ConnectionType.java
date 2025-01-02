@@ -1,6 +1,6 @@
 /*
  * Demoiselle Framework
- * Copyright (C) 2016 SERPRO
+ * Copyright (C) 2024 SERPRO
  * ----------------------------------------------------------------------------
  * This file is part of Demoiselle Framework.
  *
@@ -38,11 +38,12 @@
 package org.demoiselle.signer.timestamp.enumeration;
 
 /**
- * Types: HTTP, SOCKET
+ * Types: HTTPS, SOCKET, API
  *
- * @author 07721825741
+ * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
  */
 public enum ConnectionType {
-	HTTP,
-	SOCKET;
+	HTTPS,
+	SOCKET,
+	API;
 }

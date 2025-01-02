@@ -55,9 +55,9 @@ public class ConnectorFactory {
 
 		switch (connectionType) {
 
-			case HTTP: {
+			case HTTPS: {
 				logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.http"));
-				return new HttpConnector();
+				return new HttpsConnector();
 			}
 
 			case SOCKET: {
@@ -65,6 +65,11 @@ public class ConnectorFactory {
 				return new SocketConnector();
 			}
 
+			case API: {
+				logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.api"));
+				return new ApiConnector();
+			}
+			
 			default: {
 				logger.debug(timeStampMessagesBundle.getString("info.timestamp.connection.socket"));
 				return new SocketConnector();

@@ -78,7 +78,7 @@ import org.demoiselle.signer.cryptography.factory.DigestFactory;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.enumeration.ConnectionType;
 import org.demoiselle.signer.timestamp.signer.RequestSigner;
-import org.demoiselle.signer.timestamp.utils.TimeStampConfig;
+import org.demoiselle.signer.timestamp.utils.TimeStampConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -136,7 +136,7 @@ public class TimeStampOperator {
 			}
 			logger.debug(timeStampMessagesBundle.getString("info.timestamp.prepare.request"));
 			TimeStampRequestGenerator timeStampRequestGenerator = new TimeStampRequestGenerator();
-			timeStampRequestGenerator.setReqPolicy(new ASN1ObjectIdentifier(TimeStampConfig.getInstance().getTSPOid()));
+			timeStampRequestGenerator.setReqPolicy(new ASN1ObjectIdentifier(TimeStampConfigUtil.getInstance().getTSPOid()));
 			timeStampRequestGenerator.setCertReq(true);
 			BigInteger nonce = BigInteger.valueOf(100);
 			timeStampRequest = timeStampRequestGenerator.generate(new ASN1ObjectIdentifier(varAlgoOid), hashedMessage, nonce);
@@ -186,10 +186,10 @@ public class TimeStampOperator {
 
 			logger.debug(timeStampMessagesBundle.getString("info.timestamp.init.request"));
 			Connector connector = ConnectorFactory.buildConnector(ConnectionType.SOCKET);
-			connector.setHostname(TimeStampConfig.getInstance().getTspHostname());
-			connector.setPort(TimeStampConfig.getInstance().getTSPPort());
+			connector.setHostname(TimeStampConfigUtil.getInstance().getTspHostname());
+			connector.setPort(TimeStampConfigUtil.getInstance().getTSPPort());
 			logger.debug(timeStampMessagesBundle.getString("info.timestamp.response"));
-			inputStream = connector.connect(request);
+			inputStream = connector.authorize(request);
 
 
 			long tempo;

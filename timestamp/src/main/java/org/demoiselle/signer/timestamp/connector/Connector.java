@@ -49,7 +49,7 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
  */
 public interface Connector {
 
-	InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException;
+	InputStream authorize(byte[] content) throws UnknownHostException, CertificateCoreException;
 
 	void close();
 

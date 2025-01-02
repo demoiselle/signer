@@ -81,7 +81,7 @@ public class SocketConnector implements Connector {
 	private Socket socket = null;
 
 	@Override
-	public InputStream connect(byte[] content) throws CertificateCoreException {
+	public InputStream authorize(byte[] content) throws CertificateCoreException {
 		try {
 			TimeStampConfig.getInstance().getTimeOut();
 			logger.debug(timeStampMessagesBundle.getString("info.timestamp.send.request"));
