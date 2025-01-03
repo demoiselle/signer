@@ -40,7 +40,7 @@ package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 import org.apache.commons.codec.binary.Base64;
 import org.demoiselle.signer.core.ca.manager.CAManagerConfiguration;
 import org.demoiselle.signer.core.keystore.loader.KeyStoreLoader;
-import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
+//import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.core.keystore.loader.implementation.MSKeyStoreLoader;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
@@ -72,126 +72,11 @@ public class CAdESSignerTest {
 	// configurações dependem de parâmetros
 	// locais.
 
-	/**
-	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do token.
-	 */
-	@SuppressWarnings("restriction")
-	private KeyStore getKeyStoreToken() {
-
-		try {
-			// ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
-
-			// Para TOKEN Branco a linha abaixo
-			//String pkcs11LibraryPath =	 "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
-
-			// Para TOKEN Azul a linha abaixo
-			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
-
-			StringBuilder buf = new StringBuilder();
-			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
-			Security.addProvider(p);
-			// ATENÇÃO ALTERAR "SENHA" ABAIXO
-			Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
-			KeyStore ks;
-			ks = builder.getKeyStore();
-
-			return ks;
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return null;
-		}
-	}
-
-	// Usa o Signer para leitura, funciona para windows e NeoID
-	private KeyStore getKeyStoreTokenBySigner() {
-
-		try {
-
-			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
-			KeyStore keyStore = keyStoreLoader.getKeyStore();
-
-			return keyStore;
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return null;
-		}
-	}
-
-	// lê pelo InputStream
-	@SuppressWarnings("unused")
-	private KeyStore getKeyStoreStreamBySigner() {
-
-		try {
-
-			// informar o caminho e nome do arquivo
-			String filep12 = "/";
-
-
-			InputStream readStream = readStream(filep12);
-
-			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(readStream);
-			// Informar a senha
-			KeyStore keystore = loader.getKeyStore("senha");
-			return keystore;
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * le a partir do arquivo .p12 ou pfx
-	 *
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private KeyStore getKeyStoreFileBySigner() {
-
-		try {
-
-
-			// informar o caminho e nome do arquivo
-			File filep12 = new File("/");
-
-
-			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
-			// Informar a senha
-			KeyStore keystore = loader.getKeyStore("senha");
-			return keystore;
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return null;
-		}
-	}
-
-	/**
-	 * Keytore a partir de MSCAPI
-	 */
-
-	@SuppressWarnings("unused")
-	private KeyStore getKeyStoreOnWindows() {
-		try {
-			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
-
-			KeyStore ks = msKeyStoreLoader.getKeyStore();
-
-			return ks;
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			return null;
-		}
-	}
 
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	//@Test
+	@Test
 	public void testSignDetached() {
 		try {
 
@@ -206,12 +91,12 @@ public class CAdESSignerTest {
 			//
 			//	String fileDirName = "C:\\Users\\usuario\\Documents";
 				
-			String fileDirName = "/";
+			String fileDirName = "/home/emerson/Documentos/teste_carimbo/teste_carimbo.txt";
 			byte[] fileToSign;
 
-			fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
+			//fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
 			// se informar o fileDirName decomentar abaixo
-			//fileToSign = readContent(fileDirName);
+			fileToSign = readContent(fileDirName);
 
 
 			
@@ -263,9 +148,16 @@ public class CAdESSignerTest {
 			// politica referencia básica sem carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
-			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
 			
-			// pode ser outro certificado para timestamp
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			//TimeStampConfig.getInstance().setApiSERPRO(true);
+			
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			// TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+
+			//TimeStampConfig.getInstance().setClientCredentials("anA5dVkweVBnYVVsbnpUN3BlZmZqMVNBaXc4YTpYZm1DVGxqQTltekc5VmZSdWZfMXlQZjNnU2dh");
+			// pode ser outro certificado para timestamp via conexão socket
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));
 			//signer.setPrivateKeyForTimeStamp((PrivateKey) ksToTS.getKey(aliasToTs, senhaTS));
 
@@ -305,12 +197,12 @@ public class CAdESSignerTest {
 
 
 			TimeStampConfig tsConfig = TimeStampConfig.getInstance();
-			tsConfig.setTimeOut(100);
-			tsConfig.setConnectReplay(2);
+			tsConfig.setTimeOut(30000);
+			tsConfig.setConnectReplay(3);
 			byte[] signature = signer.doDetachedSign(fileToSign);
 			String varSignature = Base64.encodeBase64String(signature);
 			System.out.println(varSignature);
-			File file = new File(fileDirName + "_detached_rt.p7s");
+			File file = new File(fileDirName + "_detached_rt_socket.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(signature);
 			os.flush();
@@ -374,13 +266,19 @@ public class CAdESSignerTest {
 				md = java.security.MessageDigest.getInstance(DigestAlgorithmEnum.SHA_256.getAlgorithm());
 			}
 */
-			byte[] hash = Base64.decodeBase64("dvlpOKVdXfIrnWqTVRyMcElaRRcbSqXokpISZxawfoU\\u003d");
-
+			byte[] hash = Base64.decodeBase64("XxhQ9X50AKdkm1VcPvYoPrls8LULMqe/ZMqyab0g/k84uImbrPSlXFrlB/F7sz47jAcDydb6bb1xAXO8i5GqXg==");
+			
 			//String contentEncoded = Base64.encodeBase64String(fileToSign);
 			//System.out.println("contentEncoded : "+contentEncoded);
 			//String hashEncoded = new String(Base64.encodeBase64(hash));
 			//System.out.println("hashEncoded: "+hashEncoded);
 
+			
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			//TimeStampConfig.getInstance().setApiSERPRO(true);
+			
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			// TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
 
 			// seta o algoritmo de acordo com o que foi gerado o Hash
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -475,6 +373,13 @@ public class CAdESSignerTest {
 				signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 			}
 
+			
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			//TimeStampConfig.getInstance().setApiSERPRO(true);
+			
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			// TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+
 
 			/* Realiza a assinatura do conteudo */
 			System.out.println("Efetuando a  assinatura do conteudo");
@@ -540,6 +445,14 @@ public class CAdESSignerTest {
 			signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
 			// com carimbo de tempo
 			//signer.setSignaturePolicy(PolicyFactory.Policies.AD_RT_CADES_2_3);
+			
+			
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			//TimeStampConfig.getInstance().setApiSERPRO(true);
+			
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			// TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+
 
 			// para mudar o algoritimo
 			signer.setAlgorithm(SignerAlgorithmEnum.SHA512withRSA);
@@ -747,6 +660,123 @@ public class CAdESSignerTest {
 		return result;
 	}
 
+	/**
+	 * Faz a leitura do token em LINUX, precisa setar a lib (.SO) e a senha do token.
+	 */
+	@SuppressWarnings("restriction")
+	private KeyStore getKeyStoreToken() {
+
+		try {
+			// ATENÇÃO ALTERAR CONFIGURAÇÃO ABAIXO CONFORME O TOKEN USADO
+
+			// Para TOKEN Branco a linha abaixo
+			//String pkcs11LibraryPath =	 "/usr/lib/watchdata/ICP/lib/libwdpkcs_icp.so";
+
+			// Para TOKEN Azul a linha abaixo
+			String pkcs11LibraryPath = "/usr/lib/libeToken.so";
+
+			StringBuilder buf = new StringBuilder();
+			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
+			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
+			Security.addProvider(p);
+			// ATENÇÃO ALTERAR "SENHA" ABAIXO
+			Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));
+			KeyStore ks;
+			ks = builder.getKeyStore();
+
+			return ks;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	}
+
+	// Usa o Signer para leitura, funciona para windows e NeoID
+	private KeyStore getKeyStoreTokenBySigner() {
+
+		try {
+
+			KeyStoreLoader keyStoreLoader = KeyStoreLoaderFactory.factoryKeyStoreLoader();
+			KeyStore keyStore = keyStoreLoader.getKeyStore();
+
+			return keyStore;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	}
+
+	// lê pelo InputStream
+	@SuppressWarnings("unused")
+	private KeyStore getKeyStoreStreamBySigner() {
+
+		try {
+
+			// informar o caminho e nome do arquivo
+			String filep12 = "/";
+
+
+			InputStream readStream = readStream(filep12);
+
+			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(readStream);
+			// Informar a senha
+			KeyStore keystore = loader.getKeyStore("senha");
+			return keystore;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * le a partir do arquivo .p12 ou pfx
+	 *
+	 * @return
+	 */
+	@SuppressWarnings("unused")
+	private KeyStore getKeyStoreFileBySigner() {
+
+		try {
+
+
+			// informar o caminho e nome do arquivo
+			File filep12 = new File("/");
+
+
+			KeyStoreLoader loader = KeyStoreLoaderFactory.factoryKeyStoreLoader(filep12);
+			// Informar a senha
+			KeyStore keystore = loader.getKeyStore("senha");
+			return keystore;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Keytore a partir de MSCAPI
+	 */
+
+	@SuppressWarnings("unused")
+	private KeyStore getKeyStoreOnWindows() {
+		try {
+			MSKeyStoreLoader msKeyStoreLoader = new MSKeyStoreLoader();
+
+			KeyStore ks = msKeyStoreLoader.getKeyStore();
+
+			return ks;
+
+		} catch (Exception e1) {
+			e1.printStackTrace();
+			return null;
+		}
+	}
+
+	
 	private InputStream readStream(String parmFile) {
 		InputStream result = null;
 		try {

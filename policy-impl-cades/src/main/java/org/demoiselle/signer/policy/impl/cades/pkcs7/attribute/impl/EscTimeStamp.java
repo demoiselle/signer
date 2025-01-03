@@ -119,7 +119,7 @@ public class EscTimeStamp implements UnsignedAttribute {
 				//Inicializa os valores para o timestmap
 				timeStampGenerator.initialize(content, privateKey, certificates, hash);
 
-				//Obtem o carimbo de tempo atraves do servidor TSA
+				//Obtem o carimbo de tempo atraves do servidor de Carimbo do Tempo
 				byte[] response = timeStampGenerator.generateTimeStamp();
 
 				//Valida o carimbo de tempo gerado

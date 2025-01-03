@@ -45,6 +45,7 @@ import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.timestamp.TimeStampGenerator;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
+import org.demoiselle.signer.timestamp.connector.ApiConnector;
 import org.demoiselle.signer.timestamp.connector.TimeStampOperator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,15 +92,31 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
 		byte[] resp = null;
 		int attempt = 1;
 		while (attempt <= TimeStampConfig.getInstance().getConnectReplay()) {
-			try {
-				logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
-				TimeStampOperator timeStampOperator = new TimeStampOperator();
-				byte[] request = timeStampOperator.createRequest(privateKey, certificates, content, hash);
-				resp = timeStampOperator.invoke(request);
-				if (resp != null) break;
-			} catch (CertificateCoreException e) {
-				attempt++;
+			if (TimeStampConfig.getInstance().isApiSERPRO()) {
+				try {
+					logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
+					ApiConnector apiConnector = new ApiConnector();
+					if (this.hash !=null) {
+						resp = apiConnector.getStampForHash(this.hash);
+					}else {
+						resp = apiConnector.getStampForContent(this.content);
+					}					
+					if (resp != null) break;
+				} catch (CertificateCoreException e) {
+					attempt++;
+				}
+			}else {
+				try {
+					logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
+					TimeStampOperator timeStampOperator = new TimeStampOperator();
+					byte[] request = timeStampOperator.createRequest(privateKey, certificates, content, hash);
+					resp = timeStampOperator.invoke(request);
+					if (resp != null) break;
+				} catch (CertificateCoreException e) {
+					attempt++;
+				}
 			}
+			
 		}
 		if (resp != null && resp.length > 1) {
 			logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));

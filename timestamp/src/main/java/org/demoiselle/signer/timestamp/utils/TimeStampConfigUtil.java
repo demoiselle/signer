@@ -23,7 +23,8 @@ public class TimeStampConfigUtil {
 	private int tspPort = 318;
 	private String tspOid= "2.16.76.1.6.2";
 	private String apiAuthUrl="https://gateway.apiserpro.serpro.gov.br/token";
-	private String apiEndpointUrl="https://gateway.apiserpro.serpro.gov.br/apitimestamp-trial/v1";
+	//private String apiEndpointUrl="https://gateway.apiserpro.serpro.gov.br/apitimestamp-trial/v1";
+	private String apiEndpointUrl="https://gateway.apiserpro.serpro.gov.br/apitimestamp/v1";
 
 	/**
 	 * @return Returns an instance of TimeStampConfig
@@ -42,10 +43,10 @@ public class TimeStampConfigUtil {
 	protected TimeStampConfigUtil() {
 		if (bundle == null) {
 			try {
-				bundle = getBundle("timestamp-config");
+				bundle = getBundle("timestamp-config-default");
 			} catch (MissingResourceException mre) {
 				try {
-					bundle = getBundle("timestamp-config-default");
+					bundle = getBundle("timestamp-config");
 				} catch (MissingResourceException e) {
 					logger.error(e.getMessage());
 				}

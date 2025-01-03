@@ -42,7 +42,9 @@ import org.demoiselle.signer.core.keystore.loader.factory.KeyStoreLoaderFactory;
 import org.demoiselle.signer.cryptography.DigestAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.timestamp.Timestamp;
+import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 import org.junit.Ignore;
+import org.junit.Test;
 
 import javax.net.ssl.KeyManagerFactory;
 import java.io.*;
@@ -50,12 +52,12 @@ import java.security.*;
 import java.security.KeyStore.Builder;
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
+import java.util.Base64;
 import java.util.Enumeration;
 import java.util.List;
 
 import static org.junit.Assert.assertTrue;
 
-@Ignore
 @SuppressWarnings("unused")
 public class CAdESTimeStampSignerTest {
 
@@ -109,18 +111,21 @@ public class CAdESTimeStampSignerTest {
 
 	}
 
-	//@Test
+	// @Test
 	public void testDoTimeStampForContent() {
 		String fileDirName = "/";
 
 		try {
 
+			
+			// Para certificado SERPRO ID (Nuvem)
+			KeyStore ks = getKeyStoreTokenBySigner(); 
+
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
-
 
 			// Para certificado em arquivo A1
 			// KeyStore ks = getKeyStoreFile();
@@ -132,6 +137,7 @@ public class CAdESTimeStampSignerTest {
 			String alias = getAlias(ks);
 
 			byte[] content = readContent(fileDirName);
+						
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 
 			varCAdESTimeStampSigner.setCertificates(ks.getCertificateChain(alias));
@@ -139,12 +145,19 @@ public class CAdESTimeStampSignerTest {
 			// para token
 			varCAdESTimeStampSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
 
-			// para arquivo
+			// para arquivo A1
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			//TimeStampConfig.getInstance().setApiSERPRO(true);
+			
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			// TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
 
+			
 			byte[] timeStampForContent = varCAdESTimeStampSigner.doTimeStampForContent(content);
 
-			File file = new File(fileDirName + "junit.timestamp.p7s");
+			File file = new File(fileDirName + "junit.cades.api.timestamp.p7s");
 			FileOutputStream os = new FileOutputStream(file);
 			os.write(timeStampForContent);
 			os.flush();
@@ -160,12 +173,14 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testDoTimeStampForHashContent() {
-		String fileDirName = "local_e_nome_do_arquivo";
+		String fileDirName = "/";
 
 		try {
 
+			// Para certificado SERPRO ID (Nuvem)
+						KeyStore ks = getKeyStoreTokenBySigner();
 			// Para certificado em Token
-			KeyStore ks = getKeyStoreToken();
+			//KeyStore ks = getKeyStoreToken();
 
 			// Para certificados no so windows (mascapi)
 			// KeyStore ks = getKeyStoreOnWindows();
@@ -193,8 +208,8 @@ public class CAdESTimeStampSignerTest {
 						.getInstance(DigestAlgorithmEnum.SHA_512.getAlgorithm());				
 			}		
 				
-			byte[] hash = md.digest(content);
-
+		    byte[] hash = md.digest(content);
+			
 			CAdESTimeStampSigner varCAdESTimeStampSigner = new CAdESTimeStampSigner();
 
 			varCAdESTimeStampSigner.setCertificates(ks.getCertificateChain(alias));
@@ -204,6 +219,13 @@ public class CAdESTimeStampSignerTest {
 
 			// para arquivo
 			// signer.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
+			
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			//TimeStampConfig.getInstance().setApiSERPRO(true);
+			
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			// TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+
 
 			byte[] timeStampForContent = varCAdESTimeStampSigner.doTimeStampFromHashContent(hash);
 
@@ -242,7 +264,6 @@ public class CAdESTimeStampSignerTest {
 			ex.printStackTrace();
 			assertTrue(false);
 		}
-
 	}
 
 	//@Test
@@ -270,7 +291,7 @@ public class CAdESTimeStampSignerTest {
 
 	//@Test
 	public void testCheckTimeStampWithHash() {
-		String fileTimeStampDirName = "local_e_nome_do_arquivo_da_assinatura";
+		String fileTimeStampDirName = "local_e_nome_do_arquivo_de assinatura";
 		String fileContentDirName = "local_e_nome_do_arquivo_assinado";
 		try {
 			byte[] timeStampFile = readContent(fileTimeStampDirName);
@@ -304,7 +325,6 @@ public class CAdESTimeStampSignerTest {
 	}
 
 	/**
-	 * FIXME goes to core
 	 * @param parmFile file to read
 	 * @return content of file.
 	 */

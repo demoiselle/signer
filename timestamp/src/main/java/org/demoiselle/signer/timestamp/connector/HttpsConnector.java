@@ -83,7 +83,7 @@ public class HttpsConnector implements Connector {
 	private static MessagesBundle timeStampMessagesBundle = new MessagesBundle();
 
 	@Override
-	public InputStream authorize(byte[] content) {
+	public InputStream connect(byte[] content) {
 		logger.info(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
 		throw new UnsupportedOperationException(timeStampMessagesBundle.getString("error.not.supported", getClass().getName()));
 	}

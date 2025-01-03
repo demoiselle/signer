@@ -82,14 +82,25 @@ public class TimeStampConfig {
 	public static final String TIMESTAMP_READ_TIMEOUT = "signer.timestamp.read.timeout";
 
 	/**
-	 * System environment key to set CLIENT_CREDENTIALS for timestamp connector
+	 * System environment key to set CLIENT_CREDENTIALS for timestamp API connector by SERPRO
 	 */
 	public static final String ENV_TIMESTAMP_CLIENT_CREDENTIALS = "SIGNER_TIMESTAMP_CLIENT_CREDENTIALS";
 
 	/**
-	 * System key to set CLIENT_CREDENTIALS for timestamp connector
+	 * System key to set CLIENT_CREDENTIALS for timestamp API connector by SERPRO
 	 */
 	public static final String TIMESTAMP_CLIENT_CREDENTIALS = "signer.timestamp.client.credentials";
+	
+	
+	/**
+	 * System environment key to set use (true) the  API Connector by SERPRO
+	 */
+	public static final String ENV_TIMESTAMP_API_SERPRO = "SIGNER_TIMESTAMP_API_SERPRO";
+
+	/**
+	 * System key to set use (true) the API Connector by SERPRO
+	 */
+	public static final String TIMESTAMP_API_SERPRO = "signer.timestamp.api.serpro";
 
 	public static TimeStampConfig instance = new TimeStampConfig();
 
@@ -101,6 +112,8 @@ public class TimeStampConfig {
 	private int readTimeOut = 10000;
 
 	private String clientCredentials = "";
+	
+	private boolean apiSERPRO = false;
 
 	public static TimeStampConfig getInstance() {
 		if (instance == null) {
@@ -187,6 +200,33 @@ public class TimeStampConfig {
 		} catch (Exception e) {
 			LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.client.credentials.value", getClientCredentials()));
 		}
+		try {
+			String varApiSERPRO = System.getenv(ENV_TIMESTAMP_API_SERPRO);
+			if (varApiSERPRO == null || varApiSERPRO.isEmpty()) {
+				varApiSERPRO = (String) System.getProperties().get(TIMESTAMP_API_SERPRO);
+				if (varApiSERPRO == null || varApiSERPRO.isEmpty()) {
+					LOGGER.debug("DEFAULT");
+					LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.api.serpro.value", isApiSERPRO()));
+				} else {
+					LOGGER.debug("key");
+					if (varApiSERPRO.equalsIgnoreCase("true")) {
+						setApiSERPRO(true);
+					}else {
+						setApiSERPRO(false);
+					}					
+				}
+			} else {
+				LOGGER.debug("ENV");
+				if (varApiSERPRO.equalsIgnoreCase("true")) {
+					setApiSERPRO(true);
+				}else {
+					setApiSERPRO(false);
+				}
+			}
+		} catch (Exception e) {
+			LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.api.serpro.value", isApiSERPRO()));
+
+		}
 	}
 
 	/**
@@ -198,7 +238,6 @@ public class TimeStampConfig {
 
 	public void setTimeOut(int parmTimeOut) {
 		this.timeOut = parmTimeOut;
-		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.timeout.value", getTimeOut()));
 	}
 	/**
 	 * 
@@ -210,7 +249,6 @@ public class TimeStampConfig {
 
 	public void setConnectReplay(int connectReplay) {
 		this.connectReplay = connectReplay;
-		LOGGER.debug(timeStampMessagesBundle.getString("info.timestamp.connect.replay.value", getConnectReplay()));
 	}
 
 	/**
@@ -233,7 +271,23 @@ public class TimeStampConfig {
 		return clientCredentials;
 	}
 
+	/**
+	 * Para utilização no parâmetro Authorization, é necessário concatenar os códigos Consumer Key e Consumer Secret
+	 * separados pelo caracter ":", e converter o resultado em BASE64. 
+	 * No exemplo a seguir, é retornada a string ZGphUjIx[...]IzT3RlCg:
+     * echo -n "djaR21PGoYp1iyK2n2ACOH9REdUb:ObRsAJWOL4fv2Tp27D1vd8fB3Ote" | base64
+	 * 
+	 * @param clientCredentials
+	 */
 	public void setClientCredentials(String clientCredentials) {
 		this.clientCredentials = clientCredentials;
+	}
+
+	public boolean isApiSERPRO() {
+		return apiSERPRO;
+	}
+
+	public void setApiSERPRO(boolean apiSERPRO) {
+		this.apiSERPRO = apiSERPRO;
 	}
 }

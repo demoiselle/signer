@@ -189,7 +189,7 @@ public class TimeStampOperator {
 			connector.setHostname(TimeStampConfigUtil.getInstance().getTspHostname());
 			connector.setPort(TimeStampConfigUtil.getInstance().getTSPPort());
 			logger.debug(timeStampMessagesBundle.getString("info.timestamp.response"));
-			inputStream = connector.authorize(request);
+			inputStream = connector.connect(request);
 
 
 			long tempo;
@@ -380,8 +380,8 @@ public class TimeStampOperator {
 				calculatedHash = hash;
 			}
 
-
-			if (Arrays.equals(calculatedHash, timeStampToken.getTimeStampInfo().getMessageImprintDigest())) {
+			byte[] stampedHash = timeStampToken.getTimeStampInfo().getMessageImprintDigest();
+			if (Arrays.equals(calculatedHash, stampedHash)) {
 				logger.debug(timeStampMessagesBundle.getString("info.timestamp.hash.ok"));
 			} else {
 				logger.error(timeStampMessagesBundle.getString("info.timestamp.hash.nok"));
