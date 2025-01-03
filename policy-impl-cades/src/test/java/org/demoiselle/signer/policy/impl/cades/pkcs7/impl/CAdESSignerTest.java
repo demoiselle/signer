@@ -76,7 +76,7 @@ public class CAdESSignerTest {
 	/**
 	 * Teste com envio do conteúdo
 	 */
-	@Test
+	//@Test
 	public void testSignDetached() {
 		try {
 
@@ -91,7 +91,7 @@ public class CAdESSignerTest {
 			//
 			//	String fileDirName = "C:\\Users\\usuario\\Documents";
 				
-			String fileDirName = "/home/emerson/Documentos/teste_carimbo/teste_carimbo.txt";
+			String fileDirName = "";
 			byte[] fileToSign;
 
 			//fileToSign = Base64.decodeBase64("VGVzdGUgQXNzaW5hdHVyYQo=");
@@ -156,7 +156,6 @@ public class CAdESSignerTest {
 			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
 			// TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
 
-			//TimeStampConfig.getInstance().setClientCredentials("anA5dVkweVBnYVVsbnpUN3BlZmZqMVNBaXc4YTpYZm1DVGxqQTltekc5VmZSdWZfMXlQZjNnU2dh");
 			// pode ser outro certificado para timestamp via conexão socket
 			//signer.setCertificatesForTimeStamp(ksToTS.getCertificateChain(aliasToTs));
 			//signer.setPrivateKeyForTimeStamp((PrivateKey) ksToTS.getKey(aliasToTs, senhaTS));
