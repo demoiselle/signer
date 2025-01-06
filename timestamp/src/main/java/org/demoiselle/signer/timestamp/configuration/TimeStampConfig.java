@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
 /**
  * TimeOut configurations.
  *
- * @author emerson.saito@serpro.gov.br
+ * @author emerson.saito@gmail.com
  */
 public class TimeStampConfig {
 
@@ -277,7 +277,7 @@ public class TimeStampConfig {
 	 * No exemplo a seguir, é retornada a string ZGphUjIx[...]IzT3RlCg:
      * echo -n "djaR21PGoYp1iyK2n2ACOH9REdUb:ObRsAJWOL4fv2Tp27D1vd8fB3Ote" | base64
 	 * 
-	 * @param clientCredentials
+	 * @param clientCredentials a string
 	 */
 	public void setClientCredentials(String clientCredentials) {
 		this.clientCredentials = clientCredentials;

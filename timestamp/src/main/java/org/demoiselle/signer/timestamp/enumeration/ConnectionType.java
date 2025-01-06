@@ -40,7 +40,7 @@ package org.demoiselle.signer.timestamp.enumeration;
 /**
  * Types: HTTPS, SOCKET, API
  *
- * @author Emerson Sachio Saito <emerson.saito@serpro.gov.br>
+ * @author Emerson Sachio Saito emerson.saito@gmail.com
  */
 public enum ConnectionType {
 	HTTPS,
