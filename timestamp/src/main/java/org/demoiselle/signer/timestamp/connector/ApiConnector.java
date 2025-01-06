@@ -67,7 +67,7 @@ import kong.unirest.json.JSONObject;
  * Connects to the timestamp server using the API provided by SERPRO.
  * https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo
  * 
- * @author Emerson Sachio Saito <emerson.saito@gmail.com>
+ * @author Emerson Sachio Saito emerson.saito@gmail.com
  */
 
 public class ApiConnector implements Connector {
@@ -92,7 +92,7 @@ public class ApiConnector implements Connector {
 	/**
 	 * Authenticate on API
 	 * 
-	 * @return
+	 * @return String with token
 	 * @throws CertificateCoreException
 	 */
 	private String authenticate() throws CertificateCoreException {
@@ -128,8 +128,8 @@ public class ApiConnector implements Connector {
 
 	/**
 	 *  to Extract Acesss Token from response 
-	 * @param responseBody
-	 * @return
+	 * @param responseBody from authenticate()
+	 * @return String with token
 	 */
 	private String extractAccessToken(String responseBody) {
 		try {
@@ -144,9 +144,9 @@ public class ApiConnector implements Connector {
 
 	/**
 	 * generates a timestamp from a string given in the parameter.
-	 * @param parmString
+	 * @param parmString a String
 	 * @return a base64 string with the timestamp byte array {"stamp": "string"}
-	 * @throws CertificateCoreException
+	 * @throws CertificateCoreException on error
 	 */
 	public String getStampBase64(String parmString) throws CertificateCoreException {
 		try {
@@ -190,10 +190,10 @@ public class ApiConnector implements Connector {
 
 	/**
 	 * generates a timestamp from a string given in the parameter.
-	 * @param parmString
+	 * @param parmString a String
 	 * @return  {"timestamp": "string","policy": "string","serialNumber": "string","timestampAuthorityInfo": "string",
 	 *           "hashAlgorithm": "string","hash": "string","stamp": "string"}
-	 * @throws CertificateCoreException
+	 * @throws CertificateCoreException on error
 	 */
 	public String getDecodedStamps(String parmString) throws CertificateCoreException {
 		try {
@@ -235,10 +235,10 @@ public class ApiConnector implements Connector {
 	}
 
 	/**
-	 * generates a timestamp from a content (byte array)
-	 * @param content
-	 * @return byte[]
-	 * @throws CertificateCoreException
+	 * generates a timeStamp from a content (byte array)
+	 * @param content byte[] from a content 
+	 * @return byte[] with a timeStamp
+	 * @throws CertificateCoreException on error
 	 */
 	public byte[] getStampForContent(byte[] content) throws CertificateCoreException {
 		try {
@@ -288,9 +288,9 @@ public class ApiConnector implements Connector {
 
 	/**
 	 * generates a timestamp from a previously calculated hash
-	 * @param hash
-	 * @return
-	 * @throws CertificateCoreException
+	 * @param hash byte[] calculated hash
+	 * @return byte[] with a timeStamp
+	 * @throws CertificateCoreException on error
 	 */
 	public byte[] getStampForHash(byte[] hash) throws CertificateCoreException {
 		try {
