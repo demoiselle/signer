@@ -41,7 +41,6 @@ import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-import java.util.Base64;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
@@ -49,19 +48,20 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.bouncycastle.tsp.TimeStampResponse;
 import org.bouncycastle.tsp.TimeStampToken;
+import org.bouncycastle.util.encoders.Base64;
 import org.demoiselle.signer.core.exception.CertificateCoreException;
 import org.demoiselle.signer.core.keystore.loader.configuration.Configuration;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.timestamp.Timestamp;
 import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 import org.demoiselle.signer.timestamp.utils.TimeStampConfigUtil;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kong.unirest.HttpResponse;
 import kong.unirest.Unirest;
-import kong.unirest.json.JSONObject;
 
 /**
  * Connects to the timestamp server using the API provided by SERPRO.
@@ -166,7 +166,7 @@ public class ApiConnector implements Connector {
 				md = MessageDigest.getInstance("SHA-512");
 			}
 			byte[] hash = md.digest(parmString.getBytes(StandardCharsets.UTF_8));
-			String base64Hash = Base64.getEncoder().encodeToString(hash);
+			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
 
@@ -212,7 +212,7 @@ public class ApiConnector implements Connector {
 				md = MessageDigest.getInstance("SHA-512");
 			}
 			byte[] hash = md.digest(parmString.getBytes(StandardCharsets.UTF_8));
-			String base64Hash = Base64.getEncoder().encodeToString(hash);
+			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
 
@@ -258,7 +258,7 @@ public class ApiConnector implements Connector {
 				md = MessageDigest.getInstance("SHA-512");
 			}
 			byte[] hash = md.digest(content);
-			String base64Hash = Base64.getEncoder().encodeToString(hash);
+			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
 
@@ -272,7 +272,7 @@ public class ApiConnector implements Connector {
 				String jsonResp = EntityUtils.toString(response.getEntity());
 				 JSONObject jsonObject = new JSONObject(jsonResp);
 			        String timeStampbase64 = jsonObject.getString("stamp");
-			        TimeStampResponse  timeStampResponse = new TimeStampResponse(Base64.getDecoder().decode(timeStampbase64));
+			        TimeStampResponse  timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
 			        TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
 			        Timestamp tsp = new Timestamp(timeStampToken);
 				return tsp.getEncoded();
@@ -300,7 +300,7 @@ public class ApiConnector implements Connector {
 			request.setHeader("Authorization", "Bearer " + accessToken);
 			request.setHeader("Content-Type", "application/json");
 			request.setHeader("accept", "application/json");
-			String base64Hash = Base64.getEncoder().encodeToString(hash);
+			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
 			request.setEntity(entity);
@@ -310,7 +310,7 @@ public class ApiConnector implements Connector {
 				String jsonResp = EntityUtils.toString(response.getEntity());
     			JSONObject jsonObject = new JSONObject(jsonResp);
 		        String timeStampbase64 = jsonObject.getString("stamp");
-			    TimeStampResponse  timeStampResponse = new TimeStampResponse(Base64.getDecoder().decode(timeStampbase64));
+			    TimeStampResponse  timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
 			    TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
 			    Timestamp tsp = new Timestamp(timeStampToken);
 				return tsp.getEncoded();
