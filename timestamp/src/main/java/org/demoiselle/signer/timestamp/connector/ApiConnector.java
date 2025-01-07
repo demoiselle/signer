@@ -37,15 +37,28 @@
 
 package org.demoiselle.signer.timestamp.connector;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+import org.apache.http.HttpResponse;
+import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.tsp.TimeStampResponse;
 import org.bouncycastle.tsp.TimeStampToken;
 import org.bouncycastle.util.encoders.Base64;
@@ -58,9 +71,9 @@ import org.demoiselle.signer.timestamp.utils.TimeStampConfigUtil;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 
 /**
@@ -80,13 +93,18 @@ public class ApiConnector implements Connector {
 	private TimeStampConfigUtil tscu = TimeStampConfigUtil.getInstance();
 
 	public ApiConnector() throws CertificateCoreException {
+		System.setProperty("https.protocols", "TLSv1.2, TLSv1.1");
+		System.setProperty("jdk.tls.client.protocols", "TLSv1.2,TLSv1.1");
 		this.clientCredentials = timeStampConfig.getClientCredentials();
 		this.accessToken = authenticate();
 	}
 
 	public ApiConnector(String clientCredentials) throws CertificateCoreException {
+		System.setProperty("https.protocols", "TLSv1.2,TLSv1.1");
+		System.setProperty("jdk.tls.client.protocols", "TLSv1.2,TLSv1.1");
 		this.clientCredentials = clientCredentials;
 		this.accessToken = authenticate();
+
 	}
 
 	/**
@@ -98,9 +116,14 @@ public class ApiConnector implements Connector {
 	private String authenticate() throws CertificateCoreException {
 
 		try {
+			if (System.getProperty("java.version").contains("1.7")) {				
+				Unirest.setHttpClient(getHttpClient());				
+			} else {
+				Unirest.setTimeouts(timeStampConfig.getTimeOut(), timeStampConfig.getReadTimeOut());
+			}
 			logger.info(timeStampMessagesBundle.getString("info.timestamp.api.authenticate:", tscu.getApiAuthUrl()));
-			Unirest.setTimeouts(timeStampConfig.getTimeOut(), timeStampConfig.getReadTimeOut());
-			HttpResponse<String> response = Unirest.post(tscu.getApiAuthUrl())
+
+			com.mashape.unirest.http.HttpResponse<String> response = Unirest.post(tscu.getApiAuthUrl())
 					.header("Authorization", "Basic " + getClientCredentials())
 					.header("Content-Type", "application/x-www-form-urlencoded")
 					.field("grant_type", "client_credentials").asString();
@@ -117,6 +140,11 @@ public class ApiConnector implements Connector {
 						timeStampMessagesBundle.getString("error.timestamp.api.authenticate", response.getStatus()));
 			}
 		} catch (Exception e) {
+			try {
+				Unirest.shutdown();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
 			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.authenticate", e.getMessage()));
 			throw new CertificateCoreException(
 					timeStampMessagesBundle.getString("error.timestamp.api.authenticate", e.getMessage()), e);
@@ -134,9 +162,10 @@ public class ApiConnector implements Connector {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(responseBody);
 			return jsonNode.get("access_token").asText(); // Retorna o valor de access_token
-		} catch (Exception e) {			
-			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.token.extract",e.getMessage()));
-			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.token.extract",e.getMessage()), e);
+		} catch (Exception e) {
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.token.extract", e.getMessage()));
+			throw new CertificateCoreException(
+					timeStampMessagesBundle.getString("error.timestamp.api.token.extract", e.getMessage()), e);
 		}
 	}
 
@@ -149,29 +178,23 @@ public class ApiConnector implements Connector {
 	 */
 	public String getStampBase64(String parmString) throws CertificateCoreException {
 		try {
-			HttpClient httpClient = HttpClients.createDefault();
-			String varEndPoint = TimeStampConfigUtil.getInstance().getApiEndpointUrl() + "/stamps";
-			HttpPost request = new HttpPost(varEndPoint);
-			request.setHeader("Authorization", "Bearer " + accessToken);
-			request.setHeader("Content-Type", "application/json");
-			request.setHeader("accept", "application/json");
-
-			MessageDigest md;
-			if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-				logger.debug(timeStampMessagesBundle.getString("info.timestamp.winhash"));
-				md = MessageDigest.getInstance("SHA-256");
-			} else {
-				logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));
-				md = MessageDigest.getInstance("SHA-512");
-			}
+			MessageDigest md = getMessageDigest();
 			byte[] hash = md.digest(parmString.getBytes(StandardCharsets.UTF_8));
 			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
 
+			HttpPost request = geHttpPost("/stamps");
 			request.setEntity(entity);
 
-			org.apache.http.HttpResponse response = httpClient.execute(request);
+			HttpClient httpClient;
+			if (System.getProperty("java.version").contains("1.7")) {				
+				httpClient = getHttpClient();				
+			} else {
+				httpClient = HttpClients.createDefault();
+			}
+			
+			HttpResponse response = httpClient.execute(request);
 
 			int statusCode = response.getStatusLine().getStatusCode();
 
@@ -179,11 +202,13 @@ public class ApiConnector implements Connector {
 				return EntityUtils.toString(response.getEntity());
 			} else {
 				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
-				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(
+						timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
-			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"), e.getMessage());
+			throw new CertificateCoreException(
+					timeStampMessagesBundle.getString("error.timestamp.api.connection", e.getMessage()), e);
 		}
 	}
 
@@ -198,40 +223,37 @@ public class ApiConnector implements Connector {
 	 */
 	public String getDecodedStamps(String parmString) throws CertificateCoreException {
 		try {
-			HttpClient httpClient = HttpClients.createDefault();
-			String varEndPoint = TimeStampConfigUtil.getInstance().getApiEndpointUrl() + "/decoded-stamps";
-			HttpPost request = new HttpPost(varEndPoint);
-			request.setHeader("Authorization", "Bearer " + accessToken);
-			request.setHeader("Content-Type", "application/json");
-			request.setHeader("accept", "application/json");
-			MessageDigest md;
-			if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-				logger.debug(timeStampMessagesBundle.getString("info.timestamp.winhash"));
-				md = MessageDigest.getInstance("SHA-256");
-			} else {
-				logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));
-				md = MessageDigest.getInstance("SHA-512");
-			}
+			MessageDigest md = getMessageDigest();
 			byte[] hash = md.digest(parmString.getBytes(StandardCharsets.UTF_8));
 			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
 
+			HttpPost request = geHttpPost("/decoded-stamps");
 			request.setEntity(entity);
+			
+			HttpClient httpClient;
+			if (System.getProperty("java.version").contains("1.7")) {				
+				httpClient = getHttpClient();				
+			} else {
+				httpClient = HttpClients.createDefault();
+			}
 
-			org.apache.http.HttpResponse response = httpClient.execute(request);
+			HttpResponse response = httpClient.execute(request);
 
 			int statusCode = response.getStatusLine().getStatusCode();
 
 			if (statusCode == 200) {
 				return EntityUtils.toString(response.getEntity());
-			} else {				
+			} else {
 				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
-				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(
+						timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
-			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"), e.getMessage());
+			throw new CertificateCoreException(
+					timeStampMessagesBundle.getString("error.timestamp.api.connection", e.getMessage()), e);
 		}
 	}
 
@@ -244,47 +266,37 @@ public class ApiConnector implements Connector {
 	 */
 	public byte[] getStampForContent(byte[] content) throws CertificateCoreException {
 		try {
-			HttpClient httpClient = HttpClients.createDefault();
-			String varEndPoint = TimeStampConfigUtil.getInstance().getApiEndpointUrl() + "/stamps";
-			HttpPost request = new HttpPost(varEndPoint);
-			request.setHeader("Authorization", "Bearer " + accessToken);
-			request.setHeader("Content-Type", "application/json");
-			request.setHeader("accept", "application/json");
-
-			MessageDigest md;
-			if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
-				logger.debug(timeStampMessagesBundle.getString("info.timestamp.winhash"));
-				md = MessageDigest.getInstance("SHA-256");
-			} else {
-				logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));
-				md = MessageDigest.getInstance("SHA-512");
-			}
+			MessageDigest md = getMessageDigest();
 			byte[] hash = md.digest(content);
 			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
 
+			HttpPost request = geHttpPost("/stamps");
 			request.setEntity(entity);
 
-			org.apache.http.HttpResponse response = httpClient.execute(request);
+			HttpClient httpClient;
+			if (System.getProperty("java.version").contains("1.7")) {				
+				httpClient = getHttpClient();				
+			} else {
+				httpClient = HttpClients.createDefault();
+			}
+			HttpResponse response = httpClient.execute(request);
 
 			int statusCode = response.getStatusLine().getStatusCode();
 
 			if (statusCode == 200) {
-				String jsonResp = EntityUtils.toString(response.getEntity());
-				JSONObject jsonObject = new JSONObject(jsonResp);
-				String timeStampbase64 = jsonObject.getString("stamp");
-				TimeStampResponse timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
-				TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
-				Timestamp tsp = new Timestamp(timeStampToken);
+				Timestamp tsp = getTimestamp(response);
 				return tsp.getEncoded();
 			} else {
 				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
-				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(
+						timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
-			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"), e.getMessage());
+			throw new CertificateCoreException(
+					timeStampMessagesBundle.getString("error.timestamp.api.connection", e.getMessage()), e);
 		}
 	}
 
@@ -297,33 +309,33 @@ public class ApiConnector implements Connector {
 	 */
 	public byte[] getStampForHash(byte[] hash) throws CertificateCoreException {
 		try {
-			HttpClient httpClient = HttpClients.createDefault();
-			String varEndPoint = TimeStampConfigUtil.getInstance().getApiEndpointUrl() + "/stamps";
-			HttpPost request = new HttpPost(varEndPoint);
-			request.setHeader("Authorization", "Bearer " + accessToken);
-			request.setHeader("Content-Type", "application/json");
-			request.setHeader("accept", "application/json");
 			String base64Hash = Base64.toBase64String(hash);
 			String jsonBody = "{\"hash\": \"" + base64Hash + "\"}";
 			StringEntity entity = new StringEntity(jsonBody, "UTF-8");
+
+			HttpPost request = geHttpPost("/stamps");
 			request.setEntity(entity);
-			org.apache.http.HttpResponse response = httpClient.execute(request);
+
+			HttpClient httpClient;
+			if (System.getProperty("java.version").contains("1.7")) {				
+				httpClient = getHttpClient();				
+			} else {
+				httpClient = HttpClients.createDefault();
+			}
+			HttpResponse response = httpClient.execute(request);
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == 200) {
-				String jsonResp = EntityUtils.toString(response.getEntity());
-				JSONObject jsonObject = new JSONObject(jsonResp);
-				String timeStampbase64 = jsonObject.getString("stamp");
-				TimeStampResponse timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
-				TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
-				Timestamp tsp = new Timestamp(timeStampToken);
+				Timestamp tsp = getTimestamp(response);
 				return tsp.getEncoded();
 			} else {
 				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
-				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(
+						timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
-			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"), e.getMessage());
+			throw new CertificateCoreException(
+					timeStampMessagesBundle.getString("error.timestamp.api.connection", e.getMessage()), e);
 		}
 	}
 
@@ -362,5 +374,63 @@ public class ApiConnector implements Connector {
 	public InputStream connect(byte[] content) throws UnknownHostException, CertificateCoreException {
 		// UNUSED
 		return null;
+	}
+
+	private HttpPost geHttpPost(String pathEndPoint) {
+		String varEndPoint = TimeStampConfigUtil.getInstance().getApiEndpointUrl() + pathEndPoint;
+		HttpPost request = new HttpPost(varEndPoint);
+		request.setHeader("Authorization", "Bearer " + accessToken);
+		request.setHeader("Content-Type", "application/json");
+		request.setHeader("accept", "application/json");
+		return request;
+	}
+
+	private Timestamp getTimestamp(HttpResponse response) throws ParseException, IOException, TSPException {
+		String jsonResp = EntityUtils.toString(response.getEntity());
+		JSONObject jsonObject = new JSONObject(jsonResp);
+		String timeStampbase64 = jsonObject.getString("stamp");
+		TimeStampResponse timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
+		TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
+		Timestamp tsp = new Timestamp(timeStampToken);
+		return tsp;
+	}
+
+	private MessageDigest getMessageDigest() throws NoSuchAlgorithmException {
+		MessageDigest md;
+		if (Configuration.getInstance().getSO().toLowerCase().indexOf("indows") > 0) {
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.winhash"));
+			md = MessageDigest.getInstance("SHA-256");
+		} else {
+			logger.debug(timeStampMessagesBundle.getString("info.timestamp.linuxhash"));
+			md = MessageDigest.getInstance("SHA-512");
+		}
+		return md;
+	}
+
+	private CloseableHttpClient getHttpClient() throws Exception {
+		//System.setProperty("javax.net.debug", "all");
+		System.setProperty("https.protocols", "TLSv1.2,TLSv1.1");
+		System.setProperty("jdk.tls.client.protocols", "TLSv1.2,TLSv1.1");
+		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
+			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+				return null;
+			}
+
+			public void checkClientTrusted(X509Certificate[] certs, String authType) {
+			}
+
+			public void checkServerTrusted(X509Certificate[] certs, String authType) {
+			}
+
+		} };
+
+		SSLContext sslcontext = SSLContext.getInstance("SSL");
+		sslcontext.init(null, trustAllCerts, new java.security.SecureRandom());
+		HttpsURLConnection.setDefaultSSLSocketFactory(sslcontext.getSocketFactory());
+		SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslcontext,
+	            new String[]{"TLSv1.2"}, null,
+	            SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+		CloseableHttpClient httpclient = HttpClients.custom().setSSLSocketFactory(sslsf).build();
+		return httpclient;		
 	}
 }
