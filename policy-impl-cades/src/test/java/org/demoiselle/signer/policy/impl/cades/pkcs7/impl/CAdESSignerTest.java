@@ -52,8 +52,6 @@ import org.demoiselle.signer.policy.impl.cades.factory.PKCS7Factory;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.PKCS7Signer;
 import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 //import org.junit.Test;
-import org.junit.Test;
-
 import java.io.*;
 import java.security.*;
 import java.security.KeyStore.Builder;

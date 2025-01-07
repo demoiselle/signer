@@ -1,40 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>signer-timestamp</artifactId>
-    <packaging>jar</packaging>
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>signer-timestamp</artifactId>
+	<packaging>jar</packaging>
 
-    <parent>
-        <groupId>org.demoiselle.signer</groupId>
-        <artifactId>parent</artifactId>
-        <relativePath>../parent</relativePath>
-        <version>4.4.0-SNAPSHOT</version>
-    </parent>
+	<parent>
+		<groupId>org.demoiselle.signer</groupId>
+		<artifactId>parent</artifactId>
+		<relativePath>../parent</relativePath>
+		<version>4.4.0-SNAPSHOT</version>
+	</parent>
 
-    <name>Demoiselle Signer Timestamp</name>
-    <description>Demoiselle Signer Timestamp component</description>
-    <url>https://www.frameworkdemoiselle.gov.br</url>
+	<name>Demoiselle Signer Timestamp</name>
+	<description>Demoiselle Signer Timestamp component</description>
+	<url>https://www.frameworkdemoiselle.gov.br</url>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>signer-cryptography</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.demoiselle.signer</groupId>
-            <artifactId>signer-core</artifactId>
-        </dependency>
-		<!-- https://mvnrepository.com/artifact/com.konghq/unirest-java -->
+	<dependencies>
 		<dependency>
-    		<groupId>com.konghq</groupId>
-    		<artifactId>unirest-java</artifactId>
-    		<version>2.4.03</version>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signer-cryptography</artifactId>
 		</dependency>
 		<dependency>
-    		<groupId>com.fasterxml.jackson.core</groupId>
-    		<artifactId>jackson-databind</artifactId>
-    		<version>2.18.2</version>
+			<groupId>org.demoiselle.signer</groupId>
+			<artifactId>signer-core</artifactId>
 		</dependency>
-    </dependencies>
+		<!-- última versão compatível com Java 7-->
+		<dependency>
+			<groupId>com.mashape.unirest</groupId>
+			<artifactId>unirest-java</artifactId>
+			<version>1.4.9</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>2.18.2</version>
+		</dependency>
+	</dependencies>
 </project>

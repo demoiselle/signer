@@ -60,8 +60,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.Unirest;
 
 /**
  * Connects to the timestamp server using the API provided by SERPRO.
@@ -99,8 +99,7 @@ public class ApiConnector implements Connector {
 
 		try {
 			logger.info(timeStampMessagesBundle.getString("info.timestamp.api.authenticate:", tscu.getApiAuthUrl()));
-			Unirest.config().socketTimeout(timeStampConfig.getReadTimeOut())
-					.connectTimeout(timeStampConfig.getTimeOut());
+			Unirest.setTimeouts(timeStampConfig.getTimeOut(), timeStampConfig.getReadTimeOut());
 			HttpResponse<String> response = Unirest.post(tscu.getApiAuthUrl())
 					.header("Authorization", "Basic " + getClientCredentials())
 					.header("Content-Type", "application/x-www-form-urlencoded")
