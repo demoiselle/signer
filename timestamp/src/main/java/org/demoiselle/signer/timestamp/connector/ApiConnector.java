@@ -113,20 +113,19 @@ public class ApiConnector implements Connector {
 			} else {
 				logger.error(
 						timeStampMessagesBundle.getString("error.timestamp.api.authenticate", response.getStatus()));
-				return this.accessToken;
-				// throw new
-				// CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.authenticate",response.getStatus()));
+				throw new CertificateCoreException(
+						timeStampMessagesBundle.getString("error.timestamp.api.authenticate", response.getStatus()));
 			}
 		} catch (Exception e) {
-			logger.error("Erro durante a autenticação: " + e.getMessage());
-			return this.accessToken;
-			// throw new CertificateCoreException("Erro durante a autenticação: " +
-			// e.getMessage(), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.authenticate", e.getMessage()));
+			throw new CertificateCoreException(
+					timeStampMessagesBundle.getString("error.timestamp.api.authenticate", e.getMessage()), e);
 		}
 	}
 
 	/**
-	 *  to Extract Acesss Token from response 
+	 * to Extract Acesss Token from response
+	 * 
 	 * @param responseBody from authenticate()
 	 * @return String with token
 	 */
@@ -135,14 +134,15 @@ public class ApiConnector implements Connector {
 			ObjectMapper objectMapper = new ObjectMapper();
 			JsonNode jsonNode = objectMapper.readTree(responseBody);
 			return jsonNode.get("access_token").asText(); // Retorna o valor de access_token
-		} catch (Exception e) {
-			logger.error("Erro ao extrair o token de acesso do JSON: " + e.getMessage(), e);
-			throw new CertificateCoreException("Erro ao extrair o token de acesso do JSON: " + e.getMessage(), e);
+		} catch (Exception e) {			
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.token.extract",e.getMessage()));
+			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.token.extract",e.getMessage()), e);
 		}
 	}
 
 	/**
 	 * generates a timestamp from a string given in the parameter.
+	 * 
 	 * @param parmString a String
 	 * @return a base64 string with the timestamp byte array {"stamp": "string"}
 	 * @throws CertificateCoreException on error
@@ -178,20 +178,22 @@ public class ApiConnector implements Connector {
 			if (statusCode == 200) {
 				return EntityUtils.toString(response.getEntity());
 			} else {
-				logger.error("HTTP Error: " + statusCode);
-				throw new CertificateCoreException("HTTP Error: " + statusCode);
+				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error("Error connecting to timestamp server:" + e.getMessage());
-			throw new CertificateCoreException("Error connecting to timestamp server: " + e.getMessage(), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
+			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
 		}
 	}
 
 	/**
 	 * generates a timestamp from a string given in the parameter.
+	 * 
 	 * @param parmString a String
-	 * @return  {"timestamp": "string","policy": "string","serialNumber": "string","timestampAuthorityInfo": "string",
-	 *           "hashAlgorithm": "string","hash": "string","stamp": "string"}
+	 * @return {"timestamp": "string","policy": "string","serialNumber":
+	 *         "string","timestampAuthorityInfo": "string", "hashAlgorithm":
+	 *         "string","hash": "string","stamp": "string"}
 	 * @throws CertificateCoreException on error
 	 */
 	public String getDecodedStamps(String parmString) throws CertificateCoreException {
@@ -223,19 +225,20 @@ public class ApiConnector implements Connector {
 
 			if (statusCode == 200) {
 				return EntityUtils.toString(response.getEntity());
-			} else {
-				logger.error("HTTP Error: " + statusCode);
-				throw new CertificateCoreException("HTTP Error: " + statusCode);
+			} else {				
+				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error("Error connecting to timestamp server:" + e.getMessage());
-			throw new CertificateCoreException("Error connecting to timestamp server: " + e.getMessage(), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
+			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
 		}
 	}
 
 	/**
 	 * generates a timeStamp from a content (byte array)
-	 * @param content byte[] from a content 
+	 * 
+	 * @param content byte[] from a content
 	 * @return byte[] with a timeStamp
 	 * @throws CertificateCoreException on error
 	 */
@@ -269,24 +272,25 @@ public class ApiConnector implements Connector {
 
 			if (statusCode == 200) {
 				String jsonResp = EntityUtils.toString(response.getEntity());
-				 JSONObject jsonObject = new JSONObject(jsonResp);
-			        String timeStampbase64 = jsonObject.getString("stamp");
-			        TimeStampResponse  timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
-			        TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
-			        Timestamp tsp = new Timestamp(timeStampToken);
+				JSONObject jsonObject = new JSONObject(jsonResp);
+				String timeStampbase64 = jsonObject.getString("stamp");
+				TimeStampResponse timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
+				TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
+				Timestamp tsp = new Timestamp(timeStampToken);
 				return tsp.getEncoded();
 			} else {
-				logger.error("HTTP Error: " + statusCode);
-				throw new CertificateCoreException("HTTP Error: " + statusCode);
+				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error("Error connecting to timestamp server:" + e.getMessage());
-			throw new CertificateCoreException("Error connecting to timestamp server: " + e.getMessage(), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
+			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
 		}
 	}
 
 	/**
 	 * generates a timestamp from a previously calculated hash
+	 * 
 	 * @param hash byte[] calculated hash
 	 * @return byte[] with a timeStamp
 	 * @throws CertificateCoreException on error
@@ -307,19 +311,19 @@ public class ApiConnector implements Connector {
 			int statusCode = response.getStatusLine().getStatusCode();
 			if (statusCode == 200) {
 				String jsonResp = EntityUtils.toString(response.getEntity());
-    			JSONObject jsonObject = new JSONObject(jsonResp);
-		        String timeStampbase64 = jsonObject.getString("stamp");
-			    TimeStampResponse  timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
-			    TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
-			    Timestamp tsp = new Timestamp(timeStampToken);
+				JSONObject jsonObject = new JSONObject(jsonResp);
+				String timeStampbase64 = jsonObject.getString("stamp");
+				TimeStampResponse timeStampResponse = new TimeStampResponse(Base64.decode(timeStampbase64));
+				TimeStampToken timeStampToken = timeStampResponse.getTimeStampToken();
+				Timestamp tsp = new Timestamp(timeStampToken);
 				return tsp.getEncoded();
 			} else {
-				logger.error("HTTP Error: " + statusCode);
-				throw new CertificateCoreException("HTTP Error: " + statusCode);
+				logger.error(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
+				throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.request", statusCode));
 			}
 		} catch (Exception e) {
-			logger.error("Error connecting to timestamp server:" + e.getMessage());
-			throw new CertificateCoreException("Error connecting to timestamp server: " + e.getMessage(), e);
+			logger.error(timeStampMessagesBundle.getString("error.timestamp.api.connection"),e.getMessage());
+			throw new CertificateCoreException(timeStampMessagesBundle.getString("error.timestamp.api.connection",e.getMessage()), e);
 		}
 	}
 
