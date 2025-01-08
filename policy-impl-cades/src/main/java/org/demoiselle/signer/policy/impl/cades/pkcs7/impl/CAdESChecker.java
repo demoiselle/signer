@@ -51,6 +51,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TimeZone;
+
+import org.bouncycastle.asn1.ASN1GeneralizedTime;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.ASN1UTCTime;
 import org.bouncycastle.asn1.cms.Attribute;
@@ -268,12 +270,17 @@ public class CAdESChecker implements PKCS7Checker {
 
 					if (timeAttribute != null) {
 						TimeZone.setDefault(null);
-						dataHora = (((ASN1UTCTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
+						if (timeAttribute.getAttrValues().getObjectAt(0) instanceof ASN1UTCTime) {
+							dataHora = (((ASN1UTCTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
+						} else {
+							dataHora = (((ASN1GeneralizedTime) timeAttribute.getAttrValues().getObjectAt(0)).getDate());
+						}
 						logger.debug(cadesMessagesBundle.getString("info.date.utc", dataHora));
 					} else {
 						logger.debug(cadesMessagesBundle.getString("info.date.utc", "N/D"));
 					}
 
+					
 				}
 
 				if (signaturePolicy == null) {
