@@ -44,10 +44,12 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.ParseException;
 import org.apache.http.client.HttpClient;
@@ -55,7 +57,6 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.bouncycastle.tsp.TSPException;
@@ -121,7 +122,7 @@ public class ApiConnector implements Connector {
 			} else {
 				Unirest.setTimeouts(timeStampConfig.getTimeOut(), timeStampConfig.getReadTimeOut());
 			}
-			logger.info(timeStampMessagesBundle.getString("info.timestamp.api.authenticate:", tscu.getApiAuthUrl()));
+			logger.info(timeStampMessagesBundle.getString("info.timestamp.api.authenticate", tscu.getApiAuthUrl()));
 
 			com.mashape.unirest.http.HttpResponse<String> response = Unirest.post(tscu.getApiAuthUrl())
 					.header("Authorization", "Basic " + getClientCredentials())
