@@ -24,6 +24,11 @@
 			signer.setCertificatesForTimeStamp(certificateToTimeStamp);
 			PrivateKey privateKeyToTimeStamp = // Chave privada que irá requisitar o carimbo
 			signer.setPrivateKeyForTimeStamp(privateKeyToTimeStamp);
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setApiSERPRO(true);
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+						
 			Certificate[] certificateToSign = // Certificado que irá gerar a Assinatura
 			PrivateKey privateKeyToSign = // Chave privada que irá gerar a Assinatura
 			signer.setCertificates(certificateToSign);
@@ -50,8 +55,16 @@
 			signerPades.setCertificatesForTimeStamp(certificateToTimeStamp);
 			PrivateKey privateKeyToTimeStamp = // Chave privada que irá requisitar o carimbo
 			signerPades.setPrivateKeyForTimeStamp(privateKeyToTimeStamp);
+			
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setApiSERPRO(true);
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+			
 			Certificate[] certificateToSign = // Certificado que irá gerar a Assinatura
 			PrivateKey privateKeyToSign = // Chave privada que irá gerar a Assinatura
+			
+			
 			signerPades.setCertificates(certificateToSign);
 		    signerPades.setPrivateKey(privateKeyToSign);
 			// usando a politica com carimbo de tempo
@@ -61,6 +74,28 @@
 ]]></programlisting>
 </section>
 
+
+<section id="ts-xades">
+        <title>Carimbo de tempo com componente <emphasis>policy-impl-xades</emphasis></title>
+
+	<sectioninfo>
+            Assim como o Demoiselle Signer provê o componente chamado policy-impl-cades que faz a geração da assinatura no padrão CAdES e PAdES. 
+            Há o equivalente para XAdES que é o padrão de Assinaturas em XML
+	</sectioninfo>
+	<para>O código abaixo demostra como pode ser feita a chamada neste caso:</para>
+        
+        <programlisting role="JAVA"><![CDATA[
+            XMLSigner xmlSigner = new XMLSigner();
+            // Para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setApiSERPRO(true);
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+			// usando a politica com carimbo de tempo
+			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
+			// Assinando o Documento XML
+			Document doc = xmlSigner.signEnveloped(true, newFile.getPath());
+]]></programlisting>
+</section>
     <section>
         <title>Requisições de carimbo de tempo</title>
 		<sectioninfo>

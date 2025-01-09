@@ -25,5 +25,6 @@
 	<!-- capítulos -->
 	<xi:include href="configuracao.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<xi:include href="funcionalidades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+	<xi:include href="apiserpro.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 </part>

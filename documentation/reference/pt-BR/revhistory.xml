@@ -4,6 +4,19 @@
 
 <revhistory>
 
+	<revision>
+		<revnumber>4.4.0</revnumber>
+		<date>08/01/2025</date>
+		<authorinitials>ess</authorinitials>
+		<revremark>
+			<itemizedlist>
+				<listitem>
+					<ulink
+						url="https://github.com/demoiselle/signer/milestone/43?closed=1">Milestone 4.4.0</ulink>
+				</listitem>
+			</itemizedlist>
+		</revremark>
+	</revision>
 
 	<revision>
 		<revnumber>4.3.0</revnumber>

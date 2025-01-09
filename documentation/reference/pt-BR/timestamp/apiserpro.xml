@@ -1,0 +1,67 @@
+<?xml version='1.0' encoding="utf-8"?>
+<!DOCTYPE chapter PUBLIC "-//OASIS//DTD DocBook XML V4.5//EN"
+   "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
+<chapter id="timestamp-apiserpro">
+
+<title>API Carimbo do Tempo - SERPRO</title>
+
+<section>
+<title>Uso da API de Carimbo do Tempo do SERPRO</title>
+<para>
+O SERPRO comercializa um serviço de <emphasis>Carimbo do tempo</emphasis>, que pode ser utilizado através de uma API.
+As informações sobre isso estão neste link: 
+<ulink
+	url="https://doc-apitimestamp.estaleiro.serpro.gov.br/">https://doc-apitimestamp.estaleiro.serpro.gov.br/</ulink>
+</para>
+
+<para>
+Para utilizar esse serviço através do Demoiselle-Signer é bastante simples, a partir da versão 4.4.0.
+</para>
+<para>
+Isso pode ser feito de 3 formas:
+
+<itemizedlist>
+
+<listitem>
+<para>
+Definindo variáveis de Ambiente (SO)
+</para>
+<para>
+SIGNER_TIMESTAMP_API_SERPRO=true
+SIGNER_TIMESTAMP_CLIENT_CREDENTIALS=xxxxxxxxxxxxxxxxxxxxxx
+</para>
+<para>
+O valor da credencial é de acordo com a documentação da API 
+ Para utilização no parâmetro Authorization, é necessário concatenar os códigos Consumer Key e Consumer Secret
+ * separados pelo caracter ":", e converter o resultado em BASE64. 
+ * No exemplo a seguir, é retornada a string ZGphUjIx[...]IzT3RlCg:
+ * echo -n "djaR21PGoYp1iyK2n2ACOH9REdUb:ObRsAJWOL4fv2Tp27D1vd8fB3Ote" | base64
+</para>
+</listitem>
+
+<listitem>
+<para>
+Definindo chaves para JRE
+</para>
+<para>
+signer.timestamp.api.serpro=true
+signer.timestamp.client.credentials=xxxxxxxxxxxxxxxxxxxxx 
+</para>
+</listitem>
+
+<listitem>
+<para>
+Diretamente na codificação da Aplicação/Sistema
+</para>
+<para>
+<programlisting >
+<![CDATA[
+TimeStampConfig.getInstance().setClientCredentials("xxxxxxxxxxxxxxxxxxxxxxxxx");
+TimeStampConfig.getInstance().setApiSERPRO(true);]]>
+</programlisting>
+</para>
+</listitem>
+</itemizedlist>
+</para>
+</section>
+</chapter>

@@ -90,8 +90,7 @@ public class TimeStampConfig {
 	 * System key to set CLIENT_CREDENTIALS for timestamp API connector by SERPRO
 	 */
 	public static final String TIMESTAMP_CLIENT_CREDENTIALS = "signer.timestamp.client.credentials";
-	
-	
+		
 	/**
 	 * System environment key to set use (true) the  API Connector by SERPRO
 	 */

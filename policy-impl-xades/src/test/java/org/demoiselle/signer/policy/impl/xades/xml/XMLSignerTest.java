@@ -45,6 +45,7 @@ import org.demoiselle.signer.policy.impl.xades.XMLPoliciesOID;
 import org.demoiselle.signer.policy.impl.xades.util.DocumentUtils;
 import org.demoiselle.signer.policy.impl.xades.xml.impl.Constants;
 import org.demoiselle.signer.policy.impl.xades.xml.impl.XMLSigner;
+import org.demoiselle.signer.timestamp.configuration.TimeStampConfig;
 import org.w3c.dom.Document;
 
 import javax.xml.transform.Transformer;
@@ -95,12 +96,18 @@ public class XMLSignerTest {
 
 			// para token
 			xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, null));
-
 			// para arquivo
 			// quando certificado em arquivo, precisa informar a senha
 			// char[] senha = "123456".toCharArray();
 			// xmlSigner.setPrivateKey((PrivateKey) ks.getKey(alias, senha));
 
+			// Para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setApiSERPRO(true);
+			
+			// Credenciais para utilizar a API de Carimbo do Tempo do SERPRO
+			TimeStampConfig.getInstance().setClientCredentials("de acordo com a documentação: https://doc-apitimestamp.estaleiro.serpro.gov.br/quick_start/#como-autenticar-na-api-carimbo-do-tempo");
+
+			
 			xmlSigner.setCertificateChain(ks.getCertificateChain(alias));
 			// para mudar a politica de Assinatura
 			xmlSigner.setPolicyId(XMLPoliciesOID.AD_RT_XADES_2_4.getOID());
