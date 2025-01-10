@@ -5,7 +5,7 @@
     <groupId>org.demoiselle.signer</groupId>
     <artifactId>build</artifactId>
     <packaging>pom</packaging>
-    <version>4.4.0-SNAPSHOT</version>
+    <version>4.4.0</version>
 
     <name>Demoiselle Signer Build</name>
     <description>Demoiselle Framework's component for specifications of ICP-BRASIL Public Key Infrastructure (PKI)
@@ -311,7 +311,7 @@
 	<developerConnection>scm:git:git@github.com:demoiselle/${project.alias}.git</developerConnection>
 	<url>https://github.com/demoiselle/${project.alias}</url>
 
-        <tag>HEAD</tag>
+        <tag>build-4.4.0</tag>
     </scm>
 
 
