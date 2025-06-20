@@ -41,9 +41,11 @@ import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.security.cert.Certificate;
+import java.util.Collection;
 import java.util.Date;
 
 import org.bouncycastle.cms.CMSSignedData;
+import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory.Policies;
 import org.demoiselle.signer.policy.impl.cades.SignerAlgorithmEnum;
 import org.demoiselle.signer.policy.impl.cades.pkcs7.impl.CAdESSigner;
@@ -170,7 +172,7 @@ public class PAdESSigner implements PCKS7Signer {
 		return cAdESSigner.prepareDetachedSign(content);
 	}
 
-	
+
 	/*
 	 * Not for PAdES.
 	 * @param content
@@ -200,9 +202,13 @@ public class PAdESSigner implements PCKS7Signer {
 	public byte[] envelopAttachedSign(CMSSignedData signedData) {
 		return null;
 	}
-	
+
 	@Override
 	public byte[] envelopHashSign(CMSSignedData signedData) {
 		return cAdESSigner.envelopHashSign(signedData);
+	}
+
+	public void setOIDs(Collection<ObjectIdentifier> oids) {
+		cAdESSigner.setOIDs(oids);
 	}
 }
