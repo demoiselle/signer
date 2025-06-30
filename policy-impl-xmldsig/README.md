@@ -8,7 +8,7 @@ File file = new File(System.getProperty("user.dir") + "/document.xml");
 String alias = "";		
 
 
-Signer signer = new XMLSigner();
+Signer signer = new XMLDsigSigner();
 signer.setCertificateChain(keyStore.getCertificateChain(alias));
 Document resp = signer.signEnveloped(true, file.getAbsolutePath());
 

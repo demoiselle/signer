@@ -75,9 +75,9 @@ import org.w3c.dom.NodeList;
  *
  * @author Eduardo &lt;edumg80@gmail.com&gt;
  */
-public class XMLChecker implements Checker {
+public class XMLDsigChecker implements Checker {
 	
-	private static final Logger logger = LoggerFactory.getLogger(XMLChecker.class);
+	private static final Logger logger = LoggerFactory.getLogger(XMLDsigChecker.class);
 	private static MessagesBundle messagesBundle = new MessagesBundle();
 	
 	private List<XMLSignatureInformations> signaturesInfo = new ArrayList<XMLSignatureInformations>();

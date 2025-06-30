@@ -61,6 +61,10 @@ public interface Signer {
 	void setSignatureAlgorithm(String signatureAlgorithm);
 	
 	String getSignatureDigest();
+
+	String getReferenceId();
+
+	void setReferenceId(String referenceId);
 	
 	/**
 	 * Sign an XML file, from File Name and location.

@@ -83,9 +83,9 @@ import org.w3c.dom.Document;
  *
  * @author Eduardo &lt;edumg80@gmail.com&gt;
  */
-public class XMLSigner implements Signer {
+public class XMLDsigSigner implements Signer {
 	
-	private static final Logger logger = LoggerFactory.getLogger(XMLSigner.class);
+	private static final Logger logger = LoggerFactory.getLogger(XMLDsigSigner.class);
 	private static MessagesBundle messagesBundle = new MessagesBundle();
 	
 	private PrivateKey privateKey = null;

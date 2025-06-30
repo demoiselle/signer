@@ -55,15 +55,19 @@ public class AlgorithmsValues {
 	static void loadMethodsData() {
 		digestTosignature = new HashMap<String, String>();
 		digestTosignature.put("SHA1withRSA", "SHA-1");
+		digestTosignature.put("SHA256withRSA", "SHA-256");
 
 		signatureDigest = new HashMap<String, String>();
 		signatureDigest.put("SHA-1", DigestMethod.SHA1);
+		signatureDigest.put("SHA-256", DigestMethod.SHA256);
 
 		signatureAlgorithms = new HashMap<String, String>();
 		signatureAlgorithms.put("SHA1withRSA", SignatureMethod.RSA_SHA1);
+		signatureAlgorithms.put("SHA256withRSA", "http://www.w3.org/2001/04/xmldsig-more#rsa-sha256");
 		
 		algorithmsOnSignature = new HashMap<String, String>();
 		algorithmsOnSignature.put(SignatureMethod.RSA_SHA1, "SHA1withRSA");
+		algorithmsOnSignature.put("http://www.w3.org/2001/04/xmldsig-more#rsa-sha256", "SHA256withRSA");
 	}
 
 	static final String getdigestTosignature(String value) {
