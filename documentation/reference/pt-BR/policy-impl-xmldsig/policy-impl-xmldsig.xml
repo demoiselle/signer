@@ -3,7 +3,7 @@
    "http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd" []>
 <part id="policy-impl-xades-master">
 
-	<title>Implementação da Política XMLDSig</title>
+	<title>Implementação da Especificação XMLDSig</title>
 
 	<partintro>
 		<para>

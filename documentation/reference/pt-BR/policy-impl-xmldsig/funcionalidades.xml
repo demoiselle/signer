@@ -151,7 +151,7 @@ public class SignatureInformations {
         		</listitem>
         		<listitem> <para> notAfter;</para> <para>A data de validade do Certificado do Assinante</para>
         		</listitem>
-        		<listitem> <para> validatorWarnins </para> <para>Lista de Avisos. A assinatura pode estar correta mas não foi possível verificar algum atributo exigido por uma política da ICP-Brasil, que serão listados aqui</para>
+        		<listitem> <para> validatorWarnins </para> <para>Lista de Avisos.</para>
         		</listitem>
         		<listitem> <para>validatorErrors </para> <para> Lista de Erros. A assinatura pode estar correta mas não foi possível verificar alguma condição de validação exigida pela ICP-Brasil</para>
         		</listitem>
@@ -161,7 +161,7 @@ public class SignatureInformations {
         		</listitem>
         	</itemizedlist>
         	</para> 
-        	Cabe ao sistema com base nos avisos ou erros, aceitar ou não a Assinatura. Apesar de existirem as políticas, qualquer tipo de Assinatura gerada com um certificado ICP-Brasil tem validade legal.
+        	Cabe ao sistema com base nos avisos ou erros, aceitar ou não a Assinatura. Qualquer tipo de Assinatura gerada com um certificado ICP-Brasil tem validade legal.
             A seguir temos um fragmento de código que demonstra esta validação.
         </para>
         <programlisting role="JAVA"><![CDATA[
