@@ -35,7 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.policy.impl.xmldsig.xml.impl;
+package org.demoiselle.signer.xmldsig.impl;
 
 import java.util.HashMap;
 

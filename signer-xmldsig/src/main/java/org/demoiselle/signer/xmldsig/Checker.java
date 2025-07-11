@@ -35,11 +35,48 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.policy.impl.xmldsig.xml.impl;
+package org.demoiselle.signer.xmldsig;
+
+import java.util.List;
+
 
 /**
  * @author Eduardo &lt;edumg80@gmail.com&gt;
  */
-public class Constants {
-	public static final String SHA1withRSA = "SHA1withRSA";
+public interface Checker {
+
+	/**
+	 * Verify signature from File Name and location. (example: check(true,"/tmp/file.xml");
+	 *
+	 * @param isFileLocation true if the next parameter is a path and name for XML file
+	 * @param xmlSignedFile  path and name for XML file
+	 * @return fake.
+	 * @throws XMLSignerException 
+	 */
+	boolean check(boolean isFileLocation, String xmlSignedFile) throws XMLSignerException;
+	
+	/**
+	 * * XML signature validation using byte[] data. The content must contains both content and signature
+	 *
+	 * @param docData fake.
+	 * @return fake.
+	 * @throws XMLSignerException 
+	 */	
+	boolean check(byte[] docData) throws XMLSignerException;
+	
+	/**
+	 * Verify signature from String that represents a XML Document The content must contains both content and signature
+	 *
+	 * @param xmlAsString fake.
+	 * @return fake.
+	 * @throws XMLSignerException 
+	 */
+	public boolean check(String xmlAsString) throws XMLSignerException;
+
+	/**
+	 * Get signature informations after validation.
+	 * 
+	 * @return
+	 */
+	List<XMLSignatureInformations> getSignaturesInfo();
 }

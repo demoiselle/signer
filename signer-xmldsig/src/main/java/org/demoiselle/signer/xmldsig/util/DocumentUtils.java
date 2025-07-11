@@ -35,7 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.policy.impl.xmldsig.util;
+package org.demoiselle.signer.xmldsig.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -51,7 +51,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.demoiselle.signer.core.util.MessagesBundle;
-import org.demoiselle.signer.policy.impl.xmldsig.XMLSignerException;
+import org.demoiselle.signer.xmldsig.XMLSignerException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Attr;

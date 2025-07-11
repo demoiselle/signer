@@ -38,4 +38,4 @@
 /**
  * Documentation of package (put it here)
  */
-package org.demoiselle.signer.policy.impl.xmldsig.xml.impl;
+package org.demoiselle.signer.xmldsig.impl;

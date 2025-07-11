@@ -35,7 +35,39 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
+package org.demoiselle.signer.xmldsig;
+
 /**
- * Documentation of package (put it here)
+ * Custom unchecked exceptions.
+ *
+ * @author Eduardo &lt;edumg80@gmail.com&gt;
  */
-package org.demoiselle.signer.policy.impl.xmldsig.util;
+public class XMLSignerException extends RuntimeException {
+
+	/**
+	 * Serial version of this exception.
+	 */
+	private static final long serialVersionUID = 5292066774806172289L;
+
+	public XMLSignerException() {
+		super();
+	}
+
+	public XMLSignerException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+		super(message, cause, enableSuppression, writableStackTrace);
+
+	}
+
+	public XMLSignerException(String message, Throwable cause) {
+		super(message, cause);
+
+	}
+
+	public XMLSignerException(String message) {
+		super(message);
+	}
+
+	public XMLSignerException(Throwable cause) {
+		super(cause);
+	}
+}

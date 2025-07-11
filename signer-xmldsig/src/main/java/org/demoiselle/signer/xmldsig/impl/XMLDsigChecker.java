@@ -35,7 +35,7 @@
  * 51 Franklin St, Fifth Floor, Boston, MA 02111-1301, USA.
  */
 
-package org.demoiselle.signer.policy.impl.xmldsig.xml.impl;
+package org.demoiselle.signer.xmldsig.impl;
 
 import java.security.cert.Certificate;
 import java.security.cert.X509Certificate;
@@ -58,11 +58,11 @@ import org.demoiselle.signer.core.extension.BasicCertificate;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
-import org.demoiselle.signer.policy.impl.xmldsig.XMLSignatureInformations;
-import org.demoiselle.signer.policy.impl.xmldsig.XMLSignerException;
-import org.demoiselle.signer.policy.impl.xmldsig.util.DocumentUtils;
-import org.demoiselle.signer.policy.impl.xmldsig.xml.Checker;
-import org.demoiselle.signer.policy.impl.xmldsig.xml.impl.CertificateKeySelector.CertificateSelectorResult;
+import org.demoiselle.signer.xmldsig.Checker;
+import org.demoiselle.signer.xmldsig.XMLSignatureInformations;
+import org.demoiselle.signer.xmldsig.XMLSignerException;
+import org.demoiselle.signer.xmldsig.impl.CertificateKeySelector.CertificateSelectorResult;
+import org.demoiselle.signer.xmldsig.util.DocumentUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
