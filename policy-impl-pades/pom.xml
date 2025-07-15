@@ -9,7 +9,7 @@
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
         <relativePath>../parent</relativePath>
-        <version>4.4.1-SNAPSHOT</version>
+        <version>4.5.0-SNAPSHOT</version>
     </parent>
 
     <name>Demoiselle Signer PADES</name>
