@@ -13,10 +13,10 @@ import (
 )
 
 const (
-	baseURL      = "https://repositoriohom.serpro.gov.br/cadeias/"
-	p7bFolder    = "novosp7bs"
-	crtFolder    = "novascadeias"
-	logFile      = "log_importacao.txt"
+	baseURL   = "https://repositoriohom.serpro.gov.br/cadeias/"
+	p7bFolder = "novosp7bs"
+	crtFolder = "novascadeias"
+	logFile   = "log_importacao.txt"
 )
 
 func main() {
@@ -195,14 +195,14 @@ func main() {
 			fmt.Print(msg)
 			logf.WriteString(msg)
 		}
-	// Ao final, lista de erros de conversão
-	if len(errosConversao) > 0 {
-		logf.WriteString("\n==== Lista de erros de conversão p7b ====" + "\n")
-		for _, erro := range errosConversao {
-			logf.WriteString(erro + "\n")
+		// Ao final, lista de erros de conversão
+		if len(errosConversao) > 0 {
+			logf.WriteString("\n==== Lista de erros de conversão p7b ====" + "\n")
+			for _, erro := range errosConversao {
+				logf.WriteString(erro + "\n")
+			}
+		} else {
+			logf.WriteString("\nNenhum erro de conversão p7b encontrado.\n")
 		}
-	} else {
-		logf.WriteString("\nNenhum erro de conversão p7b encontrado.\n")
-	}
 	}
 }
