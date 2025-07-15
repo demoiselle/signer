@@ -94,6 +94,7 @@
         <module>policy-impl-pades</module>
         <module>chain-iti</module>
         <module>chain-iti-homolog</module>
+        <module>signer-xmldsig</module>
     </modules>
 
     <properties>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>signer-xmldsig</artifactId>
+    <packaging>jar</packaging>
+
+    <parent>
+        <groupId>org.demoiselle.signer</groupId>
+        <artifactId>parent</artifactId>
+        <relativePath>../parent</relativePath>
+        <version>4.4.1-SNAPSHOT</version>
+    </parent>
+
+    <name>Demoiselle Signer XMLDsig</name>
+    <description>Demoiselle Signer for XMLDsig (XML Digital Signature)</description>
+    <url>https://www.frameworkdemoiselle.gov.br</url>
+
+    <dependencies>
+    <!-- Essa é a maior versão compatível com java 7 -->
+        <dependency>
+            <groupId>org.apache.santuario</groupId>
+            <artifactId>xmlsec</artifactId>
+            <version>2.0.10</version>
+        </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>signer-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>chain-icp-brasil</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.demoiselle.signer</groupId>
+            <artifactId>chain-icp-brasil-homolog</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>

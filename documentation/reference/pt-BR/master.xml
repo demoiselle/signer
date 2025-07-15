@@ -43,6 +43,12 @@
 				</listitem>
 				<listitem>
 					<para>
+						<emphasis role="bold">policy-impl-XMLDSig: </emphasis>
+						permite geração e validação de assinaturas digitais (conforme uma política) no formato XMLDSig (XML).
+					</para>
+				</listitem>				
+				<listitem>
+					<para>
 						<emphasis role="bold">policy-engine: </emphasis>
 						mecanismo para carregamento das políticas de assinaturas definidas pela ICP-Brasil.
 					</para>
@@ -97,6 +103,9 @@
 
 	<!-- XAdES -->
 	<xi:include href="policy-impl-xades/policy-impl-xades.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
+
+	<!-- XMLDSig -->
+	<xi:include href="policy-impl-xmldsig/policy-impl-xmldsig.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 
 	<xi:include href="policy-engine/policy-engine.xml" xmlns:xi="http://www.w3.org/2001/XInclude" />
 	<!-- Chain ICP Brasil -->
