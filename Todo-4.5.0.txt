@@ -1,0 +1,43 @@
+Fazer  ########################################################################################################################
+
+Nova versão 4.5.0 ou 4.4.1(pom atual está na 4.4.1-SNAPSHOT)? 
+4.5.0-SNAPSHOT 
+O maven vai tirar o snapshot lá na frente no deploy; 
+O que tem que atualizar? 
+Certificados de Produção? 
+Seguir script em signer/chain-icp-brasil/src/scripts_keytool; 
+Certificados de Homologação? 
+Baixar novas cadeias de homologação(SERPRO, alinhar com o CCD) e adicionar em chain-icp-brasil-homolog/src/main/resources/trustedca; 
+https://github.com/demoiselle/signer/blob/master/chain-icp-brasil-homolog/src/main/java/org/demoiselle/signer/chain/icp/brasil/provider/hom/HomologacaoProviderCA.java; 
+Atualização de arquivos de LPAs? 
+Baixar LPA's em https://www.gov.br/iti/pt-br/assuntos/repositorio/lista-de-politicas-de-assinatura 
+Baixar Políticas em https://www.gov.br/iti/pt-br/assuntos/repositorio/artefatos-de-assinatura-digital 
+Adicionar em policy-engine/src/main/resources/org/demoiselle/signer/policy/engine/artifacts 
+Atualização de arquivos de políticas(CADES, PADES e XADES)? 
+Já faz no mesmo local da LPA (policy-engie) 
+Atualização de documentação 
+Atualizar a documentação com o número da versão nova no pom.xml; 
+Criar páginas de milestone da nova versão; 
+Como criar novas milestones? 
+https://github.com/demoiselle/signer/milestones 
+Fechar a milestone 
+Como publicar no repositório Maven? 
+Instruções do Sonatype: https://github.com/demoiselle/signer/blob/master/documentation/deploySonatype.odt 
+Novos usuários vão ter que criar uma chave GPG associado a um e-mail; 
+Passar ao Saito os e-mails para ver se ele consegue adicionar no Sonatype; 
+Como gerar e publicar a documentação? Projeto de documentação atualmente está com erro no import de alguns componentes do demoiselle, será que tá o .m2 repo local? 
+Verificar com o Saito se ele tem no .m2 os componentes; 
+Tem um problema em uns componenentes do demoiselle referente a style, estando ok, vai gerar o html no target; 
+Adicionar no projeto https://gitcorporativo.serpro/demoiselle-99455/webpages/-/tree/develop/v3/v3/signer/docs 
+Após publicação o Maven cria a tag da build automaticamente 
+
+Fazendo ########################################################################################################################
+
+Importar certificados de Produção
+Documentar certificados de Produção na documentação do demoiselle
+Importar certificados de Hom
+
+Pronto ########################################################################################################################
+
+Aceitar PR
+Mudar os POM para 4.5.0-SNAPSHOT 

@@ -8,3 +8,6 @@ target/
 .idea
 *.iml
 
+chain-icp-brasil-homolog/novascadeias/
+chain-icp-brasil-homolog/novosp7bs/
+chain-icp-brasil-homolog/log_importacao.txt
