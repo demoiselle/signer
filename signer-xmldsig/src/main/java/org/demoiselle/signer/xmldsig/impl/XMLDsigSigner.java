@@ -92,8 +92,8 @@ public class XMLDsigSigner implements Signer {
 	private X509Certificate certificate;
 	private Certificate[] certificateChain = null;
 	private String referenceId = "";
-	private String signatureAlgorithm = "SHA1withRSA";
-	private String signatureDigest = "SHA-1";
+	private String signatureAlgorithm = "SHA256withRSA";
+	private String signatureDigest = "SHA-256";
 	
 	public Document signEnveloped(boolean isFileLocation, String fileNameSource) throws XMLSignerException {
 		if (!isFileLocation) {
