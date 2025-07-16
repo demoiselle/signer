@@ -1,3 +1,5 @@
+# Importação de Certificados ICP-Brasil
+
 Estes scripts foram criado para atualizar o arquivo com as cadeias da ICP-Brasil
 
 1 - Baixe o arquivo de:
@@ -5,10 +7,50 @@ Estes scripts foram criado para atualizar o arquivo com as cadeias da ICP-Brasil
 
 2 - Crie o diretório /novascadeias e descompacte nele as cadeias do arquivo acima.
 
-3 - Execute o comando: ./insertAllKeys.sh
-
-4 - Verifique se as cadeias foram inseridas com o comando: ./listKeys.sh
-
-5 - Copie o arquivo de /src/scripts_keytool/icpbrasil.jks para /src/main/resources/icpbrasil.jks
+3 - Copie o arquivo de src/scripts_keytool/cadeiasicpbrasil.bks para /src/main/resources/cadeiasicpbrasil.bks
 
 
+# IMPORTANTE!
+- Caso algum certificado apresente erro de importação pelo script, é possível tentar a importação manual utilizando o Keystore Explorer (versão mais recente). Em alguns casos, certificados que falharam no script foram importados com sucesso manualmente por essa ferramenta.
+- No final abra no keystore explorer e remova os certificados expirados!
+- Compare com o keystore da versão anterior
+
+Este script automatiza a importação de certificados para o keystore BKS, realizando validações e gerando um log detalhado do processo.
+
+## Funcionalidades
+- **Validação X.509:** Certificados inválidos não são importados.
+- **Importação:** Certificados válidos são importados para o keystore.
+- **Log Completo:** Todo o processamento é registrado na tela e no arquivo `import.log`.
+- **Resumo Final:** Ao final, o log exibe:
+  - Total de certificados que tentaram ser importados
+  - Total de certificados válidos importados
+  - Total de certificados com erro de importação
+  - Total de certificados com erro de validação
+  - Listagem dos certificados com erro e o motivo
+
+## Como Executar
+1. Certifique-se de ter o Go instalado e as dependências (`openssl`, `keytool`, `bouncycastle`).
+2. Coloque os certificados a importar na pasta `novascadeias`.
+3. Execute o script:
+   ```bash
+   cd chain-icp-brasil/src/scripts_keytool
+   go run importar-certificados.go
+   ```
+4. Consulte o arquivo `import.log` para o log completo e o resumo final.
+
+## Estrutura do Log
+- Processamento de cada certificado:
+  - Sucesso: `Certificado importado com sucesso: <nome>`
+  - Falha: `Falha ao validar <nome>: <motivo>` ou `Falha ao importar <nome>: <motivo>`
+- Resumo final:
+  - Totais de tentativas, importações válidas, erros de importação e validação
+  - Listagem dos erros
+
+## Observações
+- Certificados expirados ou inválidos não são importados.
+- O log é apagado no início de cada execução.
+- O script pode ser adaptado para outros formatos de keystore ou validações adicionais.
+- Caso algum certificado apresente erro de importação pelo script, é possível tentar a importação manual utilizando o Keystore Explorer (versão mais recente). Em alguns casos, certificados que falharam no script foram importados com sucesso manualmente por essa ferramenta.
+
+## Contato
+Dúvidas ou sugestões: evandro.leite@serpro.gov.br
