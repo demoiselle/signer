@@ -1,6 +1,6 @@
 Fazer  ########################################################################################################################
 
-Nova versão 4.5.0 ou 4.4.1(pom atual está na 4.4.1-SNAPSHOT)? 
+
 4.5.0-SNAPSHOT 
 O maven vai tirar o snapshot lá na frente no deploy; 
 O que tem que atualizar? 
@@ -33,11 +33,12 @@ Após publicação o Maven cria a tag da build automaticamente
 
 Fazendo ########################################################################################################################
 
-Importar certificados de Produção
+Comparar os arquivos de hom da Caixa mmnse estão iguais 
 Documentar certificados de Produção na documentação do demoiselle
 Importar certificados de Hom
 
 Pronto ########################################################################################################################
 
+Importar certificados de Produção
 Aceitar PR
 Mudar os POM para 4.5.0-SNAPSHOT 
