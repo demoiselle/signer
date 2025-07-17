@@ -122,7 +122,7 @@ func main() {
 			}
 		}
 
-	// crtPath removido, não é mais utilizado
+		// crtPath removido, não é mais utilizado
 		var cmd *exec.Cmd
 		if isPEM {
 			// PKCS7 em PEM
