@@ -63,12 +63,12 @@ import (
 		var urls []string
 		scanner := bufio.NewScanner(f)
 		for scanner.Scan() {
-			url := strings.TrimSpace(scanner.Text())
-			if url == "" || !(strings.HasPrefix(url, "http://") || strings.HasPrefix(url, "https://")) {
-				continue
+			line := strings.TrimSpace(scanner.Text())
+			if idx := strings.Index(line, "http"); idx != -1 {
+				urls = append(urls, line[idx:])
 			}
-			urls = append(urls, url)
 		}
+		total = len(urls)
 		total = len(urls)
 		for _, url := range urls {
 			wg.Add(1)
