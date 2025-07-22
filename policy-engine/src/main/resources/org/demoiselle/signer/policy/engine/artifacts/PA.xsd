@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+	xmlns="http://www.iti.gov.br/PA#" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:XAdES="http://uri.etsi.org/01903/v1.3.2#" targetNamespace="http://www.iti.gov.br/PA#"
+	elementFormDefault="qualified">
+
+	<xsd:import namespace="http://uri.etsi.org/01903/v1.3.2#"
+		schemaLocation="http://uri.etsi.org/01903/v1.3.2/XAdES.xsd" />
+	<xsd:import namespace="http://www.w3.org/2000/09/xmldsig#"
+		schemaLocation="http://www.w3.org/TR/2008/REC-xmldsig-core-20080610/xmldsig-core-schema.xsd" />
+
+	<!-- Campos da PA -->
+	<xsd:element name="SignaturePolicy" type="SignaturePolicyType" />
+	<xsd:complexType name="SignaturePolicyType">
+		<xsd:sequence>
+			<xsd:element name="SignPolicyDigestAlg" type="ds:DigestMethodType" />
+			<xsd:element ref="ds:Transforms" minOccurs="0" />
+			<xsd:element name="SignPolicyInfo" type="SignaturePolicyInfoType" />
+			<xsd:element name="SignPolicyDigest" type="ds:DigestValueType" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="SignaturePolicyInfoType">
+		<xsd:sequence>
+			<xsd:element name="SignPolicyIdentifier" type="XAdES:ObjectIdentifierType" />
+			<xsd:element name="DateOfIssue" type="xsd:dateTime" />
+			<xsd:element name="PolicyIssuerName" type="xsd:string" />
+			<xsd:element name="FieldOfApplication" type="xsd:string" />
+			<xsd:element name="SignatureValidationPolicy" type="SignatureValidationPolicyType" />
+			<xsd:element name="SignPolExtensions" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SignPolExtensionsListType">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="SignPolExtension" type="XAdES:AnyType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!--  <xsd:element name="SignatureValidationPolicy" type="SignatureValidationPolicyType" /> -->
+	<xsd:complexType name="SignatureValidationPolicyType">
+		<xsd:sequence>
+			<xsd:element name="SigningPeriod" type="TimePeriodType" />
+			<xsd:element name="CommonRules" type="CommonRulesType" />
+			<xsd:element name="CommitmentRules" type="CommitmentRulesListType" />
+			<xsd:element name="SignPolicyExtensions" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="TimePeriodType">
+		<xsd:sequence>
+			<xsd:element name="NotBefore" type="xsd:dateTime" />
+			<xsd:element name="NotAfter" type="xsd:dateTime"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="CommonRules" type="CommonRulesType" />-->
+	<xsd:complexType name="CommonRulesType">
+		<xsd:sequence>
+			<xsd:element name="SignerAndVerifierRules" type="SignerAndVerifierRulesType"
+				minOccurs="0" />
+			<xsd:element name="SigningCertTrustCondition" type="SigningCertTrustConditionType"
+				minOccurs="0" />
+			<xsd:element name="TimeStampTrustCondition" type="TimeStampTrustConditionType"
+				minOccurs="0" />
+			<xsd:element name="RoleTrustCondition" type="RoleTrustConditionType"
+				minOccurs="0" />
+			<xsd:element name="AlgorithmConstraintSet" type="AlgorithmConstraintSetType"
+				minOccurs="0" />
+			<xsd:element name="SIgnPolExtensions" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SignerAndVerifierRulesType">
+		<xsd:sequence>
+			<xsd:element name="SignerRules" type="SignerRulesType" />
+			<xsd:element name="VerifierRules" type="VerifierRulesType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="CommitmentRules" type="CommitmentRulesListType" />-->
+
+	<xsd:complexType name="CommitmentRulesListType">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="CommitmentRule" type="CommitmentRuleType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="CommitmentRuleType">
+		<xsd:sequence>
+			<xsd:element name="SelCommitmentTypes" type="SelectedCommitmentTypeListType" />
+			<xsd:element name="SignerAndVerifierRules" type="SignerAndVerifierRulesType"
+				minOccurs="0" />
+			<xsd:element name="SigningCertTrustCondition" type="SigningCertTrustConditionType"
+				minOccurs="0" />
+			<xsd:element name="TimeStampTrustCondition" type="TimeStampTrustConditionType"
+				minOccurs="0" />
+			<xsd:element name="RoleTrustCondition" type="RoleTrustConditionType"
+				minOccurs="0" />
+			<xsd:element name="AlgorithmConstraintSet" type="AlgorithmConstraintSetType"
+				minOccurs="0" />
+			<xsd:element name="SignPolExtensions" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- <xsd:element name="SelCommitmentTypes" type="SelectedCommitmentTypeList" /> -->
+
+	<xsd:complexType name="SelectedCommitmentTypeListType">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="SelCommitmentType" type="SelectedCommitmentType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="SelectedCommitmentType">
+		<xsd:choice>
+			<xsd:element name="Empty"/>
+			<xsd:element name="RecognizedCommitmentType" type="CommitmentType" />
+		</xsd:choice>
+	</xsd:complexType>
+
+<!--	<xsd:element name="RecognizedCommitmentType" type="CommitmentType" />-->
+
+	<xsd:complexType name="CommitmentType">
+		<xsd:sequence>
+			<xsd:element name="CommitmentIdentifier" type="XAdES:ObjectIdentifierType" />
+			<xsd:element name="FieldOfApplication" type="xsd:string"
+				minOccurs="0" />
+			<xsd:element name="Semantics" type="xsd:string"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="SignerRules" type="SignerRulesType" />-->
+
+	<xsd:complexType name="SignerRulesType">
+		<xsd:sequence>
+			<xsd:element name="ExternalSignedObjects" type="xsd:boolean"
+				minOccurs="0" />
+			<xsd:element name="MandatedSignedQProperties" type="QPropertiesListType" />
+			<xsd:element name="MandatedUnsignedQProperties" type="QPropertiesListType" />
+			<xsd:element name="MandatedCertificateRef" type="CertificateReqType" />
+			<xsd:element name="MandatedCertificateInfo" type="CertificateInfoType" />
+			<xsd:element name="SignPolicyExtensions" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="QPropertiesListType">
+		<xsd:sequence minOccurs="0" maxOccurs="unbounded">
+			<xsd:element name="QPropertyID" type="xsd:anyURI" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="CertificateReqType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="signerOnly" />
+			<xsd:enumeration value="fullPath" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:simpleType name="CertificateInfoType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="none" />
+			<xsd:enumeration value="signerOnly" />
+			<xsd:enumeration value="fullPath" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+
+<!--	<xsd:element name="VerifierRules" type="VerifierRulesType" />-->
+
+	<xsd:complexType name="VerifierRulesType">
+		<xsd:sequence>
+			<xsd:element name="MandatedQUnsignedProperties" type="QPropertiesListType" />
+			<xsd:element name="SignPolicyExtensions" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="SigningCertTrustCondition" type="SigningCertTrustConditionType" />-->
+
+	<xsd:complexType name="SigningCertTrustConditionType">
+		<xsd:sequence>
+			<xsd:element name="SignerTrustTrees" type="CertificateTrustTreesType" minOccurs="0"/>
+			<xsd:element name="SignerRevReq" type="CertificateRevReqType" minOccurs="0"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="SignerTrustTrees" type="CertificateTrustTreesType" />-->
+
+	<xsd:complexType name="CertificateTrustTreesType">
+		<xsd:sequence  maxOccurs="unbounded">
+			<xsd:element name="CertificateTrustPoint" type="CertificateTrustPointType" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="CertificateTrustPointType">
+		<xsd:sequence>
+			<xsd:element name="TrustPoint" type="X509CertificateType" />
+			<xsd:element name="PathLenConstraint" type="xsd:integer"
+				minOccurs="0" />
+			<xsd:element name="AcceptablePolicySet" type="AcceptablePoliciesListType"
+				minOccurs="0" />
+			<xsd:element name="NameConstraints" type="NameConstraintsType"
+				minOccurs="0" />
+			<xsd:element name="PolicyConstraints" type="PolicyConstraintsType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="X509CertificateType">
+		<xsd:sequence>
+			<xsd:element name="X509Certificate" type="XAdES:EncapsulatedPKIDataType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="AcceptablePoliciesListType">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="AcceptablePolicy" type="XAdES:ObjectIdentifierType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="NameConstraintsType">
+		<xsd:sequence>
+			<xsd:element name="PermittedSubtrees" type="GeneralSubTreesListType"
+				minOccurs="0" />
+			<xsd:element name="ExcludedSubtrees" type="GeneralSubTreesListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="GeneralSubTreesListType">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="GeneralSubTree" type="GeneralSubTreeType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="GeneralSubTreeType">
+		<xsd:sequence>
+			<xsd:element name="Base" type="xsd:string" />
+			<xsd:element name="Minimum" type="xsd:integer" default="0" />
+			<xsd:element name="Maximum" type="xsd:integer" minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="PolicyConstraintsType">
+		<xsd:sequence>
+			<xsd:element name="RequireExplicitPolicy" type="xsd:integer"
+				minOccurs="0" />
+			<xsd:element name="InhibitExplicitPolicy" type="xsd:integer"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="SignerRevReq" type="CertificateRevReqType" />-->
+
+	<xsd:complexType name="CertificateRevReqType">
+		<xsd:sequence>
+			<xsd:element name="EndRevReq" type="RevocationReqType" />
+			<xsd:element name="CACerts" type="RevocationReqType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="RevocationReqType">
+		<xsd:sequence>
+			<xsd:element name="EnuRevReq" type="EnuRevReqType" />
+			<xsd:element name="exRevReq" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="EnuRevReqType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="clrcheck" />
+			<xsd:enumeration value="ocspcheck" />
+			<xsd:enumeration value="bothcheck" />
+			<xsd:enumeration value="eithercheck" />
+			<xsd:enumeration value="nocheck" />
+			<xsd:enumeration value="other" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+<!--	<xsd:element name="TimeStampTrustCondition" type="TimeStampTrustConditionType" />-->
+
+	<xsd:complexType name="TimeStampTrustConditionType">
+		<xsd:sequence>
+			<xsd:element name="TtsCertificateTrustTrees" type="CertificateTrustTreesType"
+				minOccurs="0" />
+			<xsd:element name="TtsRevReq" type="CertificateRevReqType"
+				minOccurs="0" />
+			<xsd:element name="TtsNameConstraints" type="NameConstraintsType"
+				minOccurs="0" />
+			<xsd:element name="CautionPeriod" type="DeltaTimeType"
+				minOccurs="0" />
+			<xsd:element name="SignatureTimeStampDelay" type="DeltaTimeType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="DeltaTimeType">
+		<xsd:sequence>
+			<xsd:element name="DeltaSeconds" type="xsd:integer" />
+			<xsd:element name="DeltaMinutes" type="xsd:integer" />
+			<xsd:element name="DeltaHours" type="xsd:integer" />
+			<xsd:element name="DeltaDays" type="xsd:integer" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="RoleTrustCondition" type="RoleTrustConditionType" />-->
+
+	<xsd:complexType name="RoleTrustConditionType">
+		<xsd:sequence>
+			<xsd:element name="RoleMandated" type="xsd:boolean" />
+			<xsd:element name="HowCertRole" type="HowCertRoleType" />
+			<xsd:element name="AttrCertTrustTrees" type="CertificateTrustTreesType"
+				minOccurs="0" />
+			<xsd:element name="RoleRevReq" type="CertificateRevReqType"
+				minOccurs="0" />
+			<xsd:element name="RoleConstraints" type="RoleConstraintsType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:simpleType name="HowCertRoleType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="ClaimedRole" />
+			<xsd:enumeration value="CertifiedRole" />
+			<xsd:enumeration value="Either" />
+		</xsd:restriction>
+	</xsd:simpleType>
+
+	<xsd:complexType name="RoleConstraintsType">
+		<xsd:sequence>
+			<xsd:element name="RoleTypeConstraint" type="XAdES:ObjectIdentifierType"
+				minOccurs="0" maxOccurs="unbounded" />
+			<xsd:element name="RoleValueConstraint" type="XAdES:AnyType"
+				minOccurs="0" maxOccurs="unbounded" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+<!--	<xsd:element name="AlgorithmConstraintSet" type="AlgorithmConstraintSetType" />-->
+
+	<xsd:complexType name="AlgorithmConstraintSetType">
+		<xsd:sequence>
+			<xsd:element name="SignerAlgConstraints" type="AlgConstraintsListType"
+				minOccurs="0" />
+			<xsd:element name="EeCertAlgConstraints" type="AlgConstraintsListType"
+				minOccurs="0" />
+			<xsd:element name="CACertAlgConstraints" type="AlgConstraintsListType"
+				minOccurs="0" />
+			<xsd:element name="AaCertAlgConstraints" type="AlgConstraintsListType"
+				minOccurs="0" />
+			<xsd:element name="TSACertAlgConstraints" type="AlgConstraintsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="AlgConstraintsListType">
+		<xsd:sequence maxOccurs="unbounded">
+			<xsd:element name="AlgAndLength" type="AlgAndLengthType" />
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="AlgAndLengthType">
+		<xsd:sequence>
+			<xsd:element name="AlgId" type="xsd:anyURI" />
+			<xsd:element name="MinKeyLength" type="xsd:integer"
+				minOccurs="0" />
+			<xsd:element name="Other" type="SignPolExtensionsListType"
+				minOccurs="0" />
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>

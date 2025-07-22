@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://www.iti.gov.br/LPA/v2#" 
+	xmlns:ds="http://www.w3.org/2000/09/xmldsig#" 
+	xmlns:XAdES="http://uri.etsi.org/01903/v1.3.2#" 
+	targetNamespace="http://www.iti.gov.br/LPA/v2#" elementFormDefault="qualified">
+	
+	<xsd:import namespace="http://uri.etsi.org/01903/v1.3.2#"
+		schemaLocation="http://uri.etsi.org/01903/v1.3.2/XAdES.xsd" />
+	<xsd:import namespace="http://www.w3.org/2000/09/xmldsig#" 
+		schemaLocation="https://www.w3.org/TR/2002/REC-xmldsig-core-20020212/xmldsig-core-schema.xsd"/>
+
+	<!-- Lista de Politicas de Assinatura Aprovadas -->
+	<xsd:element name="ApprovedSignaturePoliciesList" type="ApprovedSignaturePoliciesListType"/>
+	<xsd:complexType name="ApprovedSignaturePoliciesListType">
+		<xsd:sequence>
+			<xsd:element name="Version" type="xsd:integer" default="0"/>
+			<xsd:element name="NextUpdate" type="xsd:dateTime"/>
+			<xsd:element name="PolicyInfo" type="PolicyInfoType" maxOccurs="unbounded"/>
+			<xsd:element ref="ds:Signature" minOccurs="0" maxOccurs="1"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<!-- Informacoes da Politica -->
+	<xsd:complexType name="PolicyInfoType">
+		<xsd:sequence>
+			<xsd:element name="SigningPeriod" type="SigningPeriodType"/>
+			<xsd:element minOccurs="0" name="RevocationDate" type="xsd:dateTime"/>
+			<xsd:element name="policyOID" type="XAdES:ObjectIdentifierType"/>
+			<xsd:element name="PolicyDigestAndURI" type="PolicyDigestAndURIType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Periodo para Assinatura -->
+	<xsd:complexType name="SigningPeriodType">
+		<xsd:sequence>
+			<xsd:element name="NotBefore" type="xsd:dateTime"/>
+			<xsd:element minOccurs="0" name="NotAfter" type="xsd:dateTime"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!-- Resumos Criptograficos e URLs da PA -->
+	<xsd:complexType name="PolicyDigestAndURIType">
+		<xsd:sequence>
+			<xsd:element name="PolicyURI" type="xsd:anyURI"/>
+			<xsd:element name="PolicyDigest" type="DigestType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	<xsd:complexType name="DigestType">
+		<xsd:sequence>
+			<xsd:element name="DigestMethod" type="ds:DigestMethodType"/>
+			<xsd:element name="DigestValue" type="ds:DigestValueType"/>
+		</xsd:sequence>
+	</xsd:complexType>
+</xsd:schema>
