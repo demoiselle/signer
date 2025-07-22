@@ -1,18 +1,12 @@
 Fazer  ########################################################################################################################
 
+Documentar certificados de Produção na documentação do demoiselle
 
-4.5.0-SNAPSHOT 
 O maven vai tirar o snapshot lá na frente no deploy; 
-O que tem que atualizar? 
-Certificados de Produção? 
-Seguir script em signer/chain-icp-brasil/src/scripts_keytool; 
-Certificados de Homologação? 
-Baixar novas cadeias de homologação(SERPRO, alinhar com o CCD) e adicionar em chain-icp-brasil-homolog/src/main/resources/trustedca; 
-https://github.com/demoiselle/signer/blob/master/chain-icp-brasil-homolog/src/main/java/org/demoiselle/signer/chain/icp/brasil/provider/hom/HomologacaoProviderCA.java; 
-Atualização de arquivos de LPAs? 
-Baixar LPA's em https://www.gov.br/iti/pt-br/assuntos/repositorio/lista-de-politicas-de-assinatura 
+
+
+
 Baixar Políticas em https://www.gov.br/iti/pt-br/assuntos/repositorio/artefatos-de-assinatura-digital 
-Adicionar em policy-engine/src/main/resources/org/demoiselle/signer/policy/engine/artifacts 
 Atualização de arquivos de políticas(CADES, PADES e XADES)? 
 Já faz no mesmo local da LPA (policy-engie) 
 Atualização de documentação 
@@ -33,12 +27,20 @@ Após publicação o Maven cria a tag da build automaticamente
 
 Fazendo ########################################################################################################################
 
-Comparar os arquivos de hom da Caixa mmnse estão iguais 
-Documentar certificados de Produção na documentação do demoiselle
-Importar certificados de Hom
+
 
 Pronto ########################################################################################################################
 
 Importar certificados de Produção
 Aceitar PR
 Mudar os POM para 4.5.0-SNAPSHOT 
+O que tem que atualizar? 
+Certificados de Produção? 
+Seguir script em signer/chain-icp-brasil/src/scripts_keytool; 
+Certificados de Homologação? 
+Baixar novas cadeias de homologação(SERPRO, alinhar com o CCD) e adicionar em chain-icp-brasil-homolog/src/main/resources/trustedca; https://github.com/demoiselle/signer/blob/master/chain-icp-brasil-homolog/src/main/java/org/demoiselle/signer/chain/icp/brasil/provider/hom/HomologacaoProviderCA.java; 
+Importar certificados de Hom
+Comparar os arquivos de hom da Caixa mmnse estão iguais 
+
+Baixar LPA's em https://www.gov.br/iti/pt-br/assuntos/repositorio/lista-de-politicas-de-assinatura 
+Adicionar em policy-engine/src/main/resources/org/demoiselle/signer/policy/engine/artifacts 

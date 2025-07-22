@@ -15,3 +15,6 @@ chain-icp-brasil/src/scripts_keytool/novascadeias/
 
 chain-icp-brasil/src/scripts_keytool/import.log
 chain-icp-brasil-homolog/import.log
+policy-engine/automacao-atualizacao/validacao-hash/*
+policy-engine/automacao-atualizacao/politicas-baixadas/*
+policy-engine/automacao-atualizacao/baixar-politicas.log
