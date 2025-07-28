@@ -147,9 +147,9 @@ public class Configuration {
 		}
 	}
 
-	
+
 	public void doConfiguration() {
-		
+
 		SortedMap<String, String> map = new TreeMap<String, String>();
 
 		loadFromHomeFile(map);
@@ -194,6 +194,7 @@ public class Configuration {
 						"/Program Files/Assistente Desktop birdID/resources/extraResources/windows/x64/vault-pkcs11.dll"));
 				// Certificado em Nuvem SERPRO NEOID - Windows
 				map.put("TokenOuSmartCard_26_neoid", winRoot.concat("/system32/SerproPkcs11.dll"));
+				// Token Dexon DxToken - windows
 				map.put("TokenOuSmartCard_27_dexton_32", winRoot.concat("/system32/DXSafePKCS11.dll"));
 				map.put("TokenOuSmartCard_28_dexton_64", winRoot.concat("/system32/DXSafePKCS11.dll"));
 			}
@@ -235,6 +236,9 @@ public class Configuration {
 				map.put("TokenOuSmartCard_54_birdid",
 						"/opt/Assistente Desktop birdID/resources/extraResources/linux/x64/vault-pkcs11.so");
 				map.put("TokenOuSmartCard_55_ePass2003_64", "/usr/lib/ePass2003-Linux-x64/x86_64/redist/libcastle.so.1.0.0");
+				// Token Dexon DxToken - Linux
+				map.put("TokenOuSmartCard_68_dexton_32", "/etc/Dexon/DXSafe/libDXSafePKCS11.X32.so");
+				map.put("TokenOuSmartCard_69_dexton_64", "/etc/Dexon/DXSafe/libDXSafePKCS11.X64.so");
 
 			}else {
 				// ------------ Mac ------------
@@ -257,7 +261,9 @@ public class Configuration {
 				map.put("TokenOuSmartCard_66_certisign_desktopid", "//usr/local//lib//libdesktopID_Provider.dylib");
 				map.put("TokenOuSmartCard_67_birdID",
 						"//Applications//Assistente Desktop birdID.app//Contents//resources/extraResources//osx//x64//vault-pkcs11.dylib");
-			}			
+				// Token Dexon DxToken - MacOS
+				map.put("TokenOuSmartCard_70_dexton", "//Applications//DXSafe//libDXSafePKCS11.dylib");
+			}
 		}
 
 
@@ -282,7 +288,7 @@ public class Configuration {
 		} catch (Throwable error) {
 			logger.error(coreMessagesBundle.getString("error.load.driver.null"));
 		}
-		
+
 	}
 	/**
 	 * Method that returns the version of the JVM that is running the component.
@@ -557,7 +563,7 @@ public class Configuration {
 
 	/**
 	 * set MSCAPI to ON (true) or OFF (false).
-	 * 
+	 *
 	 * @param mSCAPI_ON the value to set.
 	 *
 	 */
