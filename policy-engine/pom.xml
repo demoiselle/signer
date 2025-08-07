@@ -21,6 +21,10 @@
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

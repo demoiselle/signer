@@ -55,6 +55,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.apache.xml.security.Init;
 import org.apache.xml.security.c14n.CanonicalizationException;
 import org.apache.xml.security.c14n.Canonicalizer;
@@ -112,7 +113,8 @@ public class DocumentUtils {
 
 
 		try {
-			BufferedReader in = new BufferedReader(new FileReader(xmlFile));
+			InputStream inputStream = new BOMInputStream(new FileInputStream(xmlFile));
+			BufferedReader in = new BufferedReader(new java.io.InputStreamReader(inputStream));
 			InputSource source = new InputSource(in);
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
@@ -149,7 +151,7 @@ public class DocumentUtils {
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			dbFactory.setNamespaceAware(true);
-			Document retDoc = dbFactory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlContent));
+			Document retDoc = dbFactory.newDocumentBuilder().parse(new BOMInputStream(new ByteArrayInputStream(xmlContent)));
 			retDoc.setXmlStandalone(true);
 			return retDoc;
 		} catch (SAXException e) {
@@ -177,7 +179,7 @@ public class DocumentUtils {
 		try {
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
-			Document retDoc = dbf.newDocumentBuilder().parse(new InputSource(is));
+			Document retDoc = dbf.newDocumentBuilder().parse(new InputSource(new BOMInputStream(is)));
 			retDoc.setXmlStandalone(true);
 			return retDoc;
 		} catch (SAXException e) {

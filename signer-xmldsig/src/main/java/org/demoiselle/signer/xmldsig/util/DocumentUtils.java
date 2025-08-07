@@ -50,6 +50,7 @@ import java.io.UnsupportedEncodingException;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.xmldsig.XMLSignerException;
 import org.slf4j.Logger;
@@ -86,7 +87,7 @@ public class DocumentUtils {
 			InputSource source = new InputSource(in);
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			dbf.setNamespaceAware(true);
-			Document docRet = dbf.newDocumentBuilder().parse(source);
+			Document docRet = dbf.newDocumentBuilder().parse(new BOMInputStream(new FileInputStream(xmlFile)));
 			docRet.setXmlStandalone(true);
 			if (setElementId) {
 				setDocumentElementId(docRet);
@@ -152,7 +153,7 @@ public class DocumentUtils {
 		try {
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			dbFactory.setNamespaceAware(true);
-			Document retDoc = dbFactory.newDocumentBuilder().parse(new ByteArrayInputStream(xmlContent));
+			Document retDoc = dbFactory.newDocumentBuilder().parse(new BOMInputStream(new ByteArrayInputStream(xmlContent)));
 			retDoc.setXmlStandalone(true);
 			if (setElementId) {
 				setDocumentElementId(retDoc);
