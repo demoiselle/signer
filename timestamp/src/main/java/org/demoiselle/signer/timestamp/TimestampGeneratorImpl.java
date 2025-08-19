@@ -96,10 +96,10 @@ public class TimestampGeneratorImpl implements TimeStampGenerator {
 				try {
 					logger.debug(timeStampMessagesBundle.getString("info.timestamp.attempt", attempt));
 					ApiConnector apiConnector = new ApiConnector();
-					if (this.hash !=null) {
-						resp = apiConnector.getStampForHash(this.hash);
-					}else {
+					if (this.content !=null) {
 						resp = apiConnector.getStampForContent(this.content);
+					}else {
+						resp = apiConnector.getStampForHash(this.hash);
 					}					
 					if (resp != null) break;
 				} catch (CertificateCoreException e) {
