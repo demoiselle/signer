@@ -159,14 +159,7 @@ public class XMLDsigSigner implements Signer {
 		X509Data xd = kif.newX509Data(x509Content);
 		KeyInfo ki = kif.newKeyInfo(Arrays.asList(xd));
 		
-		org.w3c.dom.Node parentNode = docToSign.getDocumentElement();
-		if (this.referenceId != null && !this.referenceId.isEmpty()) {
-			org.w3c.dom.Node nodeToSign = docToSign.getElementById(this.referenceId);
-			if (nodeToSign != null) {
-				parentNode = nodeToSign.getParentNode();
-			}
-		}
-		dsc = new DOMSignContext(privateKey, parentNode);
+		dsc = new DOMSignContext(privateKey, docToSign.getDocumentElement());
 		signature = xmlSigFac.newXMLSignature(signedInfo, ki);
 		try {
 			signature.sign(dsc);
