@@ -94,18 +94,13 @@ public class ApiConnector implements Connector {
 	private TimeStampConfigUtil tscu = TimeStampConfigUtil.getInstance();
 
 	public ApiConnector() throws CertificateCoreException {
-		System.setProperty("https.protocols", "TLSv1.2, TLSv1.1");
-		System.setProperty("jdk.tls.client.protocols", "TLSv1.2,TLSv1.1");
 		this.clientCredentials = timeStampConfig.getClientCredentials();
 		this.accessToken = authenticate();
 	}
 
 	public ApiConnector(String clientCredentials) throws CertificateCoreException {
-		System.setProperty("https.protocols", "TLSv1.2,TLSv1.1");
-		System.setProperty("jdk.tls.client.protocols", "TLSv1.2,TLSv1.1");
 		this.clientCredentials = clientCredentials;
 		this.accessToken = authenticate();
-
 	}
 
 	/**
@@ -410,8 +405,7 @@ public class ApiConnector implements Connector {
 
 	private CloseableHttpClient getHttpClient() throws Exception {
 		//System.setProperty("javax.net.debug", "all");
-		System.setProperty("https.protocols", "TLSv1.2,TLSv1.1");
-		System.setProperty("jdk.tls.client.protocols", "TLSv1.2,TLSv1.1");
+
 		TrustManager[] trustAllCerts = new TrustManager[] { new X509TrustManager() {
 			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 				return null;
