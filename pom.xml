@@ -79,6 +79,13 @@
 			<organizationUrl>https://www.serpro.gov.br</organizationUrl>
 		</developer>
 
+		<developer>
+			<name>Evandro Magalhães Leite Júnior</name>
+			<email>evandrojr@gmail.com</email>
+			<organization>SERPRO</organization>
+			<organizationUrl>https://www.serpro.gov.br</organizationUrl>
+		</developer>
+
 	</developers>
 
 
