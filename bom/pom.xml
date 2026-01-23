@@ -25,7 +25,7 @@
 	<parent>
 		<groupId>org.demoiselle.signer</groupId>
 		<artifactId>build</artifactId>
-		<version>4.4.1-SNAPSHOT</version>
+		<version>4.5.0</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -52,7 +52,7 @@
 		<maven.install.plugin.version>2.3.1</maven.install.plugin.version>
 		<maven.release.plugin.version>2.5</maven.release.plugin.version>
 		<wagon.plugin.version>1.0-beta-3</wagon.plugin.version>
-		<demoiselle.signer.version>4.4.1-SNAPSHOT</demoiselle.signer.version>
+		<demoiselle.signer.version>4.5.0</demoiselle.signer.version>
 	</properties>
 
 	<dependencyManagement>
@@ -154,6 +154,11 @@
 				<groupId>org.bouncycastle</groupId>
 				<artifactId>bcmail-jdk15on</artifactId>
 				<version>1.62</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-io</groupId>
+				<artifactId>commons-io</artifactId>
+				<version>2.11.0</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

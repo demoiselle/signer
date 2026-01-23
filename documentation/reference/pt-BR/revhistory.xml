@@ -5,6 +5,37 @@
 <revhistory>
 
 	<revision>
+		<revnumber>4.5.0</revnumber>
+		<date>21/11/2025</date>
+		<authorinitials>ess</authorinitials>
+		<revremark>
+			<itemizedlist>
+				<listitem>
+					<para>Mudança para o novo portal do Maven Central (Sonatype) #435</para>
+				</listitem>
+				<listitem>
+					<para>Correção de erro ao assinar região do XML #433</para>
+				</listitem>
+				<listitem>
+					<para>Correção para suportar assinatura de hash com carimbo #432</para>
+				</listitem>
+				<listitem>
+					<para>Suporte a token DxToken no Linux e MacOS #431</para>
+				</listitem>
+				<listitem>
+					<para>Atualização de arquivos de políticas (CADES, PADES e XADES)</para>
+				</listitem>
+				<listitem>
+					<para>Remoção de configurações de protocolo TLS depreciadas</para>
+				</listitem>
+				<listitem>
+					<para>Suporte para assinar XML com ou sem BOM no UTF-8</para>
+				</listitem>
+			</itemizedlist>
+		</revremark>
+	</revision>
+
+	<revision>
 		<revnumber>4.4.0</revnumber>
 		<date>08/01/2025</date>
 		<authorinitials>ess</authorinitials>

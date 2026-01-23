@@ -1,0 +1,34 @@
+ExtensoesPAsPAdES { joint(2) country(16) br(76) iti(1) pas(8) extensions(0) }
+
+DEFINITIONS EXPLICIT TAGS ::= 
+
+BEGIN
+
+br-ext-mandatedPdfSigDicEntries OBJECT IDENTIFIER ::= { joint(2) country(16) br(76) iti(1) pas(8) 1 }
+
+MandatedPdfSigDicEntries ::= SEQUENCE OF PdfEntry
+
+PdfEntry ::= SEQUENCE {
+	id UTF8String(SIZE (1..MAX)),
+	value OCTET STRING OPTIONAL 
+}
+	
+br-ext-dss OBJECT IDENTIFIER ::= { joint(2) country(16) br(76) iti(1) pas(8) 2 }
+
+DssDictionary ::= SEQUENCE{
+   mandatedEntries     SEQUENCE OF PdfEntry,
+   vriMandatedEntries  SEQUENCE OF PdfEntry OPTIONAL
+ }
+	
+br-ext-mandatedDocTSEntries OBJECT IDENTIFIER ::= { joint(2) country(16) br(76) iti(1) pas(8) 3 }
+
+MandatedDocTSEntries ::= SEQUENCE OF PdfEntry
+
+ValidationReq ::= ENUMERATED {
+   crlsOnly (0), -- indica que apenas a entrada CRLs/CRL pode ser usada
+   ocspsOnly (1), -- indica que apenas a entrada OCSPs/OCSP pode ser usada
+   either (2), -- indica que podem ser usadas LCRs ou OCSPs no DSS/VRI
+   both (3) -- indica que devem ser usadas LCRs e OCSPs no DSS/VRI
+}
+
+END

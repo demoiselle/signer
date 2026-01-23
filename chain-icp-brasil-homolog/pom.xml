@@ -16,13 +16,19 @@
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
         <relativePath>../parent</relativePath>
-        <version>4.4.1-SNAPSHOT</version>
+        <version>4.5.0</version>
     </parent>
 
     <dependencies>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.2</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 </project>

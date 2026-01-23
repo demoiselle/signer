@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
-        <version>4.4.1-SNAPSHOT</version>
+        <version>4.5.0</version>
         <relativePath>../parent</relativePath>
     </parent>
 
@@ -20,6 +20,10 @@
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
         </dependency>
     </dependencies>
 

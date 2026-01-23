@@ -43,6 +43,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.input.BOMInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -66,8 +67,8 @@ public class XMLUtil {
 			LOGGER.error(policyMessagesBundle.getString("error.xml.parser.notfound", e.getMessage()));
 			throw new RuntimeException(policyMessagesBundle.getString("error.xml.parser.notfound", e.getMessage()));
 		}
-		try {
-			docReturn = dBuilder.parse(parmIS);
+		try (InputStream bomInputStream = new BOMInputStream(parmIS)) {
+			docReturn = dBuilder.parse(bomInputStream);
 		} catch (SAXException e) {
 			LOGGER.error(policyMessagesBundle.getString("error.xml.sax.exception", e.getMessage()));
 			throw new RuntimeException(policyMessagesBundle.getString("error.xml.sax.exception", e.getMessage()));

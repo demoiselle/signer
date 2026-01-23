@@ -1,0 +1,35 @@
+ListaDePAsAprovadasV2 { joint(2) country(16) br(76) iti(1) lpa(9) v2(1) }
+
+DEFINITIONS IMPLICIT TAGS ::= 
+BEGIN
+
+	IMPORTS
+
+		-- Electronic Signature Formats for long term electronic signatures: RFC 3126
+		OtherHashAlgAndValue
+		FROM ETSI { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-mod(0) 5}
+		-- Electronic Signature Policies: RFC 3125
+		SigningPeriod
+		FROM ETS-ElectronicSignaturePolicies-88syntax { iso(1) member-body(2) us(840) rsadsi(113549) pkcs(1) pkcs-9(9) smime(16) id-mod(0) 7};
+
+
+-- Estrutura principal
+LPA ::= SEQUENCE {
+	version		Version DEFAULT v2,
+	policyInfos 	PolicyInfos,
+	nextUpdate 	GeneralizedTime }
+
+Version  ::=  INTEGER  {  v2(0) }
+
+PolicyInfos ::= SEQUENCE OF PolicyInfo
+
+PolicyInfo ::= SEQUENCE {
+     signingPeriod      SigningPeriod,
+     revocationDate     GeneralizedTime OPTIONAL,
+     policyOID		OBJECT IDENTIFIER,
+     policyURI          IA5String,
+     policyDigest       OtherHashAlgAndValue }
+
+
+END
+
