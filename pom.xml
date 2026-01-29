@@ -7,7 +7,7 @@
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>build</artifactId>
 	<packaging>pom</packaging>
-	<version>4.5.0</version>
+	<version>4.5.1-SNAPSHOT</version>
 
 	<name>Demoiselle Signer Build</name>
 	<description>Demoiselle Framework's component for specifications of
@@ -326,7 +326,7 @@
 			scm:git:git@github.com:demoiselle/${project.alias}.git</developerConnection>
 		<url>https://github.com/demoiselle/${project.alias}</url>
 
-		<tag>4.5.0</tag>
+		<tag>4.5.1-SNAPSHOT</tag>
 	</scm>
 
 
