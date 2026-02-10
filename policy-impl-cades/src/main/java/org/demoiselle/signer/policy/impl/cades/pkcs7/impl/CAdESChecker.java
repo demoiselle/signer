@@ -38,10 +38,12 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -59,6 +61,9 @@ import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.cms.CMSAttributes;
 import org.bouncycastle.asn1.cms.ContentInfo;
+import org.bouncycastle.asn1.ess.ESSCertID;
+import org.bouncycastle.asn1.ess.ESSCertIDv2;
+import org.bouncycastle.asn1.ess.SigningCertificateV2;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -299,7 +304,10 @@ public class CAdESChecker implements PKCS7Checker {
 							if (signedAtt == null) {
 								logger.debug(cadesMessagesBundle.getString("error.signed.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
 								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
-							}
+} else {
+// Validação semântica de atributos específicos (ex: RFC 5035 signing-certificate-v2)
+validateMandatedAttributeContent(oi, signedAtt, varCert, signatureInfo);
+}
 						}
 					}
 				}
@@ -570,6 +578,73 @@ public class CAdESChecker implements PKCS7Checker {
 	public void setHash(byte[] hash) {
 		this.hash = hash;
 	}
+
+private void validateMandatedAttributeContent(String oid, Attribute attribute, X509Certificate certificate, SignatureInformations signatureInfo) {
+if (oid.equals(PKCSObjectIdentifiers.id_aa_signingCertificateV2.getId())) {
+validateSigningCertificateV2(attribute, certificate, signatureInfo);
+} else if (oid.equals(PKCSObjectIdentifiers.id_aa_signingCertificate.getId())) {
+validateSigningCertificateV1(attribute, certificate, signatureInfo);
+}
+}
+
+private void validateSigningCertificateV2(Attribute attribute, X509Certificate certificate, SignatureInformations signatureInfo) {
+try {
+SigningCertificateV2 signingCertV2 = SigningCertificateV2.getInstance(attribute.getAttrValues().getObjectAt(0));
+ESSCertIDv2[] certs = signingCertV2.getCerts();
+if (certs == null || certs.length == 0) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.no.certid"));
+return;
+}
+ESSCertIDv2 essCertID = certs[0];
+AlgorithmIdentifier hashAlg = essCertID.getHashAlgorithm();
+String algName = (hashAlg == null) ? "SHA-256" : getHashAlgorithmName(hashAlg.getAlgorithm());
+if (algName == null) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.unknown.algorithm", hashAlg.getAlgorithm().getId()));
+return;
+}
+MessageDigest md = MessageDigest.getInstance(algName);
+byte[] certHashCalculated = md.digest(certificate.getEncoded());
+byte[] certHashFromAttribute = essCertID.getCertHash();
+if (!Arrays.equals(certHashCalculated, certHashFromAttribute)) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.hash.mismatch", algName, toHex(certHashFromAttribute), toHex(certHashCalculated)));
+logger.error("RFC 5035 validation FAILED");
+} else {
+logger.debug("RFC 5035 validation PASSED");
+}
+} catch (Exception ex) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.validation.failed", ex.getMessage()));
+}
+}
+
+private void validateSigningCertificateV1(Attribute attribute, X509Certificate certificate, SignatureInformations signatureInfo) {
+try {
+org.bouncycastle.asn1.ess.SigningCertificate signingCert = org.bouncycastle.asn1.ess.SigningCertificate.getInstance(attribute.getAttrValues().getObjectAt(0));
+ESSCertID[] certs = signingCert.getCerts();
+if (certs == null || certs.length == 0) return;
+MessageDigest md = MessageDigest.getInstance("SHA-1");
+byte[] certHashCalculated = md.digest(certificate.getEncoded());
+if (!Arrays.equals(certHashCalculated, certs[0].getCertHash())) {
+signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("warn.rfc2634.hash.mismatch"));
+}
+} catch (Exception ex) {
+signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("warn.rfc2634.validation.failed", ex.getMessage()));
+}
+}
+
+private String getHashAlgorithmName(ASN1ObjectIdentifier oid) {
+if (oid.equals(org.bouncycastle.asn1.nist.NISTObjectIdentifiers.id_sha256)) return "SHA-256";
+else if (oid.equals(org.bouncycastle.asn1.nist.NISTObjectIdentifiers.id_sha384)) return "SHA-384";
+else if (oid.equals(org.bouncycastle.asn1.nist.NISTObjectIdentifiers.id_sha512)) return "SHA-512";
+else if (oid.equals(org.bouncycastle.asn1.oiw.OIWObjectIdentifiers.idSHA1)) return "SHA-1";
+return null;
+}
+
+private String toHex(byte[] bytes) {
+if (bytes == null) return "null";
+StringBuilder sb = new StringBuilder();
+for (byte b : bytes) sb.append(String.format("%02X", b));
+return sb.toString();
+}
 
 	
 }
