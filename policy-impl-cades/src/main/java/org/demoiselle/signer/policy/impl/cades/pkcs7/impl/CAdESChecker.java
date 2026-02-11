@@ -189,9 +189,29 @@ public class CAdESChecker implements PKCS7Checker {
 
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
 
+				// Primeiro, tentar obter a data do timestamp (se existir)
+				// para usar na validação de revogação
+				Date timestampDate = null;
+				AttributeTable unsignedAttributesForTimestamp = signerInfo.getUnsignedAttributes();
+				if (unsignedAttributesForTimestamp != null) {
+					Attribute timestampAttribute = unsignedAttributesForTimestamp.get(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken);
+					if (timestampAttribute != null) {
+						try {
+							byte[] varTimestampBytes = timestampAttribute.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
+							TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimestampBytes));
+							timestampDate = timeStampToken.getTimeStampInfo().getGenTime();
+							logger.info("Timestamp encontrado: " + timestampDate + " - será usado para validação de revogação");
+						} catch (Exception e) {
+							logger.debug("Erro ao extrair data do timestamp: " + e.getMessage());
+						}
+					}
+				}
+
 				CRLValidator cV = new CRLValidator();
 				try {
-					cV.validate(varCert);
+					// Se há timestamp, valida revogação na data do timestamp
+					// Se não há timestamp, valida revogação na data atual
+					cV.validate(varCert, timestampDate);
 				} catch (CertificateValidatorCRLException cvce) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.crl.not.access",cvce.getMessage()));
 					logger.debug(cadesMessagesBundle.getString("error.crl.not.access",cvce.getMessage()));
