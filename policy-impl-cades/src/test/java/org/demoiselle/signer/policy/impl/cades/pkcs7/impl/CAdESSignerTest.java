@@ -674,7 +674,8 @@ public class CAdESSignerTest {
 
 			StringBuilder buf = new StringBuilder();
 			buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-			Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
+			Provider p = Security.getProvider("SunPKCS11");
+			p = p.configure("--" + buf.toString());
 			Security.addProvider(p);
 			// ATENÇÃO ALTERAR "SENHA" ABAIXO
 			Builder builder = KeyStore.Builder.newInstance("PKCS11", p, new KeyStore.PasswordProtection("senha".toCharArray()));

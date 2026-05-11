@@ -367,9 +367,11 @@ public class CAdESChecker implements PKCS7Checker {
 					
 					if(this.checkHash) {
 						for (AlgorithmIdentifier ai : cmsSignedData.getDigestAlgorithmIDs()) {
+							SignerAlgorithmEnum signerAlg = SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId());
+							String algName = signerAlg != null ? signerAlg.getAlgorithm() : ai.getAlgorithm().getId();
 							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch.digest"));
-							logger.info(cadesMessagesBundle.getString("error.signature.mismatch.digest",SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId()).getAlgorithm()));
-							throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch.digest",SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId()).getAlgorithm()), ex);	
+							logger.info(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName));
+							throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName), ex);	
 					    }						
 						
 					}else {

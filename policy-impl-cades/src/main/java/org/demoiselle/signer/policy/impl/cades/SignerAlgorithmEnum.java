@@ -55,7 +55,13 @@ public enum SignerAlgorithmEnum {
 	SHA256withRSA("SHA256withRSA", DigestAlgorithmEnum.SHA_256.getAlgorithm(), "2.16.840.1.101.3.4.2.1", "RSA", "1.2.840.113549.1.1.1"),
 	SHA256withECDSA("SHA256withECDSA", DigestAlgorithmEnum.SHA_256.getAlgorithm(), "2.16.840.1.101.3.4.2.1", "ECDSA", "1.0.14888.3.0.4"),
 	SHA512withRSA("SHA512withRSA", DigestAlgorithmEnum.SHA_512.getAlgorithm(), "2.16.840.1.101.3.4.2.3", "RSA", "1.2.840.113549.1.1.1"),
-	SHA512withECDSA("SHA512withECDSA", DigestAlgorithmEnum.SHA_512.getAlgorithm(), "2.16.840.1.101.3.4.2.3", "ECDSA", "1.0.14888.3.0.4");
+	SHA512withECDSA("SHA512withECDSA", DigestAlgorithmEnum.SHA_512.getAlgorithm(), "2.16.840.1.101.3.4.2.3", "ECDSA", "1.0.14888.3.0.4"),
+
+	// ML-DSA (FIPS 204) - Post-Quantum Digital Signature
+	// ML-DSA uses internal hashing (SHAKE), but SHA-256/SHA-512 is used for the CMS message-digest attribute
+	ML_DSA_44("ML-DSA-44", DigestAlgorithmEnum.SHA_256.getAlgorithm(), "2.16.840.1.101.3.4.2.1", "ML-DSA", "2.16.840.1.101.3.4.3.17"),
+	ML_DSA_65("ML-DSA-65", DigestAlgorithmEnum.SHA_256.getAlgorithm(), "2.16.840.1.101.3.4.2.1", "ML-DSA", "2.16.840.1.101.3.4.3.18"),
+	ML_DSA_87("ML-DSA-87", DigestAlgorithmEnum.SHA_512.getAlgorithm(), "2.16.840.1.101.3.4.2.3", "ML-DSA", "2.16.840.1.101.3.4.3.19");
 
 	/**
 	 * Definition of standard algorithm.
@@ -127,6 +133,22 @@ public enum SignerAlgorithmEnum {
 	public static SignerAlgorithmEnum getSignerOIDAlgorithmHashEnum(String OIDalgorithm) {
 		for (SignerAlgorithmEnum value : SignerAlgorithmEnum.values()) {
 			if (value.getOIDAlgorithmHash().equalsIgnoreCase(OIDalgorithm)) {
+				return value;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Retrieves an item from the enumeration corresponding to the parameter,
+	 * which is the OID of the cipher/signature algorithm (e.g., 2.16.840.1.101.3.4.3.17 for ML-DSA-44).
+	 *
+	 * @param OIDalgorithm OID String representation
+	 * @return SignerAlgorithmEnum specific enum value for cipher OID, or null
+	 */
+	public static SignerAlgorithmEnum getSignerOIDAlgorithmCipherEnum(String OIDalgorithm) {
+		for (SignerAlgorithmEnum value : SignerAlgorithmEnum.values()) {
+			if (value.getOIDAlgorithmCipher().equalsIgnoreCase(OIDalgorithm)) {
 				return value;
 			}
 		}

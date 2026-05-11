@@ -47,6 +47,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.security.interfaces.ECKey;
 import java.security.interfaces.RSAKey;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -990,7 +991,10 @@ public class CAdESSigner implements PKCS7Signer {
 			for (AlgAndLength algLength : listOfAlgAndLength) {
 				if (algLength.getAlgID().getValue().equalsIgnoreCase(varSetedAlgorithmOID)) {
 					algAndLength = algLength;
-					SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum.valueOf(this.pkcs1.getAlgorithm());
+					SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum.getSignerAlgorithmEnum(this.pkcs1.getAlgorithm());
+					if (varSignerAlgorithmEnum == null) {
+						throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
+					}
 					String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
 					ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
 					varObjectIdentifier.setValue(varOIDAlgorithmHash);
@@ -1002,7 +1006,10 @@ public class CAdESSigner implements PKCS7Signer {
 		} else {
 			algAndLength = listOfAlgAndLength.get(1);
 			this.pkcs1.setAlgorithm(AlgorithmNames.getAlgorithmNameByOID(algAndLength.getAlgID().getValue()));
-			SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum.valueOf(this.pkcs1.getAlgorithm());
+			SignerAlgorithmEnum varSignerAlgorithmEnum = SignerAlgorithmEnum.getSignerAlgorithmEnum(this.pkcs1.getAlgorithm());
+			if (varSignerAlgorithmEnum == null) {
+				throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
+			}
 			String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
 			ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
 			varObjectIdentifier.setValue(varOIDAlgorithmHash);
@@ -1020,7 +1027,16 @@ public class CAdESSigner implements PKCS7Signer {
 		logger.debug(cadesMessagesBundle.getString("info.min.key.length", algAndLength.getMinKeyLength()));
 		// Recupera o tamanho minimo da chave para validacao
 		logger.debug(cadesMessagesBundle.getString("info.validating.key.length"));
-		int keyLegth = ((RSAKey) certificate.getPublicKey()).getModulus().bitLength();
+		java.security.PublicKey pubKey = certificate.getPublicKey();
+		int keyLegth;
+		if (pubKey instanceof RSAKey) {
+			keyLegth = ((RSAKey) pubKey).getModulus().bitLength();
+		} else if (pubKey instanceof ECKey) {
+			keyLegth = ((ECKey) pubKey).getParams().getOrder().bitLength();
+		} else {
+			// For post-quantum keys (ML-DSA, etc.), derive bit length from encoded key
+			keyLegth = pubKey.getEncoded().length * 8;
+		}
 		if (keyLegth < algAndLength.getMinKeyLength()) {
 			throw new SignerException(cadesMessagesBundle.getString("error.min.key.length",
 					algAndLength.getMinKeyLength().toString(), keyLegth));

@@ -110,9 +110,9 @@
 	<properties>
 		<license.header>./licence-lgpl</license.header>
 		<project.alias>signer</project.alias>
-		<java.version>1.7</java.version>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.scm.id>github</project.scm.id>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
@@ -169,9 +169,9 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.0.1</version>
 				<configuration>
-					<source>1.7</source>
+					<source>1.8</source>
 					<links>
-						<link>https://docs.oracle.com/javase/7/docs/api/</link>
+						<link>https://docs.oracle.com/javase/8/docs/api/</link>
 					</links>
 				</configuration>
 				<executions>
@@ -284,11 +284,11 @@
 						<artifactId>maven-javadoc-plugin</artifactId>
 						<version>3.3.1</version>
 						<configuration>
-							<source>1.7</source>
+							<source>1.8</source>
 							<links>
-								<link>https://docs.oracle.com/javase/7/docs/api/</link>
+								<link>https://docs.oracle.com/javase/8/docs/api/</link>
 								<link>
-									https://javadoc.io/doc/org.bouncycastle/bcprov-jdk15on/1.62/</link>
+									https://javadoc.io/doc/org.bouncycastle/bcprov-jdk18on/1.79/</link>
 							</links>
 							<outputDirectory>${basedir}/target/html</outputDirectory>
 							<reportOutputDirectory>${basedir}/target/html</reportOutputDirectory>

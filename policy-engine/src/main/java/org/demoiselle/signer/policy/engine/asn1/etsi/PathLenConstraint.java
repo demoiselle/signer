@@ -79,7 +79,7 @@ public class PathLenConstraint extends ASN1Object {
 	@Override
 	public void parse(ASN1Primitive derObject) {
 		DERTaggedObject derTaggedObject = (DERTaggedObject) derObject;
-		DERSequence derSequence = (DERSequence) derTaggedObject.getObject();
+		DERSequence derSequence = (DERSequence) derTaggedObject.getBaseObject().toASN1Primitive();
 		int total = derSequence.size();
 		for (int i = 0; i < total; i++) {
 			ObjectIdentifier objectIdentifier = new ObjectIdentifier();

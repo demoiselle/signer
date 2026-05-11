@@ -245,7 +245,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 				String pkcs11LibraryPath = entry.getValue();
 				StringBuilder buf = new StringBuilder();
 				buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-				Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
+				Provider p = Security.getProvider("SunPKCS11");
+				p = p.configure("--" + buf.toString());
 				Security.addProvider(p);
 				Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
 						new KeyStore.PasswordProtection(pinNumber.toCharArray()));

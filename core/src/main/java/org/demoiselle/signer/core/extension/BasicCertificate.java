@@ -530,7 +530,7 @@ public class BasicCertificate {
 				return null;
 			}
 			DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(0);
-			DEROctetString oct = (DEROctetString) taggedObject.getObject();
+			DEROctetString oct = (DEROctetString) taggedObject.getBaseObject();
 			return toString(oct.getOctets());
 		} catch (Exception error) {
 			logger.error(error.getMessage());

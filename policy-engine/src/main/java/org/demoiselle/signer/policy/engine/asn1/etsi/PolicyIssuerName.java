@@ -83,7 +83,7 @@ public class PolicyIssuerName extends ASN1Object {
 			ASN1Encodable asn1Encodable = sequence.getObjectAt(0);
 			if (asn1Encodable instanceof DERTaggedObject) {
 				DERTaggedObject derTaggedObject = (DERTaggedObject) asn1Encodable;
-				ASN1Primitive object = derTaggedObject.getObject();
+				ASN1Primitive object = derTaggedObject.getBaseObject().toASN1Primitive();
 				if (object instanceof DEROctetString) {
 					OctetString octetString = new OctetString();
 					octetString.parse(object);
