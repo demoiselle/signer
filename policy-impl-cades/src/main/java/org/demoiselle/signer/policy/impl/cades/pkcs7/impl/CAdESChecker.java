@@ -239,6 +239,26 @@ public class CAdESChecker implements PKCS7Checker {
 				} catch (CMSVerifierCertificateNotValidException e) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature", e.getMessage()));
 					signatureInfo.setInvalidSignature(true);
+				} catch (CMSSignerDigestMismatchException e) {
+					if (checkHash) {
+						for (AlgorithmIdentifier ai : cmsSignedData.getDigestAlgorithmIDs()) {
+							SignerAlgorithmEnum signerAlg = SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId());
+							String algName = signerAlg != null ? signerAlg.getAlgorithm() : ai.getAlgorithm().getId();
+							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch.digest"));
+							logger.info(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName));
+							throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName), e);
+						}
+					} else {
+						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
+						logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
+						throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), e);
+					}
+				} catch (CMSException e) {
+					// Handles algorithm/key mismatch during verification (e.g. ML-DSA signature
+					// algorithm declared in SignerInfo but certificate carries a different key type)
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", e.getMessage()));
+					signatureInfo.setInvalidSignature(true);
+					logger.error(cadesMessagesBundle.getString("error.signature.invalid", e.getMessage()));
 				}
 
 				// recupera atributos assinados
@@ -389,30 +409,6 @@ validateMandatedAttributeContent(oi, signedAtt, varCert, signatureInfo);
 			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
 				signatureInfo.getValidatorErrors().add(ex.getMessage());
 				logger.info(ex.getMessage());
-			} catch (CMSException ex) {
-				// When file is mismatch with sign
-				if (ex instanceof CMSSignerDigestMismatchException) {
-					
-					if(this.checkHash) {
-						for (AlgorithmIdentifier ai : cmsSignedData.getDigestAlgorithmIDs()) {
-							SignerAlgorithmEnum signerAlg = SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId());
-							String algName = signerAlg != null ? signerAlg.getAlgorithm() : ai.getAlgorithm().getId();
-							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch.digest"));
-							logger.info(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName));
-							throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName), ex);	
-					    }						
-						
-					}else {
-						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
-						logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
-						throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
-					}
-					
-				} else {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
-					logger.info(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()), ex);
-				}
 			} catch (ParseException e) {
 				signatureInfo.getValidatorErrors().add(e.getMessage());
 				logger.info(e.getMessage());
