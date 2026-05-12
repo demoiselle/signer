@@ -68,7 +68,7 @@ public abstract class ASN1Object {
 	public static ASN1Sequence getDERSequence(ASN1Primitive derObject) {
 		ASN1Sequence sequence = null;
 		if (derObject instanceof DERTaggedObject) {
-			ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
+			ASN1Primitive object = ((DERTaggedObject) derObject).getBaseObject().toASN1Primitive();
 			if (object instanceof DERSequence) {
 				sequence = (DERSequence) object;
 			}
@@ -90,7 +90,7 @@ public abstract class ASN1Object {
 	public static ASN1Enumerated getDEREnumerated(ASN1Primitive derObject) {
 		ASN1Enumerated derEnumerated = null;
 		if (derObject instanceof DERTaggedObject) {
-			ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
+			ASN1Primitive object = ((DERTaggedObject) derObject).getBaseObject().toASN1Primitive();
 			if (object instanceof ASN1Enumerated) {
 				derEnumerated = (ASN1Enumerated) object;
 			}

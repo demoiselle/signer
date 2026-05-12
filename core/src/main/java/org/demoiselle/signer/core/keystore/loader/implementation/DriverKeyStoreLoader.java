@@ -280,7 +280,6 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 				String pkcs11LibraryPath = entry.getValue();
 				StringBuilder buf = new StringBuilder();
 				buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-
 				// Java 9+: usa Provider.configure() com config inline (prefixo "--")
 				Provider base = Security.getProvider("SunPKCS11");
 				if (base == null) continue;

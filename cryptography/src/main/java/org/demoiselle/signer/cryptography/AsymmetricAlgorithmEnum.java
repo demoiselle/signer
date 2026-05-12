@@ -63,8 +63,14 @@ public enum AsymmetricAlgorithmEnum {
 	 * <a href="http://www.faqs.org/rfcs/rfc4050.html">http://www.faqs.org/rfcs/
 	 * rfc4050.html</a>
 	 */
-	ECDSA("ECDSA");
+	ECDSA("ECDSA"),
 	// ECDSA 256, ECDSA 512
+
+	/**
+	 * ML-DSA (Module-Lattice-Based Digital Signature Algorithm) - FIPS 204
+	 * Post-Quantum Digital Signature: ML-DSA-44, ML-DSA-65, ML-DSA-87
+	 */
+	ML_DSA("ML-DSA");
 
 	/**
 	 * Definition of standard algorithm.
