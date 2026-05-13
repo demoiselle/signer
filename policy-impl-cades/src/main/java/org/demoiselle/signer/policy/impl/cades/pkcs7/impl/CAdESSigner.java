@@ -804,6 +804,9 @@ public class CAdESSigner implements PKCS7Signer {
 		checkCertificateChain();
 		// Consulta e adiciona os atributos não assinados//
 
+		AttributeFactory attributeFactory = AttributeFactory.getInstance();
+		ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
+
 		logger.debug(cadesMessagesBundle.getString("info.unsigned.attribute"));
 		Collection<SignerInformation> vNewSigners = cmsSignedData.getSignerInfos().getSigners();
 
