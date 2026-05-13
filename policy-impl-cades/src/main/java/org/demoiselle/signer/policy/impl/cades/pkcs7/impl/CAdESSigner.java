@@ -91,6 +91,7 @@ import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmConstraintSet;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignerAndVerifierRules;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
@@ -349,11 +350,13 @@ public class CAdESSigner implements PKCS7Signer {
 		ASN1EncodableVector signedAttributes = new ASN1EncodableVector();
 
 		// logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
-		if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-				.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr().getObjectIdentifiers() != null) {
-			for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-					.getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-					.getObjectIdentifiers()) {
+		SignerAndVerifierRules signerAndVerifierRules = signaturePolicy.getSignPolicyInfo()
+				.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+		if (signerAndVerifierRules != null
+				&& signerAndVerifierRules.getSignerRules() != null
+				&& signerAndVerifierRules.getSignerRules().getMandatedSignedAttr().getObjectIdentifiers() != null) {
+			for (ObjectIdentifier objectIdentifier : signerAndVerifierRules.getSignerRules()
+					.getMandatedSignedAttr().getObjectIdentifiers()) {
 
 				SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 						.factory(objectIdentifier.getValue());
@@ -428,11 +431,13 @@ public class CAdESSigner implements PKCS7Signer {
 		Iterator<SignerInformation> it = vNewSigners.iterator();
 		SignerInformation oSi = it.next();
 
-		if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-				.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
-			for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-					.getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-					.getObjectIdentifiers()) {
+		SignerAndVerifierRules signerAndVerifierRulesUnsigned = signaturePolicy.getSignPolicyInfo()
+				.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+		if (signerAndVerifierRulesUnsigned != null
+				&& signerAndVerifierRulesUnsigned.getSignerRules() != null
+				&& signerAndVerifierRulesUnsigned.getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
+			for (ObjectIdentifier objectIdentifier : signerAndVerifierRulesUnsigned.getSignerRules()
+					.getMandatedUnsignedAttr().getObjectIdentifiers()) {
 				SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 						.factory(objectIdentifier.getValue());
 
@@ -799,20 +804,19 @@ public class CAdESSigner implements PKCS7Signer {
 		checkCertificateChain();
 		// Consulta e adiciona os atributos não assinados//
 
-		AttributeFactory attributeFactory = AttributeFactory.getInstance();
-		ASN1EncodableVector unsignedAttributes = new ASN1EncodableVector();
-
 		logger.debug(cadesMessagesBundle.getString("info.unsigned.attribute"));
 		Collection<SignerInformation> vNewSigners = cmsSignedData.getSignerInfos().getSigners();
 
 		Iterator<SignerInformation> it = vNewSigners.iterator();
 		SignerInformation oSi = it.next();
 
-		if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-				.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
-			for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-					.getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-					.getObjectIdentifiers()) {
+		SignerAndVerifierRules signerAndVerifierRulesUnsigned2 = signaturePolicy.getSignPolicyInfo()
+				.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+		if (signerAndVerifierRulesUnsigned2 != null
+				&& signerAndVerifierRulesUnsigned2.getSignerRules() != null
+				&& signerAndVerifierRulesUnsigned2.getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
+			for (ObjectIdentifier objectIdentifier : signerAndVerifierRulesUnsigned2.getSignerRules()
+					.getMandatedUnsignedAttr().getObjectIdentifiers()) {
 				SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 						.factory(objectIdentifier.getValue());
 
@@ -948,11 +952,13 @@ public class CAdESSigner implements PKCS7Signer {
 		ASN1EncodableVector signedAttributes = new ASN1EncodableVector();
 
 		// logger.info(cadesMessagesBundle.getString("info.signed.attribute"));
-		if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-				.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr().getObjectIdentifiers() != null) {
-			for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-					.getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-					.getObjectIdentifiers()) {
+		SignerAndVerifierRules signerAndVerifierRulesSigned2 = signaturePolicy.getSignPolicyInfo()
+				.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+		if (signerAndVerifierRulesSigned2 != null
+				&& signerAndVerifierRulesSigned2.getSignerRules() != null
+				&& signerAndVerifierRulesSigned2.getSignerRules().getMandatedSignedAttr().getObjectIdentifiers() != null) {
+			for (ObjectIdentifier objectIdentifier : signerAndVerifierRulesSigned2.getSignerRules()
+					.getMandatedSignedAttr().getObjectIdentifiers()) {
 
 				SignedOrUnsignedAttribute signedOrUnsignedAttribute = attributeFactory
 						.factory(objectIdentifier.getValue());
