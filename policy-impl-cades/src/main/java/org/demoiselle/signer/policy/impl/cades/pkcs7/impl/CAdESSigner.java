@@ -94,6 +94,7 @@ import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignerAndVerifierRules;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SigningCertTrustCondition;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
 import org.demoiselle.signer.policy.engine.asn1.icpb.v2.PolicyValidator;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
@@ -1081,12 +1082,17 @@ public class CAdESSigner implements PKCS7Signer {
 		// Recupera o(s) certificado(s) de confianca para validacao
 		Collection<X509Certificate> trustedCAs = new HashSet<X509Certificate>();
 
-		Collection<CertificateTrustPoint> ctp = signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-				.getCommonRules().getSigningCertTrustCondition().getSignerTrustTrees().getCertificateTrustPoints();
-		for (CertificateTrustPoint certificateTrustPoint : ctp) {
-			logger.debug(cadesMessagesBundle.getString("info.trust.point",
-					certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
-			trustedCAs.add(certificateTrustPoint.getTrustpoint());
+		SigningCertTrustCondition signingCertTrustCondition = signaturePolicy.getSignPolicyInfo()
+				.getSignatureValidationPolicy().getCommonRules().getSigningCertTrustCondition();
+		if (signingCertTrustCondition != null && signingCertTrustCondition.getSignerTrustTrees() != null) {
+			Collection<CertificateTrustPoint> ctp = signingCertTrustCondition.getSignerTrustTrees().getCertificateTrustPoints();
+			for (CertificateTrustPoint certificateTrustPoint : ctp) {
+				logger.debug(cadesMessagesBundle.getString("info.trust.point",
+						certificateTrustPoint.getTrustpoint().getSubjectDN().toString()));
+				trustedCAs.add(certificateTrustPoint.getTrustpoint());
+			}
+		} else {
+			logger.warn("signingCertTrustCondition não definido na política — sem restrições de confiança de certificado. Usando CAManager.");
 		}
 
 		// Efetua a validacao das cadeias do certificado baseado na politica
