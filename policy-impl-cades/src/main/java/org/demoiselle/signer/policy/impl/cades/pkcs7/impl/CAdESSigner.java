@@ -89,6 +89,7 @@ import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgAndLength;
+import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmConstraintSet;
 import org.demoiselle.signer.policy.engine.asn1.etsi.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.CertificateTrustPoint;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
@@ -978,10 +979,29 @@ public class CAdESSigner implements PKCS7Signer {
 		// chave
 		List<AlgAndLength> listOfAlgAndLength = new ArrayList<AlgAndLength>();
 
-		for (AlgAndLength algLength : signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy()
-				.getCommonRules().getAlgorithmConstraintSet().getSignerAlgorithmConstraints().getAlgAndLengths()) {
-			listOfAlgAndLength.add(algLength);
+		AlgorithmConstraintSet algorithmConstraintSet = signaturePolicy.getSignPolicyInfo()
+				.getSignatureValidationPolicy().getCommonRules().getAlgorithmConstraintSet();
+
+		if (algorithmConstraintSet != null && algorithmConstraintSet.getSignerAlgorithmConstraints() != null) {
+			for (AlgAndLength algLength : algorithmConstraintSet.getSignerAlgorithmConstraints().getAlgAndLengths()) {
+				listOfAlgAndLength.add(algLength);
+			}
+		} else {
+			// algorithmConstraintSet é OPTIONAL no padrão ETSI — quando ausente, a política
+			// não impõe restrições. Usamos o algoritmo já configurado ou o DEFAULT.
+			logger.warn("algorithmConstraintSet não definido na política — sem restrições de algoritmo. Usando algoritmo configurado.");
+			String algorithmName = this.pkcs1.getAlgorithm() != null
+					? this.pkcs1.getAlgorithm()
+					: SignerAlgorithmEnum.DEFAULT.getAlgorithm();
+			String algorithmOID = AlgorithmNames.getOIDByAlgorithmName(algorithmName);
+			AlgAndLength fallback = new AlgAndLength();
+			ObjectIdentifier oid = new ObjectIdentifier();
+			oid.setValue(algorithmOID);
+			fallback.setAlgID(oid);
+			fallback.setMinKeyLength(0);
+			return fallback;
 		}
+
 		AlgAndLength algAndLength = null;
 
 		// caso o algoritmo tenha sido informado como parâmetro irá
