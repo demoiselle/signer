@@ -125,32 +125,44 @@ public class SignaturePolicy {
 		builder.append(policyMessagesBundle.getString("text.issuer")).append(this.getSignPolicyInfo().getPolicyIssuerName()).append("\n");
 		builder.append(policyMessagesBundle.getString("text.application")).append(this.getSignPolicyInfo().getFieldOfApplication().getValue()).append("\n");
 		builder.append(policyMessagesBundle.getString("text.valid")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getSigningPeriod()).append("\n");
-		builder.append(policyMessagesBundle.getString("text.external")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getExternalSignedData()).append("\n");
-		builder.append(policyMessagesBundle.getString("text.mandated.ref")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateRef()).append("\n");
-		builder.append(policyMessagesBundle.getString("text.mandated.info")).append(this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedCertificateInfo()).append("\n");
-
-		for (AlgAndLength oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getAlgorithmConstraintSet().getSignerAlgorithmConstraints().getAlgAndLengths()) {
-			builder.append(policyMessagesBundle.getString("text.algo")).append(oi.getAlgID()).append("\n");
-			builder.append(policyMessagesBundle.getString("text.key.min.size")).append(oi.getMinKeyLength()).append("\n");
+		SignerAndVerifierRules signerAndVerifierRules = this.getSignPolicyInfo().getSignatureValidationPolicy()
+				.getCommonRules().getSignerAndVeriferRules();
+		if (signerAndVerifierRules != null && signerAndVerifierRules.getSignerRules() != null) {
+			builder.append(policyMessagesBundle.getString("text.external")).append(signerAndVerifierRules.getSignerRules().getExternalSignedData()).append("\n");
+			builder.append(policyMessagesBundle.getString("text.mandated.ref")).append(signerAndVerifierRules.getSignerRules().getMandatedCertificateRef()).append("\n");
+			builder.append(policyMessagesBundle.getString("text.mandated.info")).append(signerAndVerifierRules.getSignerRules().getMandatedCertificateInfo()).append("\n");
 		}
 
-		builder.append("==============================================================").append("\n");
-		for (ObjectIdentifier oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr().getObjectIdentifiers()) {
-			builder.append(policyMessagesBundle.getString("text.signed.attr.oid")).append(oi.getValue()).append("\n");
-		}
-
-		builder.append("==============================================================").append("\n");
-
-		if (this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
-			for (ObjectIdentifier oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers()) {
-				builder.append(policyMessagesBundle.getString("text.unsigned.attr.oid")).append(oi.getValue()).append("\n");
+		AlgorithmConstraintSet algorithmConstraintSet = this.getSignPolicyInfo().getSignatureValidationPolicy()
+				.getCommonRules().getAlgorithmConstraintSet();
+		if (algorithmConstraintSet != null && algorithmConstraintSet.getSignerAlgorithmConstraints() != null) {
+			for (AlgAndLength oi : algorithmConstraintSet.getSignerAlgorithmConstraints().getAlgAndLengths()) {
+				builder.append(policyMessagesBundle.getString("text.algo")).append(oi.getAlgID()).append("\n");
+				builder.append(policyMessagesBundle.getString("text.key.min.size")).append(oi.getMinKeyLength()).append("\n");
 			}
 		}
 
-		if (this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getVerifierRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
+		if (signerAndVerifierRules != null && signerAndVerifierRules.getSignerRules() != null) {
 			builder.append("==============================================================").append("\n");
-			for (ObjectIdentifier oi : this.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getVerifierRules().getMandatedUnsignedAttr().getObjectIdentifiers()) {
-				builder.append(policyMessagesBundle.getString("text.unsigned.attr.oid")).append(oi.getValue()).append("\n");
+			if (signerAndVerifierRules.getSignerRules().getMandatedSignedAttr().getObjectIdentifiers() != null) {
+				for (ObjectIdentifier oi : signerAndVerifierRules.getSignerRules().getMandatedSignedAttr().getObjectIdentifiers()) {
+					builder.append(policyMessagesBundle.getString("text.signed.attr.oid")).append(oi.getValue()).append("\n");
+				}
+			}
+
+			builder.append("==============================================================").append("\n");
+			if (signerAndVerifierRules.getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
+				for (ObjectIdentifier oi : signerAndVerifierRules.getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers()) {
+					builder.append(policyMessagesBundle.getString("text.unsigned.attr.oid")).append(oi.getValue()).append("\n");
+				}
+			}
+
+			if (signerAndVerifierRules.getVerifierRules() != null
+					&& signerAndVerifierRules.getVerifierRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
+				builder.append("==============================================================").append("\n");
+				for (ObjectIdentifier oi : signerAndVerifierRules.getVerifierRules().getMandatedUnsignedAttr().getObjectIdentifiers()) {
+					builder.append(policyMessagesBundle.getString("text.unsigned.attr.oid")).append(oi.getValue()).append("\n");
+				}
 			}
 		}
 

@@ -94,6 +94,7 @@ import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignerAndVerifierRules;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -332,11 +333,12 @@ public class CAdESChecker implements PKCS7Checker {
 					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
 					logger.debug(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
 				} else {
-					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-						.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-						.getObjectIdentifiers() != null) {
-						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+					SignerAndVerifierRules signerAndVerifierRules = signaturePolicy.getSignPolicyInfo()
+						.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+					if (signerAndVerifierRules != null
+						&& signerAndVerifierRules.getSignerRules() != null
+						&& signerAndVerifierRules.getSignerRules().getMandatedSignedAttr().getObjectIdentifiers() != null) {
+						for (ObjectIdentifier objectIdentifier : signerAndVerifierRules.getSignerRules()
 							.getMandatedSignedAttr().getObjectIdentifiers()) {
 							String oi = objectIdentifier.getValue();
 							Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
@@ -361,11 +363,12 @@ validateMandatedAttributeContent(oi, signedAtt, varCert, signatureInfo);
 				}
 				if (signaturePolicy != null) {
 					// Validando atributos NÃO assinados de acordo com a politica
-					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-						.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-						.getObjectIdentifiers() != null) {
-						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+					SignerAndVerifierRules signerAndVerifierRulesUnsigned = signaturePolicy.getSignPolicyInfo()
+						.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+					if (signerAndVerifierRulesUnsigned != null
+						&& signerAndVerifierRulesUnsigned.getSignerRules() != null
+						&& signerAndVerifierRulesUnsigned.getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
+						for (ObjectIdentifier objectIdentifier : signerAndVerifierRulesUnsigned.getSignerRules()
 							.getMandatedUnsignedAttr().getObjectIdentifiers()) {
 							String oi = objectIdentifier.getValue();
 							Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
