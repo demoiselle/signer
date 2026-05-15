@@ -67,6 +67,7 @@ public class Downloads {
 
 	// Prevents re-entrant calls when online CA providers also use Downloads
 	private static final ThreadLocal<Boolean> loadingCAsForSSL = new ThreadLocal<>();
+	private static volatile SSLContext icpBrasilSSLContext = null;
 
 	/**
 	 * Builds an {@link SSLContext} trusted by the ICP-Brasil CA chain loaded
@@ -74,6 +75,9 @@ public class Downloads {
 	 * Returns {@code null} if no CAs are available or if called re-entrantly.
 	 */
 	private static SSLContext buildIcpBrasilSSLContext() {
+		if (icpBrasilSSLContext != null) {
+			return icpBrasilSSLContext;
+		}
 		if (Boolean.TRUE.equals(loadingCAsForSSL.get())) {
 			return null;
 		}
@@ -102,7 +106,8 @@ public class Downloads {
 			SSLContext sslContext = SSLContext.getInstance("TLS");
 			sslContext.init(null, tmf.getTrustManagers(), null);
 			logger.debug("ICP-Brasil SSL context built with {} CAs", count);
-			return sslContext;
+			icpBrasilSSLContext = sslContext;
+			return icpBrasilSSLContext;
 		} catch (Exception e) {
 			logger.warn("Could not build ICP-Brasil SSL context: {}", e.getMessage());
 			return null;
