@@ -165,6 +165,16 @@ public class ConfigurationRepo {
 	 * System environment key set timeout for CRL url connection
 	 */
 	public static final String ENV_CRL_CONNECTION_TIMEOUT = "SIGNER_CRL_CONNECTION_TIMEOUT";
+
+	/**
+	 * System key to set timeout for CA chain file download
+	 */
+	public static final String CA_CHAIN_CONNECTION_TIMEOUT = "signer.ca.chain.connection.timeout";
+
+	/**
+	 * System environment key to set timeout for CA chain file download
+	 */
+	public static final String ENV_CA_CHAIN_CONNECTION_TIMEOUT = "SIGNER_CA_CHAIN_CONNECTION_TIMEOUT";
 	
 	
 	
@@ -189,6 +199,8 @@ public class ConfigurationRepo {
 	private boolean validateLCR = true;
 	// Default is 10 seconds
 	private int crlTimeOut = 10000;
+	// Default is 30 seconds (CA chain files can be several hundred KB)
+	private int caChainTimeOut = 30000;
 
 	/**
 	 * Check for system variables. If there is, assign in class variables otherwise use default values.
@@ -297,6 +309,22 @@ public class ConfigurationRepo {
 		} catch (Exception e) {
 			LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout", getCrlTimeOut()));
 
+		}
+
+		try {
+			String varCaChainTimeOut = System.getenv(ENV_CA_CHAIN_CONNECTION_TIMEOUT);
+			if (varCaChainTimeOut == null || varCaChainTimeOut.isEmpty()) {
+				varCaChainTimeOut = (String) System.getProperties().get(CA_CHAIN_CONNECTION_TIMEOUT);
+				if (varCaChainTimeOut == null || varCaChainTimeOut.isEmpty()) {
+					setCaChainTimeOut(30000);
+				} else {
+					setCaChainTimeOut(Integer.valueOf(varCaChainTimeOut));
+				}
+			} else {
+				setCaChainTimeOut(Integer.valueOf(varCaChainTimeOut));
+			}
+		} catch (Exception e) {
+			LOGGER.debug("CA chain timeout using default: {}", getCaChainTimeOut());
 		}
 
 	}
@@ -465,5 +493,14 @@ public class ConfigurationRepo {
 	public void setCrlTimeOut(int crlTimeOut) {
 		this.crlTimeOut = crlTimeOut;
 		LOGGER.debug(coreMessagesBundle.getString("info.crl.timeout", getCrlTimeOut()));
+	}
+
+	public int getCaChainTimeOut() {
+		return caChainTimeOut;
+	}
+
+	public void setCaChainTimeOut(int caChainTimeOut) {
+		this.caChainTimeOut = caChainTimeOut;
+		LOGGER.debug("CA chain connection timeout: {}", getCaChainTimeOut());
 	}
 }

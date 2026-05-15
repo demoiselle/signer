@@ -64,15 +64,29 @@ public class Downloads {
 	 * @return the {@link InputStream} corresponding to the other param.
 	 */
 	public static InputStream getInputStreamFromURL(final String stringURL) throws RuntimeException {
+		ConfigurationRepo conf = ConfigurationRepo.getInstance();
+		return getInputStreamFromURL(stringURL, conf.getCrlTimeOut(), conf.getCrlTimeOut());
+	}
+
+	/**
+	 * Get the input stream from provided address with explicit timeouts.
+	 *
+	 * @param stringURL      sequence from with an {@link InputStream} will be returned.
+	 * @param connectTimeout connection timeout in milliseconds.
+	 * @param readTimeout    read timeout in milliseconds.
+	 *
+	 * @return the {@link InputStream} corresponding to the other param.
+	 */
+	public static InputStream getInputStreamFromURL(final String stringURL, int connectTimeout, int readTimeout) throws RuntimeException {
 		try {
 			InputStream is = null;
 			URL url = new URL(stringURL);
 			URLConnection connection;
 			ConfigurationRepo conf = ConfigurationRepo.getInstance();
 			connection = url.openConnection(conf.getProxy());
-			connection.setConnectTimeout(conf.getCrlTimeOut());
-			connection.setReadTimeout(conf.getCrlTimeOut());
-			
+			connection.setConnectTimeout(connectTimeout);
+			connection.setReadTimeout(readTimeout);
+
 			try {
 				is = connection.getInputStream();
 			} catch (IOException e) {
@@ -80,12 +94,12 @@ public class Downloads {
 				logger.info(newUrl);
 				url = new URL(newUrl);
 				connection = url.openConnection(conf.getProxy());
-				connection.setConnectTimeout(conf.getCrlTimeOut());
-				connection.setReadTimeout(conf.getCrlTimeOut());
+				connection.setConnectTimeout(connectTimeout);
+				connection.setReadTimeout(readTimeout);
 				is = connection.getInputStream();
-			}			
-			
-			return is; 
+			}
+
+			return is;
 		} catch (MalformedURLException error) {
 			throw new RuntimeException(coreMessagesBundle.getString("error.malformedURL", error.getMessage()), error);
 		} catch (UnknownServiceException error) {
