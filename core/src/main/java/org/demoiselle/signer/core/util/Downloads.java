@@ -43,7 +43,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.UnknownServiceException;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
+import java.util.Collection;
 
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +64,52 @@ public class Downloads {
 
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 	private static Logger logger = LoggerFactory.getLogger(Downloads.class);
+
+	// Prevents re-entrant calls when online CA providers also use Downloads
+	private static final ThreadLocal<Boolean> loadingCAsForSSL = new ThreadLocal<>();
+
+	/**
+	 * Builds an {@link SSLContext} trusted by the ICP-Brasil CA chain loaded
+	 * from all available {@link ProviderCA} implementations.
+	 * Returns {@code null} if no CAs are available or if called re-entrantly.
+	 */
+	private static SSLContext buildIcpBrasilSSLContext() {
+		if (Boolean.TRUE.equals(loadingCAsForSSL.get())) {
+			return null;
+		}
+		loadingCAsForSSL.set(Boolean.TRUE);
+		try {
+			KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+			trustStore.load(null, null);
+			int count = 0;
+			for (ProviderCA provider : ProviderCAFactory.getInstance().factory()) {
+				try {
+					Collection<X509Certificate> certs = provider.getCAs();
+					if (certs != null) {
+						for (X509Certificate cert : certs) {
+							trustStore.setCertificateEntry("icp-brasil-ca-" + count++, cert);
+						}
+					}
+				} catch (Exception e) {
+					logger.debug("Could not load CAs from provider: {}", e.getMessage());
+				}
+			}
+			if (count == 0) {
+				return null;
+			}
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+			tmf.init(trustStore);
+			SSLContext sslContext = SSLContext.getInstance("TLS");
+			sslContext.init(null, tmf.getTrustManagers(), null);
+			logger.debug("ICP-Brasil SSL context built with {} CAs", count);
+			return sslContext;
+		} catch (Exception e) {
+			logger.warn("Could not build ICP-Brasil SSL context: {}", e.getMessage());
+			return null;
+		} finally {
+			loadingCAsForSSL.remove();
+		}
+	}
 
 	/**
 	 * Get the input stream from provided address.
@@ -96,6 +151,12 @@ public class Downloads {
 				connection = url.openConnection(conf.getProxy());
 				connection.setConnectTimeout(connectTimeout);
 				connection.setReadTimeout(readTimeout);
+				if (connection instanceof HttpsURLConnection) {
+					SSLContext sslCtx = buildIcpBrasilSSLContext();
+					if (sslCtx != null) {
+						((HttpsURLConnection) connection).setSSLSocketFactory(sslCtx.getSocketFactory());
+					}
+				}
 				is = connection.getInputStream();
 			}
 
