@@ -326,7 +326,7 @@
 			scm:git:git@github.com:demoiselle/${project.alias}.git</developerConnection>
 		<url>https://github.com/demoiselle/${project.alias}</url>
 
-		<tag>4.5.1</tag>
+		<tag>4.6.0-SNAPSHOT</tag>
 	</scm>
 
 
