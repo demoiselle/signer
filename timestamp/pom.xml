@@ -9,7 +9,11 @@
 		<groupId>org.demoiselle.signer</groupId>
 		<artifactId>parent</artifactId>
 		<relativePath>../parent</relativePath>
+<<<<<<< HEAD
 		<version>4.5.1-SNAPSHOT</version>
+=======
+		<version>4.5.1</version>
+>>>>>>> 4.5.1
 	</parent>
 
 	<name>Demoiselle Signer Timestamp</name>
