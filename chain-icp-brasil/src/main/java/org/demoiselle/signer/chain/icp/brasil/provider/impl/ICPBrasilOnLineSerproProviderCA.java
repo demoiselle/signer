@@ -62,6 +62,7 @@ import java.util.zip.ZipInputStream;
 import javax.xml.bind.DatatypeConverter;
 import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.repository.ConfigurationRepo;
 import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -122,7 +123,8 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			if (Files.exists(pathZip)) {
 
 				// Baixa o hash do endereço online
-				InputStream inputStreamHash = Downloads.getInputStreamFromURL(getURLHash());
+				int caChainTimeOut = ConfigurationRepo.getInstance().getCaChainTimeOut();
+				InputStream inputStreamHash = Downloads.getInputStreamFromURL(getURLHash(), caChainTimeOut, caChainTimeOut);
 
 				// Convert o input stream em string
 				Scanner scannerOnlineHash = new Scanner(inputStreamHash);
@@ -151,8 +153,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			// salva localmente
 			if (!useCache) {
 				// Baixa um novo arquivo
-				LOGGER.debug(chainMessagesBundle.getString("info.file.downloading", getURLZIP()));
-				InputStream inputStreamZip = Downloads.getInputStreamFromURL(getURLZIP());
+			LOGGER.debug(chainMessagesBundle.getString("info.file.downloading", getURLZIP()));
+				int caChainTimeOut = ConfigurationRepo.getInstance().getCaChainTimeOut();
+				InputStream inputStreamZip = Downloads.getInputStreamFromURL(getURLZIP(), caChainTimeOut, caChainTimeOut);
 
 				// FIXME fails if directory does not exist
 				Files.copy(inputStreamZip, pathZip, StandardCopyOption.REPLACE_EXISTING);

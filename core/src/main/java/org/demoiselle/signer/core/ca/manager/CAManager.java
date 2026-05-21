@@ -299,6 +299,14 @@ public class CAManager {
 		}
 
 		if (!ok) {
+			LOGGER.error("Fornecedor (Issuer) do certificado: {}", certificate.getIssuerX500Principal());
+			LOGGER.error("Cadeia parcial construída ({} elemento(s)):", result.size());
+			int chainIdx = 0;
+			for (X509Certificate chainCert : result) {
+				if (chainCert != null) {
+					LOGGER.error("  [{}] Subject: {} | Issuer: {}", chainIdx++, chainCert.getSubjectX500Principal(), chainCert.getIssuerX500Principal());
+				}
+			}
 			LOGGER.error(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
 			throw new CAManagerException(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
 		}
