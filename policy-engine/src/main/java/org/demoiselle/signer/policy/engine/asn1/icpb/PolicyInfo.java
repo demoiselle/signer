@@ -39,7 +39,7 @@ package org.demoiselle.signer.policy.engine.asn1.icpb;
 
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.bouncycastle.asn1.x500.DirectoryString;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SigningPeriod;
@@ -132,7 +132,7 @@ public class PolicyInfo extends ASN1Object {
 
         int indice = 3;
         ASN1Primitive revocationObject = derSequence.getObjectAt(indice).toASN1Primitive();
-        if (!(secondObject instanceof DERTaggedObject)) {
+        if (!(secondObject instanceof ASN1TaggedObject)) {
             indice = 4;
         }
         if (indice == 3) {

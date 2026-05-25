@@ -47,9 +47,9 @@ import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.DERPrintableString;
 import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.DERSet;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.bouncycastle.asn1.DERUTF8String;
-import org.bouncycastle.asn1.DLSequence;
+
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
@@ -78,25 +78,25 @@ public class PolicyIssuerName extends ASN1Object {
 
 	@Override
 	public void parse(ASN1Primitive primitive) {
-		if (primitive instanceof DLSequence) {
-			DLSequence sequence = (DLSequence) primitive;
+		if (primitive instanceof ASN1Sequence) {
+			ASN1Sequence sequence = (ASN1Sequence) primitive;
 			ASN1Encodable asn1Encodable = sequence.getObjectAt(0);
-			if (asn1Encodable instanceof DERTaggedObject) {
-				DERTaggedObject derTaggedObject = (DERTaggedObject) asn1Encodable;
+			if (asn1Encodable instanceof ASN1TaggedObject) {
+				ASN1TaggedObject derTaggedObject = (ASN1TaggedObject) asn1Encodable;
 				ASN1Primitive object = derTaggedObject.getBaseObject().toASN1Primitive();
 				if (object instanceof DEROctetString) {
 					OctetString octetString = new OctetString();
 					octetString.parse(object);
 					this.issuerName = octetString.getValueUTF8();
-				} else if (object instanceof DERSequence) {
-					DERSequence sequence2 = (DERSequence) object;
+				} else if (object instanceof ASN1Sequence) {
+					ASN1Sequence sequence2 = (ASN1Sequence) object;
 					for (int i = 0; i < sequence2.size(); i++) {
 						ASN1Encodable obj = sequence2.getObjectAt(i);
 						if (obj instanceof DERSet) {
 							DERSet set = (DERSet) obj;
 							ASN1Encodable object2 = set.getObjectAt(0);
-							if (object2 instanceof DERSequence) {
-								DERSequence sequence3 = (DERSequence) object2;
+							if (object2 instanceof ASN1Sequence) {
+								ASN1Sequence sequence3 = (ASN1Sequence) object2;
 								ObjectIdentifier objectIdendifier = new ObjectIdentifier();
 								objectIdendifier.parse(sequence3.getObjectAt(0).toASN1Primitive());
 								String name = null;

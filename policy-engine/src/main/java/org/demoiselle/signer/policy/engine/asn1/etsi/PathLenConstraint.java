@@ -41,8 +41,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import org.bouncycastle.asn1.ASN1Primitive;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.ASN1Sequence;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
@@ -78,8 +78,8 @@ public class PathLenConstraint extends ASN1Object {
 	// FIXME there are many parser methods with this strategy should we refactor it?
 	@Override
 	public void parse(ASN1Primitive derObject) {
-		DERTaggedObject derTaggedObject = (DERTaggedObject) derObject;
-		DERSequence derSequence = (DERSequence) derTaggedObject.getBaseObject().toASN1Primitive();
+		ASN1TaggedObject derTaggedObject = (ASN1TaggedObject) derObject;
+		ASN1Sequence derSequence = (ASN1Sequence) derTaggedObject.getBaseObject().toASN1Primitive();
 		int total = derSequence.size();
 		for (int i = 0; i < total; i++) {
 			ObjectIdentifier objectIdentifier = new ObjectIdentifier();

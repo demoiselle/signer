@@ -42,7 +42,7 @@ import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERTaggedObject;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 
 /**
@@ -87,7 +87,7 @@ import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
  * @see ASN1Sequence
  * @see ASN1Primitive
  * @see DERSequence
- * @see DERTaggedObject
+ * @see ASN1TaggedObject
  */
 public class SignerRules extends ASN1Object {
 
@@ -163,8 +163,8 @@ public class SignerRules extends ASN1Object {
 		if (total > 0) {
 			for (int i = 0; i < total; i++) {
 				ASN1Primitive object = derSequence.getObjectAt(i).toASN1Primitive();
-				if (object instanceof DERTaggedObject) {
-					DERTaggedObject derTaggedObject = (DERTaggedObject) object;
+				if (object instanceof ASN1TaggedObject) {
+					ASN1TaggedObject derTaggedObject = (ASN1TaggedObject) object;
 					TAG tag = TAG.getTag(derTaggedObject.getTagNo());
 					switch (tag) {
 						case mandatedCertificateRef:
@@ -186,7 +186,7 @@ public class SignerRules extends ASN1Object {
 
 		int i = 0;
 		ASN1Encodable object = derSequence.getObjectAt(i);
-		if (!(object instanceof DERSequence)) {
+		if (!(object instanceof ASN1Sequence)) {
 			if (object instanceof ASN1Boolean) {
 				this.externalSignedData = ((ASN1Boolean) object).isTrue();
 			}
