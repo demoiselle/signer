@@ -80,9 +80,9 @@ public class CertificateExtra {
 				return;
 			}
 			for (List<?> list : certificate.getSubjectAlternativeNames()) {
-				if (list.size() != 2) {
-					logger.error(coreMessagesBundle.getString("error.extra.size.incorret"));
-					throw new Exception(coreMessagesBundle.getString("error.extra.size.incorret"));
+				if (list.size() < 2) {
+					logger.info(coreMessagesBundle.getString("error.extra.size.incorret"));
+					continue;
 				}
 
 				Object e1, e2;
