@@ -37,6 +37,7 @@
 
 package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -437,7 +438,9 @@ public class XMLSigner implements Signer {
 		byte[] canonicalized = null;
 
 		try {
-			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0), baos);
+			canonicalized = baos.toByteArray();
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
@@ -456,7 +459,9 @@ public class XMLSigner implements Signer {
 		}
 		byte[] dh;
 		try {
-			dh = c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(numSignatures));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(numSignatures), baos);
+			dh = baos.toByteArray();
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(

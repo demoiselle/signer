@@ -37,6 +37,7 @@
 
 package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -554,7 +555,9 @@ public class XMLChecker implements Checker {
 		Canonicalizer c14n;
 		try {
 			c14n = Canonicalizer.getInstance(canonicalString);
-			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0), baos);
+			canonicalized = baos.toByteArray();
 		} catch (InvalidCanonicalizerException | CanonicalizationException e1) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.data.invalid", digestMethod));
 			logger.error(xadesMessagesBundle.getString("error.xml.hash.data.invalid", digestMethod));
@@ -642,7 +645,9 @@ public class XMLChecker implements Checker {
 			Init.init();
 			Canonicalizer c14n = Canonicalizer.getInstance(canonicalizationMethodTag.getAttribute("Algorithm"));
 
-			byte[] dh = c14n.canonicalizeSubtree(signatureInfoTag);
+			ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(signatureInfoTag, baos1);
+			byte[] dh = baos1.toByteArray();
 
 			String aos = AlgorithmsValues.getAlgorithmsOnSignature(signatureMethod.getAttribute("Algorithm"));
 			Signature verify = Signature.getInstance(aos);
@@ -756,7 +761,9 @@ public class XMLChecker implements Checker {
 
 			Canonicalizer c14n = Canonicalizer.getInstance(canonicalizationMethod);
 
-			byte[] dh = c14n.canonicalizeSubtree(signature.getElementsByTagName("ds:SignedInfo").item(0));
+			ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(signature.getElementsByTagName("ds:SignedInfo").item(0), baos2);
+			byte[] dh = baos2.toByteArray();
 			byte[] sigValue = Base64.decode(signatureValueTag.getTextContent());
 
 			if (!AlgorithmsValues.isCanonicalMethods(canonicalizationMethod)) {

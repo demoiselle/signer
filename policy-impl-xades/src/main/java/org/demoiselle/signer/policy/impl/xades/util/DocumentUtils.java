@@ -39,6 +39,7 @@ package org.demoiselle.signer.policy.impl.xades.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -279,7 +280,9 @@ public class DocumentUtils {
 			throw new XMLSignerException(xadesMessagesBundle.getString("error.no.algorithm", e.getMessage()));
 		}
 		try {
-			return messageDigest.digest(c14n.canonicalizeSubtree(xml));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(xml, baos);
+			return messageDigest.digest(baos.toByteArray());
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
