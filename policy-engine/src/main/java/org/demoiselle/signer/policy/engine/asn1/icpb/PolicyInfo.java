@@ -132,7 +132,7 @@ public class PolicyInfo extends ASN1Object {
 
         int indice = 3;
         ASN1Primitive revocationObject = derSequence.getObjectAt(indice).toASN1Primitive();
-        if (!(secondObject instanceof ASN1TaggedObject)) {
+        if (!(revocationObject instanceof ASN1TaggedObject)) {
             indice = 4;
         }
         if (indice == 3) {

@@ -44,6 +44,8 @@ import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.ASN1TaggedObject;
 
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class for provide methods to get {@link DERSequence}
@@ -59,6 +61,7 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 public abstract class ASN1Object {
 
 	private static final MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final Logger logger = LoggerFactory.getLogger(ASN1Object.class);
 
 	/**
 	 * @param derObject Object to convert from.
@@ -101,6 +104,6 @@ public abstract class ASN1Object {
 	 * @param derObject ASN1 Primitive to parse
 	 */
 	public void parse(ASN1Primitive derObject) {
-		System.out.println(this.getClass() + policyMessagesBundle.getString("info.not.implemented"));
+		logger.info(this.getClass() + policyMessagesBundle.getString("info.not.implemented"));
 	}
 }

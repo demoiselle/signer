@@ -52,6 +52,8 @@ import org.bouncycastle.asn1.DERUTF8String;
 
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The policyIssuerName field identifies the policy issuer in one or more of the general name forms.
@@ -74,7 +76,8 @@ public class PolicyIssuerName extends ASN1Object {
 
 	private Map<ObjectIdentifier, String> issuerNames;
 	private String issuerName;
-	private static MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final Logger logger = LoggerFactory.getLogger(PolicyIssuerName.class);
 
 	@Override
 	public void parse(ASN1Primitive primitive) {
@@ -106,7 +109,7 @@ public class PolicyIssuerName extends ASN1Object {
 								} else if (object3 instanceof DERUTF8String) {
 									name = ((DERUTF8String) object3).getString();
 								} else {
-									System.out.println(policyMessagesBundle.getString("error.not.recognized.object", object3.getClass(), object3.toString()));
+									logger.warn(policyMessagesBundle.getString("error.not.recognized.object", object3.getClass(), object3.toString()));
 								}
 								if (this.issuerNames == null) {
 									this.issuerNames = new HashMap<ObjectIdentifier, String>();
