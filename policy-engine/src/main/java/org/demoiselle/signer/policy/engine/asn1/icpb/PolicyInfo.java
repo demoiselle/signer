@@ -125,19 +125,28 @@ public class PolicyInfo extends ASN1Object {
         ASN1Primitive firstObject = derSequence.getObjectAt(0).toASN1Primitive();
         this.policyName = new DirectoryString(firstObject.toString());
         ASN1Primitive secondObject = derSequence.getObjectAt(1).toASN1Primitive();
-        String fieldOfApplication = secondObject.toString();
-        this.fieldOfApplication = new DirectoryString(fieldOfApplication);
+        String _fieldOfApplication = secondObject.toString();
+        this.fieldOfApplication = new DirectoryString(_fieldOfApplication);
         this.signingPeriod = new SigningPeriod();
         this.signingPeriod.parse(derSequence.getObjectAt(2).toASN1Primitive());
 
         int indice = 3;
-        ASN1Primitive revocationObject = derSequence.getObjectAt(indice).toASN1Primitive();
-        if (!(revocationObject instanceof ASN1TaggedObject)) {
-            indice = 4;
+        if (derSequence.size() > indice) {
+            ASN1Primitive revocationObject = derSequence.getObjectAt(indice).toASN1Primitive();
+            if (revocationObject instanceof ASN1TaggedObject) {
+                ASN1Primitive innerObject = ((ASN1TaggedObject) revocationObject).getBaseObject().toASN1Primitive();
+                this.revocationDate = new Time();
+                this.revocationDate.parse(innerObject);
+                indice = 4;
+            }
         }
-        if (indice == 3) {
-            this.revocationDate = new Time();
-            this.revocationDate.parse(revocationObject);
+        if (derSequence.size() > indice) {
+            this.policiesURI = new PoliciesURI();
+            this.policiesURI.parse(derSequence.getObjectAt(indice).toASN1Primitive());
+        }
+        if (derSequence.size() > indice + 1) {
+            this.policiesDigest = new PoliciesDigest();
+            this.policiesDigest.parse(derSequence.getObjectAt(indice + 1).toASN1Primitive());
         }
     }
 }
