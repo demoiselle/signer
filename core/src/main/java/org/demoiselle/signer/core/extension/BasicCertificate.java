@@ -87,6 +87,8 @@ public class BasicCertificate {
 	public static final String OID_S2_CERTIFICATE = "2.16.76.1.2.102";
 	public static final String OID_S3_CERTIFICATE = "2.16.76.1.2.103";
 	public static final String OID_S4_CERTIFICATE = "2.16.76.1.2.104";
+	public static final String OID_SE_S_CERTIFICATE = "2.16.76.1.2.201";
+	public static final String OID_SE_H_CERTIFICATE = "2.16.76.1.2.202";
 
 	private static final MessagesBundle coreMessagesBundle = new MessagesBundle();
 
@@ -232,14 +234,7 @@ public class BasicCertificate {
 
 	public String getNome() {
 		try {
-			String nome = this.getCertificateSubjectDN().getProperty("CN");
-			int pos;
-
-			pos = nome.indexOf(':');
-			if (pos > 0) {
-				return nome.substring(0, pos);
-			}
-			return nome;
+			return this.getCertificateSubjectDN().getProperty("CN");
 		} catch (IOException e) {
 			logger.error(e.getMessage());
 		}
@@ -248,21 +243,12 @@ public class BasicCertificate {
 
 	/**
 	 * Returns the name that was defined on CN for CertificateSubjectDN.<br>
-	 * Its similar to CertificateSubjectDN.getProperty("CN"), but ignoring<br>
-	 * the information after ":".<br>
 	 *
 	 * @return String name
 	 */
 	public String getName() {
 		try {
-			String name = this.getCertificateSubjectDN().getProperty("CN");
-			int pos;
-
-			pos = name.indexOf(':');
-			if (pos > 0) {
-				return name.substring(0, pos);
-			}
-			return name;
+			return this.getCertificateSubjectDN().getProperty("CN");
 		} catch (Exception e) {
 			logger.info(e.getMessage());
 			return null;
@@ -481,6 +467,12 @@ public class BasicCertificate {
 					}
 					if (id.startsWith(OID_S4_CERTIFICATE)) {
 						return "S4";
+					}
+					if (id.startsWith(OID_SE_S_CERTIFICATE)) {
+						return "SE-S";
+					}
+					if (id.startsWith(OID_SE_H_CERTIFICATE)) {
+						return "SE-H";
 					}
 				}
 			}

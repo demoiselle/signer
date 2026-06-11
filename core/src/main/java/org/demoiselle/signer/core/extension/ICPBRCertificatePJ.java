@@ -54,86 +54,80 @@ public class ICPBRCertificatePJ {
 	private OID_2_16_76_1_3_3 oID_2_16_76_1_3_3;
 	private OID_2_16_76_1_3_4 oID_2_16_76_1_3_4;
 	private OID_2_16_76_1_3_7 oID_2_16_76_1_3_7;
+	private String serialNumber;
 
-	/**
-	 * @param oid1 -&gt; 2.16.76.1.3.2 and content = Name of the person responsible for the certificate
-	 * @param oid2 -&gt; 2.16.76.1.3.3 and content = the Brazilian IRS's Bussiness Company Registry Number
-	 *             called CNPJ (Cadastro Nacional de Pessoa Juridica)
-	 * @param oid3 -&gt; 2.16.76.1.3.4 and content = In the first 8 (eight) positions,
-	 *             Date of birth of the person responsible for the certificate, in ddMMyyyy format,
-	 *             In the eleven (11) subsequent positions, the Brazilian IRS Individuals Registry number
-	 *             called CPF (Cadastro de Pessoa Fisica) of the responsible for the certificate;
-	 *             In the next eleven (11)positions, Brazilian Social Identification number -
-	 *             initials are: NIS (PIS, PASEP or CI) of the responsible;
-	 *             In the 15 (fifteen) subsequent positions, the Brazilian ID number (called RG)
-	 *             of the responsible for the certificate; In the 6 (six) subsequent positions,
-	 *             the initials of the issuing agency of the ID (RG) and
-	 *             the Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
-	 * @param oid4 -&gt; 2.16.76.1.3.7 and content = In the 12 (twelve) positions the number of Specific Registry (called CEI), on
-	 *             Brazilian National Institute of Social Security,  of the bussines company holding the certificate
-	 */
-	public ICPBRCertificatePJ(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_7 oid4) {
+	public ICPBRCertificatePJ(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_7 oid4, String serialNumber) {
 		this.oID_2_16_76_1_3_2 = oid1;
 		this.oID_2_16_76_1_3_3 = oid2;
 		this.oID_2_16_76_1_3_4 = oid3;
 		this.oID_2_16_76_1_3_7 = oid4;
+		this.serialNumber = serialNumber;
+	}
+
+	public ICPBRCertificatePJ(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_7 oid4) {
+		this(oid1, oid2, oid3, oid4, null);
 	}
 
 	/**
 	 * @return Name of the person responsible for the certificate
 	 */
 	public String getResponsibleName() {
-		return oID_2_16_76_1_3_2.getName();
+		return oID_2_16_76_1_3_2 != null ? oID_2_16_76_1_3_2.getName() : null;
 	}
 
 	/**
 	 * @return CPF (a Brazilian document ) of the person responsible for the certificate
 	 */
 	public String getResponsibleCPF() {
-		return oID_2_16_76_1_3_4.getCPF();
+		return oID_2_16_76_1_3_4 != null ? oID_2_16_76_1_3_4.getCPF() : null;
 	}
 
 	/**
 	 * @return Corporate name in the the Brazilian IRS's Bussiness Company Registry Number called CNPJ
 	 */
 	public String getCNPJ() {
-		return oID_2_16_76_1_3_3.getCNPJ();
+		if (serialNumber != null && !serialNumber.isEmpty()) {
+			return serialNumber;
+		}
+		if (oID_2_16_76_1_3_3 != null) {
+			return oID_2_16_76_1_3_3.getCNPJ();
+		}
+		return null;
 	}
 
 	/**
 	 * @return Date of birth of the person responsible for the certificate in ddMMyyyy format
 	 */
 	public String getBirthDate() {
-		return oID_2_16_76_1_3_4.getBirthDate();
-
+		return oID_2_16_76_1_3_4 != null ? oID_2_16_76_1_3_4.getBirthDate() : null;
 	}
 
 	/**
 	 * @return Brazilian Social Identification number of the responsible - initials are: NIS
 	 */
 	public String getNis() {
-		return oID_2_16_76_1_3_4.getNIS();
+		return oID_2_16_76_1_3_4 != null ? oID_2_16_76_1_3_4.getNIS() : null;
 	}
 
 	/**
 	 * @return the Brazilian ID number (called RG) of the responsible for the certificate
 	 */
 	public String getRg() {
-		return oID_2_16_76_1_3_4.getRg();
+		return oID_2_16_76_1_3_4 != null ? oID_2_16_76_1_3_4.getRg() : null;
 	}
 
 	/**
 	 * @return initials of the issuing agency of the Brazilian ID (RG)
 	 */
 	public String getIssuingAgencyRg() {
-		return oID_2_16_76_1_3_4.getIssuingAgencyRg();
+		return oID_2_16_76_1_3_4 != null ? oID_2_16_76_1_3_4.getIssuingAgencyRg() : null;
 	}
 
 	/**
 	 * @return Initials for a Brasilian state(called UF) of the issuing agency of the ID (RG)
 	 */
 	public String getUfIssuingAgencyRg() {
-		return oID_2_16_76_1_3_4.getUfIssuingAgencyRg();
+		return oID_2_16_76_1_3_4 != null ? oID_2_16_76_1_3_4.getUfIssuingAgencyRg() : null;
 	}
 
 	/**
@@ -141,7 +135,7 @@ public class ICPBRCertificatePJ {
 	 * of the bussines company holding the certificate
 	 */
 	public String getCEI() {
-		return oID_2_16_76_1_3_7.getCEI();
+		return oID_2_16_76_1_3_7 != null ? oID_2_16_76_1_3_7.getCEI() : null;
 	}
 
 }

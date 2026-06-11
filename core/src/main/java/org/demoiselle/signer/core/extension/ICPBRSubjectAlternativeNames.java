@@ -64,11 +64,29 @@ public class ICPBRSubjectAlternativeNames {
 		String SN = getSNfromCertificate(certificate);
 		CertificateExtra ce = new CertificateExtra(certificate);
 
-		if (ce.isCertificatePF()) {
-			icpBrCertPF = new ICPBRCertificatePF(ce.getOID_2_16_76_1_3_1(), ce.getOID_2_16_76_1_3_5(), ce.getOID_2_16_76_1_3_6());
-		} else if (ce.isCertificatePJ()) {
-			icpBrCertPJ = new ICPBRCertificatePJ(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_7());
-		} else if (ce.isCertificateEquipment()) {
+		boolean isEq = ce.isCertificateEquipment();
+		boolean isPF = false;
+		boolean isPJ = false;
+
+		if (!isEq) {
+			if (ce.getOID_2_16_76_1_3_1() != null) {
+				isPF = true;
+			} else if (ce.getOID_2_16_76_1_3_7() != null || ce.getOID_2_16_76_1_3_3() != null) {
+				isPJ = true;
+			} else if (SN != null) {
+				if (SN.length() == 11) {
+					isPF = true;
+				} else if (SN.length() == 14) {
+					isPJ = true;
+				}
+			}
+		}
+
+		if (isPF) {
+			icpBrCertPF = new ICPBRCertificatePF(ce.getOID_2_16_76_1_3_1(), ce.getOID_2_16_76_1_3_5(), ce.getOID_2_16_76_1_3_6(), ce.getOID_2_16_76_1_4_5_1(), SN);
+		} else if (isPJ) {
+			icpBrCertPJ = new ICPBRCertificatePJ(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_7(), SN);
+		} else if (isEq) {
 			icpBrCertEquipment = new ICPBRCertificateEquipment(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_8(),
 				ce.getOID_2_5_29_17(), SN);
 			this.dns = ce.getDNS();

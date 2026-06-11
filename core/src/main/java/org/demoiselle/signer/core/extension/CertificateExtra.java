@@ -47,6 +47,7 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_5;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_6;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_7;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_8;
+import org.demoiselle.signer.core.oid.OID_2_16_76_1_4_5_1;
 import org.demoiselle.signer.core.oid.OID_2_5_29_17;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -303,6 +304,13 @@ public class CertificateExtra {
 	 */
 	public OID_1_3_6_1_4_1_311_60_2_1_3 getOID_1_3_6_1_4_1_311_60_2_1_3() {
 		return (OID_1_3_6_1_4_1_311_60_2_1_3) extras.get("1.3.6.1.4.1.311.60.2.1.3");
+	}
+
+	/**
+	 * @return OID_2_16_76_1_4_5_1
+	 */
+	public OID_2_16_76_1_4_5_1 getOID_2_16_76_1_4_5_1() {
+		return (OID_2_16_76_1_4_5_1) extras.get("2.16.76.1.4.5.1");
 	}
 
 	public OID_2_5_29_17 getOID_2_5_29_17() {
