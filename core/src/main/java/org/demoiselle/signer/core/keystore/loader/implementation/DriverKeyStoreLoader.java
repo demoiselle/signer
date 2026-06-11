@@ -77,6 +77,39 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 	private Formatter formatter;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 
+	private Provider createPKCS11Provider(String configString) throws Exception {
+		Provider base = Security.getProvider("SunPKCS11");
+		if (base != null) {
+			try {
+				// Java 9+
+				java.lang.reflect.Method configureMethod = Provider.class.getMethod("configure", String.class);
+				boolean isFile = !configString.startsWith("--");
+				String arg = isFile ? configString : configString;
+				return (Provider) configureMethod.invoke(base, arg);
+			} catch (NoSuchMethodException e) {
+				// Fallback para Java 8
+			}
+		}
+		
+		try {
+			// Java 8 fallback usando o construtor String ou InputStream
+			Class<?> sunPkcs11Class = Class.forName("sun.security.pkcs11.SunPKCS11");
+			if (configString.startsWith("--")) {
+				// config inline
+				String configData = configString.substring(2);
+				java.io.InputStream is = new java.io.ByteArrayInputStream(configData.getBytes("UTF-8"));
+				java.lang.reflect.Constructor<?> constructor = sunPkcs11Class.getConstructor(java.io.InputStream.class);
+				return (Provider) constructor.newInstance(is);
+			} else {
+				// config path
+				java.lang.reflect.Constructor<?> constructor = sunPkcs11Class.getConstructor(String.class);
+				return (Provider) constructor.newInstance(configString);
+			}
+		} catch (Exception ex) {
+			throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"));
+		}
+	}
+
 	/**
 	 * read the config file
 	 */
@@ -124,13 +157,7 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 		String pkcs11ConfigSettings = formatter.format(PKCS11_CONTENT_CONFIG_FILE, driverName, driverPath).toString();
 
 		try {
-			// Java 9+: usa Provider.configure() com config inline (prefixo "--")
-			// Os construtores SunPKCS11(InputStream) e SunPKCS11(String) foram removidos no Java 9.
-			Provider base = Security.getProvider("SunPKCS11");
-			if (base == null) {
-				throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"));
-			}
-			Provider pkcs11Provider = base.configure("--" + pkcs11ConfigSettings);
+			Provider pkcs11Provider = createPKCS11Provider("--" + pkcs11ConfigSettings);
 			Security.addProvider(pkcs11Provider);
 
 			if (pkcs11Provider instanceof AuthProvider) {
@@ -182,12 +209,7 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 		KeyStore keyStore = null;
 
 		try {
-			// Java 9+: usa Provider.configure() com caminho de arquivo
-			Provider base = Security.getProvider("SunPKCS11");
-			if (base == null) {
-				throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"));
-			}
-			Provider pkcs11Provider = base.configure(configFile);
+			Provider pkcs11Provider = createPKCS11Provider(configFile);
 			Security.addProvider(pkcs11Provider);
 
 			if (pkcs11Provider instanceof AuthProvider) {
@@ -280,10 +302,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 				String pkcs11LibraryPath = entry.getValue();
 				StringBuilder buf = new StringBuilder();
 				buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-				// Java 9+: usa Provider.configure() com config inline (prefixo "--")
-				Provider base = Security.getProvider("SunPKCS11");
-				if (base == null) continue;
-				Provider p = base.configure("--" + buf.toString());
+				
+				Provider p = createPKCS11Provider("--" + buf.toString());
 				Security.addProvider(p);
 				Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
 						new KeyStore.PasswordProtection(pinNumber.toCharArray()));
