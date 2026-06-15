@@ -69,6 +69,7 @@ public class CertificateExtra {
 	private String email = "";
 	private String dns = "";
 	private final Map<String, OIDGeneric> extras = new HashMap<>();
+	private final X509Certificate certificate;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 	private static final Logger logger = LoggerFactory.getLogger(CertificateExtra.class);
 
@@ -76,6 +77,7 @@ public class CertificateExtra {
 	 * @param certificate The certificate to be analyzed
 	 */
 	public CertificateExtra(X509Certificate certificate) {
+		this.certificate = certificate;
 		try {
 			if (certificate.getSubjectAlternativeNames() == null) {
 				return;
@@ -161,6 +163,19 @@ public class CertificateExtra {
 		if (!isEquipment)
 			isEquipment = extras.get("2.16.76.1.3.8") != null;
 		return isEquipment;
+	}
+
+	/**
+	 * Checks if the certificate is an "ICP-BRASIL Selo Eletronico"
+	 * (Resolução 211).<br>
+	 * Detected via Certificate Policies OIDs (SE-S: 2.16.76.1.2.201,
+	 * SE-H: 2.16.76.1.2.202), not via SubjectAlternativeNames since
+	 * SE certificates share OIDs with PJ in SAN.
+	 *
+	 * @return True if it is an "ICP-BRASIL Selo Eletronico". False otherwise.
+	 */
+	public boolean isCertificateSE() {
+		return new BasicCertificate(certificate).isSeloEletronico();
 	}
 
 	/**

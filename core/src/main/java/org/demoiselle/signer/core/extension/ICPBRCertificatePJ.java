@@ -41,6 +41,7 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_2;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_3;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_4;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_7;
+import org.demoiselle.signer.core.oid.OID_2_16_76_1_4_5_1;
 
 /**
  * Implemented Class for ICP-BRASIL (DOC-ICP-04)
@@ -55,17 +56,19 @@ public class ICPBRCertificatePJ {
 	private OID_2_16_76_1_3_4 oID_2_16_76_1_3_4;
 	private OID_2_16_76_1_3_7 oID_2_16_76_1_3_7;
 	private String serialNumber;
+    private OID_2_16_76_1_4_5_1 oID_2_16_76_1_4_5_1;
 
-	public ICPBRCertificatePJ(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_7 oid4, String serialNumber) {
+	public ICPBRCertificatePJ(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_7 oid4, OID_2_16_76_1_4_5_1 oidAR, String serialNumber) {
 		this.oID_2_16_76_1_3_2 = oid1;
 		this.oID_2_16_76_1_3_3 = oid2;
 		this.oID_2_16_76_1_3_4 = oid3;
 		this.oID_2_16_76_1_3_7 = oid4;
 		this.serialNumber = serialNumber;
+                this.oID_2_16_76_1_4_5_1 = oidAR;
 	}
 
 	public ICPBRCertificatePJ(OID_2_16_76_1_3_2 oid1, OID_2_16_76_1_3_3 oid2, OID_2_16_76_1_3_4 oid3, OID_2_16_76_1_3_7 oid4) {
-		this(oid1, oid2, oid3, oid4, null);
+		this(oid1, oid2, oid3, oid4, null, null);
 	}
 
 	/**
@@ -134,6 +137,13 @@ public class ICPBRCertificatePJ {
 	 * @return number of Specific Registry (called CEI), on  Brazilian National Institute of Social Security,
 	 * of the bussines company holding the certificate
 	 */
+        /**
+         * @return CNPJ da Autoridade de Registro (AR)
+         */
+        public String getCnpjAR() {
+                return oID_2_16_76_1_4_5_1 != null ? oID_2_16_76_1_4_5_1.getCnpjAR() : null;
+        }
+
 	public String getCEI() {
 		return oID_2_16_76_1_3_7 != null ? oID_2_16_76_1_3_7.getCEI() : null;
 	}

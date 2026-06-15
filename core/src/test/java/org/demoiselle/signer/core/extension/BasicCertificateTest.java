@@ -1,11 +1,11 @@
 package org.demoiselle.signer.core.extension;
 
+import org.bouncycastle.asn1.ASN1EncodableVector;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.DERSequence;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.asn1.x509.BasicConstraints;
 import org.bouncycastle.asn1.x509.Extension;
-import org.bouncycastle.asn1.x509.GeneralName;
-import org.bouncycastle.asn1.x509.GeneralNames;
 import org.bouncycastle.cert.X509CertificateHolder;
 import org.bouncycastle.cert.X509v3CertificateBuilder;
 import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
@@ -49,9 +49,15 @@ public class BasicCertificateTest {
 
         certBuilder.addExtension(Extension.basicConstraints, true, new BasicConstraints(false));
 
-        // For this test, we simplify by not adding the CertificatePolicies extension properly, 
-        // since we are mainly testing the SN extraction for now.
-        // If we want to test getCertificateLevel(), we'd need to add the policy.
+        if (policyOid != null) {
+            ASN1EncodableVector policyVec = new ASN1EncodableVector();
+            policyVec.add(new ASN1ObjectIdentifier(policyOid));
+            DERSequence policySequence = new DERSequence(policyVec);
+            ASN1EncodableVector policiesVec = new ASN1EncodableVector();
+            policiesVec.add(policySequence);
+            DERSequence policiesSequence = new DERSequence(policiesVec);
+            certBuilder.addExtension(Extension.certificatePolicies, false, policiesSequence);
+        }
 
         ContentSigner signer = new JcaContentSignerBuilder("SHA256WithRSAEncryption").setProvider("BC").build(pair.getPrivate());
         X509CertificateHolder certHolder = certBuilder.build(signer);
@@ -76,8 +82,7 @@ public class BasicCertificateTest {
     }
 
     @Test
-    public void testExtractionPJSeloEletronicoSN() throws Exception {
-        // Novo Perfil Selo Eletronico (PJ)
+    public void testExtractionPJSN() throws Exception {
         String cnpj = "12345678000199";
         X509Certificate cert = generateMockCertificate("CN=Empresa Teste, SERIALNUMBER=" + cnpj, null);
         
@@ -89,5 +94,25 @@ public class BasicCertificateTest {
         ICPBRCertificatePJ pj = bc.getICPBRCertificatePJ();
         Assert.assertNotNull(pj);
         Assert.assertEquals(cnpj, pj.getCNPJ());
+    }
+
+    @Test
+    public void testExtractionSESN() throws Exception {
+        String cnpj = "12345678000199";
+        X509Certificate cert = generateMockCertificate(
+            "CN=Empresa Teste, SERIALNUMBER=" + cnpj,
+            "2.16.76.1.2.201"
+        );
+        
+        BasicCertificate bc = new BasicCertificate(cert);
+        
+        Assert.assertTrue(bc.isSeloEletronico());
+        Assert.assertTrue(bc.hasCertificateSE());
+        Assert.assertFalse(bc.hasCertificatePJ());
+        Assert.assertFalse(bc.hasCertificatePF());
+        
+        ICPBRCertificateSE se = bc.getICPBRCertificateSE();
+        Assert.assertNotNull(se);
+        Assert.assertEquals(cnpj, se.getCNPJ());
     }
 }
