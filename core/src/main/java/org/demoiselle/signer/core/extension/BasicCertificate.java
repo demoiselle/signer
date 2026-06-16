@@ -75,6 +75,8 @@ public class BasicCertificate {
         public static final String OID_S4_CERTIFICATE = "2.16.76.1.2.104";
         public static final String OID_SE_S_CERTIFICATE = "2.16.76.1.2.201";
         public static final String OID_SE_H_CERTIFICATE = "2.16.76.1.2.202";
+        public static final String OID_AE_S_CERTIFICATE = "2.16.76.1.2.203";
+        public static final String OID_AE_H_CERTIFICATE = "2.16.76.1.2.204";
 
         private static final MessagesBundle coreMessagesBundle = new MessagesBundle();
 
@@ -456,6 +458,12 @@ public class BasicCertificate {
                                         if (id.equals(OID_SE_H_CERTIFICATE)) {
                                                 return "SE-H";
                                         }
+                                        if (id.equals(OID_AE_S_CERTIFICATE)) {
+                                                return "AE-S";
+                                        }
+                                        if (id.equals(OID_AE_H_CERTIFICATE)) {
+                                                return "AE-H";
+                                        }
                                         if (id.equals(OID_A1_CERTIFICATE)) {
                                                 return "A1";
                                         }
@@ -500,6 +508,9 @@ public class BasicCertificate {
                 if (level.startsWith("SE-")) {
                         return "SE";
                 }
+                if (level.startsWith("AE-")) {
+                        return "AE";
+                }
                 return level.substring(0, 1);
         }
 
@@ -514,52 +525,126 @@ public class BasicCertificate {
         }
 
         /**
+         * Check if the certificate level indicates an Aplicacao Especifica (AE-S or AE-H).<br>
+         *
+         * @return boolean true if certificate level is AE-S or AE-H
+         */
+        public boolean isAplicacaoEspecifica() {
+                String level = getCertificateLevel();
+                return level != null && (level.equals("AE-S") || level.equals("AE-H"));
+        }
+
+        /**
          * @return CNPJ of the Registration Authority (AR) associated with the certificate
          */
-        public String getCnpjAR() {
-                if (getICPBRSubjectAlternativeNames() == null) {
-                        return null;
-                }
-                if (hasCertificatePF()) {
-                        return getICPBRCertificatePF().getCnpjAR();
-                }
-                if (hasCertificatePJ()) {
-                        return getICPBRCertificatePJ().getCnpjAR();
-                }
-                if (hasCertificateSE()) {
-                        return getICPBRCertificateSE().getCnpjAR();
-                }
-                return null;
-        }
 
-        /**
-         * @return Name of the Registration Authority (AR) extracted from SubjectDN
-         */
-        public String getNameAR() {
-                try {
-                        String dn = certificate.getSubjectDN().getName();
-                        String[] parts = dn.split(",");
-                        for (String part : parts) {
-                                String p = part.trim().toUpperCase();
-                                if (p.startsWith("OU=")) {
-                                        String value = part.split("=")[1].trim();
-                                        if (value.toUpperCase().contains("AUTORIDADE DE REGISTRO") || value.toUpperCase().startsWith("AR ")) {
-                                                return value;
-                                        }
-                                }
-                        }
-                } catch (Exception e) {
-                        logger.error(e.getMessage());
-                }
-                return null;
-        }
+	public String getCnpjAR() {
+		String cnpj = null;
+		
+		// 1. Tentar extrair do SAN (OtherName) diretamente via BouncyCastle
+		// para resolver problema de compatibilidade com Java 25+ e a nova
+		// Resolução que coloca o CNPJ da AR no OID 2.16.76.1.4.5.1
+		try {
+			java.util.Collection<java.util.List<?>> sans = certificate.getSubjectAlternativeNames();
+			if (sans != null) {
+				for (java.util.List<?> san : sans) {
+					if (!Integer.valueOf(0).equals(san.get(0))) continue;
+					if (!(san.get(1) instanceof byte[])) continue;
 
-        /**
-         * Returns the AuthorityInfoAccess extension value on list format.<br>
-         * Otherwise, returns <b>list empty</b>.<br>
-         *
-         * @return List Authority info access list
-         */
+					byte[] der = (byte[]) san.get(1);
+					try {
+						org.bouncycastle.asn1.ASN1Primitive prim = org.bouncycastle.asn1.ASN1Primitive.fromByteArray(der);
+						org.bouncycastle.asn1.ASN1Sequence seq;
+						if (prim instanceof org.bouncycastle.asn1.ASN1Sequence) {
+							seq = (org.bouncycastle.asn1.ASN1Sequence) prim;
+						} else if (prim instanceof org.bouncycastle.asn1.ASN1TaggedObject) {
+							seq = org.bouncycastle.asn1.ASN1Sequence.getInstance(((org.bouncycastle.asn1.ASN1TaggedObject) prim).getBaseObject());
+						} else {
+							continue;
+						}
+
+						if (seq.size() < 2) continue;
+
+						String oid = ((org.bouncycastle.asn1.ASN1ObjectIdentifier) seq.getObjectAt(0)).getId();
+						if ("2.16.76.1.4.5.1".equals(oid)) {
+							org.bouncycastle.asn1.ASN1TaggedObject tagged =
+								(org.bouncycastle.asn1.ASN1TaggedObject) seq.getObjectAt(1);
+							org.bouncycastle.asn1.ASN1Primitive inner = tagged.getBaseObject().toASN1Primitive();
+
+							byte[] contentBytes = null;
+							if (inner instanceof org.bouncycastle.asn1.ASN1OctetString) {
+								contentBytes = ((org.bouncycastle.asn1.ASN1OctetString) inner).getOctets();
+							} else if (inner instanceof org.bouncycastle.asn1.ASN1String) {
+								contentBytes = ((org.bouncycastle.asn1.ASN1String) inner).getString().getBytes("UTF-8");
+							}
+							
+							if (contentBytes != null) {
+								String data = new String(contentBytes, "UTF-8").trim().toUpperCase();
+								if (data.matches("[0-9A-Z]{14}")) {
+									logger.debug("CNPJ da AR extraído via OtherName direto (2.16.76.1.4.5.1)");
+									return data;
+								}
+							}
+						}
+					} catch (Exception e) {
+						logger.debug("Erro ao parsear OtherName entry para CNPJ da AR: {}", e.getMessage());
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.debug("Erro ao extrair SAN: {}", e.getMessage());
+		}
+
+		// 2. Tentar usar classes internas do Demoiselle (CertificateExtra)
+		if (getICPBRSubjectAlternativeNames() != null) {
+			if (hasCertificatePF()) {
+				cnpj = getICPBRCertificatePF().getCnpjAR();
+			} else if (hasCertificatePJ()) {
+				cnpj = getICPBRCertificatePJ().getCnpjAR();
+			} else if (hasCertificateSE()) {
+				cnpj = getICPBRCertificateSE().getCnpjAR();
+			}
+		}
+		
+		// 3. Fallback: procurar OU= com 14 digitos
+		if (cnpj == null || cnpj.isEmpty()) {
+			try {
+				String dn = certificate.getSubjectDN().getName();
+				String[] parts = dn.split(",");
+				for (String part : parts) {
+					String p = part.trim().toUpperCase();
+					if (p.startsWith("OU=")) {
+						String value = part.split("=")[1].trim();
+						if (value.matches("\\d{14}")) {
+							return value;
+						}
+					}
+				}
+			} catch (Exception e) {
+				logger.error(e.getMessage());
+			}
+		}
+		return cnpj;
+	}
+
+	public String getNameAR() {
+		try {
+			String dn = certificate.getSubjectDN().getName();
+			String[] parts = dn.split(",");
+			for (String part : parts) {
+				String p = part.trim().toUpperCase();
+				if (p.startsWith("OU=")) {
+					String value = part.split("=")[1].trim();
+					if (value.toUpperCase().contains("AUTORIDADE DE REGISTRO") || value.toUpperCase().startsWith("AR")) {
+						return value;
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error(e.getMessage());
+		}
+		return null;
+	}
         public List<String> getAuthorityInfoAccess() {
                 List<String> address = new ArrayList<String>();
                 try {

@@ -81,7 +81,16 @@ public class OIDGeneric {
 	 */
 	public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
 		is = new ASN1InputStream(data);
-		DLSequence sequence = (DLSequence) is.readObject();
+		org.bouncycastle.asn1.ASN1Primitive prim = is.readObject();
+		org.bouncycastle.asn1.ASN1Sequence sequence;
+		if (prim instanceof org.bouncycastle.asn1.ASN1Sequence) {
+			sequence = (org.bouncycastle.asn1.ASN1Sequence) prim;
+		} else if (prim instanceof org.bouncycastle.asn1.ASN1TaggedObject) {
+			sequence = org.bouncycastle.asn1.ASN1Sequence.getInstance(((org.bouncycastle.asn1.ASN1TaggedObject) prim).getBaseObject());
+		} else {
+			throw new Exception("Formato de OtherName inválido");
+		}
+		
 		ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) sequence.getObjectAt(0);
 		ASN1TaggedObject taggedObject = (ASN1TaggedObject) sequence.getObjectAt(1);
 		ASN1Encodable innerEncoded = taggedObject.getBaseObject();
