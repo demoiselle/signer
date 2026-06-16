@@ -452,16 +452,16 @@ public class BasicCertificate {
                                                 continue;
                                         }
 
-                                        if (id.equals(OID_SE_S_CERTIFICATE)) {
+                                        if (id.startsWith(OID_SE_S_CERTIFICATE)) {
                                                 return "SE-S";
                                         }
-                                        if (id.equals(OID_SE_H_CERTIFICATE)) {
+                                        if (id.startsWith(OID_SE_H_CERTIFICATE)) {
                                                 return "SE-H";
                                         }
-                                        if (id.equals(OID_AE_S_CERTIFICATE)) {
+                                        if (id.startsWith(OID_AE_S_CERTIFICATE)) {
                                                 return "AE-S";
                                         }
-                                        if (id.equals(OID_AE_H_CERTIFICATE)) {
+                                        if (id.startsWith(OID_AE_H_CERTIFICATE)) {
                                                 return "AE-H";
                                         }
                                         if (id.equals(OID_A1_CERTIFICATE)) {
