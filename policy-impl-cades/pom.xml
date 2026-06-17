@@ -81,7 +81,7 @@
             <exclusions>
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcprov-jdk18on</artifactId>
+                    <artifactId>bcprov-lts8on</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

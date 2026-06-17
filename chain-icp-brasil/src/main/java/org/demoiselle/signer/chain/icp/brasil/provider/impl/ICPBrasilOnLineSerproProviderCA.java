@@ -59,7 +59,7 @@ import java.util.HashSet;
 import java.util.Scanner;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
-import javax.xml.bind.DatatypeConverter;
+import java.util.Base64;
 import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
@@ -136,7 +136,7 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 
 					// Gera o hash do arquivo local
 					// FIXME DigestImpl.convertToHex instead of DatatypeConverter.printHexBinary
-					String localZipHash = DatatypeConverter.printHexBinary(checksum(new File(pathZip.toString())));
+					String localZipHash = bytesToHex(checksum(new File(pathZip.toString())));
 
 					// Pega SOMENTE o hash sem o nome do arquivo
 					String onlineHashWithouFilename = onlineHash.replace(ICPBrasilUserHomeProviderCA.FILENAME_ZIP, "")
@@ -283,6 +283,18 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	/**
 	 * This provider Name
 	 */
+	private String bytesToHex(byte[] hash) {
+		StringBuilder hexString = new StringBuilder(2 * hash.length);
+		for (int i = 0; i < hash.length; i++) {
+			String hex = Integer.toHexString(0xff & hash[i]);
+			if (hex.length() == 1) {
+				hexString.append('0');
+			}
+			hexString.append(hex);
+		}
+		return hexString.toString().toUpperCase();
+	}
+
 	@Override
 	public String getName() {
 		return chainMessagesBundle.getString("info.provider.name.serpro", getURLZIP());

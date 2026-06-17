@@ -152,23 +152,23 @@
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcmail-jdk18on</artifactId>
-				<version>1.80</version>
+				<artifactId>bcmail-lts8on</artifactId>
+				<version>2.73.11</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcpkix-jdk18on</artifactId>
-				<version>1.80</version>
+				<artifactId>bcpkix-lts8on</artifactId>
+				<version>2.73.11</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcprov-jdk18on</artifactId>
-				<version>1.80</version>
+				<artifactId>bcprov-lts8on</artifactId>
+				<version>2.73.11</version>
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcutil-jdk18on</artifactId>
-				<version>1.80</version>
+				<artifactId>bcutil-lts8on</artifactId>
+				<version>2.73.11</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
