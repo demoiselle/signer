@@ -18,7 +18,7 @@ Todos os scripts antigos foram removidos e consolidados em uma única ferramenta
 1.  **Go (Golang)** instalado (versão 1.21+ recomendada).
 2.  **Java & Keytool** no PATH.
 3.  **OpenSSL** instalado no sistema (usado para normalizar certificados).
-4.  O arquivo `bcprov-jdk18on-1.80.jar` deve estar presente nas pastas adequadas (`chain-icp-brasil/src/scripts_keytool` e `chain-icp-brasil-homolog`).
+4.  O arquivo `bcprov-lts8on-2.73.11.jar` deve estar presente nas pastas adequadas (`chain-icp-brasil/src/scripts_keytool` e `chain-icp-brasil-homolog`).
 
 ---
 

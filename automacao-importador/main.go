@@ -52,9 +52,9 @@ func main() {
 		cadConfig = cadeias.Config{
 			Env:              "pro",
 			ZipURL:           "http://acraiz.icpbrasil.gov.br/credenciadas/CertificadosAC-ICP-Brasil/ACcompactadox.zip",
-			TargetKeystore:   filepath.Join(wd, "chain-icp-brasil/src/main/resources/cadeiasicpbrasil.bks"),
+			TargetKeystore:   filepath.Join(wd, "../chain-icp-brasil/src/main/resources/cadeiasicpbrasil.bks"),
 			KeystorePass:     "serprosigner",
-			BouncyCastlePath: filepath.Join(wd, "chain-icp-brasil/src/scripts_keytool/bcprov-jdk18on-1.80.jar"),
+			BouncyCastlePath: filepath.Join(wd, "../chain-icp-brasil/src/scripts_keytool/bcprov-lts8on-2.73.11.jar"),
 		}
 		polConfig = politicas.Config{
 			Env:           "pro",
@@ -67,7 +67,7 @@ func main() {
 			HomologURL:       "https://repositoriohom.serpro.gov.br/cadeias/",
 			TargetKeystore:   filepath.Join(wd, "../chain-icp-brasil-homolog/src/main/resources/cadeiasicpbrasil-HOMOLOGACAO.bks"),
 			KeystorePass:     "serprosigner",
-			BouncyCastlePath: filepath.Join(wd, "../chain-icp-brasil-homolog/bcprov-jdk18on-1.80.jar"),
+			BouncyCastlePath: filepath.Join(wd, "../chain-icp-brasil-homolog/bcprov-lts8on-2.73.11.jar"),
 		}
 		polConfig = politicas.Config{
 			Env: "hom",

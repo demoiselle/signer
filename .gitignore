@@ -21,3 +21,4 @@ policy-engine/automacao-atualizacao/baixar-politicas.log
 test-config.json
 tests/results/token_certificates.txt
 .metals
+chain-icp-brasil-homolog/log_atualizacao.txt
