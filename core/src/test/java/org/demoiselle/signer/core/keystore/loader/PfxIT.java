@@ -10,7 +10,7 @@ import java.security.KeyStore;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
 
-public class PfxIntegrationTest {
+public class PfxIT {
 
     @Test
     public void testReadNewProfileSESPfx() throws Exception {

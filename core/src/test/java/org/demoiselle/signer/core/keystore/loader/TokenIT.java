@@ -16,7 +16,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TokenIntegrationTest {
+public class TokenIT {
 
     @Test
     public void testReadTokenCertificates() throws Exception {
