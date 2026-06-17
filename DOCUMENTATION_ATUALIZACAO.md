@@ -1,72 +1,67 @@
-# Guia de Atualização de Artefatos de Produção (ICP-Brasil)
+# Guia de Atualização de Artefatos (ICP-Brasil)
 
-Este guia descreve como manter as cadeias de certificados e as políticas de assinatura atualizadas para o ambiente de produção.
+Este guia descreve como manter as cadeias de certificados e as políticas de assinatura atualizadas para os ambientes de Produção e Homologação.
+
+## Nova Ferramenta Unificada: `automacao-importador`
+
+Todos os scripts antigos foram removidos e consolidados em uma única ferramenta modular escrita em Go, localizada na pasta `automacao-importador`.
+
+### Por que a ferramenta foi atualizada?
+1. **Unificação**: Produção e Homologação agora compartilham o mesmo código, reduzindo duplicação.
+2. **Correção do Java/Keytool**: Certificados específicos da ICP-Brasil (como a Raiz v13 ECC) antes falhavam na importação com o erro `A entrada não é um certificado X.509`. A nova ferramenta resolve isso passando todos os certificados baixados por um processo de "limpeza/normalização" usando o OpenSSL antes de entregar ao `keytool`.
+3. **Bloqueios de Rede**: A ferramenta injeta headers de navegador (`User-Agent`) para não ser bloqueada pelos firewalls do ITI.
+
+---
 
 ## Requisitos Prévios
 
-Para executar a automação, você precisa ter instalado no seu ambiente:
+1.  **Go (Golang)** instalado (versão 1.21+ recomendada).
+2.  **Java & Keytool** no PATH.
+3.  **OpenSSL** instalado no sistema (usado para normalizar certificados).
+4.  O arquivo `bcprov-jdk18on-1.80.jar` deve estar presente nas pastas adequadas (`chain-icp-brasil/src/scripts_keytool` e `chain-icp-brasil-homolog`).
 
-1.  **Go (Golang)**: Utilizado para os scripts de download e processamento.
-2.  **Java & Keytool**: Necessário para manipular o keystore BKS.
-3.  **OpenSSL**: Utilizado pelos scripts para validação de certificados.
-4.  **Bouncy Castle Provider**: O arquivo `bcprov-jdk15on-1.65.jar` deve estar presente em `chain-icp-brasil/src/scripts_keytool/`.
+---
 
-## Automação Total (Recomendado)
+## Como Atualizar os Artefatos
 
-Foi criado um script mestre que executa todas as etapas de download, validação e movimentação de arquivos.
+Abra o terminal na **raiz do projeto** (`signer-evandrojr`) e execute a ferramenta informando o ambiente desejado.
 
-Para rodar a atualização completa:
+### 1. Atualizar PRODUÇÃO
+Baixa as políticas, baixa as cadeias do ITI (`ACcompactadox.zip`), limpa os arquivos corrompidos e gera o `cadeiasicpbrasil.bks`.
 
 ```bash
-./atualizar-artefatos-producao.sh
+cd automacao-importador
+go run main.go -env=pro
 ```
 
-Este script realiza as seguintes operações:
-1.  **Baixa as Políticas**: Executa `02-baixar-politicas.go` para baixar arquivos `.der` e `.xml` do repositório da ICP-Brasil, validando o SHA256.
-2.  **Baixa as Cadeias**: Executa `01-baixar-cadeias.go` para baixar o arquivo `ACcompactadox.zip` do ITI e extrair os certificados para a pasta `novascadeias`.
-3.  **Gera o Keystore**: Executa `importar-certificados.go` para criar um novo arquivo `cadeiasicpbrasil.bks` contendo todas as cadeias válidas.
-4.  **Distribui os Artefatos**: Move os arquivos baixados e o keystore gerado para as pastas de `src/main/resources` correspondentes.
+### 2. Atualizar HOMOLOGAÇÃO
+Baixa apenas as cadeias do repositório do Serpro (lendo o HTML e convertendo os arquivos `.p7b`), limpa e gera o `cadeiasicpbrasil-HOMOLOGACAO.bks`.
+
+```bash
+cd automacao-importador
+go run main.go -env=hom
+```
+
+### O que o script faz por debaixo dos panos?
+- **Pro**: Salva as políticas em `policy-engine/.../artifacts` e o BKS em `chain-icp-brasil/src/main/resources/`.
+- **Hom**: Salva o BKS em `chain-icp-brasil-homolog/src/main/resources/`.
+
+Após a atualização, execute `mvn clean install -DskipTests` e rode os testes de integração (`mvn verify -Pit`).
 
 ---
 
-## Detalhes das Etapas Manuais (Caso necessário)
+## Dúvidas Frequentes
 
-### 1. Atualização de Políticas
-Se precisar atualizar apenas as políticas ou adicionar uma nova URL:
-1.  Edite o arquivo `policy-engine/automacao-atualizacao/politicas.txt`.
-2.  Execute:
-    ```bash
-    cd policy-engine/automacao-atualizacao
-    go run 02-baixar-politicas.go
-    ```
+### Como as LPAs (Listas de Políticas de Assinatura) funcionam e por que ocorrem "erros" de importação?
+O Demoiselle Signer hoje não lê o arquivo global da LPA automaticamente. A infraestrutura do ITI publica uma lista mestra em `http://politicas.icpbrasil.gov.br/LPA.xml`. Dentro deste XML ficam as referências (`PolicyURI`) para cada nova política (ex: `PA_AD_RB_v2_4.xml`).
 
-### 2. Atualização de Cadeias de Certificados
-Se desejar processar certificados locais manualmente:
-1.  Coloque os arquivos `.crt` ou `.cer` na pasta `chain-icp-brasil/src/scripts_keytool/novascadeias`.
-2.  Execute a geração do keystore:
-    ```bash
-    cd chain-icp-brasil/src/scripts_keytool
-    go run importar-certificados.go
-    ```
-3.  O arquivo gerado `cadeiasicpbrasil.bks` deve ser copiado para `chain-icp-brasil/src/main/resources/`.
+Quando ocorre um erro na importação das políticas pela nossa ferramenta, normalmente significa que:
+1. O repositório da ICP-Brasil pode estar instável.
+2. O arquivo na ICP-Brasil está sem a versão do hash (`-sha256.txt`). A nova ferramenta foi programada para ignorar amigavelmente hashes ausentes e focar em baixar a política.
 
----
-
-## Verificação e Build
-
-Após a atualização dos artefatos, é essencial validar se o projeto continua funcionando corretamente:
-
-1.  **Rebuild do Projeto**:
-    ```bash
-    mvn clean install -DskipTests
-    ```
-2.  **Execução dos Testes de Integração**:
-    Como os artefatos de produção mudaram, rode os testes de integração (especialmente os que usam certificados reais):
-    ```bash
-    mvn verify -Pit
-    ```
-
-## Contato e Suporte
-Em caso de falha no download ou certificados corrompidos no repositório do ITI, verifique os logs gerados:
-- `policy-engine/automacao-atualizacao/baixar-politicas.log`
-- `chain-icp-brasil/src/scripts_keytool/import.log`
+### Como saber se surgiram novas LPAs não cadastradas no DS?
+A forma correta de detectar novas políticas não suportadas pelo componente é:
+1. Acessar manualmente ou via script a URL: `http://politicas.icpbrasil.gov.br/LPA.xml`.
+2. Procurar pela tag `<PolicyURI>`.
+3. Comparar as URLs listadas neste arquivo com as que estão cadastradas no seu arquivo `policy-engine/automacao-atualizacao/politicas.txt`.
+4. Se o ITI publicar uma `PA_AD_RB_v3_0.xml` na `LPA.xml`, você deverá adicioná-la ao `politicas.txt` e rodar a nossa ferramenta novamente com `-env=pro`.
