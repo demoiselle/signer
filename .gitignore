@@ -18,3 +18,6 @@ chain-icp-brasil-homolog/import.log
 policy-engine/automacao-atualizacao/validacao-hash/*
 policy-engine/automacao-atualizacao/politicas-baixadas/*
 policy-engine/automacao-atualizacao/baixar-politicas.log
+test-config.json
+tests/results/token_certificates.txt
+.metals

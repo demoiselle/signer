@@ -7,5 +7,8 @@
             "environmentVariable": "JAVA_HOME",
             "value": "C:\\Program Files\\Java\\jdk-23"
         }
-    ]
+    ],
+    "files.watcherExclude": {
+        "**/target/**": true
+    }
 }
