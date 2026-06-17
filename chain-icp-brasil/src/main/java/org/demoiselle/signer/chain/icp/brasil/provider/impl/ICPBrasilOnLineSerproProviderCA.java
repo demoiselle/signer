@@ -164,9 +164,9 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			}
 
 			// Pega os certificados locais
-			InputStream inputStreamZipReturn = new FileInputStream(pathZip.toString());
-			result = getFromZip(inputStreamZipReturn);
-			inputStreamZipReturn.close();
+                        try (InputStream inputStreamZipReturn = new FileInputStream(pathZip.toString())) {
+                                result = getFromZip(inputStreamZipReturn);
+                        }
 
 			LOGGER.debug(chainMessagesBundle.getString("info.recovered.certs", result.size()));
 

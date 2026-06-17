@@ -205,7 +205,7 @@ public class CAManager {
 	 * @param certificate final certificate in the desired chain
 	 * @return list of certificates
 	 */
-	public Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {
+	public synchronized Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {
 		CAManagerConfiguration config = CAManagerConfiguration.getInstance();
 		Collection<X509Certificate> result = new LinkedList<>();
 
