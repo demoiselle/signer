@@ -122,7 +122,7 @@ public class TokenSignatureIT {
         signer.setPrivateKey(privateKey);
         
         // Utilizando a política base AD_RB
-        signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_3);
+        signer.setSignaturePolicy(PolicyFactory.Policies.AD_RB_CADES_2_4);
         signer.setAlgorithm(SignerAlgorithmEnum.SHA256withRSA);
 
         // Desabilita cache temporariamente para evitar falhas de rede/LCR no teste
