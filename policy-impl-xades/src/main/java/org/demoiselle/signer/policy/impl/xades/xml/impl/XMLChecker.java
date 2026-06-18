@@ -517,7 +517,12 @@ public class XMLChecker implements Checker {
 			return null;
 		}
 		NodeList value = parent.getElementsByTagNameNS(XAdESv1_3_2, tagName);
-		if (value.getLength() == 0) {
+                if (value.getLength() == 0) {
+                        value = parent.getElementsByTagName("xades:" + tagName);
+                }
+                if (value.getLength() == 0) {
+                        value = parent.getElementsByTagName(tagName);
+                }
 			if (mandatory) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
 				logger.error(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
