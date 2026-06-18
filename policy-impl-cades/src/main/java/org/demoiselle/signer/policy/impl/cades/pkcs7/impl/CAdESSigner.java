@@ -135,7 +135,7 @@ public class CAdESSigner implements PKCS7Signer {
 
 	public CAdESSigner() {
 		this.pkcs1.setAlgorithm((String) null);
-		this.setSignaturePolicy(Policies.AD_RB_CADES_2_3);
+		this.setSignaturePolicy(Policies.AD_RB_CADES_2_4);
 	}
 
 	public CAdESSigner(String algorithm, Policies police) {
@@ -305,6 +305,16 @@ public class CAdESSigner implements PKCS7Signer {
 		// Completa os certificados ausentes da cadeia, se houver
 		if (this.certificate == null && this.certificateChain != null && this.certificateChain.length > 0) {
 			this.certificate = (X509Certificate) this.certificateChain[0];
+		}
+
+		// Valida compatibilidade da Raiz v12 com a Política
+		if (this.certificate != null && this.getPolicyName() != null) {
+			try {
+				org.demoiselle.signer.core.validator.RootCompatValidator.validateRootCompatibility(this.certificate, this.getPolicyName());
+			} catch (org.demoiselle.signer.core.exception.IncompatiblePolicyException e) {
+				logger.error(e.getMessage());
+				throw new SignerException(e.getMessage(), e);
+			}
 		}
 
 		this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);

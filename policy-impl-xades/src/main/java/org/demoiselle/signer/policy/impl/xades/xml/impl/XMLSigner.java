@@ -394,6 +394,16 @@ public class XMLSigner implements Signer {
 			this.certificate = (X509Certificate) this.certificateChain[0];
 		}
 
+		// Valida compatibilidade da Raiz v12 com a Política
+		if (this.certificate != null && this.policy != null) {
+			try {
+				org.demoiselle.signer.core.validator.RootCompatValidator.validateRootCompatibility(this.certificate, this.policy.name());
+			} catch (org.demoiselle.signer.core.exception.IncompatiblePolicyException e) {
+				logger.error(e.getMessage());
+				throw new XMLSignerException(e.getMessage(), e);
+			}
+		}
+
 		this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 
 		if (this.certificateChain.length < 3) {
