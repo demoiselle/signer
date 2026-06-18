@@ -718,10 +718,19 @@ public class XMLChecker implements Checker {
 
 		XMLPolicyValidator xmlPolicyValidator = new XMLPolicyValidator(policyDoc);
 
-		if (!xmlPolicyValidator.validate()) {
-			logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
-			validationWaring.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
-		}
+                boolean validated = false;
+                try {
+                    validated = xmlPolicyValidator.validate();
+                } catch (Exception e) {
+                    logger.debug("Erro ao validar politica: " + e.getMessage());
+                }
+                if (!validated) {
+                        logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+                        validationWaring.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+                        if (xmlPolicyValidator.getXmlSignaturePolicy().getIdentifier() == null) {
+                            xmlPolicyValidator.getXmlSignaturePolicy().setIdentifier(policyOID);
+                        }
+                }
 
 		List<XMLSignerAlgConstraint> listSignerAlgConstraint = xmlPolicyValidator.getXmlSignaturePolicy()
 				.getXmlSignerAlgConstraintList();
