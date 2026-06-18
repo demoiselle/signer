@@ -64,6 +64,8 @@ public class PolicyUtils {
 				return PolicyFactory.Policies.AD_RB_XADES_2_3;
 			case "2.16.76.1.7.1.6.2.4":
 				return PolicyFactory.Policies.AD_RB_XADES_2_4;
+			case "2.16.76.1.7.1.6.2.5":
+				return PolicyFactory.Policies.AD_RB_XADES_2_5;
 
 			case "2.16.76.1.7.1.7.2.1":
 				return PolicyFactory.Policies.AD_RT_XADES_2_1;
@@ -73,6 +75,8 @@ public class PolicyUtils {
 				return PolicyFactory.Policies.AD_RT_XADES_2_3;
 			case "2.16.76.1.7.1.7.2.4":
 				return PolicyFactory.Policies.AD_RT_XADES_2_4;
+			case "2.16.76.1.7.1.7.2.5":
+				return PolicyFactory.Policies.AD_RT_XADES_2_5;
 
 			case "2.16.76.1.7.1.8.2.2":
 				return PolicyFactory.Policies.AD_RV_XADES_2_2;
@@ -80,19 +84,25 @@ public class PolicyUtils {
 				return PolicyFactory.Policies.AD_RV_XADES_2_3;
 			case "2.16.76.1.7.1.8.2.4":
 				return PolicyFactory.Policies.AD_RV_XADES_2_4;
+			case "2.16.76.1.7.1.8.2.5":
+				return PolicyFactory.Policies.AD_RV_XADES_2_5;
 
 			case "2.16.76.1.7.1.9.2.3":
 				return PolicyFactory.Policies.AD_RC_XADES_2_3;
 			case "2.16.76.1.7.1.9.2.4":
 				return PolicyFactory.Policies.AD_RC_XADES_2_4;
+			case "2.16.76.1.7.1.9.2.5":
+				return PolicyFactory.Policies.AD_RC_XADES_2_5;
 
 			case "2.16.76.1.7.1.10.2.3":
 				return PolicyFactory.Policies.AD_RA_XADES_2_3;
 			case "2.16.76.1.7.1.10.2.4":
 				return PolicyFactory.Policies.AD_RA_XADES_2_4;
+			case "2.16.76.1.7.1.10.2.5":
+				return PolicyFactory.Policies.AD_RA_XADES_2_5;
 
 			default:
-				return null;
+				return PolicyFactory.Policies.AD_RB_XADES_2_5;
 		}
 	}
 }
