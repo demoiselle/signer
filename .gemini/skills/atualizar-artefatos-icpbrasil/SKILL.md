@@ -14,7 +14,14 @@ Quando o usuário pedir para atualizar as políticas ou cadeias, siga ESTRITAMEN
 ### Passo 1: Autodescoberta de Políticas (Update LPA)
 O ITI frequentemente lança novas políticas (ex: v2.4, v2.5). Antes de baixar arquivos velhos, devemos atualizar nosso índice.
 1. Execute: `cd automacao-importador && go run main.go -update-lpa`
-2. **Importante:** Se o log indicar que "novas URLs foram encontradas e adicionadas", pare e avise o usuário: *"Novas políticas foram descobertas. Você precisará mapeá-las manualmente no arquivo `PolicyFactory.java` do módulo `policy-engine` após o download."*
+2. **Lição Crítica (Atenção às Versões Diferentes):** As versões que suportam as mesmas raízes podem ser diferentes dependendo do formato de assinatura. Exemplo (Suporte Raiz v12):
+   - **CAdES:** O padrão (RB, RT, RV, RC) é `v2.4`, mas o `RA` é `v2.5`.
+   - **XAdES:** Tudo usa `v2.5`.
+   - **PAdES:** RB/RT usam `v1.3`. RC/RA usam `v1.4`.
+3. Se o log indicar que "novas URLs foram encontradas", você DEVE:
+   - Adicionar as constantes `.der` e `.xml` manualmente na classe `PolicyFactory.java`.
+   - Se houver XAdES novo, atualizar o enum `XMLPoliciesOID.java` com os novos OIDs.
+   - Atualizar os construtores "vazios" (Default) nas classes `CAdESSigner`, `PAdESSigner` e `XMLSigner` para essas versões descobertas.
 
 ### Passo 2: Atualização de Produção
 Responsável por baixar do repositório raiz do ITI.
