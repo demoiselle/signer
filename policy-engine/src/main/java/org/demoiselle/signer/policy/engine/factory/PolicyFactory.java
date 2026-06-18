@@ -583,6 +583,8 @@ public class PolicyFactory {
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_1.der"),
 		AD_RB_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_2.der",
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_2.der"),
+		AD_RB_PADES_1_3("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RB_v1_3.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_3.der"),
 
 		AD_RT_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_0.der",
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_0.der"),
@@ -590,6 +592,8 @@ public class PolicyFactory {
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_1.der"),
 		AD_RT_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_2.der",
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_2.der"),
+		AD_RT_PADES_1_3("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RT_v1_3.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_3.der"),
 
 		AD_RC_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_0.der",
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_0.der"),
@@ -599,6 +603,8 @@ public class PolicyFactory {
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_2.der"),
 		AD_RC_PADES_1_3("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_3.der",
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_3.der"),
+		AD_RC_PADES_1_4("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RC_v1_4.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_4.der"),
 
 		AD_RA_PADES_1_0("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_0.der",
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_0.der"),
@@ -607,7 +613,9 @@ public class PolicyFactory {
 		AD_RA_PADES_1_2("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_2.der",
 			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_2.der"),
 		AD_RA_PADES_1_3("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_3.der",
-			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_3.der");
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_3.der"),
+		AD_RA_PADES_1_4("/org/demoiselle/signer/policy/engine/artifacts/PA_PAdES_AD_RA_v1_4.der",
+			"http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_4.der");
 
 
 		Policies(String file, String url) {

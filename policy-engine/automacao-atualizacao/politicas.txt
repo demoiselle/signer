@@ -1211,3 +1211,9 @@ http://politicas.icpbrasil.gov.br/PA_AD_RB_v1_2.der
 http://politicas.icpbrasil.gov.br/PA_AD_RT_v1_2.der
 http://politicas.icpbrasil.gov.br/PA_AD_RV_v1_2.der
 http://politicas.icpbrasil.gov.br/PA_AD_RC_v1_2.der
+
+# --- Adicionadas para Suporte a Raiz v12 (Levantamento Equipe) ---
+http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RB_v1_3.der
+http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RT_v1_3.der
+http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RC_v1_4.der
+http://politicas.icpbrasil.gov.br/PA_PAdES_AD_RA_v1_4.der
