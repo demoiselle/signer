@@ -130,7 +130,7 @@ public class XMLSigner implements Signer {
 	
 
 	public XMLSigner() {
-		this.policyOID = XMLPoliciesOID.AD_RB_XADES_2_4.getOID();
+		this.policyOID = XMLPoliciesOID.AD_RB_XADES_2_5.getOID();
 		this.policy = PolicyUtils.getPolicyByOid(policyOID);
 	}
 

@@ -538,16 +538,19 @@ public class PolicyFactory {
 			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_3.xml"),
 		AD_RB_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_4.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_4.xml"),
+		AD_RB_XADES_2_5("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RB_v2_5.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RB_v2_5.xml"),
 
 		AD_RT_XADES_2_1("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_1.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_1.xml"),
-
 		AD_RT_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_2.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_2.xml"),
 		AD_RT_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_3.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_3.xml"),
 		AD_RT_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_4.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_4.xml"),
+		AD_RT_XADES_2_5("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RT_v2_5.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RT_v2_5.xml"),
 
 		AD_RV_XADES_2_2("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_2.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_2.xml"),
@@ -555,17 +558,22 @@ public class PolicyFactory {
 			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_3.xml"),
 		AD_RV_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_4.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_4.xml"),
+		AD_RV_XADES_2_5("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RV_v2_5.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RV_v2_5.xml"),
 
 		AD_RC_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_3.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_3.xml"),
 		AD_RC_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_4.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_4.xml"),
+		AD_RC_XADES_2_5("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RC_v2_5.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RC_v2_5.xml"),
 
 		AD_RA_XADES_2_3("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_3.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_3.xml"),
-
 		AD_RA_XADES_2_4("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_4.xml",
 			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_4.xml"),
+		AD_RA_XADES_2_5("/org/demoiselle/signer/policy/engine/artifacts/PA_AD_RA_v2_5.xml",
+			"http://politicas.icpbrasil.gov.br/PA_AD_RA_v2_5.xml"),
 
 		// FORMATO PAdES
 
