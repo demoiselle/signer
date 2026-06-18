@@ -307,7 +307,9 @@ public class CAdESSigner implements PKCS7Signer {
 			this.certificate = (X509Certificate) this.certificateChain[0];
 		}
 
-		// Valida compatibilidade da Raiz v12 com a Política
+		/* TODO: Avaliar implementação futura (Ronald)
+		// Validação Preditiva de Compatibilidade: Analisar as raizes aceitas dentro do arquivo da politica 
+		// e cruzar com o certificado do usuario, ao invés de buscar apenas por substrings.
 		if (this.certificate != null && this.getPolicyName() != null) {
 			try {
 				org.demoiselle.signer.core.validator.RootCompatValidator.validateRootCompatibility(this.certificate, this.getPolicyName());
@@ -316,6 +318,7 @@ public class CAdESSigner implements PKCS7Signer {
 				throw new SignerException(e.getMessage(), e);
 			}
 		}
+		*/
 
 		this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 
