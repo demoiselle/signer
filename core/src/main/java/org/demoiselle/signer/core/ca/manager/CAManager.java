@@ -141,11 +141,20 @@ public class CAManager {
 		if (ca == null) {
 			return false;
 		}
-		// Se o Subject e o Issuer forem idênticos, é uma AC Raiz (mesmo que a auto-assinatura seja inválida em ambiente de homologação)
-		if (ca.getSubjectX500Principal().equals(ca.getIssuerX500Principal())) {
+		// Validação estrita da auto-assinatura (Padrão para Produção)
+		if (this.isCAofCertificate(ca, ca)) {
 			return true;
 		}
-		return this.isCAofCertificate(ca, ca);
+		
+		// Fallback por identidade apenas se explicitamente configurado para ambiente de homologação/teste
+		String env = System.getProperty("org.demoiselle.signer.env");
+		if ("hom".equalsIgnoreCase(env) || "homolog".equalsIgnoreCase(env)) {
+			if (ca.getSubjectX500Principal().equals(ca.getIssuerX500Principal())) {
+				LOGGER.debug("AC Raiz de Homologação identificada por identidade (assinatura não validada).");
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public boolean isCAofCertificate(X509Certificate ca, X509Certificate certificate) {
