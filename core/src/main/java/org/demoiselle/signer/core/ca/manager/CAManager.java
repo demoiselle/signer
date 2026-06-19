@@ -38,6 +38,7 @@
 package org.demoiselle.signer.core.ca.manager;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
@@ -140,7 +141,10 @@ public class CAManager {
 		if (ca == null) {
 			return false;
 		}
-
+		// Se o Subject e o Issuer forem idênticos, é uma AC Raiz (mesmo que a auto-assinatura seja inválida em ambiente de homologação)
+		if (ca.getSubjectX500Principal().equals(ca.getIssuerX500Principal())) {
+			return true;
+		}
 		return this.isCAofCertificate(ca, ca);
 	}
 
@@ -248,8 +252,16 @@ public class CAManager {
 			String issuerCN = this.getCN(issuerPrincipal.getName());
 			
 			for (X509Certificate ca : allCAs) {
-				String caCN = this.getCN(ca.getSubjectX500Principal().getName());
-				if (issuerCN.equalsIgnoreCase(caCN) && this.isCAofCertificate(ca, current)) {
+				// Tenta comparação exata de Principals primeiro (mais seguro)
+				boolean match = issuerPrincipal.equals(ca.getSubjectX500Principal());
+				
+				// Fallback para comparação de CN (legado/robusto para variações de encoding)
+				if (!match) {
+					String caCN = this.getCN(ca.getSubjectX500Principal().getName());
+					match = issuerCN.equalsIgnoreCase(caCN);
+				}
+				
+				if (match && this.isCAofCertificate(ca, current)) {
 					issuer = ca;
 					break;
 				}
@@ -286,10 +298,6 @@ public class CAManager {
 
 		if (config.isCached() && !result.isEmpty()) {
 			CAManagerCache.getInstance().addCertificate(certificate, result);
-		}
-
-		return result;
-	}sult);
 		}
 
 		return result;
@@ -356,13 +364,15 @@ public class CAManager {
 	}
 
 	private String getCN(String x500) {
-		int indexCN = x500.indexOf(CN);
+		if (x500 == null) return "";
+		String upper = x500.toUpperCase();
+		int indexCN = upper.indexOf("CN=");
 		if (indexCN >= 0) {
 			int indexComa = x500.indexOf(',', indexCN);
 			if (indexComa < 0) {
-				return x500.substring(indexCN);
+				return x500.substring(indexCN).trim();
 			}
-			return x500.substring(indexCN, indexComa);
+			return x500.substring(indexCN, indexComa).trim();
 		}
 		return x500;
 	}
