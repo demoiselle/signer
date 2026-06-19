@@ -37,6 +37,8 @@
 
 package org.demoiselle.signer.core.ca.manager;
 
+import java.util.ArrayList;
+
 import java.security.InvalidKeyException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -207,94 +209,65 @@ public class CAManager {
 	 */
 	public synchronized Collection<X509Certificate> getCertificateChain(X509Certificate certificate) {
 		CAManagerConfiguration config = CAManagerConfiguration.getInstance();
-		Collection<X509Certificate> result = new LinkedList<>();
-
+		
 		// Tentando obter cadeia de certificados do cache
 		if (config.isCached()) {
 			LOGGER.debug(coreMessagesBundle.getString("info.cache.mode", config.isCached()));
 			CAManagerCache managerCache = CAManagerCache.getInstance();
 			Collection<X509Certificate> certificates = managerCache.getCachedCertificatesFor(certificate);
-			// Se encontrar no cache
 			if (certificates != null) {
 				return certificates;
 			}
 		}
 
+		LinkedList<X509Certificate> result = new LinkedList<>();
 		result.add(certificate);
 		if (this.isRootCA(certificate)) {
 			return result;
 		}
 
+		// Coleta TODAS as CAs de TODOS os providers primeiro
+		// Isso resolve o problema de cadeias espalhadas entre providers (ex: Intermediária no Provedor A e Raiz no B)
+		List<X509Certificate> allCAs = new ArrayList<>();
 		Collection<ProviderCA> providers = ProviderCAFactory.getInstance().factory();
-
-		boolean ok = false;
 		for (ProviderCA provider : providers) {
 			try {
-				String varNameProvider = provider.getName();
-				LOGGER.debug(coreMessagesBundle.getString("info.searching.on.provider", varNameProvider));
-
-				// Get ALL CAs of ONE provider
-				Collection<X509Certificate> acs = provider.getCAs();
-
-				// Variable to control if go to next Provider is necessery
-				// Iterate this provider to create a Cert Chain
-				for (X509Certificate ac : acs) {
-					// If is CA issuer of certificate
-					X500Principal issuer = certificate.getIssuerX500Principal();
-					if (issuer != null) {
-						String issuerName = certificate.getIssuerX500Principal().getName();
-						String certificateCnIssuer = this.getCN(issuerName);
-						String acCN = this.getCN(ac.getSubjectX500Principal().getName());
-						if (certificateCnIssuer.equalsIgnoreCase(acCN) && this.isCAofCertificate(ac, certificate)) {
-							result.add(ac);
-							X509Certificate acFromAc = null;
-
-							for (X509Certificate ac2 : acs) {
-								// If is CA Issuer of CA issuer
-								String acCnIssuer = this.getCN(ac.getIssuerX500Principal().getName());
-								String ac2CN = this.getCN(ac2.getSubjectX500Principal().getName());
-								if (acCnIssuer.equalsIgnoreCase(ac2CN) && this.isCAofCertificate(ac2, ac)) {
-									acFromAc = ac2;
-								}
-							}
-
-							while (acFromAc != null) {
-								// If the chain was created SET OK
-								result.add(acFromAc);
-
-								// If Certificate is ROOT end while
-								if (this.isRootCA(acFromAc)) {
-									ok = true;
-									break;
-								} else {
-									for (X509Certificate ac3 : acs) {
-										// If is CA Issuer of CA issuer
-										String acFromAcIssuerCN = this.getCN(acFromAc.getIssuerX500Principal().getName());
-										String ac3CN = this.getCN(ac3.getSubjectX500Principal().getName());
-										if (acFromAcIssuerCN.equalsIgnoreCase(ac3CN) && this.isCAofCertificate(ac3, acFromAc)) {
-											acFromAc = ac3;
-										}
-									}
-								}
-							}
-						}
-						if (ok) {
-							break;
-						}
-					}
-
-				}
-
-				LOGGER.debug(coreMessagesBundle.getString("info.found.levels", result.size(), provider.getName()));
-
-				// If chain is created BREAK! Doesn't go to next Provider
-				if (ok) {
-					break;
-				} else {
-					LOGGER.info(coreMessagesBundle.getString("warn.no.chain.on.provider", provider.getName()));
-				}
-			} catch (Exception error) {
+				allCAs.addAll(provider.getCAs());
+			} catch (Exception e) {
 				LOGGER.warn(coreMessagesBundle.getString("error.no.ca", provider.getName()));
+			}
+		}
+
+		boolean ok = false;
+		X509Certificate current = certificate;
+		
+		// Tenta construir a cadeia navegando pelos emissores
+		while (current != null && !this.isRootCA(current)) {
+			X509Certificate issuer = null;
+			X500Principal issuerPrincipal = current.getIssuerX500Principal();
+			String issuerCN = this.getCN(issuerPrincipal.getName());
+			
+			for (X509Certificate ca : allCAs) {
+				String caCN = this.getCN(ca.getSubjectX500Principal().getName());
+				if (issuerCN.equalsIgnoreCase(caCN) && this.isCAofCertificate(ca, current)) {
+					issuer = ca;
+					break;
+				}
+			}
+			
+			if (issuer != null) {
+				// Evita loops infinitos caso haja circularidade (improvável mas seguro)
+				if (result.contains(issuer)) {
+					break; 
+				}
+				result.add(issuer);
+				current = issuer;
+				if (this.isRootCA(current)) {
+					ok = true;
+				}
+			} else {
+				// Não encontrou emisor para o certificado atual
+				current = null;
 			}
 		}
 
@@ -310,8 +283,13 @@ public class CAManager {
 			LOGGER.error(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
 			throw new CAManagerException(coreMessagesBundle.getString("erro.no.chain.provided", certificate.getSubjectDN()));
 		}
+
 		if (config.isCached() && !result.isEmpty()) {
 			CAManagerCache.getInstance().addCertificate(certificate, result);
+		}
+
+		return result;
+	}sult);
 		}
 
 		return result;
