@@ -38,6 +38,8 @@
 package org.demoiselle.signer.policy.impl.xades.util;
 
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility Class for XML Policy treatment
@@ -46,6 +48,8 @@ import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
  */
 public class PolicyUtils {
 
+	private static final Logger logger = LoggerFactory.getLogger(PolicyUtils.class);
+
 	/**
 	 * return the policy by OID.
 	 *
@@ -53,6 +57,11 @@ public class PolicyUtils {
 	 * @return the corresponding {@link PolicyFactory.Policies}.
 	 */
 	public static PolicyFactory.Policies getPolicyByOid(String oid) {
+
+		if (oid == null || oid.isEmpty()) {
+			logger.warn("OID de politica nulo ou vazio.");
+			return null;
+		}
 
 		switch (oid) {
 
@@ -102,7 +111,8 @@ public class PolicyUtils {
 				return PolicyFactory.Policies.AD_RA_XADES_2_5;
 
 			default:
-				return PolicyFactory.Policies.AD_RB_XADES_2_5;
+				logger.warn("OID de politica nao mapeado: {}. Rejeitando politica desconhecida.", oid);
+				return null;
 		}
 	}
 }

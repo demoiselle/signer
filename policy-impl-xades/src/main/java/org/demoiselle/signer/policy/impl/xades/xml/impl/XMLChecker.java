@@ -709,6 +709,7 @@ public class XMLChecker implements Checker {
 		if (policyOID == null) {
 			validationWaring.add(xadesMessagesBundle.getString("error.xml.policy.null"));
 			logger.warn(xadesMessagesBundle.getString("error.xml.policy.null"));
+			return null;
 		}
 		if (policyOID.contains("urn:oid:")) {
 			policyOID = policyOID.substring(policyOID.lastIndexOf(":") + 1, policyOID.length());
@@ -720,7 +721,13 @@ public class XMLChecker implements Checker {
 		 * policyOID)); return null; }
 		 */
 
-		Document policyDoc = PolicyFactory.getInstance().loadXMLPolicy(PolicyUtils.getPolicyByOid(policyOID));
+		PolicyFactory.Policies policy = PolicyUtils.getPolicyByOid(policyOID);
+		if (policy == null) {
+			validationWaring.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+			logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+			return null;
+		}
+		Document policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
 
 		XMLPolicyValidator xmlPolicyValidator = new XMLPolicyValidator(policyDoc);
 
