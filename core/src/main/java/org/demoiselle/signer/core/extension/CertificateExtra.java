@@ -140,8 +140,8 @@ public class CertificateExtra {
 	 * @return True if you are an "ICP-BRASIL Pessoa Jurídica ". False otherwise.
 	 */
 	public boolean isCertificatePJ() {
-		// oid for (cei-pj)
-		return extras.get("2.16.76.1.3.7") != null;
+		// oid for (cei-pj) or (cnpj)
+		return extras.get("2.16.76.1.3.7") != null || extras.get("2.16.76.1.3.3") != null;
 	}
 
 	/**
