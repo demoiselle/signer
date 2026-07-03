@@ -431,6 +431,10 @@ public class BasicCertificate {
                 return certificate.getBasicConstraints() >= 0;
         }
 
+        private boolean oidMatches(String id, String oid) {
+                return id.equals(oid) || id.startsWith(oid + ".");
+        }
+
         /**
          * returns the ICP-BRASIL Certificate Level(A1, A2, A3, A4, S1, S2, S3,
          * S4).<br>
@@ -452,40 +456,40 @@ public class BasicCertificate {
                                                 continue;
                                         }
 
-                                        if (id.startsWith(OID_SE_S_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_SE_S_CERTIFICATE)) {
                                                 return "SE-S";
                                         }
-                                        if (id.startsWith(OID_SE_H_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_SE_H_CERTIFICATE)) {
                                                 return "SE-H";
                                         }
-                                        if (id.startsWith(OID_AE_S_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_AE_S_CERTIFICATE)) {
                                                 return "AE-S";
                                         }
-                                        if (id.startsWith(OID_AE_H_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_AE_H_CERTIFICATE)) {
                                                 return "AE-H";
                                         }
-                                        if (id.equals(OID_A1_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_A1_CERTIFICATE)) {
                                                 return "A1";
                                         }
-                                        if (id.equals(OID_A2_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_A2_CERTIFICATE)) {
                                                 return "A2";
                                         }
-                                        if (id.equals(OID_A3_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_A3_CERTIFICATE)) {
                                                 return "A3";
                                         }
-                                        if (id.equals(OID_A4_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_A4_CERTIFICATE)) {
                                                 return "A4";
                                         }
-                                        if (id.equals(OID_S1_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_S1_CERTIFICATE)) {
                                                 return "S1";
                                         }
-                                        if (id.equals(OID_S2_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_S2_CERTIFICATE)) {
                                                 return "S2";
                                         }
-                                        if (id.equals(OID_S3_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_S3_CERTIFICATE)) {
                                                 return "S3";
                                         }
-                                        if (id.equals(OID_S4_CERTIFICATE)) {
+                                        if (oidMatches(id, OID_S4_CERTIFICATE)) {
                                                 return "S4";
                                         }
                                 }
@@ -534,98 +538,7 @@ public class BasicCertificate {
                 return level != null && (level.equals("AE-S") || level.equals("AE-H"));
         }
 
-        /**
-         * @return CNPJ of the Registration Authority (AR) associated with the certificate
-         */
 
-	public String getCnpjAR() {
-		String cnpj = null;
-		
-		// 1. Tentar extrair do SAN (OtherName) diretamente via BouncyCastle
-		// para resolver problema de compatibilidade com Java 25+ e a nova
-		// Resolução que coloca o CNPJ da AR no OID 2.16.76.1.4.5.1
-		try {
-			java.util.Collection<java.util.List<?>> sans = certificate.getSubjectAlternativeNames();
-			if (sans != null) {
-				for (java.util.List<?> san : sans) {
-					if (!Integer.valueOf(0).equals(san.get(0))) continue;
-					if (!(san.get(1) instanceof byte[])) continue;
-
-					byte[] der = (byte[]) san.get(1);
-					try {
-						org.bouncycastle.asn1.ASN1Primitive prim = org.bouncycastle.asn1.ASN1Primitive.fromByteArray(der);
-						org.bouncycastle.asn1.ASN1Sequence seq;
-						if (prim instanceof org.bouncycastle.asn1.ASN1Sequence) {
-							seq = (org.bouncycastle.asn1.ASN1Sequence) prim;
-						} else if (prim instanceof org.bouncycastle.asn1.ASN1TaggedObject) {
-							seq = org.bouncycastle.asn1.ASN1Sequence.getInstance(((org.bouncycastle.asn1.ASN1TaggedObject) prim).getBaseObject());
-						} else {
-							continue;
-						}
-
-						if (seq.size() < 2) continue;
-
-						String oid = ((org.bouncycastle.asn1.ASN1ObjectIdentifier) seq.getObjectAt(0)).getId();
-						if ("2.16.76.1.4.5.1".equals(oid)) {
-							org.bouncycastle.asn1.ASN1TaggedObject tagged =
-								(org.bouncycastle.asn1.ASN1TaggedObject) seq.getObjectAt(1);
-							org.bouncycastle.asn1.ASN1Primitive inner = tagged.getBaseObject().toASN1Primitive();
-
-							byte[] contentBytes = null;
-							if (inner instanceof org.bouncycastle.asn1.ASN1OctetString) {
-								contentBytes = ((org.bouncycastle.asn1.ASN1OctetString) inner).getOctets();
-							} else if (inner instanceof org.bouncycastle.asn1.ASN1String) {
-								contentBytes = ((org.bouncycastle.asn1.ASN1String) inner).getString().getBytes("UTF-8");
-							}
-							
-							if (contentBytes != null) {
-								String data = new String(contentBytes, "UTF-8").trim().toUpperCase();
-								if (data.matches("[0-9A-Z]{14}")) {
-									logger.debug("CNPJ da AR extraído via OtherName direto (2.16.76.1.4.5.1)");
-									return data;
-								}
-							}
-						}
-					} catch (Exception e) {
-						logger.debug("Erro ao parsear OtherName entry para CNPJ da AR: {}", e.getMessage());
-					}
-				}
-			}
-		} catch (Exception e) {
-			logger.debug("Erro ao extrair SAN: {}", e.getMessage());
-		}
-
-		// 2. Tentar usar classes internas do Demoiselle (CertificateExtra)
-		if (getICPBRSubjectAlternativeNames() != null) {
-			if (hasCertificatePF()) {
-				cnpj = getICPBRCertificatePF().getCnpjAR();
-			} else if (hasCertificatePJ()) {
-				cnpj = getICPBRCertificatePJ().getCnpjAR();
-			} else if (hasCertificateSE()) {
-				cnpj = getICPBRCertificateSE().getCnpjAR();
-			}
-		}
-		
-		// 3. Fallback: procurar OU= com 14 digitos
-		if (cnpj == null || cnpj.isEmpty()) {
-			try {
-				String dn = certificate.getSubjectDN().getName();
-				String[] parts = dn.split(",");
-				for (String part : parts) {
-					String p = part.trim().toUpperCase();
-					if (p.startsWith("OU=")) {
-						String value = part.split("=")[1].trim();
-						if (value.matches("\\d{14}")) {
-							return value;
-						}
-					}
-				}
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-			}
-		}
-		return cnpj;
-	}
 
 	public String getNameAR() {
 		try {

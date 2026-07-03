@@ -99,7 +99,7 @@ public class Resolution211Test {
         BasicCertificate bc = new BasicCertificate(cert);
         Assert.assertTrue("Deveria ser PF", bc.hasCertificatePF());
         Assert.assertEquals("CPF incorreto", cpf, bc.getICPBRCertificatePF().getCPF());
-        Assert.assertEquals("CNPJ AR incorreto", cnpjAR, bc.getCnpjAR());
+
         Assert.assertEquals("Tipo incorreto", "A", bc.getCertificateType());
         Assert.assertEquals("Nível incorreto", "A3", bc.getCertificateLevel());
     }

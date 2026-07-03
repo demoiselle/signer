@@ -162,10 +162,8 @@ public class TokenIT {
                 out.println("Issuer DN: " + cert.getIssuerDN().getName());
                 out.println("Serial Number: " + bc.getSerialNumber());
                 
-                String cnpjAR = bc.getCnpjAR();
                 String nameAR = bc.getNameAR();
                 
-                out.println("CNPJ da AR: " + (cnpjAR != null ? cnpjAR : "Não encontrado"));
                 out.println("Nome da AR: " + (nameAR != null ? nameAR : "Não encontrado"));
                 
                 // Extração de OIDs extintos pela Resolução 211 para verificação
