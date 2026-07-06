@@ -34,14 +34,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.bouncycastle.asn1.ASN1IA5String;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERIA5String;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERTaggedObject;
-import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.bouncycastle.asn1.x509.AccessDescription;
 import org.bouncycastle.asn1.x509.AuthorityInformationAccess;
 import org.bouncycastle.asn1.x509.CRLDistPoint;
@@ -445,11 +444,11 @@ public class BasicCertificate {
          */
         public String getCertificateLevel() {
                 try {
-                        ASN1Sequence sequence = (ASN1Sequence) getExtensionValue(Extension.certificatePolicies.getId());
+                        ASN1Sequence sequence = ASN1Sequence.getInstance(getExtensionValue(Extension.certificatePolicies.getId()));
                         if (sequence != null) {
                                 for (int pos = 0; pos < sequence.size(); pos++) {
-                                        ASN1Sequence sequence2 = (ASN1Sequence) sequence.getObjectAt(pos);
-                                        ASN1ObjectIdentifier policyIdentifier = (ASN1ObjectIdentifier) sequence2.getObjectAt(0);
+                                        ASN1Sequence sequence2 = ASN1Sequence.getInstance(sequence.getObjectAt(pos));
+                                        ASN1ObjectIdentifier policyIdentifier = ASN1ObjectIdentifier.getInstance(sequence2.getObjectAt(0));
                                         PolicyInformation policyInformation = new PolicyInformation(policyIdentifier);
                                         String id = policyInformation.getPolicyIdentifier().getId();
                                         if (id == null) {
@@ -567,7 +566,7 @@ public class BasicCertificate {
                                         JcaX509ExtensionUtils.parseExtensionValue(authorityInfoAccess));
                                 for (AccessDescription desc : infoAccess.getAccessDescriptions())
                                         if (desc.getAccessLocation().getTagNo() == GeneralName.uniformResourceIdentifier)
-                                                address.add(((DERIA5String) desc.getAccessLocation().getName()).getString());
+                                                address.add(ASN1IA5String.getInstance(desc.getAccessLocation().getName()).getString());
                         }
                         return address;
                 } catch (Exception error) {
@@ -583,12 +582,12 @@ public class BasicCertificate {
          */
         public String getAuthorityKeyIdentifier() {
                 try {
-                        DLSequence sequence = (DLSequence) getExtensionValue(Extension.authorityKeyIdentifier.getId());
+                        ASN1Sequence sequence = ASN1Sequence.getInstance(getExtensionValue(Extension.authorityKeyIdentifier.getId()));
                         if (sequence == null || sequence.size() == 0) {
                                 return null;
                         }
-                        DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(0);
-                        DEROctetString oct = (DEROctetString) taggedObject.getBaseObject();
+                        ASN1TaggedObject taggedObject = ASN1TaggedObject.getInstance(sequence.getObjectAt(0));
+                        ASN1OctetString oct = ASN1OctetString.getInstance(taggedObject.getBaseObject());
                         return toString(oct.getOctets());
                 } catch (Exception error) {
                         logger.error(error.getMessage());
@@ -602,7 +601,7 @@ public class BasicCertificate {
          */
         public String getSubjectKeyIdentifier() throws IOException {
                 try {
-                        DEROctetString oct = (DEROctetString) getExtensionValue(Extension.subjectKeyIdentifier.getId());
+                        ASN1OctetString oct = ASN1OctetString.getInstance(getExtensionValue(Extension.subjectKeyIdentifier.getId()));
                         if (oct == null) {
                                 return null;
                         }
@@ -633,7 +632,7 @@ public class BasicCertificate {
                                         GeneralName[] genNames = GeneralNames.getInstance(dpn.getName()).getNames();
                                         for (GeneralName genName : genNames) {
                                                 if (genName.getTagNo() == GeneralName.uniformResourceIdentifier) {
-                                                        String url = DERIA5String.getInstance(genName.getName()).getString();
+                                                        String url = ASN1IA5String.getInstance(genName.getName()).getString();
                                                         crlUrls.add(url);
                                                 }
                                         }
@@ -656,7 +655,7 @@ public class BasicCertificate {
                                 return null;
                         }
                         try (ASN1InputStream input = new ASN1InputStream(extensionValue)) {
-                                DEROctetString oct = (DEROctetString) input.readObject();
+                                ASN1OctetString oct = ASN1OctetString.getInstance(input.readObject());
                                 try (ASN1InputStream inner = new ASN1InputStream(oct.getOctets())) {
                                         return inner.readObject();
                                 }

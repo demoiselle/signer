@@ -39,7 +39,7 @@ package org.demoiselle.signer.policy.engine.asn1.etsi;
 
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DEROctetString;
+import org.bouncycastle.asn1.ASN1OctetString;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 
@@ -110,7 +110,7 @@ public class SignaturePolicy {
 		this.signPolicyInfo = new SignPolicyInfo();
 		this.signPolicyInfo.parse(derSequence.getObjectAt(1).toASN1Primitive());
 		if (derSequence.size() == 3) {
-			this.signPolicyHash = new SignPolicyHash((DEROctetString) derSequence.getObjectAt(2));
+			this.signPolicyHash = new SignPolicyHash(ASN1OctetString.getInstance(derSequence.getObjectAt(2)));
 		}
 	}
 

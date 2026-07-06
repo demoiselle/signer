@@ -42,13 +42,13 @@ import java.util.Map;
 
 import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1Primitive;
+import org.bouncycastle.asn1.ASN1IA5String;
+import org.bouncycastle.asn1.ASN1PrintableString;
+import org.bouncycastle.asn1.ASN1UTF8String;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERPrintableString;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERSet;
+import org.bouncycastle.asn1.ASN1Set;
+import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.ASN1TaggedObject;
-import org.bouncycastle.asn1.DERUTF8String;
 
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
@@ -87,7 +87,7 @@ public class PolicyIssuerName extends ASN1Object {
 			if (asn1Encodable instanceof ASN1TaggedObject) {
 				ASN1TaggedObject derTaggedObject = (ASN1TaggedObject) asn1Encodable;
 				ASN1Primitive object = derTaggedObject.getBaseObject().toASN1Primitive();
-				if (object instanceof DEROctetString) {
+				if (object instanceof ASN1OctetString) {
 					OctetString octetString = new OctetString();
 					octetString.parse(object);
 					this.issuerName = octetString.getValueUTF8();
@@ -95,8 +95,8 @@ public class PolicyIssuerName extends ASN1Object {
 					ASN1Sequence sequence2 = (ASN1Sequence) object;
 					for (int i = 0; i < sequence2.size(); i++) {
 						ASN1Encodable obj = sequence2.getObjectAt(i);
-						if (obj instanceof DERSet) {
-							DERSet set = (DERSet) obj;
+						if (obj instanceof ASN1Set) {
+							ASN1Set set = (ASN1Set) obj;
 							ASN1Encodable object2 = set.getObjectAt(0);
 							if (object2 instanceof ASN1Sequence) {
 								ASN1Sequence sequence3 = (ASN1Sequence) object2;
@@ -104,10 +104,10 @@ public class PolicyIssuerName extends ASN1Object {
 								objectIdendifier.parse(sequence3.getObjectAt(0).toASN1Primitive());
 								String name = null;
 								ASN1Encodable object3 = sequence3.getObjectAt(1);
-								if (object3 instanceof DERPrintableString) {
-									name = ((DERPrintableString) object3).getString();
-								} else if (object3 instanceof DERUTF8String) {
-									name = ((DERUTF8String) object3).getString();
+								if (object3 instanceof ASN1PrintableString) {
+									name = ((ASN1PrintableString) object3).getString();
+								} else if (object3 instanceof ASN1UTF8String) {
+									name = ((ASN1UTF8String) object3).getString();
 								} else {
 									logger.warn(policyMessagesBundle.getString("error.not.recognized.object", object3.getClass(), object3.toString()));
 								}
