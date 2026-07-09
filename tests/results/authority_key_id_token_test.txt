@@ -1,7 +1,0 @@
-Teste de Integração: Authority Key Identifier via Token
-======================================================
-Data: Mon Jul 06 14:01:21 GMT-03:00 2026
-
-Nenhum certificado encontrado no token.
-
-Fim do teste. Total de certificados: 0

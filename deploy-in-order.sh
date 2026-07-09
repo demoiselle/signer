@@ -5,7 +5,7 @@ export PATH=$JAVA_HOME/bin:$PATH
 cd /home/s932743005/repo/signer-evandrojr/
 
 # Use -Dmaven.test.skip=true and -Dgpg.skip=true to bypass blockers
-OPTS="-Dmaven.test.skip=true -Dmaven.javadoc.skip=true -Dsource.skip=true -Dgpg.skip=true -B"
+OPTS="-Dmaven.test.skip=true -B"
 
 echo "Step 1: Deploying build..."
 mvn clean deploy -N $OPTS && \

@@ -1,7 +1,7 @@
 #!/bin/zsh
 set -e
 
-VERSION=4.6.1-SNAPSHOT
+VERSION=4.6.1
 git checkout -b $VERSION 2>/dev/null || git checkout $VERSION
 
 # Load SDKMAN if available
