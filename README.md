@@ -35,7 +35,7 @@ Adicione o módulo desejado ao seu `pom.xml`. Para assinatura CAdES:
 <dependency>
     <groupId>org.demoiselle.signer</groupId>
     <artifactId>policy-impl-cades</artifactId>
-    <version>4.6.0-SNAPSHOT</version>
+    <version>4.6.1</version>
 </dependency>
 ```
 
@@ -45,7 +45,7 @@ A cadeia ICP-Brasil é carregada automaticamente se `chain-icp-brasil` estiver n
 <dependency>
     <groupId>org.demoiselle.signer</groupId>
     <artifactId>chain-icp-brasil</artifactId>
-    <version>4.6.0-SNAPSHOT</version>
+    <version>4.6.1</version>
 </dependency>
 ```
 
@@ -85,7 +85,7 @@ As principais configurações são feitas via variável de ambiente ou system pr
 
 ## Release Notes
 
-- [4.6.0-SNAPSHOT](release-notes/4.6.0-SNAPSHOT.md)
+- [4.6.1](release-notes/4.6.1.md)
 
 ---
 
