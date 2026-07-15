@@ -5,6 +5,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
@@ -67,7 +68,7 @@ func main() {
 	}
 
 	duration := time.Since(start)
-	fmt.Println("\n" + filepath.Repeat("-", 40))
+	fmt.Println("\n" + strings.Repeat("-", 40))
 	fmt.Printf("🏁 Finalizado em %v\n", duration.Truncate(time.Second))
 	fmt.Printf("📊 Resumo: %d Sucessos, %d Falhas\n", successCount, failCount)
 
