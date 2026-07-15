@@ -54,7 +54,7 @@ public class PAdESSigner implements PCKS7Signer {
 	private CAdESSigner cAdESSigner;
 
 	public PAdESSigner() {
-		cAdESSigner = new CAdESSigner(null, Policies.AD_RB_PADES_1_1, true);
+		cAdESSigner = new CAdESSigner(null, Policies.AD_RB_PADES_1_3, true);
 	}
 
 	public PAdESSigner(Policies police) {

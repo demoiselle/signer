@@ -49,108 +49,151 @@ import org.bouncycastle.cert.jcajce.JcaX509CertificateHolder;
  */
 public class ICPBRSubjectAlternativeNames {
 
-	private String email = null;
-	private String dns = null;
-	private ICPBRCertificatePF icpBrCertPF = null;
-	private ICPBRCertificatePJ icpBrCertPJ = null;
-	private ICPBRCertificateEquipment icpBrCertEquipment = null;
+        private String email = null;
+        private String dns = null;
+        private ICPBRCertificatePF icpBrCertPF = null;
+        private ICPBRCertificatePJ icpBrCertPJ = null;
+        private ICPBRCertificateSE icpBrCertSE = null;
+        private ICPBRCertificateEquipment icpBrCertEquipment = null;
 
-	/**
-	 * @param certificate -&gt; X509Certificate
-	 * @see java.security.cert.X509Certificate
-	 */
-	public ICPBRSubjectAlternativeNames(X509Certificate certificate) {
+        /**
+         * @param certificate -&gt; X509Certificate
+         * @see java.security.cert.X509Certificate
+         */
+        public ICPBRSubjectAlternativeNames(X509Certificate certificate) {
 
-		String SN = getSNfromCertificate(certificate);
-		CertificateExtra ce = new CertificateExtra(certificate);
+                String SN = getSNfromCertificate(certificate);
+                CertificateExtra ce = new CertificateExtra(certificate);
 
-		if (ce.isCertificatePF()) {
-			icpBrCertPF = new ICPBRCertificatePF(ce.getOID_2_16_76_1_3_1(), ce.getOID_2_16_76_1_3_5(), ce.getOID_2_16_76_1_3_6());
-		} else if (ce.isCertificatePJ()) {
-			icpBrCertPJ = new ICPBRCertificatePJ(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_7());
-		} else if (ce.isCertificateEquipment()) {
-			icpBrCertEquipment = new ICPBRCertificateEquipment(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_8(),
-				ce.getOID_2_5_29_17(), SN);
-			this.dns = ce.getDNS();
-		}
-		this.email = ce.getEmail();
-	}
+                boolean isEq = ce.isCertificateEquipment();
+                boolean isSE = false;
+                String level = new BasicCertificate(certificate).getCertificateLevel();
+                if (level != null && level.startsWith("SE-")) {
+                        isSE = true;
+                }
 
-	/**
-	 * @return boolean is PF
-	 */
-	public boolean isCertificatePF() {
-		return icpBrCertPF != null;
-	}
+                boolean isPF = false;
+                boolean isPJ = false;
 
-	/**
-	 * @return ICPBRCertificatePF ICPBR Certificate PF
-	 * @see org.demoiselle.signer.core.extension.ICPBRCertificatePF
-	 */
-	public ICPBRCertificatePF getICPBRCertificatePF() {
-		return icpBrCertPF;
-	}
+                if (!isEq && !isSE) {
+                        if (ce.getOID_2_16_76_1_3_1() != null) {
+                                isPF = true;
+                        } else if (ce.getOID_2_16_76_1_3_7() != null || ce.getOID_2_16_76_1_3_3() != null) {
+                                isPJ = true;
+                        } else if (SN != null) {
+                                if (SN.length() == 11) {
+                                        isPF = true;
+                                } else if (SN.length() == 14) {
+                                        isPJ = true;
+                                }
+                        }
+                }
 
-	/**
-	 * @return boolean is PJ
-	 */
-	public boolean isCertificatePJ() {
-		return icpBrCertPJ != null;
-	}
+                if (isSE) {
+                        icpBrCertSE = new ICPBRCertificateSE(SN, ce.getOID_2_16_76_1_4_5_1());
+                } else if (isPF) {
+                        icpBrCertPF = new ICPBRCertificatePF(ce.getOID_2_16_76_1_3_1(), ce.getOID_2_16_76_1_3_5(), ce.getOID_2_16_76_1_3_6(), ce.getOID_2_16_76_1_4_5_1(), SN);
+                } else if (isPJ) {
+                        icpBrCertPJ = new ICPBRCertificatePJ(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_7(), ce.getOID_2_16_76_1_4_5_1(), SN);
+                } else if (isEq) {
+                        icpBrCertEquipment = new ICPBRCertificateEquipment(ce.getOID_2_16_76_1_3_2(), ce.getOID_2_16_76_1_3_3(), ce.getOID_2_16_76_1_3_4(), ce.getOID_2_16_76_1_3_8(),
+                                ce.getOID_2_5_29_17(), SN);
+                        this.dns = ce.getDNS();
+                }
+                this.email = ce.getEmail();
+        }
 
-	/**
-	 * @return ICPBRCertificatePJ ICPBR Certificate PJ
-	 * @see org.demoiselle.signer.core.extension.ICPBRCertificatePJ
-	 */
-	public ICPBRCertificatePJ getICPBRCertificatePJ() {
-		return icpBrCertPJ;
-	}
+        /**
+         * @return boolean is PF
+         */
+        public boolean isCertificatePF() {
+                return icpBrCertPF != null;
+        }
 
-	/**
-	 * @return boolean is Equipment
-	 */
-	public boolean isCertificateEquipment() {
-		return icpBrCertEquipment != null;
-	}
+        /**
+         * @return ICPBRCertificatePF ICPBR Certificate PF
+         * @see org.demoiselle.signer.core.extension.ICPBRCertificatePF
+         */
+        public ICPBRCertificatePF getICPBRCertificatePF() {
+                return icpBrCertPF;
+        }
 
-	/**
-	 * @return ICPBRCertificateEquipment ICPBR Certificate Equipment
-	 * @see org.demoiselle.signer.core.extension.ICPBRCertificateEquipment
-	 */
-	public ICPBRCertificateEquipment getICPBRCertificateEquipment() {
-		return icpBrCertEquipment;
-	}
+        /**
+         * @return boolean is PJ
+         */
+        public boolean isCertificatePJ() {
+                return icpBrCertPJ != null;
+        }
 
-	/**
-	 * @return String email
-	 */
-	public String getEmail() {
-		return email;
-	}
+        /**
+         * @return ICPBRCertificatePJ ICPBR Certificate PJ
+         * @see org.demoiselle.signer.core.extension.ICPBRCertificatePJ
+         */
+        public ICPBRCertificatePJ getICPBRCertificatePJ() {
+                return icpBrCertPJ;
+        }
 
-	/**
-	 * @return String DNS for  ICPBR Certificate Equipment
-	 */
-	public String getDns() {
-		return dns;
-	}
+        /**
+         * @return boolean is SE
+         */
+        public boolean isCertificateSE() {
+                return icpBrCertSE != null;
+        }
 
-	/**
-	 * @param certificate
-	 * @return SerialNumber ("2.5.4.5") from Principal Certificate
-	 */
-	private String getSNfromCertificate(X509Certificate certificate) {
-		try {
-			X500Name x500name = new JcaX509CertificateHolder(certificate).getSubject();
-			RDN[] rdns = x500name.getRDNs();
-			for (int i = 0; i < rdns.length; i++) {
-				if (rdns[i].getFirst().getType().getId().equals("2.5.4.5"))
-					return rdns[i].getFirst().getValue().toString();
-			}
-			return null;
-		} catch (CertificateEncodingException e) {
-			return null;
-		}
-	}
+        /**
+         * @return ICPBRCertificateSE ICPBR Certificate SE
+         */
+        public ICPBRCertificateSE getICPBRCertificateSE() {
+                return icpBrCertSE;
+        }
+
+        /**
+         * @return boolean is Equipment
+         */
+        public boolean isCertificateEquipment() {
+                return icpBrCertEquipment != null;
+        }
+
+        /**
+         * @return ICPBRCertificateEquipment ICPBR Certificate Equipment
+         * @see org.demoiselle.signer.core.extension.ICPBRCertificateEquipment
+         */
+        public ICPBRCertificateEquipment getICPBRCertificateEquipment() {
+                return icpBrCertEquipment;
+        }
+
+        /**
+         * @return String email from Principal Certificate
+         */
+        public String getEmail() {
+                return email;
+        }
+
+        /**
+         * @return String DNS for  ICPBR Certificate Equipment
+         */
+        public String getDns() {
+                return dns;
+        }
+
+        /**
+         * @param certificate
+         * @return SerialNumber ("2.5.4.5") from Principal Certificate
+         */
+        private String getSNfromCertificate(X509Certificate certificate) {
+                try {
+                        X500Name x500name = new JcaX509CertificateHolder(certificate).getSubject();
+                        RDN[] rdns = x500name.getRDNs();
+                        for (int i = 0; i < rdns.length; i++) {
+                                if (rdns[i].getFirst().getType().getId().equals("2.5.4.5")) {
+                                        String value = rdns[i].getFirst().getValue().toString();
+                                        return value != null ? value.replaceAll("^CNPJ:", "") : null;
+                                }
+                        }
+                        return null;
+                } catch (CertificateEncodingException e) {
+                        return null;
+                }
+        }
 
 }

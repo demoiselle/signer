@@ -12,8 +12,37 @@
     <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>build</artifactId>
-        <version>4.5.1</version>
+        <version>4.6.1</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>SERPRO - Serviço Federal de Processamento de Dados</name>
+        <url>https://www.serpro.gov.br</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Evandro Magalhães Leite Júnior</name>
+            <email>evandrojr@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:demoiselle/signer.git</connection>
+        <developerConnection>scm:git:git@github.com:demoiselle/signer.git</developerConnection>
+        <url>https://github.com/demoiselle/signer</url>
+        <tag>4.6.1</tag>
+    </scm>
 
     <dependencyManagement>
         <dependencies>
@@ -22,35 +51,56 @@
                 <artifactId>bom</artifactId>
                 <scope>import</scope>
                 <type>pom</type>
-                <version>${project.parent.version}</version>
+                <version>4.6.1</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
 
     <properties>
         <license.header>../licence-lgpl</license.header>
+        <skipITs>true</skipITs>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
     <!-- Dependencias -->
     <dependencies>
         <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-1.2-api</artifactId>
+            <version>2.25.4</version>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <version>1.7.32</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <version>4.13.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.bouncycastle</groupId>
-            <artifactId>bcmail-jdk15on</artifactId>
+            <artifactId>bcmail-lts8on</artifactId>
+            <version>2.73.11</version>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.6.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>ossrh</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <skipPublishing>true</skipPublishing>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -67,21 +117,43 @@
                             <Codebase>*</Codebase>
                             <Application-Library-Allowable-Codebase>*</Application-Library-Allowable-Codebase>
                             <Trusted-Library>true</Trusted-Library>
-                            <Bundle-RequiredExecutionEnvironment>JavaSE-1.6, JavaSE-1.7
+                            <Bundle-RequiredExecutionEnvironment>JavaSE-1.8
                             </Bundle-RequiredExecutionEnvironment>
                             <Implementation-Vendor-Id>org.demoiselle</Implementation-Vendor-Id>
-                            <Implementation-Version>${project.parent.version}</Implementation-Version>
+                            <Implementation-Version>4.6.1</Implementation-Version>
                             <Specification-Vendor>Demoiselle.org</Specification-Vendor>
                             <Implementation-Vendor>Demoiselle.org</Implementation-Vendor>
-                            <Bundle-Version>${project.parent.version}</Bundle-Version>
+                            <Bundle-Version>4.6.1</Bundle-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.22.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skipITs>${skipITs}</skipITs>
+                </configuration>
+            </plugin>
         </plugins>
-
-
     </build>
+
+    <profiles>
+        <profile>
+            <id>it</id>
+            <properties>
+                <skipITs>false</skipITs>
+            </properties>
+        </profile>
+    </profiles>
 
 </project>

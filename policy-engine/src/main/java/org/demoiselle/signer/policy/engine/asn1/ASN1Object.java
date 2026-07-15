@@ -40,10 +40,12 @@ package org.demoiselle.signer.policy.engine.asn1;
 import org.bouncycastle.asn1.ASN1Enumerated;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERSequence;
-import org.bouncycastle.asn1.DERTaggedObject;
-import org.bouncycastle.asn1.DLSequence;
+
+import org.bouncycastle.asn1.ASN1TaggedObject;
+
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract class for provide methods to get {@link DERSequence}
@@ -59,6 +61,7 @@ import org.demoiselle.signer.policy.engine.util.MessagesBundle;
 public abstract class ASN1Object {
 
 	private static final MessagesBundle policyMessagesBundle = new MessagesBundle("messages_policy");
+	private static final Logger logger = LoggerFactory.getLogger(ASN1Object.class);
 
 	/**
 	 * @param derObject Object to convert from.
@@ -67,16 +70,13 @@ public abstract class ASN1Object {
 	 */
 	public static ASN1Sequence getDERSequence(ASN1Primitive derObject) {
 		ASN1Sequence sequence = null;
-		if (derObject instanceof DERTaggedObject) {
-			ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
-			if (object instanceof DERSequence) {
-				sequence = (DERSequence) object;
+		if (derObject instanceof ASN1TaggedObject) {
+			ASN1Primitive object = ((ASN1TaggedObject) derObject).getBaseObject().toASN1Primitive();
+			if (object instanceof ASN1Sequence) {
+				sequence = (ASN1Sequence) object;
 			}
-		} else if (derObject instanceof DERSequence) {
-			sequence = (DERSequence) derObject;
-		} else if (derObject instanceof DLSequence) {
-
-			sequence = (DLSequence) derObject.toASN1Primitive();
+		} else if (derObject instanceof ASN1Sequence) {
+			sequence = (ASN1Sequence) derObject;
 		}
 		return sequence;
 	}
@@ -89,8 +89,8 @@ public abstract class ASN1Object {
 	 */
 	public static ASN1Enumerated getDEREnumerated(ASN1Primitive derObject) {
 		ASN1Enumerated derEnumerated = null;
-		if (derObject instanceof DERTaggedObject) {
-			ASN1Primitive object = ((DERTaggedObject) derObject).getObject();
+		if (derObject instanceof ASN1TaggedObject) {
+			ASN1Primitive object = ((ASN1TaggedObject) derObject).getBaseObject().toASN1Primitive();
 			if (object instanceof ASN1Enumerated) {
 				derEnumerated = (ASN1Enumerated) object;
 			}
@@ -104,6 +104,6 @@ public abstract class ASN1Object {
 	 * @param derObject ASN1 Primitive to parse
 	 */
 	public void parse(ASN1Primitive derObject) {
-		System.out.println(this.getClass() + policyMessagesBundle.getString("info.not.implemented"));
+		logger.info(this.getClass() + policyMessagesBundle.getString("info.not.implemented"));
 	}
 }

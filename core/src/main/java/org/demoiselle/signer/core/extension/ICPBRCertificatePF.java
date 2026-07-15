@@ -40,6 +40,7 @@ package org.demoiselle.signer.core.extension;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_1;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_5;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_6;
+import org.demoiselle.signer.core.oid.OID_2_16_76_1_4_5_1;
 
 /**
  * Implemented Class for ICP-BRASIL (DOC-ICP-04)
@@ -53,116 +54,120 @@ public class ICPBRCertificatePF {
 	private OID_2_16_76_1_3_1 oID_2_16_76_1_3_1;
 	private OID_2_16_76_1_3_5 oID_2_16_76_1_3_5;
 	private OID_2_16_76_1_3_6 oID_2_16_76_1_3_6;
+	private OID_2_16_76_1_4_5_1 oID_2_16_76_1_4_5_1;
+	private String serialNumber;
 
-	/**
-	 * @param oid1 -&gt; 2.16.76.1.3.1 and content = In the first 8 (eight) positions, the
-	 *             Date of birth of the holder for the certificate, in ddmmaaaa format;
-	 *             In the 11 (eleven) subsequent positions, the Brazilian IRS Individuals Registry number called CPF of the
-	 *             holder; In the 11 (eleven) subsequent positions, the number of
-	 *             Brazilian Social Identification number - NIS (PIS, PASEP or CI); In the 15 (fifteen) positions
-	 *             Subsequent, the Brazilian ID number (called RG) of the responsible for the certificate; In the six (6) positions
-	 *             Subsequent, the initials of the issuing agency of the ID (RG) and its UF (Initials for a Brazilian state).
-	 * @param oid2 -&gt; 2.16.76.1.3.5 and content = In the first 12 (eleven)
-	 *             positions, the number of the Electoral document; In 3
-	 *             (Three) subsequent positions, the Electoral document Zone; In the four (4)
-	 *             following positions, the Section of Electoral document; In the twenty-two (22)
-	 *             Subsequent  positions, the name of City and  and its UF (Initials for a Brazilian state) of the Electoral Document.
-	 * @param oid3 -&gt; 2.16.76.1.3.6 and content = In the 12 (twelve) positions, the number of the registry
-	 *             on Brazilian National Social Security Institute (INSS) called CEI .
-	 */
-
-	public ICPBRCertificatePF(OID_2_16_76_1_3_1 oid1, OID_2_16_76_1_3_5 oid2, OID_2_16_76_1_3_6 oid3) {
+	public ICPBRCertificatePF(OID_2_16_76_1_3_1 oid1, OID_2_16_76_1_3_5 oid2, OID_2_16_76_1_3_6 oid3, OID_2_16_76_1_4_5_1 oidAR, String serialNumber) {
 		this.oID_2_16_76_1_3_1 = oid1;
 		this.oID_2_16_76_1_3_5 = oid2;
 		this.oID_2_16_76_1_3_6 = oid3;
+		this.oID_2_16_76_1_4_5_1 = oidAR;
+		this.serialNumber = serialNumber;
+	}
+
+	public ICPBRCertificatePF(OID_2_16_76_1_3_1 oid1, OID_2_16_76_1_3_5 oid2, OID_2_16_76_1_3_6 oid3, String serialNumber) {
+		this(oid1, oid2, oid3, null, serialNumber);
+	}
+
+	public ICPBRCertificatePF(OID_2_16_76_1_3_1 oid1, OID_2_16_76_1_3_5 oid2, OID_2_16_76_1_3_6 oid3) {
+		this(oid1, oid2, oid3, null, null);
 	}
 
 	/**
 	 * @return the Brazilian IRS Individuals Registry number called CPF
 	 */
 	public String getCPF() {
-		return oID_2_16_76_1_3_1.getCPF();
+		if (serialNumber != null && !serialNumber.isEmpty()) {
+			return serialNumber;
+		}
+		if (oID_2_16_76_1_3_1 != null) {
+			return oID_2_16_76_1_3_1.getCPF();
+		}
+		return null;
 	}
 
 	/**
 	 * @return Date of birth of the responsible for the certificate
 	 */
 	public String getBirthDate() {
-		return oID_2_16_76_1_3_1.getBirthDate();
+		return oID_2_16_76_1_3_1 != null ? oID_2_16_76_1_3_1.getBirthDate() : null;
 	}
 
 	/**
 	 * @return Brazilian Social Identification number of the responsible - initials are: NIS
 	 */
 	public String getNis() {
-		return oID_2_16_76_1_3_1.getNIS();
+		return oID_2_16_76_1_3_1 != null ? oID_2_16_76_1_3_1.getNIS() : null;
 	}
 
 	/**
 	 * @return the Brazilian ID number (called RG), of the certificate's holder
 	 */
 	public String getRg() {
-		return oID_2_16_76_1_3_1.getRg();
+		return oID_2_16_76_1_3_1 != null ? oID_2_16_76_1_3_1.getRg() : null;
 	}
 
 	/**
 	 * @return the initials of the issuing agency of the Brazilian ID (RG)
 	 */
 	public String getIssuingAgencyRg() {
-		return oID_2_16_76_1_3_1.getIssuingAgencyRg();
+		return oID_2_16_76_1_3_1 != null ? oID_2_16_76_1_3_1.getIssuingAgencyRg() : null;
 	}
 
 	/**
 	 * @return Initials for a Brasilian state(UF) of the issuing agency of the ID (RG)
 	 */
 	public String getUfIssuingAgencyRg() {
-		return oID_2_16_76_1_3_1.getUfIssuingAgencyRg();
+		return oID_2_16_76_1_3_1 != null ? oID_2_16_76_1_3_1.getUfIssuingAgencyRg() : null;
 	}
 
 	/**
 	 * @return String that contains a number (with size = 12) of the Brazilian Electoral Document (Titulo Eleitor)
 	 */
 	public String getElectoralDocument() {
-		return oID_2_16_76_1_3_5.getElectoralDocument();
+		return oID_2_16_76_1_3_5 != null ? oID_2_16_76_1_3_5.getElectoralDocument() : null;
 	}
 
 	/**
 	 * @return String that contains a number (with size = 4) Section of  Electoral document
 	 */
 	public String getSectionElectoralDocument() {
-		return oID_2_16_76_1_3_5.getSection();
+		return oID_2_16_76_1_3_5 != null ? oID_2_16_76_1_3_5.getSection() : null;
 	}
 
 	/**
 	 * @return String that contains a number (with size = 3) Section of  Electoral document
 	 */
 	public String getZoneElectoralDocument() {
-		return oID_2_16_76_1_3_5.getZone();
+		return oID_2_16_76_1_3_5 != null ? oID_2_16_76_1_3_5.getZone() : null;
 	}
 
 	/**
-	 * @return o municipio e a UF do Titulo de Eleitor
-	 * <p>
-	 * public String getMunicipioUfTituloEleitor(){ return
-	 * oID_2_16_76_1_3_5.getMunicipioUf(); }
 	 * @return Name of City of  Electoral document
 	 */
 	public String getCityElectoralDocument() {
-		return oID_2_16_76_1_3_5.getCityUF();
+		return oID_2_16_76_1_3_5 != null ? oID_2_16_76_1_3_5.getCityUF() : null;
 	}
 
 	/**
 	 * @return Initials for a Brasilian state  of Electoral document
 	 */
 	public String getUFElectoralDocument() {
-		return oID_2_16_76_1_3_5.getUFDocument();
+		return oID_2_16_76_1_3_5 != null ? oID_2_16_76_1_3_5.getUFDocument() : null;
 	}
 
 	/**
 	 * @return Brazilian Social Identification Number (INSS-CEI) of the holder of certificate
 	 */
 	public String getCEI() {
-		return oID_2_16_76_1_3_6.getCEI();
+		return oID_2_16_76_1_3_6 != null ? oID_2_16_76_1_3_6.getCEI() : null;
+	}
+
+	/**
+	 * @return CNPJ da Autoridade de Registro (AR)
+	 */
+	public String getCnpjAR() {
+		return oID_2_16_76_1_4_5_1 != null ? oID_2_16_76_1_4_5_1.getCnpjAR() : null;
 	}
 
 	/*

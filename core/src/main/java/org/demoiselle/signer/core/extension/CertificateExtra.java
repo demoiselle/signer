@@ -47,6 +47,7 @@ import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_5;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_6;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_7;
 import org.demoiselle.signer.core.oid.OID_2_16_76_1_3_8;
+import org.demoiselle.signer.core.oid.OID_2_16_76_1_4_5_1;
 import org.demoiselle.signer.core.oid.OID_2_5_29_17;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -68,6 +69,7 @@ public class CertificateExtra {
 	private String email = "";
 	private String dns = "";
 	private final Map<String, OIDGeneric> extras = new HashMap<>();
+	private final X509Certificate certificate;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
 	private static final Logger logger = LoggerFactory.getLogger(CertificateExtra.class);
 
@@ -75,14 +77,15 @@ public class CertificateExtra {
 	 * @param certificate The certificate to be analyzed
 	 */
 	public CertificateExtra(X509Certificate certificate) {
+		this.certificate = certificate;
 		try {
 			if (certificate.getSubjectAlternativeNames() == null) {
 				return;
 			}
 			for (List<?> list : certificate.getSubjectAlternativeNames()) {
-				if (list.size() != 2) {
-					logger.error(coreMessagesBundle.getString("error.extra.size.incorret"));
-					throw new Exception(coreMessagesBundle.getString("error.extra.size.incorret"));
+				if (list.size() < 2) {
+					logger.info(coreMessagesBundle.getString("error.extra.size.incorret"));
+					continue;
 				}
 
 				Object e1, e2;
@@ -137,8 +140,8 @@ public class CertificateExtra {
 	 * @return True if you are an "ICP-BRASIL Pessoa Jurídica ". False otherwise.
 	 */
 	public boolean isCertificatePJ() {
-		// oid for (cei-pj)
-		return extras.get("2.16.76.1.3.7") != null;
+		// oid for (cei-pj) or (cnpj)
+		return extras.get("2.16.76.1.3.7") != null || extras.get("2.16.76.1.3.3") != null;
 	}
 
 	/**
@@ -160,6 +163,19 @@ public class CertificateExtra {
 		if (!isEquipment)
 			isEquipment = extras.get("2.16.76.1.3.8") != null;
 		return isEquipment;
+	}
+
+	/**
+	 * Checks if the certificate is an "ICP-BRASIL Selo Eletronico"
+	 * (Resolução 211).<br>
+	 * Detected via Certificate Policies OIDs (SE-S: 2.16.76.1.2.201,
+	 * SE-H: 2.16.76.1.2.202), not via SubjectAlternativeNames since
+	 * SE certificates share OIDs with PJ in SAN.
+	 *
+	 * @return True if it is an "ICP-BRASIL Selo Eletronico". False otherwise.
+	 */
+	public boolean isCertificateSE() {
+		return new BasicCertificate(certificate).isSeloEletronico();
 	}
 
 	/**
@@ -303,6 +319,13 @@ public class CertificateExtra {
 	 */
 	public OID_1_3_6_1_4_1_311_60_2_1_3 getOID_1_3_6_1_4_1_311_60_2_1_3() {
 		return (OID_1_3_6_1_4_1_311_60_2_1_3) extras.get("1.3.6.1.4.1.311.60.2.1.3");
+	}
+
+	/**
+	 * @return OID_2_16_76_1_4_5_1
+	 */
+	public OID_2_16_76_1_4_5_1 getOID_2_16_76_1_4_5_1() {
+		return (OID_2_16_76_1_4_5_1) extras.get("2.16.76.1.4.5.1");
 	}
 
 	public OID_2_5_29_17 getOID_2_5_29_17() {

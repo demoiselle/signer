@@ -40,7 +40,6 @@ package org.demoiselle.signer.policy.engine.asn1.icpb.v2;
 import org.bouncycastle.asn1.ASN1Integer;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DLSequence;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
 import org.demoiselle.signer.policy.engine.asn1.GeneralizedTime;
 import org.demoiselle.signer.policy.engine.util.MessagesBundle;
@@ -97,7 +96,7 @@ public class LPA extends ASN1Object {
 			indice++;
 		}
 		ASN1Primitive policyInfos = sequence.getObjectAt(indice).toASN1Primitive();
-		DLSequence policyInfosSequence = (DLSequence) policyInfos;
+		ASN1Sequence policyInfosSequence = ASN1Sequence.getInstance(policyInfos);
 		if (policyInfosSequence != null && policyInfosSequence.size() > 0) {
 			this.policyInfos = new ArrayList<>();
 			for (int i = 0; i < policyInfosSequence.size(); i++) {

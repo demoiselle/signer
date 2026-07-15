@@ -38,10 +38,12 @@
 package org.demoiselle.signer.policy.impl.cades.pkcs7.impl;
 
 import java.io.IOException;
+import java.security.MessageDigest;
 import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Enumeration;
@@ -59,6 +61,9 @@ import org.bouncycastle.asn1.cms.Attribute;
 import org.bouncycastle.asn1.cms.AttributeTable;
 import org.bouncycastle.asn1.cms.CMSAttributes;
 import org.bouncycastle.asn1.cms.ContentInfo;
+import org.bouncycastle.asn1.ess.ESSCertID;
+import org.bouncycastle.asn1.ess.ESSCertIDv2;
+import org.bouncycastle.asn1.ess.SigningCertificateV2;
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -89,6 +94,7 @@ import org.demoiselle.signer.core.validator.CRLValidator;
 import org.demoiselle.signer.core.validator.PeriodValidator;
 import org.demoiselle.signer.policy.engine.asn1.etsi.ObjectIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.etsi.SignaturePolicy;
+import org.demoiselle.signer.policy.engine.asn1.etsi.SignerAndVerifierRules;
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
 import org.demoiselle.signer.policy.impl.cades.AttachedContentValidation;
 import org.demoiselle.signer.policy.impl.cades.SignatureInformations;
@@ -184,9 +190,29 @@ public class CAdESChecker implements PKCS7Checker {
 
 				X509Certificate varCert = new JcaX509CertificateConverter().getCertificate(certificateHolder);
 
+				// Primeiro, tentar obter a data do timestamp (se existir)
+				// para usar na validação de revogação
+				Date timestampDate = null;
+				AttributeTable unsignedAttributesForTimestamp = signerInfo.getUnsignedAttributes();
+				if (unsignedAttributesForTimestamp != null) {
+					Attribute timestampAttribute = unsignedAttributesForTimestamp.get(PKCSObjectIdentifiers.id_aa_signatureTimeStampToken);
+					if (timestampAttribute != null) {
+						try {
+							byte[] varTimestampBytes = timestampAttribute.getAttrValues().getObjectAt(0).toASN1Primitive().getEncoded();
+							TimeStampToken timeStampToken = new TimeStampToken(new CMSSignedData(varTimestampBytes));
+							timestampDate = timeStampToken.getTimeStampInfo().getGenTime();
+							logger.info("Timestamp encontrado: " + timestampDate + " - será usado para validação de revogação");
+						} catch (Exception e) {
+							logger.debug("Erro ao extrair data do timestamp: " + e.getMessage());
+						}
+					}
+				}
+
 				CRLValidator cV = new CRLValidator();
 				try {
-					cV.validate(varCert);
+					// Se há timestamp, valida revogação na data do timestamp
+					// Se não há timestamp, valida revogação na data atual
+					cV.validate(varCert, timestampDate);
 				} catch (CertificateValidatorCRLException cvce) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.crl.not.access",cvce.getMessage()));
 					logger.debug(cadesMessagesBundle.getString("error.crl.not.access",cvce.getMessage()));
@@ -214,6 +240,26 @@ public class CAdESChecker implements PKCS7Checker {
 				} catch (CMSVerifierCertificateNotValidException e) {
 					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.invalid.signature", e.getMessage()));
 					signatureInfo.setInvalidSignature(true);
+				} catch (CMSSignerDigestMismatchException e) {
+					if (checkHash) {
+						for (AlgorithmIdentifier ai : cmsSignedData.getDigestAlgorithmIDs()) {
+							SignerAlgorithmEnum signerAlg = SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId());
+							String algName = signerAlg != null ? signerAlg.getAlgorithm() : ai.getAlgorithm().getId();
+							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch.digest"));
+							logger.info(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName));
+							throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch.digest", algName), e);
+						}
+					} else {
+						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
+						logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
+						throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), e);
+					}
+				} catch (CMSException e) {
+					// Handles algorithm/key mismatch during verification (e.g. ML-DSA signature
+					// algorithm declared in SignerInfo but certificate carries a different key type)
+					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", e.getMessage()));
+					signatureInfo.setInvalidSignature(true);
+					logger.error(cadesMessagesBundle.getString("error.signature.invalid", e.getMessage()));
 				}
 
 				// recupera atributos assinados
@@ -287,11 +333,12 @@ public class CAdESChecker implements PKCS7Checker {
 					signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("error.policy.on.component.not.found", varOIDPolicy));
 					logger.debug(cadesMessagesBundle.getString("error.policy.on.component.not.found"));
 				} else {
-					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-						.getSignerAndVeriferRules().getSignerRules().getMandatedSignedAttr()
-						.getObjectIdentifiers() != null) {
-						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+					SignerAndVerifierRules signerAndVerifierRules = signaturePolicy.getSignPolicyInfo()
+						.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+					if (signerAndVerifierRules != null
+						&& signerAndVerifierRules.getSignerRules() != null
+						&& signerAndVerifierRules.getSignerRules().getMandatedSignedAttr().getObjectIdentifiers() != null) {
+						for (ObjectIdentifier objectIdentifier : signerAndVerifierRules.getSignerRules()
 							.getMandatedSignedAttr().getObjectIdentifiers()) {
 							String oi = objectIdentifier.getValue();
 							Attribute signedAtt = signedAttributes.get(new ASN1ObjectIdentifier(oi));
@@ -299,7 +346,10 @@ public class CAdESChecker implements PKCS7Checker {
 							if (signedAtt == null) {
 								logger.debug(cadesMessagesBundle.getString("error.signed.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
 								signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signed.attribute.not.found", oi, signaturePolicy.getSignPolicyInfo().getSignPolicyIdentifier().getValue()));
-							}
+} else {
+// Validação semântica de atributos específicos (ex: RFC 5035 signing-certificate-v2)
+validateMandatedAttributeContent(oi, signedAtt, varCert, signatureInfo);
+}
 						}
 					}
 				}
@@ -313,11 +363,12 @@ public class CAdESChecker implements PKCS7Checker {
 				}
 				if (signaturePolicy != null) {
 					// Validando atributos NÃO assinados de acordo com a politica
-					if (signaturePolicy.getSignPolicyInfo().getSignatureValidationPolicy().getCommonRules()
-						.getSignerAndVeriferRules().getSignerRules().getMandatedUnsignedAttr()
-						.getObjectIdentifiers() != null) {
-						for (ObjectIdentifier objectIdentifier : signaturePolicy.getSignPolicyInfo()
-							.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules().getSignerRules()
+					SignerAndVerifierRules signerAndVerifierRulesUnsigned = signaturePolicy.getSignPolicyInfo()
+						.getSignatureValidationPolicy().getCommonRules().getSignerAndVeriferRules();
+					if (signerAndVerifierRulesUnsigned != null
+						&& signerAndVerifierRulesUnsigned.getSignerRules() != null
+						&& signerAndVerifierRulesUnsigned.getSignerRules().getMandatedUnsignedAttr().getObjectIdentifiers() != null) {
+						for (ObjectIdentifier objectIdentifier : signerAndVerifierRulesUnsigned.getSignerRules()
 							.getMandatedUnsignedAttr().getObjectIdentifiers()) {
 							String oi = objectIdentifier.getValue();
 							Attribute unSignedAtt = unsignedAttributes.get(new ASN1ObjectIdentifier(oi));
@@ -361,28 +412,6 @@ public class CAdESChecker implements PKCS7Checker {
 			} catch (OperatorCreationException | java.security.cert.CertificateException ex) {
 				signatureInfo.getValidatorErrors().add(ex.getMessage());
 				logger.info(ex.getMessage());
-			} catch (CMSException ex) {
-				// When file is mismatch with sign
-				if (ex instanceof CMSSignerDigestMismatchException) {
-					
-					if(this.checkHash) {
-						for (AlgorithmIdentifier ai : cmsSignedData.getDigestAlgorithmIDs()) {
-							signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch.digest"));
-							logger.info(cadesMessagesBundle.getString("error.signature.mismatch.digest",SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId()).getAlgorithm()));
-							throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch.digest",SignerAlgorithmEnum.getSignerOIDAlgorithmHashEnum(ai.getAlgorithm().getId()).getAlgorithm()), ex);	
-					    }						
-						
-					}else {
-						signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.mismatch"));
-						logger.info(cadesMessagesBundle.getString("error.signature.mismatch"));
-						throw new SignerException(cadesMessagesBundle.getString("error.signature.mismatch"), ex);
-					}
-					
-				} else {
-					signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
-					logger.info(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()));
-					throw new SignerException(cadesMessagesBundle.getString("error.signature.invalid", ex.getMessage()), ex);
-				}
 			} catch (ParseException e) {
 				signatureInfo.getValidatorErrors().add(e.getMessage());
 				logger.info(e.getMessage());
@@ -570,6 +599,73 @@ public class CAdESChecker implements PKCS7Checker {
 	public void setHash(byte[] hash) {
 		this.hash = hash;
 	}
+
+private void validateMandatedAttributeContent(String oid, Attribute attribute, X509Certificate certificate, SignatureInformations signatureInfo) {
+if (oid.equals(PKCSObjectIdentifiers.id_aa_signingCertificateV2.getId())) {
+validateSigningCertificateV2(attribute, certificate, signatureInfo);
+} else if (oid.equals(PKCSObjectIdentifiers.id_aa_signingCertificate.getId())) {
+validateSigningCertificateV1(attribute, certificate, signatureInfo);
+}
+}
+
+private void validateSigningCertificateV2(Attribute attribute, X509Certificate certificate, SignatureInformations signatureInfo) {
+try {
+SigningCertificateV2 signingCertV2 = SigningCertificateV2.getInstance(attribute.getAttrValues().getObjectAt(0));
+ESSCertIDv2[] certs = signingCertV2.getCerts();
+if (certs == null || certs.length == 0) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.no.certid"));
+return;
+}
+ESSCertIDv2 essCertID = certs[0];
+AlgorithmIdentifier hashAlg = essCertID.getHashAlgorithm();
+String algName = (hashAlg == null) ? "SHA-256" : getHashAlgorithmName(hashAlg.getAlgorithm());
+if (algName == null) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.unknown.algorithm", hashAlg.getAlgorithm().getId()));
+return;
+}
+MessageDigest md = MessageDigest.getInstance(algName);
+byte[] certHashCalculated = md.digest(certificate.getEncoded());
+byte[] certHashFromAttribute = essCertID.getCertHash();
+if (!Arrays.equals(certHashCalculated, certHashFromAttribute)) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.hash.mismatch", algName, toHex(certHashFromAttribute), toHex(certHashCalculated)));
+logger.error("RFC 5035 validation FAILED");
+} else {
+logger.debug("RFC 5035 validation PASSED");
+}
+} catch (Exception ex) {
+signatureInfo.getValidatorErrors().add(cadesMessagesBundle.getString("error.rfc5035.validation.failed", ex.getMessage()));
+}
+}
+
+private void validateSigningCertificateV1(Attribute attribute, X509Certificate certificate, SignatureInformations signatureInfo) {
+try {
+org.bouncycastle.asn1.ess.SigningCertificate signingCert = org.bouncycastle.asn1.ess.SigningCertificate.getInstance(attribute.getAttrValues().getObjectAt(0));
+ESSCertID[] certs = signingCert.getCerts();
+if (certs == null || certs.length == 0) return;
+MessageDigest md = MessageDigest.getInstance("SHA-1");
+byte[] certHashCalculated = md.digest(certificate.getEncoded());
+if (!Arrays.equals(certHashCalculated, certs[0].getCertHash())) {
+signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("warn.rfc2634.hash.mismatch"));
+}
+} catch (Exception ex) {
+signatureInfo.getValidatorWarnins().add(cadesMessagesBundle.getString("warn.rfc2634.validation.failed", ex.getMessage()));
+}
+}
+
+private String getHashAlgorithmName(ASN1ObjectIdentifier oid) {
+if (oid.equals(org.bouncycastle.asn1.nist.NISTObjectIdentifiers.id_sha256)) return "SHA-256";
+else if (oid.equals(org.bouncycastle.asn1.nist.NISTObjectIdentifiers.id_sha384)) return "SHA-384";
+else if (oid.equals(org.bouncycastle.asn1.nist.NISTObjectIdentifiers.id_sha512)) return "SHA-512";
+else if (oid.equals(org.bouncycastle.asn1.oiw.OIWObjectIdentifiers.idSHA1)) return "SHA-1";
+return null;
+}
+
+private String toHex(byte[] bytes) {
+if (bytes == null) return "null";
+StringBuilder sb = new StringBuilder();
+for (byte b : bytes) sb.append(String.format("%02X", b));
+return sb.toString();
+}
 
 	
 }

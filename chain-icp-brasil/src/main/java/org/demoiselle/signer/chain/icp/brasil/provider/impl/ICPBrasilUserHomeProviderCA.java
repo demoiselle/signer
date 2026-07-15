@@ -118,13 +118,9 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 			timeBefore = System.currentTimeMillis();
 
 			if (Files.exists(fileZip)) {
-
-				// get file from filesystem
-				InputStream inputStream = new FileInputStream(fileZip.toString());
-
-				// get certificates stored on file
-				result = this.getFromZip(inputStream);
-
+                                try (InputStream inputStream = new FileInputStream(fileZip.toString())) {
+                                        result = this.getFromZip(inputStream);
+                                }
 			} else {
 				LOGGER.warn(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));
 				throw new Exception(chainMessagesBundle.getString("error.filenotfound.userhome", fileZip.toString()));

@@ -41,14 +41,12 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.bouncycastle.asn1.ASN1Encodable;
 import org.bouncycastle.asn1.ASN1InputStream;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
-import org.bouncycastle.asn1.DERIA5String;
-import org.bouncycastle.asn1.DEROctetString;
-import org.bouncycastle.asn1.DERPrintableString;
-import org.bouncycastle.asn1.DERTaggedObject;
-import org.bouncycastle.asn1.DERUTF8String;
-import org.bouncycastle.asn1.DLSequence;
+import org.bouncycastle.asn1.ASN1OctetString;
+import org.bouncycastle.asn1.ASN1String;
+import org.bouncycastle.asn1.ASN1TaggedObject;
 import org.demoiselle.signer.core.util.MessagesBundle;
 
 import sun.security.util.DerValue;
@@ -82,28 +80,34 @@ public class OIDGeneric {
 	 */
 	public static OIDGeneric getInstance(byte[] data) throws IOException, Exception {
 		is = new ASN1InputStream(data);
-		DLSequence sequence = (DLSequence) is.readObject();
+		org.bouncycastle.asn1.ASN1Primitive prim = is.readObject();
+		org.bouncycastle.asn1.ASN1Sequence sequence;
+		if (prim instanceof org.bouncycastle.asn1.ASN1Sequence) {
+			sequence = (org.bouncycastle.asn1.ASN1Sequence) prim;
+		} else if (prim instanceof org.bouncycastle.asn1.ASN1TaggedObject) {
+			sequence = org.bouncycastle.asn1.ASN1Sequence.getInstance(((org.bouncycastle.asn1.ASN1TaggedObject) prim).getBaseObject());
+		} else {
+			throw new Exception("Formato de OtherName inválido");
+		}
+		
 		ASN1ObjectIdentifier oid = (ASN1ObjectIdentifier) sequence.getObjectAt(0);
-		DERTaggedObject taggedObject = (DERTaggedObject) sequence.getObjectAt(1);
-		DERTaggedObject taggedObject2 = (DERTaggedObject) taggedObject.getObject();
+		ASN1TaggedObject taggedObject = (ASN1TaggedObject) sequence.getObjectAt(1);
+		ASN1Encodable innerEncoded = taggedObject.getBaseObject();
 
-		DEROctetString octet = null;
-		DERPrintableString print = null;
-		DERUTF8String utf8 = null;
-		DERIA5String ia5 = null;
+		// Em BC 1.80, getBaseObject() pode retornar DLTaggedObject (não DERTaggedObject)
+		// ou já retornar o conteúdo diretamente sem wrapper adicional
+		ASN1Encodable valueEncoded;
+		if (innerEncoded instanceof ASN1TaggedObject) {
+			valueEncoded = ((ASN1TaggedObject) innerEncoded).getBaseObject();
+		} else {
+			valueEncoded = innerEncoded;
+		}
 
-		try {
-			octet = (DEROctetString) taggedObject2.getObject();
-		} catch (Exception e) {
-			try {
-				print = (DERPrintableString) taggedObject2.getObject();
-			} catch (Exception e1) {
-				try {
-					utf8 = (DERUTF8String) taggedObject2.getObject();
-				} catch (Exception e2) {
-					ia5 = (DERIA5String) taggedObject2.getObject();
-				}
-			}
+		String stringValue = null;
+		if (valueEncoded instanceof ASN1OctetString) {
+			stringValue = new String(((ASN1OctetString) valueEncoded).getOctets());
+		} else if (valueEncoded instanceof ASN1String) {
+			stringValue = ((ASN1String) valueEncoded).getString();
 		}
 
 		String className = getPackageName() + oid.getId().replaceAll("[.]", "_");
@@ -120,19 +124,7 @@ public class OIDGeneric {
 
 		oidGenerico.oid = oid.getId();
 
-		if (octet != null) {
-			oidGenerico.data = new String(octet.getOctets());
-		} else {
-			if (print != null) {
-				oidGenerico.data = print.getString();
-			} else {
-				if (utf8 != null) {
-					oidGenerico.data = utf8.getString();
-				} else {
-					oidGenerico.data = ia5.getString();
-				}
-			}
-		}
+		oidGenerico.data = stringValue;
 
 		oidGenerico.initialize();
 

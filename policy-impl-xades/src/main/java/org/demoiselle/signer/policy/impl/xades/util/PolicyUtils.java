@@ -38,6 +38,8 @@
 package org.demoiselle.signer.policy.impl.xades.util;
 
 import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Utility Class for XML Policy treatment
@@ -46,6 +48,8 @@ import org.demoiselle.signer.policy.engine.factory.PolicyFactory;
  */
 public class PolicyUtils {
 
+	private static final Logger logger = LoggerFactory.getLogger(PolicyUtils.class);
+
 	/**
 	 * return the policy by OID.
 	 *
@@ -53,6 +57,11 @@ public class PolicyUtils {
 	 * @return the corresponding {@link PolicyFactory.Policies}.
 	 */
 	public static PolicyFactory.Policies getPolicyByOid(String oid) {
+
+		if (oid == null || oid.isEmpty()) {
+			logger.warn("OID de politica nulo ou vazio.");
+			return null;
+		}
 
 		switch (oid) {
 
@@ -64,6 +73,8 @@ public class PolicyUtils {
 				return PolicyFactory.Policies.AD_RB_XADES_2_3;
 			case "2.16.76.1.7.1.6.2.4":
 				return PolicyFactory.Policies.AD_RB_XADES_2_4;
+			case "2.16.76.1.7.1.6.2.5":
+				return PolicyFactory.Policies.AD_RB_XADES_2_5;
 
 			case "2.16.76.1.7.1.7.2.1":
 				return PolicyFactory.Policies.AD_RT_XADES_2_1;
@@ -73,6 +84,8 @@ public class PolicyUtils {
 				return PolicyFactory.Policies.AD_RT_XADES_2_3;
 			case "2.16.76.1.7.1.7.2.4":
 				return PolicyFactory.Policies.AD_RT_XADES_2_4;
+			case "2.16.76.1.7.1.7.2.5":
+				return PolicyFactory.Policies.AD_RT_XADES_2_5;
 
 			case "2.16.76.1.7.1.8.2.2":
 				return PolicyFactory.Policies.AD_RV_XADES_2_2;
@@ -80,18 +93,25 @@ public class PolicyUtils {
 				return PolicyFactory.Policies.AD_RV_XADES_2_3;
 			case "2.16.76.1.7.1.8.2.4":
 				return PolicyFactory.Policies.AD_RV_XADES_2_4;
+			case "2.16.76.1.7.1.8.2.5":
+				return PolicyFactory.Policies.AD_RV_XADES_2_5;
 
 			case "2.16.76.1.7.1.9.2.3":
 				return PolicyFactory.Policies.AD_RC_XADES_2_3;
 			case "2.16.76.1.7.1.9.2.4":
 				return PolicyFactory.Policies.AD_RC_XADES_2_4;
+			case "2.16.76.1.7.1.9.2.5":
+				return PolicyFactory.Policies.AD_RC_XADES_2_5;
 
 			case "2.16.76.1.7.1.10.2.3":
 				return PolicyFactory.Policies.AD_RA_XADES_2_3;
 			case "2.16.76.1.7.1.10.2.4":
 				return PolicyFactory.Policies.AD_RA_XADES_2_4;
+			case "2.16.76.1.7.1.10.2.5":
+				return PolicyFactory.Policies.AD_RA_XADES_2_5;
 
 			default:
+				logger.warn("OID de politica nao mapeado: {}. Rejeitando politica desconhecida.", oid);
 				return null;
 		}
 	}
