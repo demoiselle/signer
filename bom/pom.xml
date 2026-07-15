@@ -22,10 +22,26 @@
 		<url>https://www.serpro.gov.br</url>
 	</organization>
 
+	<developers>
+		<developer>
+			<name>Evandro Magalhães Leite Júnior</name>
+			<email>evandrojr@gmail.com</email>
+			<organization>SERPRO</organization>
+			<organizationUrl>https://www.serpro.gov.br</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:demoiselle/signer.git</connection>
+		<developerConnection>scm:git:git@github.com:demoiselle/signer.git</developerConnection>
+		<url>https://github.com/demoiselle/signer</url>
+		<tag>4.6.1</tag>
+	</scm>
+
 	<parent>
 		<groupId>org.demoiselle.signer</groupId>
 		<artifactId>build</artifactId>
-		<version>4.5.1</version>
+		<version>4.6.1</version>
 		<relativePath>../pom.xml</relativePath>
 	</parent>
 
@@ -34,14 +50,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- Dependencies versions -->
 		<eclipse.lifecycle.mapping.plugin.version>1.0.0</eclipse.lifecycle.mapping.plugin.version>
-		<java.version>1.7</java.version>
+		<java.version>1.8</java.version>
 		<site.url>file://${project.build.directory}/tmp</site.url>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<!-- Maven plugin versions -->
 		<maven.compiler.plugin.version>3.6.0</maven.compiler.plugin.version>
 		<maven.war.plugin.version>3.0.0</maven.war.plugin.version>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.deploy.plugin.version>2.8.1</maven.deploy.plugin.version>
 		<maven.site.plugin.version>2.2</maven.site.plugin.version>
 		<maven.assembly.plugin.version>2.6</maven.assembly.plugin.version>
@@ -52,7 +68,7 @@
 		<maven.install.plugin.version>2.3.1</maven.install.plugin.version>
 		<maven.release.plugin.version>2.5</maven.release.plugin.version>
 		<wagon.plugin.version>1.0-beta-3</wagon.plugin.version>
-		<demoiselle.signer.version>4.5.1</demoiselle.signer.version>
+		<demoiselle.signer.version>4.6.1</demoiselle.signer.version>
 	</properties>
 
 	<dependencyManagement>
@@ -117,19 +133,19 @@
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-api</artifactId>
-				<version>2.11.2</version>
+				<version>2.25.4</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-core</artifactId>
-				<version>2.11.2</version>
+				<version>2.25.4</version>
 			</dependency>
 
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-1.2-api</artifactId>
-				<version>2.11.2</version>
+				<version>2.25.4</version>
 			</dependency>
 
 			<dependency>
@@ -152,14 +168,46 @@
 			</dependency>
 			<dependency>
 				<groupId>org.bouncycastle</groupId>
-				<artifactId>bcmail-jdk15on</artifactId>
-				<version>1.62</version>
+				<artifactId>bcmail-lts8on</artifactId>
+				<version>2.73.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcpkix-lts8on</artifactId>
+				<version>2.73.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcprov-lts8on</artifactId>
+				<version>2.73.11</version>
+			</dependency>
+			<dependency>
+				<groupId>org.bouncycastle</groupId>
+				<artifactId>bcutil-lts8on</artifactId>
+				<version>2.73.11</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-io</groupId>
 				<artifactId>commons-io</artifactId>
-				<version>2.11.0</version>
+				<version>2.15.1</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.6.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<publishingServerId>ossrh</publishingServerId>
+					<autoPublish>true</autoPublish>
+					<skipPublishing>true</skipPublishing>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

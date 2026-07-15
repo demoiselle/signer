@@ -48,8 +48,16 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.demoiselle.signer.core.exception.CertificateValidatorException;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
@@ -86,6 +94,45 @@ public class RepositoryUtil {
 	}
 
 	/**
+	 * Configura SSL para aceitar qualquer certificado (equivalente a curl -k).
+	 * Usado apenas para download de CRLs de servidores com certificado inválido/auto-assinado.
+	 * 
+	 * @param httpsConnection Conexão HTTPS a configurar
+	 */
+	private static void setupInsecureSSL(HttpsURLConnection httpsConnection) {
+		try {
+			// Cria TrustManager que aceita todos os certificados
+			TrustManager[] trustAllCerts = new TrustManager[] {
+				new X509TrustManager() {
+					public X509Certificate[] getAcceptedIssuers() {
+						return null;
+					}
+					public void checkClientTrusted(X509Certificate[] certs, String authType) {
+					}
+					public void checkServerTrusted(X509Certificate[] certs, String authType) {
+					}
+				}
+			};
+
+			// Cria SSLContext com o TrustManager permissivo
+			SSLContext sc = SSLContext.getInstance("SSL");
+			sc.init(null, trustAllCerts, new java.security.SecureRandom());
+			httpsConnection.setSSLSocketFactory(sc.getSocketFactory());
+
+			// Desabilita verificação de hostname
+			httpsConnection.setHostnameVerifier(new HostnameVerifier() {
+				public boolean verify(String hostname, SSLSession session) {
+					return true;
+				}
+			});
+			
+			logger.debug("SSL verificacao desabilitada para download de CRL");
+		} catch (Exception e) {
+			logger.warn("Nao foi possivel desabilitar verificacao SSL: " + e.getMessage());
+		}
+	}
+
+	/**
 	 * @param sUrl            source url
 	 * @param destinationFile destination file
 	 */
@@ -98,25 +145,30 @@ public class RepositoryUtil {
 		BufferedOutputStream outStream = null;
 		URLConnection uCon = null;
 		InputStream is = null;
+		
+		// Estratégia: tentar HTTP primeiro, depois HTTPS sem verificação de certificado
+		String primaryUrl = sUrl;
+		String fallbackUrl = null;
+		
+		if (sUrl.startsWith("http://")) {
+			// URL é HTTP, tentamos HTTP primeiro
+			primaryUrl = sUrl;
+			fallbackUrl = sUrl.replace("http://", "https://"); // HTTPS como fallback
+			logger.info("Tentando HTTP primeiro (fallback para HTTPS se necessário): " + primaryUrl);
+		} else {
+			logger.info("URL já é HTTPS: " + sUrl);
+		}
+		
 		try {
 			logger.info(coreMessagesBundle.getString("info.file.destination", destinationFile));
-			url = new URL(sUrl);
+			url = new URL(primaryUrl);
 			
 			ConfigurationRepo conf = ConfigurationRepo.getInstance();
 			uCon = url.openConnection(conf.getProxy());
+			
 			uCon.setConnectTimeout(conf.getCrlTimeOut());
 			uCon.setReadTimeout(conf.getCrlTimeOut());
-			try {
-				is = uCon.getInputStream();
-			} catch (Exception e) {
-				String newUrl = sUrl.replace("http://", "https://");
-				logger.info(newUrl);
-				url = new URL(newUrl);
-				uCon = url.openConnection(conf.getProxy());
-				uCon.setConnectTimeout(conf.getCrlTimeOut());
-				uCon.setReadTimeout(conf.getCrlTimeOut());
-				is = uCon.getInputStream();
-			}
+			is = uCon.getInputStream();
 				
 			outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
 			buf = new byte[1024];
@@ -131,13 +183,57 @@ public class RepositoryUtil {
 				}
 			}
 			is.close();
+			logger.info("Download bem-sucedido via " + (primaryUrl.startsWith("https://") ? "HTTPS" : "HTTP"));
 		} catch (MalformedURLException e) {
-			logger.error(coreMessagesBundle.getString("error.malformed.url", sUrl));
-			throw new CertificateValidatorException(coreMessagesBundle.getString("error.malformed.url", sUrl), e);
+			logger.error(coreMessagesBundle.getString("error.malformed.url", primaryUrl));
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.malformed.url", primaryUrl), e);
 		} catch (FileNotFoundException e) {
-			logger.error(coreMessagesBundle.getString("error.file.not.found", sUrl));
-			throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found", sUrl), e);
+			logger.error(coreMessagesBundle.getString("error.file.not.found", primaryUrl));
+			throw new CertificateValidatorException(coreMessagesBundle.getString("error.file.not.found", primaryUrl), e);
 		} catch (IOException e) {
+			// Se falhou com HTTP e existe fallback HTTPS, tenta com HTTPS sem verificação
+			if (fallbackUrl != null) {
+				logger.warn("Falha ao baixar via HTTP, tentando HTTPS sem verificacao de certificado: " + e.getMessage());
+				try {
+					if (is != null) is.close();
+					if (outStream != null) outStream.close();
+				} catch (Exception ex) {}
+				
+				// Retry com HTTPS sem verificação
+				try {
+					url = new URL(fallbackUrl);
+					ConfigurationRepo conf = ConfigurationRepo.getInstance();
+					uCon = url.openConnection(conf.getProxy());
+					
+					// Desabilita verificação de certificado para HTTPS
+					if (uCon instanceof HttpsURLConnection) {
+						setupInsecureSSL((HttpsURLConnection) uCon);
+					}
+					
+					uCon.setConnectTimeout(conf.getCrlTimeOut());
+					uCon.setReadTimeout(conf.getCrlTimeOut());
+					is = uCon.getInputStream();
+					
+					outStream = new BufferedOutputStream(new FileOutputStream(destinationFile));
+					buf = new byte[1024];
+					while ((ByteRead = is.read(buf)) != -1) {
+						outStream.write(buf, 0, ByteRead);
+						setByteWritten(getByteWritten() + ByteRead);
+					}
+					outStream.flush();
+					if (destinationFile.length() <= 0) {
+						if (!destinationFile.delete()) {
+							logger.warn(coreMessagesBundle.getString("error.file.remove", destinationFile));
+						}
+					}
+					is.close();
+					logger.info("Download bem-sucedido via HTTPS sem verificacao");
+					return;
+				} catch (Exception ex) {
+					logger.error("Falha tambem com HTTPS: " + ex.getMessage());
+					throw new CertificateValidatorException("Falha ao baixar de " + sUrl + " e " + fallbackUrl, ex);
+				}
+			}
 			logger.error(coreMessagesBundle.getString("error.io", e.getMessage()));
 			throw new CertificateValidatorException(coreMessagesBundle.getString("error.io", e.getMessage()), e);
 		} finally {

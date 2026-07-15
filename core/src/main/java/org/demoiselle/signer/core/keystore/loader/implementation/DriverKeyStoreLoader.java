@@ -37,12 +37,8 @@
 
 package org.demoiselle.signer.core.keystore.loader.implementation;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
+import java.security.AuthProvider;
 import java.security.KeyStore;
 import java.security.KeyStore.Builder;
 import java.security.KeyStoreException;
@@ -55,7 +51,6 @@ import java.util.Formatter;
 import java.util.Map;
 import java.util.Set;
 
-import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
 
 import org.demoiselle.signer.core.keystore.loader.DriverNotAvailableException;
@@ -69,6 +64,10 @@ import org.demoiselle.signer.core.util.MessagesBundle;
 /**
  * Implementation of KeyStoreLoader based operating system drivers. You must
  * enter the driver file in the operating system and the API name.
+ *
+ * Compatível com Java 9+: usa {@code Provider.configure()} em vez dos
+ * construtores {@code SunPKCS11(InputStream)} / {@code SunPKCS11(String)}
+ * que foram removidos no Java 9.
  */
 public class DriverKeyStoreLoader implements KeyStoreLoader {
 
@@ -77,6 +76,39 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 	private CallbackHandler callback;
 	private Formatter formatter;
 	private static MessagesBundle coreMessagesBundle = new MessagesBundle();
+
+	private Provider createPKCS11Provider(String configString) throws Exception {
+		Provider base = Security.getProvider("SunPKCS11");
+		if (base != null) {
+			try {
+				// Java 9+
+				java.lang.reflect.Method configureMethod = Provider.class.getMethod("configure", String.class);
+				boolean isFile = !configString.startsWith("--");
+				String arg = isFile ? configString : configString;
+				return (Provider) configureMethod.invoke(base, arg);
+			} catch (NoSuchMethodException e) {
+				// Fallback para Java 8
+			}
+		}
+		
+		try {
+			// Java 8 fallback usando o construtor String ou InputStream
+			Class<?> sunPkcs11Class = Class.forName("sun.security.pkcs11.SunPKCS11");
+			if (configString.startsWith("--")) {
+				// config inline
+				String configData = configString.substring(2);
+				java.io.InputStream is = new java.io.ByteArrayInputStream(configData.getBytes("UTF-8"));
+				java.lang.reflect.Constructor<?> constructor = sunPkcs11Class.getConstructor(java.io.InputStream.class);
+				return (Provider) constructor.newInstance(is);
+			} else {
+				// config path
+				java.lang.reflect.Constructor<?> constructor = sunPkcs11Class.getConstructor(String.class);
+				return (Provider) constructor.newInstance(configString);
+			}
+		} catch (Exception ex) {
+			throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"));
+		}
+	}
 
 	/**
 	 * read the config file
@@ -123,35 +155,45 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 		formatter = new Formatter();
 
 		String pkcs11ConfigSettings = formatter.format(PKCS11_CONTENT_CONFIG_FILE, driverName, driverPath).toString();
-		byte[] pkcs11ConfigBytes = pkcs11ConfigSettings.getBytes();
-		ByteArrayInputStream confStream = new ByteArrayInputStream(pkcs11ConfigBytes);
 
 		try {
-			Constructor<?> construtor = Class.forName("sun.security.pkcs11.SunPKCS11")
-					.getConstructor(new Class[] { InputStream.class });
-			Provider pkcs11Provider = (Provider) construtor.newInstance(new Object[] { confStream });
+			Provider pkcs11Provider = createPKCS11Provider("--" + pkcs11ConfigSettings);
 			Security.addProvider(pkcs11Provider);
-			confStream.close();
-			Method login = Class.forName("sun.security.pkcs11.SunPKCS11").getMethod("login",
-					new Class[] { Subject.class, CallbackHandler.class });
-			login.invoke(Security.getProvider(pkcs11Provider.getName()), new Object[] { null, this.callback });
+
+			if (pkcs11Provider instanceof AuthProvider) {
+				((AuthProvider) pkcs11Provider).login(null, this.callback);
+			}
+
 			keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
 			keyStore.load(null, null);
 
-		} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
-				| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException
-				| KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
-			if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
+		} catch (InvalidPinException | PKCS11NotFoundException e) {
+			throw e;
+		} catch (javax.security.auth.login.FailedLoginException ex) {
+			throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+		} catch (javax.security.auth.login.LoginException ex) {
+			throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+		} catch (IOException | KeyStoreException | NoSuchAlgorithmException
+				| NoSuchProviderException | CertificateException ex) {
+			Throwable cause = ex.getCause();
+			String causeStr = cause != null ? cause.toString() : "";
+			if (causeStr.contains("FailedLoginException") || cause instanceof javax.security.auth.login.FailedLoginException) {
 				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
 			}
-
-			if (ex.getCause().toString().equals("javax.security.auth.login.LoginException")) {
-				// TODO https://github.com/demoiselle/signer/pull/126 // if (ex.getCause()
-				// instanceof javax.security.auth.login.LoginException) {
+			if (causeStr.contains("LoginException") || cause instanceof javax.security.auth.login.LoginException) {
 				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
-			} else {
-				throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
 			}
+			throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
+		} catch (Exception ex) {
+			Throwable cause = ex.getCause();
+			String causeStr = cause != null ? cause.toString() : "";
+			if (causeStr.contains("FailedLoginException") || cause instanceof javax.security.auth.login.FailedLoginException) {
+				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+			}
+			if (causeStr.contains("LoginException") || cause instanceof javax.security.auth.login.LoginException) {
+				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+			}
+			throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
 		}
 		return keyStore;
 	}
@@ -167,28 +209,43 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 		KeyStore keyStore = null;
 
 		try {
-			Constructor<?> construtor = Class.forName("sun.security.pkcs11.SunPKCS11")
-					.getConstructor(new Class[] { String.class });
-			Provider pkcs11Provider = (Provider) construtor.newInstance(new Object[] { configFile });
+			Provider pkcs11Provider = createPKCS11Provider(configFile);
 			Security.addProvider(pkcs11Provider);
-			Method login = Class.forName("sun.security.pkcs11.SunPKCS11").getMethod("login",
-					new Class[] { Subject.class, CallbackHandler.class });
-			login.invoke(Security.getProvider(pkcs11Provider.getName()), new Object[] { null, this.callback });
+
+			if (pkcs11Provider instanceof AuthProvider) {
+				((AuthProvider) pkcs11Provider).login(null, this.callback);
+			}
+
 			keyStore = KeyStore.getInstance(PKCS11_KEYSTORE_TYPE, pkcs11Provider.getName());
 			keyStore.load(null, null);
 
-		} catch (IOException | ClassNotFoundException | IllegalAccessException | IllegalArgumentException
-				| InstantiationException | NoSuchMethodException | SecurityException | InvocationTargetException
-				| KeyStoreException | NoSuchAlgorithmException | NoSuchProviderException | CertificateException ex) {
-			if (ex.getCause().toString().equals("javax.security.auth.login.FailedLoginException")) {
+		} catch (InvalidPinException | PKCS11NotFoundException e) {
+			throw e;
+		} catch (javax.security.auth.login.FailedLoginException ex) {
+			throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+		} catch (javax.security.auth.login.LoginException ex) {
+			throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+		} catch (IOException | KeyStoreException | NoSuchAlgorithmException
+				| NoSuchProviderException | CertificateException ex) {
+			Throwable cause = ex.getCause();
+			String causeStr = cause != null ? cause.toString() : "";
+			if (causeStr.contains("FailedLoginException") || cause instanceof javax.security.auth.login.FailedLoginException) {
 				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
 			}
-
-			if (ex.getCause().toString().equals("javax.security.auth.login.LoginException")) {
+			if (causeStr.contains("LoginException") || cause instanceof javax.security.auth.login.LoginException) {
 				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
-			} else {
-				throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
 			}
+			throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
+		} catch (Exception ex) {
+			Throwable cause = ex.getCause();
+			String causeStr = cause != null ? cause.toString() : "";
+			if (causeStr.contains("FailedLoginException") || cause instanceof javax.security.auth.login.FailedLoginException) {
+				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+			}
+			if (causeStr.contains("LoginException") || cause instanceof javax.security.auth.login.LoginException) {
+				throw new InvalidPinException(coreMessagesBundle.getString("error.pin.invalid"), ex);
+			}
+			throw new PKCS11NotFoundException(coreMessagesBundle.getString("error.load.module.pcks11"), ex);
 		}
 		return keyStore;
 	}
@@ -245,7 +302,8 @@ public class DriverKeyStoreLoader implements KeyStoreLoader {
 				String pkcs11LibraryPath = entry.getValue();
 				StringBuilder buf = new StringBuilder();
 				buf.append("library = ").append(pkcs11LibraryPath).append("\nname = Provedor\n");
-				Provider p = new sun.security.pkcs11.SunPKCS11(new ByteArrayInputStream(buf.toString().getBytes()));
+				
+				Provider p = createPKCS11Provider("--" + buf.toString());
 				Security.addProvider(p);
 				Builder builder = KeyStore.Builder.newInstance("PKCS11", p,
 						new KeyStore.PasswordProtection(pinNumber.toCharArray()));

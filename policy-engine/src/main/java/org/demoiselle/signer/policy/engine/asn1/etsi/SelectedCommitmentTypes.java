@@ -78,7 +78,7 @@ public class SelectedCommitmentTypes extends ASN1Object {
 		ASN1Primitive object = derSequence.getObjectAt(0).toASN1Primitive();
 		if (object instanceof DERNull) {
 			this.recognizedCommitmentType = null;
-		} else if (object instanceof DERSequence) {
+		} else if (object instanceof ASN1Sequence) {
 			this.recognizedCommitmentType = new CommitmentType();
 			this.recognizedCommitmentType.parse(object);
 		}

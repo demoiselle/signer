@@ -7,7 +7,7 @@
 	<groupId>org.demoiselle.signer</groupId>
 	<artifactId>build</artifactId>
 	<packaging>pom</packaging>
-	<version>4.5.1</version>
+	<version>4.6.1</version>
 
 	<name>Demoiselle Signer Build</name>
 	<description>Demoiselle Framework's component for specifications of
@@ -110,9 +110,9 @@
 	<properties>
 		<license.header>./licence-lgpl</license.header>
 		<project.alias>signer</project.alias>
-		<java.version>1.7</java.version>
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<java.version>1.8</java.version>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
 		<project.scm.id>github</project.scm.id>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<github.global.server>github</github.global.server>
@@ -167,12 +167,12 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.0.1</version>
+				<version>3.10.1</version>
 				<configuration>
-					<source>1.7</source>
-					<links>
-						<link>https://docs.oracle.com/javase/7/docs/api/</link>
-					</links>
+					<source>1.8</source>
+					<doclint>none</doclint>
+					<detectJavaApiLink>false</detectJavaApiLink>
+					<detectOfflineLinks>false</detectOfflineLinks>
 				</configuration>
 				<executions>
 					<execution>
@@ -197,12 +197,12 @@
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.9.0</version>
+				<version>0.6.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<publishingServerId>ossrh</publishingServerId>
 					<autoPublish>true</autoPublish>
-					<skipPublishing>false</skipPublishing>
+					<skipPublishing>true</skipPublishing>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -249,7 +249,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
+				<version>3.10.1</version>
 				<reportSets>
 					<reportSet><!-- by default, id = "default" -->
 						<reports><!-- select non-aggregate reports -->
@@ -282,14 +282,12 @@
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-javadoc-plugin</artifactId>
-						<version>3.3.1</version>
+						<version>3.10.1</version>
 						<configuration>
-							<source>1.7</source>
-							<links>
-								<link>https://docs.oracle.com/javase/7/docs/api/</link>
-								<link>
-									https://javadoc.io/doc/org.bouncycastle/bcprov-jdk15on/1.62/</link>
-							</links>
+							<source>1.8</source>
+							<doclint>none</doclint>
+							<detectJavaApiLink>false</detectJavaApiLink>
+							<detectOfflineLinks>false</detectOfflineLinks>
 							<outputDirectory>${basedir}/target/html</outputDirectory>
 							<reportOutputDirectory>${basedir}/target/html</reportOutputDirectory>
 							<overview>${basedir}/parent/overview.html</overview>
@@ -326,7 +324,7 @@
 			scm:git:git@github.com:demoiselle/${project.alias}.git</developerConnection>
 		<url>https://github.com/demoiselle/${project.alias}</url>
 
-		<tag>4.5.1</tag>
+		<tag>4.6.1</tag>
 	</scm>
 
 

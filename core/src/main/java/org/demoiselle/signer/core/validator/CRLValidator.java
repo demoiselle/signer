@@ -36,8 +36,10 @@
  */
 package org.demoiselle.signer.core.validator;
 
+import java.security.cert.X509CRLEntry;
 import java.security.cert.X509Certificate;
 import java.util.Collection;
+import java.util.Date;
 
 import org.demoiselle.signer.core.IValidator;
 import org.demoiselle.signer.core.exception.CertificateRevocationException;
@@ -61,6 +63,22 @@ public class CRLValidator implements IValidator {
 
 	@Override
 	public void validate(X509Certificate x509) throws CertificateValidatorCRLException, CertificateRevocationException {
+		validate(x509, null);
+	}
+
+	/**
+	 * Valida se o certificado estava revogado em uma data específica.
+	 * 
+	 * Se validationDate for null, verifica revogação na data atual.
+	 * Se validationDate for fornecida (ex: data do timestamp), verifica se o certificado
+	 * estava revogado ANTES dessa data.
+	 * 
+	 * @param x509 Certificado a ser validado
+	 * @param validationDate Data de referência para validação (null = data atual)
+	 * @throws CertificateValidatorCRLException
+	 * @throws CertificateRevocationException
+	 */
+	public void validate(X509Certificate x509, Date validationDate) throws CertificateValidatorCRLException, CertificateRevocationException {
 		if (x509 != null) {
 			Collection<ICPBR_CRL> crls = null;
 			try {
@@ -72,9 +90,27 @@ public class CRLValidator implements IValidator {
 			if (crls == null || crls.isEmpty()) {
 				throw new CertificateValidatorCRLException(coreMessagesBundle.getString("error.validate.on.crl", "vazio ou nula"));
 			}
+			
 			for (ICPBR_CRL icpbr_crl : crls) {
-				if (icpbr_crl.getCRL().isRevoked(x509)) {
-					throw new CertificateRevocationException(coreMessagesBundle.getString("error.certificate.repealed"));
+				// Se validationDate não foi fornecida, usa verificação padrão (data atual)
+				if (validationDate == null) {
+					if (icpbr_crl.getCRL().isRevoked(x509)) {
+						throw new CertificateRevocationException(coreMessagesBundle.getString("error.certificate.repealed"));
+					}
+				} else {
+					// Verifica se estava revogado ANTES da data de validação (timestamp)
+					X509CRLEntry revokedCert = icpbr_crl.getCRL().getRevokedCertificate(x509);
+					if (revokedCert != null) {
+						Date revocationDate = revokedCert.getRevocationDate();
+						// Se foi revogado ANTES do timestamp, a assinatura é inválida
+						if (revocationDate.before(validationDate)) {
+							throw new CertificateRevocationException(
+								coreMessagesBundle.getString("error.certificate.repealed") + 
+								" (revogado em " + revocationDate + ", validação em " + validationDate + ")"
+							);
+						}
+						// Se foi revogado DEPOIS do timestamp, a assinatura é válida (certificado era válido no momento da assinatura)
+					}
 				}
 			}
 		} else {

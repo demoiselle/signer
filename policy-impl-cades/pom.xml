@@ -4,13 +4,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>policy-impl-cades</artifactId>
+            <version>4.6.1</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
-        <version>4.5.1</version>
-        <relativePath>../parent</relativePath>
+        <version>4.6.1</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
     <name>Demoiselle Signer CADES</name>
@@ -19,81 +20,105 @@
     </description>
     <url>https://www.frameworkdemoiselle.gov.br</url>
 
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>SERPRO - Serviço Federal de Processamento de Dados</name>
+        <url>https://www.serpro.gov.br</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Evandro Magalhães Leite Júnior</name>
+            <email>evandrojr@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:demoiselle/signer.git</connection>
+        <developerConnection>scm:git:git@github.com:demoiselle/signer.git</developerConnection>
+        <url>https://github.com/demoiselle/signer</url>
+        <tag>4.6.1</tag>
+    </scm>
+
     <dependencies>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
+            <version>4.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-icp-brasil</artifactId>
+            <version>4.6.1</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-icp-brasil-homolog</artifactId>
+            <version>4.6.1</version>
             <scope>test</scope>
         </dependency>
         <!--Cadeias da plataforma de assinaturas do SERPRO -->
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-serpro-neosigner</artifactId>
+            <version>4.6.1</version>
             <scope>test</scope>
         </dependency>
         
-        
         <!-- Cadeias ITI -->
-   
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-iti</artifactId>
+            <version>4.6.1</version>
             <scope>test</scope>
         </dependency> 
         
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-cryptography</artifactId>
+            <version>4.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>policy-engine</artifactId>
+            <version>4.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-timestamp</artifactId>
+            <version>4.6.1</version>
         </dependency>
      
         <!-- A versão abaixo é a ultima para java7 -->
-
         <dependency>
             <groupId>commons-codec</groupId>
             <artifactId>commons-codec</artifactId>
             <version>1.10</version>
             <scope>test</scope>
         </dependency>
-
-
-        <!-- LCR MANAGER SYNC - Gerenciador de Cache LCR interno SERPRO
-        <dependency>
-            <groupId>br.gov.serpro.supcd</groupId>
-            <artifactId>lcr-manager-sync</artifactId>
-            <version>0.0.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.bouncycastle</groupId>
-                    <artifactId>bcprov-jdk15on</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-         -->
-
     </dependencies>
-    <!--
-       <repositories>
-           <repository>
-               <id>serpro</id>
-               <name>serpro</name>
-               <url>http://nexus.aic.serpro/repository/releases</url>
-           </repository>
-       </repositories>  -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.6.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>ossrh</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <skipPublishing>false</skipPublishing>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

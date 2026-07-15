@@ -63,8 +63,12 @@ public enum AlgorithmNames {
 		"2.16.840.1.101.3.4.2.9", "SHA3-384"), sha3_512(
 		"2.16.840.1.101.3.4.2.10", "SHA3-512"), shake128(
 		"1.0.10118.3.0.62", "SHAKE128"), shake256("1.0.10118.3.0.63",
-		"SHAKE256");
+	"SHAKE256"),
 
+	// ML-DSA (FIPS 204) - Post-Quantum Digital Signature
+	mlDsa44("2.16.840.1.101.3.4.3.17", "ML-DSA-44"),
+	mlDsa65("2.16.840.1.101.3.4.3.18", "ML-DSA-65"),
+	mlDsa87("2.16.840.1.101.3.4.3.19", "ML-DSA-87");
 	private final String identifier;
 	private final String algorithmName;
 
@@ -148,6 +152,15 @@ public enum AlgorithmNames {
 			case "1.0.10118.3.0.63": {
 				return shake256.getAlgorithmName();
 			}
+			case "2.16.840.1.101.3.4.3.17": {
+				return mlDsa44.getAlgorithmName();
+			}
+			case "2.16.840.1.101.3.4.3.18": {
+				return mlDsa65.getAlgorithmName();
+			}
+			case "2.16.840.1.101.3.4.3.19": {
+				return mlDsa87.getAlgorithmName();
+			}
 			default: {
 				return sha256WithRSAEncryption.getAlgorithmName();
 			}
@@ -223,6 +236,15 @@ public enum AlgorithmNames {
 			}
 			case "SHAKE256": {
 				return shake256.getIdentifier();
+			}
+			case "ML-DSA-44": {
+				return mlDsa44.getIdentifier();
+			}
+			case "ML-DSA-65": {
+				return mlDsa65.getIdentifier();
+			}
+			case "ML-DSA-87": {
+				return mlDsa87.getIdentifier();
 			}
 			default: {
 				return sha256WithRSAEncryption.getIdentifier();

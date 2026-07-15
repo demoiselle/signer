@@ -37,6 +37,7 @@
 
 package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -129,7 +130,7 @@ public class XMLSigner implements Signer {
 	
 
 	public XMLSigner() {
-		this.policyOID = XMLPoliciesOID.AD_RB_XADES_2_4.getOID();
+		this.policyOID = XMLPoliciesOID.AD_RB_XADES_2_5.getOID();
 		this.policy = PolicyUtils.getPolicyByOid(policyOID);
 	}
 
@@ -393,6 +394,19 @@ public class XMLSigner implements Signer {
 			this.certificate = (X509Certificate) this.certificateChain[0];
 		}
 
+		/* TODO: Avaliar implementação futura (Ronald)
+		// Validação Preditiva de Compatibilidade: Analisar as raizes aceitas dentro do arquivo da politica 
+		// e cruzar com o certificado do usuario, ao invés de buscar apenas por substrings.
+		if (this.certificate != null && this.policy != null) {
+			try {
+				org.demoiselle.signer.core.validator.RootCompatValidator.validateRootCompatibility(this.certificate, this.policy.name());
+			} catch (org.demoiselle.signer.core.exception.IncompatiblePolicyException e) {
+				logger.error(e.getMessage());
+				throw new XMLSignerException(e.getMessage(), e);
+			}
+		}
+		*/
+
 		this.certificateChain = CAManager.getInstance().getCertificateChainArray(this.certificate);
 
 		if (this.certificateChain.length < 3) {
@@ -437,7 +451,9 @@ public class XMLSigner implements Signer {
 		byte[] canonicalized = null;
 
 		try {
-			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0), baos);
+			canonicalized = baos.toByteArray();
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(
@@ -456,7 +472,9 @@ public class XMLSigner implements Signer {
 		}
 		byte[] dh;
 		try {
-			dh = c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(numSignatures));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(doc.getElementsByTagName("ds:SignedInfo").item(numSignatures), baos);
+			dh = baos.toByteArray();
 		} catch (CanonicalizationException e) {
 			logger.error(xadesMessagesBundle.getString("error.xml.Invalid.Canonicalizer", e.getMessage()));
 			throw new XMLSignerException(

@@ -37,11 +37,11 @@
 
 package org.demoiselle.signer.policy.engine.asn1.icpb.v2;
 
+import org.bouncycastle.asn1.ASN1IA5String;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
+import org.bouncycastle.asn1.ASN1OctetString;
 import org.bouncycastle.asn1.ASN1Primitive;
 import org.bouncycastle.asn1.ASN1Sequence;
-import org.bouncycastle.asn1.DERIA5String;
-import org.bouncycastle.asn1.DEROctetString;
 import org.bouncycastle.asn1.esf.OtherHashAlgAndValue;
 import org.bouncycastle.asn1.x509.AlgorithmIdentifier;
 import org.demoiselle.signer.policy.engine.asn1.ASN1Object;
@@ -124,13 +124,13 @@ public class PolicyInfo extends ASN1Object {
 		}
 		this.policyOID = new ObjectIdentifier();
 		this.policyOID.parse(sequence1.getObjectAt(indice).toASN1Primitive());
-		DERIA5String policyURI = (DERIA5String) sequence1.getObjectAt(indice + 1);
+		ASN1IA5String policyURI = ASN1IA5String.getInstance(sequence1.getObjectAt(indice + 1));
 		this.policyURI = policyURI.getString();
 
 		ASN1Primitive policyDigest = sequence1.getObjectAt(indice + 2).toASN1Primitive();
 		ASN1Sequence sequence2 = ASN1Sequence.getInstance(policyDigest);
 
-		DEROctetString derOctetString = (DEROctetString) sequence2.getObjectAt(1).toASN1Primitive();
+		ASN1OctetString derOctetString = ASN1OctetString.getInstance(sequence2.getObjectAt(1).toASN1Primitive());
 		ASN1Sequence sequence3 = ASN1Object.getDERSequence(sequence2.getObjectAt(0).toASN1Primitive());
 		ASN1ObjectIdentifier objectIdentifier = (ASN1ObjectIdentifier) sequence3.getObjectAt(0).toASN1Primitive();
 		AlgorithmIdentifier algorithmIdentifier = new AlgorithmIdentifier(objectIdentifier);

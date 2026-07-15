@@ -37,6 +37,7 @@
 
 package org.demoiselle.signer.policy.impl.xades.xml.impl;
 
+import java.io.ByteArrayOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -517,6 +518,12 @@ public class XMLChecker implements Checker {
 		}
 		NodeList value = parent.getElementsByTagNameNS(XAdESv1_3_2, tagName);
 		if (value.getLength() == 0) {
+			value = parent.getElementsByTagName("xades:" + tagName);
+		}
+		if (value.getLength() == 0) {
+			value = parent.getElementsByTagName(tagName);
+		}
+		if (value.getLength() == 0) {
 			if (mandatory) {
 				validationErrors.add(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
 				logger.error(xadesMessagesBundle.getString("error.xml.element.not.found", tagName));
@@ -554,7 +561,9 @@ public class XMLChecker implements Checker {
 		Canonicalizer c14n;
 		try {
 			c14n = Canonicalizer.getInstance(canonicalString);
-			canonicalized = c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0));
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(objectTag.getElementsByTagName("xades:SignedProperties").item(0), baos);
+			canonicalized = baos.toByteArray();
 		} catch (InvalidCanonicalizerException | CanonicalizationException e1) {
 			validationErrors.add(xadesMessagesBundle.getString("error.xml.hash.data.invalid", digestMethod));
 			logger.error(xadesMessagesBundle.getString("error.xml.hash.data.invalid", digestMethod));
@@ -642,7 +651,9 @@ public class XMLChecker implements Checker {
 			Init.init();
 			Canonicalizer c14n = Canonicalizer.getInstance(canonicalizationMethodTag.getAttribute("Algorithm"));
 
-			byte[] dh = c14n.canonicalizeSubtree(signatureInfoTag);
+			ByteArrayOutputStream baos1 = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(signatureInfoTag, baos1);
+			byte[] dh = baos1.toByteArray();
 
 			String aos = AlgorithmsValues.getAlgorithmsOnSignature(signatureMethod.getAttribute("Algorithm"));
 			Signature verify = Signature.getInstance(aos);
@@ -698,6 +709,7 @@ public class XMLChecker implements Checker {
 		if (policyOID == null) {
 			validationWaring.add(xadesMessagesBundle.getString("error.xml.policy.null"));
 			logger.warn(xadesMessagesBundle.getString("error.xml.policy.null"));
+			return null;
 		}
 		if (policyOID.contains("urn:oid:")) {
 			policyOID = policyOID.substring(policyOID.lastIndexOf(":") + 1, policyOID.length());
@@ -709,14 +721,29 @@ public class XMLChecker implements Checker {
 		 * policyOID)); return null; }
 		 */
 
-		Document policyDoc = PolicyFactory.getInstance().loadXMLPolicy(PolicyUtils.getPolicyByOid(policyOID));
+		PolicyFactory.Policies policy = PolicyUtils.getPolicyByOid(policyOID);
+		if (policy == null) {
+			validationWaring.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+			logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+			return null;
+		}
+		Document policyDoc = PolicyFactory.getInstance().loadXMLPolicy(policy);
 
 		XMLPolicyValidator xmlPolicyValidator = new XMLPolicyValidator(policyDoc);
 
-		if (!xmlPolicyValidator.validate()) {
-			logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
-			validationWaring.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
-		}
+                boolean validated = false;
+                try {
+                    validated = xmlPolicyValidator.validate();
+                } catch (Exception e) {
+                    logger.debug("Erro ao validar politica: " + e.getMessage());
+                }
+                if (!validated) {
+                        logger.warn(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+                        validationWaring.add(xadesMessagesBundle.getString("error.policy.not.recognized", policyOID));
+                        if (xmlPolicyValidator.getXmlSignaturePolicy().getIdentifier() == null) {
+                            xmlPolicyValidator.getXmlSignaturePolicy().setIdentifier(policyOID);
+                        }
+                }
 
 		List<XMLSignerAlgConstraint> listSignerAlgConstraint = xmlPolicyValidator.getXmlSignaturePolicy()
 				.getXmlSignerAlgConstraintList();
@@ -756,7 +783,9 @@ public class XMLChecker implements Checker {
 
 			Canonicalizer c14n = Canonicalizer.getInstance(canonicalizationMethod);
 
-			byte[] dh = c14n.canonicalizeSubtree(signature.getElementsByTagName("ds:SignedInfo").item(0));
+			ByteArrayOutputStream baos2 = new ByteArrayOutputStream();
+			c14n.canonicalizeSubtree(signature.getElementsByTagName("ds:SignedInfo").item(0), baos2);
+			byte[] dh = baos2.toByteArray();
 			byte[] sigValue = Base64.decode(signatureValueTag.getTextContent());
 
 			if (!AlgorithmsValues.isCanonicalMethods(canonicalizationMethod)) {

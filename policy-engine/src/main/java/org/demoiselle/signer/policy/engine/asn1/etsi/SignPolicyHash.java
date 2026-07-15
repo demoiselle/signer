@@ -37,14 +37,14 @@
 
 package org.demoiselle.signer.policy.engine.asn1.etsi;
 
-import org.bouncycastle.asn1.DEROctetString;
+import org.bouncycastle.asn1.ASN1OctetString;
 
 /**
  * OID for SignPolicyHash defined on policy.
  */
 public class SignPolicyHash extends OctetString {
 
-	public SignPolicyHash(DEROctetString derOctetString) {
+	public SignPolicyHash(ASN1OctetString derOctetString) {
 		this.derOctetString = derOctetString;
 	}
 }

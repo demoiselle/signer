@@ -138,6 +138,9 @@ public class OffLineCRLRepository implements CRLRepository {
 
 			fileCRL = new File(config.getCrlPath(), RepositoryUtil.urlToMD5(uRLCRL));
 			if (!fileCRL.exists()) {
+				// Tenta baixar arquivo que não existe em cache
+				// saveURL() já tenta HTTPS primeiro com fallback para HTTP
+				logger.info("CRL não encontrada em cache, iniciando download: " + uRLCRL);
 				RepositoryUtil.saveURL(uRLCRL, fileCRL);
 			}
 
@@ -146,7 +149,14 @@ public class OffLineCRLRepository implements CRLRepository {
 				if (crl.getCRL().getNextUpdate().before(new Date())) {
 					// Se estiver expirado, atualiza com a CRL mais nova
 					logger.info(coreMessagesBundle.getString("info.update.crl"));
-					RepositoryUtil.saveURL(uRLCRL, fileCRL);
+					try {
+						RepositoryUtil.saveURL(uRLCRL, fileCRL);
+						// Recarrega CRL atualizada
+						crl = new ICPBR_CRL(new FileInputStream(fileCRL));
+					} catch (Exception e) {
+						logger.warn("Não foi possível atualizar CRL expirada, usando versão em cache: " + e.getMessage());
+						// Retorna a CRL expirada mesmo assim (melhor que nada)
+					}
 				}
 			} else {
 				if (!fileCRL.delete()) {
@@ -161,13 +171,16 @@ public class OffLineCRLRepository implements CRLRepository {
 			logger.error(coreMessagesBundle.getString("error.file.not.found", fileCRL));
 			config.setOnline(true);
 		} catch (CRLException e) {
+			// Arquivo corrompido - provavelmente falha no download
+			// saveURL() já tentou HTTPS e HTTP, então não há mais o que fazer
 			addFileIndex(uRLCRL);
 			logger.error(coreMessagesBundle.getString("error.file.corrupted", fileCRL, e.getMessage()));
 			config.setOnline(true);
-			if (!fileCRL.delete()) {
+			if (fileCRL != null && !fileCRL.delete()) {
 				logger.error(coreMessagesBundle.getString("error.file.remove", fileCRL));
 			}
 		} catch (CertificateException e) {
+			// Erro de certificado na CRL
 			addFileIndex(uRLCRL);
 			config.setOnline(true);
 			logger.error(coreMessagesBundle.getString("error.crl.certificate", e.getMessage()));
