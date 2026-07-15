@@ -197,12 +197,12 @@
 			<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
-				<version>0.9.0</version>
+				<version>0.6.0</version>
 				<extensions>true</extensions>
 				<configuration>
 					<publishingServerId>ossrh</publishingServerId>
 					<autoPublish>true</autoPublish>
-					<skipPublishing>false</skipPublishing>
+					<skipPublishing>true</skipPublishing>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -324,7 +324,7 @@
 			scm:git:git@github.com:demoiselle/${project.alias}.git</developerConnection>
 		<url>https://github.com/demoiselle/${project.alias}</url>
 
-		<tag>4.6.0-SNAPSHOT</tag>
+		<tag>4.6.1</tag>
 	</scm>
 
 

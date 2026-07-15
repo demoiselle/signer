@@ -22,6 +22,22 @@
 		<url>https://www.serpro.gov.br</url>
 	</organization>
 
+	<developers>
+		<developer>
+			<name>Evandro Magalhães Leite Júnior</name>
+			<email>evandrojr@gmail.com</email>
+			<organization>SERPRO</organization>
+			<organizationUrl>https://www.serpro.gov.br</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>scm:git:git@github.com:demoiselle/signer.git</connection>
+		<developerConnection>scm:git:git@github.com:demoiselle/signer.git</developerConnection>
+		<url>https://github.com/demoiselle/signer</url>
+		<tag>4.6.1</tag>
+	</scm>
+
 	<parent>
 		<groupId>org.demoiselle.signer</groupId>
 		<artifactId>build</artifactId>
@@ -177,4 +193,21 @@
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.sonatype.central</groupId>
+				<artifactId>central-publishing-maven-plugin</artifactId>
+				<version>0.6.0</version>
+				<extensions>true</extensions>
+				<configuration>
+					<publishingServerId>ossrh</publishingServerId>
+					<autoPublish>true</autoPublish>
+					<skipPublishing>true</skipPublishing>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>

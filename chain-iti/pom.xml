@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>chain-iti</artifactId>
+            <version>4.6.1</version>
     <packaging>jar</packaging>
 
     <name>ITI CA name</name>
@@ -12,22 +13,68 @@
     <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
-        <relativePath>../parent</relativePath>
         <version>4.6.1</version>
+        <relativePath>../parent/pom.xml</relativePath>
     </parent>
+
+    <licenses>
+        <license>
+            <name>GNU Lesser General Public License, Version 3</name>
+            <url>https://www.gnu.org/licenses/lgpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>SERPRO - Serviço Federal de Processamento de Dados</name>
+        <url>https://www.serpro.gov.br</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <name>Evandro Magalhães Leite Júnior</name>
+            <email>evandrojr@gmail.com</email>
+            <organization>SERPRO</organization>
+            <organizationUrl>https://www.serpro.gov.br</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:demoiselle/signer.git</connection>
+        <developerConnection>scm:git:git@github.com:demoiselle/signer.git</developerConnection>
+        <url>https://github.com/demoiselle/signer</url>
+        <tag>4.6.1</tag>
+    </scm>
 
     <dependencies>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
+            <version>4.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-icp-brasil</artifactId>
+            <version>4.6.1</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-serpro-neosigner</artifactId>
+            <version>4.6.1</version>
         </dependency>
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.central</groupId>
+                <artifactId>central-publishing-maven-plugin</artifactId>
+                <version>0.6.0</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <publishingServerId>ossrh</publishingServerId>
+                    <autoPublish>true</autoPublish>
+                    <skipPublishing>false</skipPublishing>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
