@@ -63,6 +63,7 @@ import java.util.Base64;
 import org.demoiselle.signer.chain.icp.brasil.provider.ChainICPBrasilConfig;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.repository.ConfigurationRepo;
+import org.demoiselle.signer.core.util.DisablingUtil;
 import org.demoiselle.signer.core.util.Downloads;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
@@ -110,6 +111,10 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 	 */
 	@Override
 	public Collection<X509Certificate> getCAs() {
+		if (DisablingUtil.isChainDisabled("icp-brasil")) {
+			LOGGER.info("Production chain 'icp-brasil' is disabled. Skipping CA loading.");
+			return new HashSet<>();
+		}
 
 		Collection<X509Certificate> result = null;
 		boolean useCache = false;
@@ -180,6 +185,11 @@ public class ICPBrasilOnLineSerproProviderCA implements ProviderCA {
 			LOGGER.debug(chainMessagesBundle.getString("info.number.certificates.found", getName(), result.size()));
 		} else {
 			LOGGER.info(chainMessagesBundle.getString("info.none.certificates", getName()));
+			// Never return null: honor the ProviderCA contract and stay consistent
+			// with ICPBrasilUserHomeProviderCA, which always returns a (possibly empty)
+			// collection. Returning null here caused NullPointerException on callers
+			// (and tests) whenever the online chain could not be downloaded/parsed.
+			result = new HashSet<>();
 		}
 
 		return result;

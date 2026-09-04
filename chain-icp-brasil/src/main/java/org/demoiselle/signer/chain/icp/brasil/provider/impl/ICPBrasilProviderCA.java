@@ -53,14 +53,20 @@ import java.util.List;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.util.DisablingUtil;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * FIXME rename to ICPBrasilKeystoreProviderCA for consistence
  * Provides trusted Certificate Authority chain of the ICP-BRAZIL's digital signature policies
- * from Keystore (icpbrasil.jks) stored in resources library
+ * from Keystore (icpbrasil.jks) stored in resources library.
+ * <p>
+ * By default, this chain is loaded when the dependency is present.
+ * To disable it, set the environment variable: {@code SIGNER_DISABLE_CHAIN_ICP_BRASIL=true}
+ * <p>
+ * The global environment variable {@code SIGNER_ENV} is also respected when
+ * the disable variable is not explicitly set.
  */
 public class ICPBrasilProviderCA implements ProviderCA {
 
@@ -72,6 +78,10 @@ public class ICPBrasilProviderCA implements ProviderCA {
 	 */
 	@Override
 	public Collection<X509Certificate> getCAs() {
+		if (DisablingUtil.isChainDisabled("icp-brasil")) {
+			LOGGER.info("Production chain 'icp-brasil' is disabled. Skipping CA loading.");
+			return new ArrayList<>();
+		}
 		KeyStore keyStore = this.getKeyStore();
 		List<X509Certificate> result = new ArrayList<X509Certificate>();
 		try {

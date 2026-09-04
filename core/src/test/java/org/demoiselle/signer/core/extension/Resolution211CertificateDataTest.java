@@ -17,50 +17,36 @@ import org.junit.Test;
 
 public class Resolution211CertificateDataTest {
 
-    public static final String CERT_V6 = 
+    public static final String CERT_FICTICIO =
         "-----BEGIN CERTIFICATE-----\n" +
-        "MIIGpTCCBI2gAwIBAgIMHymo/VF2vgDXXhxYMA0GCSqGSIb3DQEBCwUAMIGVMQsw\n" +
-        "CQYDVQQGEwJCUjETMBEGA1UECgwKSUNQLUJyYXNpbDE7MDkGA1UECwwyU2Vydmlj\n" +
-        "byBGZWRlcmFsIGRlIFByb2Nlc3NhbWVudG8gZGUgRGFkb3MgLSBTRVJQUk8xNDAy\n" +
-        "BgNVBAMMK0F1dG9yaWRhZGUgQ2VydGlmaWNhZG9yYSBkbyBTRVJQUk8gRmluYWwg\n" +
-        "djYwHhcNMjYwNjE2MTc0NjQ3WhcNMjkwNjE1MTc0NjQ3WjBvMQswCQYDVQQGEwJC\n" +
-        "UjETMBEGA1UECgwKSUNQLUJyYXNpbDEUMBIGA1UEBRMLNzA0NjM2NDYxMzQxNTAz\n" +
-        "BgNVBAMMLENBUkxPUyBBVUdVU1RPIEJFUk5BUkRFUyBBWkVWRURPOjcwNDYzNjQ2\n" +
-        "MTM0MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxCgOceR4VC9P9P9Q\n" +
-        "dsPlmwpzgF2uQJFl7KgSRbNzD1TlB9VuacFD7lWEgV8rF8MO4r0P7N6Q12lSby+J\n" +
-        "/n2b1VL56l7yzLjplA2g8+qTwaYLUgvX0wrcpym23L9h22E1GJzcgnhwCkhmSM9j\n" +
-        "r92CS8Ow2GxolrFCrBUc5xb14T/qR95Bh9XC5UgYwufT46ogyh9pCZ2F6JtCuL+m\n" +
-        "aa2CKXvygKPX+kFUIcXGKJPBu6UtaiZEM0mtug+LjC7C+gy6ENQgTotwL+YpimQa\n" +
-        "N2MFXRMeslk8cdGTdsCBxlPSoLifV37KvSzK1IDAC0UWtRoS7CPE402A3rf8cTtN\n" +
-        "ScQypQIDAQABo4ICGDCCAhQwHwYDVR0jBBgwFoAU6OO83K8EOdIf+CNSOmXKpldo\n" +
-        "OsUwHQYDVR0OBBYEFMTjTtxKPo8ja4BE524l1NN6fpPdMA4GA1UdDwEB/wQEAwIF\n" +
-        "4DBZBgNVHSAEUjBQME4GBmBMAQIDDTBEMEIGCCsGAQUFBwIBFjZodHRwOi8vcmVw\n" +
-        "b3NpdG9yaW8uc2VycHJvLmdvdi5ici9kb2NzL2RwY3NlcnByb2FjZi5wZGYwVwYD\n" +
-        "VR0RBFAwTqA4BgVgTAEDAaAvBC0wMTAyMTk4MDcwNDYzNjQ2MTM0MDAwMDAwMDAw\n" +
-        "MDAwMDAwMDAwMDAwMDAwMDCBEmNhemV2ZWRvQG1wZi5tcC5icjAMBgNVHRMBAf8E\n" +
-        "AjAAMB0GA1UdJQQWMBQGCCsGAQUFBwMCBggrBgEFBQcDBDCBiAYDVR0fBIGAMH4w\n" +
-        "PKA6oDiGNmh0dHA6Ly9yZXBvc2l0b3Jpby5zZXJwcm8uZ292LmJyL2xjci9hY3Nl\n" +
-        "cnByb2FjZnY2LmNybDA+oDygOoY4aHR0cDovL2NlcnRpZmljYWRvczIuc2VycHJv\n" +
-        "Lmdvdi5ici9sY3IvYWNzZXJwcm9hY2Z2Ni5jcmwwVgYIKwYBBQUHAQEESjBIMEYG\n" +
-        "CCsGAQUFBzAChjpodHRwOi8vcmVwb3NpdG9yaW8uc2VycHJvLmdvdi5ici9jYWRl\n" +
-        "aWFzL2Fjc2VycHJvYWNmdjYucDdiMA0GCSqGSIb3DQEBCwUAA4ICAQCUsZ/MjmzB\n" +
-        "NSx6cKPq16mHTVSkwzjJvo5hrcDwtM82Qdr3RF2mq04hJMVf4kqgLvW/eWDYpqKh\n" +
-        "rdI4jyYaQueVCXd20QUIb9z9Vzo679WS3l8J9Lm1s+cOcYwAB3F+bqqbDJ27G7Sd\n" +
-        "yucnBHH5gspeSN+7HTZ56FxiAO9vIpyKxay8p0h6eMUcAGMgC2FCCbUviekZVl50\n" +
-        "VoQbw4Nf77q+y8cK+S81MrytwzzE7WF5ia1PTSBJm/4PkyfoQ6cAP+OaKh5KvQwS\n" +
-        "NJ7TPfwZIh2o41M14VFhaYFdhbroKcVrREd+Hqe232xFey/aTlPukrQqa5mTTxY1\n" +
-        "pkaVBPxbS0enTn9SmXBYJs5B6alM13thRKLZYFiFJ1aQGD6s9MoU1ndvRLXU7Jgk\n" +
-        "w3YR80xGUsvBPTZsdyNEGsW83v8+vzcQDc9cPppG9OSf4Sxzg8viRZgyQV6l+4x0\n" +
-        "u/xv57yGXrGnZX3hrjBr0eeKpbJcpWxJVQahwpcwe6pt/vnKVlyYTFLTQVKyCvCf\n" +
-        "BgJoE/FhMeT38QCpH9kKgDZ9rR3kUg5WIsLMqNvfcruZn9FMYSU2uQer6DIF55iW\n" +
-        "resYRq2Lzoo2jh9NjG4OUo2oZqqJ0rVQXzZbA9gBp3VWUHMK4rJ67HLj+vgmJ7iB\n" +
-        "Ncnn2UcdUuhYJirLeZCb9eJ/ocoppfufug==\n" +
+        "MIID8DCCAtigAwIBAgIESZYC0jANBgkqhkiG9w0BAQsFADBcMQswCQYDVQQGEwJC\n" +
+        "UjETMBEGA1UECgwKSUNQLUJyYXNpbDEUMBIGA1UEBRMLMTIzNDU2Nzg5MDkxIjAg\n" +
+        "BgNVBAMMGUpPU0UgREEgU0lMVkE6MTIzNDU2Nzg5MDkwHhcNMjYwODA2MTUwMDMx\n" +
+        "WhcNMjcwODA3MTUwMDMxWjBcMQswCQYDVQQGEwJCUjETMBEGA1UECgwKSUNQLUJy\n" +
+        "YXNpbDEUMBIGA1UEBRMLMTIzNDU2Nzg5MDkxIjAgBgNVBAMMGUpPU0UgREEgU0lM\n" +
+        "VkE6MTIzNDU2Nzg5MDkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCX\n" +
+        "WPGNqqKW2xydFP7IAMorhz0SpbyiBqV/7XbNrtJr29gQkKHE88gFUO4SNMf2w6FH\n" +
+        "mHcDruVpxAhVH9alknNd0/0p8qTWzzUF/uW9hW09xouJa5gBq8YnNLU1VnMM/mJ7\n" +
+        "UhdCRAt+HN55q3S2D81NnhQBu/KP34DKcT1XVYdU9+PWBuaBrpf3m1po9Gbro8iu\n" +
+        "bCRDOCvoKxMvPzPyE8iC1CoyHWIaFPrz6LAbsKkZYkj5qqBZGnd4H3WRsf6V4iBx\n" +
+        "MPtznyyjtHj/hagu7y2nFNsh58IvNek31JU+PkYFRVcwMEwccX9Gu3gQfooRE6Dq\n" +
+        "bvHUg42ZUDypfKeCycshAgMBAAGjgbkwgbYwDAYDVR0TAQH/BAIwADASBgNVHSAE\n" +
+        "CzAJMAcGBWBMAQIDMEkGA1UdEQRCMECgPgYFYEwBAwGgNQQzMDEwMjE5ODAxMjM0\n" +
+        "NTY3ODkwOTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwU1NQMFNQMEcGA1UdHwRA\n" +
+        "MD4wPKA6oDiGNmh0dHA6Ly9yZXBvc2l0b3Jpby5zZXJwcm8uZ292LmJyL2xjci9h\n" +
+        "Y3NlcnByb2FjZnY2LmNybDANBgkqhkiG9w0BAQsFAAOCAQEAPrtIFKL/bjVOBOkD\n" +
+        "W0zQnctSDnZ8sFcn/WiTwF1YhvZePJDqBWJm8F0PYj6U6CSzHT96rtcmZqJ8C0OF\n" +
+        "f8NiuGhIxTfQ2USB0WWDdINxbUwNQ7AO43RdEqzCJOuQF7XLlnRFGXhmedEQrZsP\n" +
+        "9SYbMQew7VjHKd6nBlDlfCc4VVKxIrcC4oyrEDRyB2hOZIR0vvQXHgNLbJdT00t1\n" +
+        "LdaOTE7ufrMrXjHBLOgZGkleVsLkZRvl83tuGhKR1+86vNEo+mY19LmuJR5sr+kK\n" +
+        "bzD6aT2H6q2X4CpNLE6ze+cxZlpvTfePZQopcFkhYL5PNY0NKbh3R/8jI4f8GGSM\n" +
+        "l3z5Yw==\n" +
         "-----END CERTIFICATE-----\n";
 
     @Test
     public void testCertificateData() {
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-        X509Certificate x509Certificate = fromPem(CERT_V6);
+        X509Certificate x509Certificate = fromPem(CERT_FICTICIO);
 
         Assert.assertNotNull("Certificado não deve ser nulo", x509Certificate);
         

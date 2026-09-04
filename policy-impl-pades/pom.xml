@@ -8,7 +8,7 @@
     <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
-        <version>4.6.1</version>
+        <version>4.6.2</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -48,22 +48,22 @@
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-core</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>signer-cryptography</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>policy-engine</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>policy-impl-cades</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
         </dependency>
 
         <dependency>
@@ -88,43 +88,28 @@
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-serpro-neosigner</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-icp-brasil</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-icp-brasil-homolog</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
             <scope>test</scope>
         </dependency>
         <!-- Cadeias ITI  -->   
         <dependency>
             <groupId>org.demoiselle.signer</groupId>
             <artifactId>chain-iti</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
             <scope>test</scope>
         </dependency> 
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.6.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>ossrh</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                    <skipPublishing>false</skipPublishing>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

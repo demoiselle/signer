@@ -45,14 +45,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.util.DisablingUtil;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides HOM Certificate Authority chain of ITI
- * https://assinador.iti.br/assinatura/
- * http://repo.iti.br/docs/Cadeia_GovBr-der-hom.p7b
+ * Provides Certificate Authority chain of ITI HOMOLOGATION.
+ * <p>
+ * By default, this chain is loaded when the dependency is present.
+ * To disable it, set the environment variable: {@code SIGNER_DISABLE_CHAIN_ITI_HOMOLOG=true}
+ * <p>
+ * The global environment variable {@code SIGNER_ENV} is also respected when
+ * the disable variable is not explicitly set.
  * 
  */
 public class ITIProviderHOMCA implements ProviderCA {
@@ -62,6 +67,10 @@ public class ITIProviderHOMCA implements ProviderCA {
 
 	@SuppressWarnings("finally")
 	public Collection<X509Certificate> getCAs() {
+		if (DisablingUtil.isChainDisabled("iti-homolog")) {
+			logger.info("Homologation chain 'iti-homolog' is disabled. Skipping CA loading.");
+			return new ArrayList<>();
+		}
 		List<X509Certificate> result = new ArrayList<X509Certificate>();
 		try {
 

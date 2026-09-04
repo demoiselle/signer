@@ -57,6 +57,7 @@ import java.util.HashSet;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.util.DisablingUtil;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,6 +90,10 @@ public class ICPBrasilUserHomeProviderCA implements ProviderCA {
 	 */
 	@Override
 	public Collection<X509Certificate> getCAs() {
+		if (DisablingUtil.isChainDisabled("icp-brasil")) {
+			LOGGER.info("Production chain 'icp-brasil' is disabled. Skipping CA loading.");
+			return new java.util.HashSet<>();
+		}
 
 		// verify if the FULL_PATH_FOLDER_SINGER exists
 		try {

@@ -74,7 +74,14 @@ public class MessageDigest implements SignedAttribute {
 	public Attribute getValue() {
 		try {
 			if (this.hash == null) {
-				java.security.MessageDigest md = java.security.MessageDigest.getInstance(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue());
+				// Usa o algoritmo de hash da assinatura do documento (preenchido pelo CAdESSigner),
+				// e nao o signPolicyHashAlg (que eh o algoritmo de hash do arquivo .der da politica).
+				String hashAlgOID = signaturePolicy.getSignatureAlgorithmHashOID();
+				if (hashAlgOID == null) {
+					// Fallback para compatibilidade: usa o hash da politica se signatureAlgorithmHashOID nao definido
+					hashAlgOID = signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue();
+				}
+				java.security.MessageDigest md = java.security.MessageDigest.getInstance(hashAlgOID);
 				this.hash = md.digest(content);
 			}
 			return new Attribute(identifier, new DERSet(new DEROctetString(this.hash)));

@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>org.demoiselle.signer</groupId>
+		<artifactId>parent</artifactId>
+		<version>4.6.2</version>
+		<relativePath>../parent/pom.xml</relativePath>
+	</parent>
+
+	<artifactId>automacao-importador</artifactId>
+	<packaging>jar</packaging>
+
+	<name>Demoiselle Signer - Automacao Importador</name>
+	<description>Aplicacao autonoma (uber-jar) para baixar e persistir cadeias de
+		certificados ICP-Brasil no keystore BKS, manipulado nativamente via
+		BouncyCastle (sem keytool/openssl).</description>
+
+	<properties>
+		<!-- Isolado do reactor pinado em 1.8: este modulo usa Java 17+
+		     (java.net.http.HttpClient e records). O parent herda source/target=1.8,
+		     entao sobrescrevemos com maven.compiler.release=17 apenas aqui. -->
+		<maven.compiler.release>17</maven.compiler.release>
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+		<!-- Nao publicar este modulo no repositorio central -->
+		<central.publish.skip>true</central.publish.skip>
+		<maven.deploy.skip>true</maven.deploy.skip>
+		<gpg.skip>true</gpg.skip>
+
+		<!-- Main-Class do uber-jar executavel -->
+		<importador.main.class>org.demoiselle.signer.importador.cli.Main</importador.main.class>
+
+		<!-- Versoes de dependencias nao gerenciadas pelo BOM -->
+		<picocli.version>4.7.6</picocli.version>
+		<jackson.version>2.17.2</jackson.version>
+		<junit.jupiter.version>5.10.3</junit.jupiter.version>
+		<jqwik.version>1.8.5</jqwik.version>
+		<maven.shade.plugin.version>3.6.0</maven.shade.plugin.version>
+		<maven.surefire.plugin.version>3.2.5</maven.surefire.plugin.version>
+		<!-- 3.13.0 suporta <release> e <parameters> (necessarios para records + Jackson) -->
+		<maven.compiler.plugin.version>3.13.0</maven.compiler.plugin.version>
+	</properties>
+
+	<dependencies>
+		<!-- BouncyCastle: versao 1.80 herdada do parent/BOM (byte-compativel com
+		     o signer), empacotada dentro do uber-jar pelo shade. -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcpkix-jdk18on</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcmail-jdk18on</artifactId>
+		</dependency>
+
+		<!-- CLI: subcomandos, flags e help -->
+		<dependency>
+			<groupId>info.picocli</groupId>
+			<artifactId>picocli</artifactId>
+			<version>${picocli.version}</version>
+		</dependency>
+
+		<!-- manifest.json da staging -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- Suporte a java.time.Instant (serializacao ISO-8601) no manifest.json -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+		<!-- Suporte a nomes de parametros de construtor: essencial para
+		     (des)serializar Java records sem anotacoes explicitas. -->
+		<dependency>
+			<groupId>com.fasterxml.jackson.module</groupId>
+			<artifactId>jackson-module-parameter-names</artifactId>
+			<version>${jackson.version}</version>
+		</dependency>
+
+		<!-- Testes: JUnit 5 (Jupiter) -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<version>${junit.jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Testes property-based: jqwik -->
+		<dependency>
+			<groupId>net.jqwik</groupId>
+			<artifactId>jqwik</artifactId>
+			<version>${jqwik.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<finalName>automacao-importador</finalName>
+		<plugins>
+			<!-- Compilacao isolada em Java 17 (release) -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven.compiler.plugin.version}</version>
+				<configuration>
+					<release>${maven.compiler.release}</release>
+					<encoding>UTF-8</encoding>
+					<!-- Nao herdar source/target=1.8 do reactor raiz -->
+					<source>${maven.compiler.release}</source>
+					<target>${maven.compiler.release}</target>
+					<!-- Preserva nomes de parametros no bytecode; necessario para o
+					     jackson-module-parameter-names desserializar records sem anotacoes. -->
+					<parameters>true</parameters>
+				</configuration>
+			</plugin>
+
+			<!-- JUnit 5 + jqwik -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven.surefire.plugin.version}</version>
+			</plugin>
+
+			<!-- UBER-JAR executavel com todas as dependencias embutidas -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>${maven.shade.plugin.version}</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+						<configuration>
+							<createDependencyReducedPom>false</createDependencyReducedPom>
+							<transformers>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+									<mainClass>${importador.main.class}</mainClass>
+								</transformer>
+								<transformer
+									implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer" />
+							</transformers>
+							<filters>
+								<!-- Descartar assinaturas dos jars do BC ao reempacotar -->
+								<filter>
+									<artifact>*:*</artifact>
+									<excludes>
+										<exclude>META-INF/*.SF</exclude>
+										<exclude>META-INF/*.DSA</exclude>
+										<exclude>META-INF/*.RSA</exclude>
+									</excludes>
+								</filter>
+							</filters>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+</project>

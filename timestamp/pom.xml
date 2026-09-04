@@ -3,13 +3,13 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>signer-timestamp</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
 	<packaging>jar</packaging>
 
 	<parent>
 		<groupId>org.demoiselle.signer</groupId>
 		<artifactId>parent</artifactId>
-		<version>4.6.1</version>
+		<version>4.6.2</version>
 		<relativePath>../parent/pom.xml</relativePath>
 	</parent>
 
@@ -49,12 +49,12 @@
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>signer-cryptography</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
 		</dependency>
 		<dependency>
 			<groupId>org.demoiselle.signer</groupId>
 			<artifactId>signer-core</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
 		</dependency>
 		<!-- última versão compatível com Java 7 -->
 		<dependency>
@@ -68,19 +68,5 @@
 			<version>2.22.0</version>
 		</dependency>
 	</dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.6.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>ossrh</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                    <skipPublishing>false</skipPublishing>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
 </project>

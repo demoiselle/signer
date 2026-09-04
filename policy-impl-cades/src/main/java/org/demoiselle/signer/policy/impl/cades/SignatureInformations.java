@@ -61,6 +61,8 @@ public class SignatureInformations {
 	private Date notAfter;
 	private LinkedList<String> validatorWarnins = new LinkedList<String>();
 	private LinkedList<String> validatorErrors = new LinkedList<String>();
+	private LinkedList<ValidationMessageCode> validatorErrorCodes = new LinkedList<ValidationMessageCode>();
+	private LinkedList<ValidationMessageCode> validatorWarningCodes = new LinkedList<ValidationMessageCode>();
 	private boolean invalidSignature = false;
 	private BasicCertificate icpBrasilcertificate = null;
 
@@ -208,5 +210,35 @@ public class SignatureInformations {
 
 	public void setValidatorWarnins(LinkedList<String> validatorWarnins) {
 		this.validatorWarnins = validatorWarnins;
+	}
+
+	/**
+	 * @return list of error codes (programmatic identifiers for validation errors)
+	 * @since 4.6.3
+	 */
+	public LinkedList<ValidationMessageCode> getValidatorErrorCodes() {
+		return validatorErrorCodes;
+	}
+
+	/**
+	 * @param validatorErrorCodes the error codes to set
+	 */
+	public void setValidatorErrorCodes(LinkedList<ValidationMessageCode> validatorErrorCodes) {
+		this.validatorErrorCodes = validatorErrorCodes;
+	}
+
+	/**
+	 * @return list of warning codes (programmatic identifiers for validation warnings)
+	 * @since 4.6.3
+	 */
+	public LinkedList<ValidationMessageCode> getValidatorWarningCodes() {
+		return validatorWarningCodes;
+	}
+
+	/**
+	 * @param validatorWarningCodes the warning codes to set
+	 */
+	public void setValidatorWarningCodes(LinkedList<ValidationMessageCode> validatorWarningCodes) {
+		this.validatorWarningCodes = validatorWarningCodes;
 	}
 }
