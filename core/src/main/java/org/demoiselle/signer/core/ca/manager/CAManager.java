@@ -56,6 +56,7 @@ import javax.security.auth.x500.X500Principal;
 
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
 import org.demoiselle.signer.core.ca.provider.ProviderCAFactory;
+import org.demoiselle.signer.core.util.DisablingUtil;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -146,9 +147,9 @@ public class CAManager {
 			return true;
 		}
 		
-		// Fallback por identidade apenas se explicitamente configurado para ambiente de homologação/teste
-		String env = System.getProperty("org.demoiselle.signer.env");
-		if ("hom".equalsIgnoreCase(env) || "homolog".equalsIgnoreCase(env)) {
+		// Fallback por identidade para homologação (test CAs podem não ter assinatura válida)
+		// Só aplica fallback se a cadeia de homologação estiver carregada (não desabilitada)
+		if (!DisablingUtil.isChainDisabled("icp-brasil-homolog")) {
 			if (ca.getSubjectX500Principal().equals(ca.getIssuerX500Principal())) {
 				LOGGER.debug("AC Raiz de Homologação identificada por identidade (assinatura não validada).");
 				return true;

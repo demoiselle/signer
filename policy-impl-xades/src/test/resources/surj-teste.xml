@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<documento>
+  <cabecalho>
+    <versao>1.0</versao>
+    <dataGeracao>2026-07-28</dataGeracao>
+    <orgao>00604446000125</orgao>
+  </cabecalho>
+  <conteudo>
+    <descricao>Teste de assinatura XML com certificado SURJ HOM</descricao>
+    <valor>100.00</valor>
+  </conteudo>
+</documento>

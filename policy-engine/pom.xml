@@ -3,13 +3,13 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>policy-engine</artifactId>
-            <version>4.6.1</version>
+            <version>4.6.2</version>
     <packaging>jar</packaging>
 
     <parent>
         <groupId>org.demoiselle.signer</groupId>
         <artifactId>parent</artifactId>
-        <version>4.6.1</version>
+        <version>4.6.2</version>
         <relativePath>../parent/pom.xml</relativePath>
     </parent>
 
@@ -57,20 +57,5 @@
             <version>2.15.1</version>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.sonatype.central</groupId>
-                <artifactId>central-publishing-maven-plugin</artifactId>
-                <version>0.6.0</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <publishingServerId>ossrh</publishingServerId>
-                    <autoPublish>true</autoPublish>
-                    <skipPublishing>false</skipPublishing>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

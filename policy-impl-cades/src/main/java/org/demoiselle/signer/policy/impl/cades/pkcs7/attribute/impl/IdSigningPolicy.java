@@ -83,7 +83,7 @@ public class IdSigningPolicy implements SignedAttribute {
 		//Atributo 2
 		OtherHashAlgAndValue sigPolicyHash = new OtherHashAlgAndValue(new AlgorithmIdentifier(
 			new ASN1ObjectIdentifier(signaturePolicy.getSignPolicyHashAlg().getAlgorithm().getValue())),
-			signaturePolicy.getSignPolicyHash().getDerOctetString());
+			signaturePolicy.getValidatedPolicyHashOctetString());
 
 		//Atributo 3
 		List<SigPolicyQualifierInfo> sigPolicyQualifierInfos = new ArrayList<SigPolicyQualifierInfo>();

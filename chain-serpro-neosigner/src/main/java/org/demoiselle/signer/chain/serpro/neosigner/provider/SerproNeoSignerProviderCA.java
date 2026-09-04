@@ -45,56 +45,73 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.util.DisablingUtil;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Provides Certificate Authority chain of SERPRO's
+ * Provides Certificate Authority chain of SERPRO (both production and homologation).
+ * <p>
+ * By default, loads the homologation chain when {@code SIGNER_ENV} is set to
+ * "hom" or "homolog", otherwise loads the production chain.
+ * <p>
+ * To disable the entire provider, set: {@code SIGNER_DISABLE_CHAIN_SERPRO_NEOSIGNER=true}
+ * <p>
+ * To disable only the homologation chain (load only production), set:
+ * {@code SIGNER_DISABLE_CHAIN_SERPRO_NEOSIGNER_HOMOLOG=true}
  */
 public class SerproNeoSignerProviderCA implements ProviderCA {
 
-	protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
-	private static final Logger logger = LoggerFactory.getLogger(SerproNeoSignerProviderCA.class);
+        protected static MessagesBundle chainMessagesBundle = new MessagesBundle();
+        private static final Logger logger = LoggerFactory.getLogger(SerproNeoSignerProviderCA.class);
 
-	@SuppressWarnings("finally")
-	public Collection<X509Certificate> getCAs() {
-		List<X509Certificate> result = new ArrayList<X509Certificate>();
-		try {
+        @SuppressWarnings("finally")
+        public Collection<X509Certificate> getCAs() {
+                if (DisablingUtil.isChainDisabled("serpro-neosigner")) {
+                        logger.info("Provider 'serpro-neosigner' is disabled. Skipping CA loading.");
+                        return new ArrayList<>();
+                }
+                List<X509Certificate> result = new ArrayList<>();
+                try {
+                        Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+                        CertificateFactory factory = CertificateFactory.getInstance("X.509", "BC");
+                        
+                        boolean isHomologDisabled = DisablingUtil.isChainDisabled("serpro-neosigner-homolog");
+                        String env = DisablingUtil.getEnvironment();
+                        boolean isHomEnv = "hom".equalsIgnoreCase(env) || "homolog".equalsIgnoreCase(env);
 
-			// CADEIAS de PRODUÇÃO
-			InputStream AutoridadeCertificadoraAssinadorSERPRORaiz =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraAssinadorSERPRORaiz.crt");
-			InputStream AutoridadeCertificadoraAssinadorSERPROFinal =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraAssinadorSERPROFinal.crt");
-			// CADEIAS de HOMOLOGAÇÃO
-			InputStream AutoridadeCertificadoraRaizdoSERPRO =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
-			InputStream AutoridadeCertificadoraFinaldoSERPRO =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");
-			// CADEIA geradas em software/Testes
-			InputStream AutoridadeCertificadoraRaizdoSERPROSoftware =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraRaizdoSERPROSoftware.crt");
-			InputStream AutoridadeCertificadoraFinaldoSERPROSoftware =
-				SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream("trustedca/AutoridadeCertificadoraFinaldoSERPROSoftware.crt");
+                        if (isHomologDisabled || !isHomEnv) {
+                                logger.info("Ambiente de producao. Carregando cadeias de producao do SERPRO (NeoSigner).");
+                                loadCert(result, factory, "trustedca/AutoridadeCertificadoraAssinadorSERPRORaiz.crt");
+                                loadCert(result, factory, "trustedca/AutoridadeCertificadoraAssinadorSERPROFinal.crt");
+                        } else {
+                                logger.info("Ambiente de homologacao detectado. Carregando cadeias de homologacao do SERPRO (NeoSigner).");
+                                loadCert(result, factory, "trustedca/AutoridadeCertificadoraRaizdoSERPRO.crt");
+                                loadCert(result, factory, "trustedca/AutoridadeCertificadoraFinaldoSERPRO.crt");
+                                loadCert(result, factory, "trustedca/AutoridadeCertificadoraRaizdoSERPROSoftware.crt");
+                                loadCert(result, factory, "trustedca/AutoridadeCertificadoraFinaldoSERPROSoftware.crt");
+                                loadCert(result, factory, "trustedca/NeoSignerSERPRO.crt");
+                        }
+                } catch (Throwable error) {
+                        logger.error("Erro ao carregar CAs do NeoSigner: " + error.getMessage());
+                } finally {
+                        return result;
+                }
+        }
 
-			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			logger.debug(chainMessagesBundle.getString("info.provider.name.serpro.neosigner"));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraAssinadorSERPRORaiz));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraAssinadorSERPROFinal));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoSERPRO));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraFinaldoSERPRO));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraRaizdoSERPROSoftware));
-			result.add((X509Certificate) CertificateFactory.getInstance("X.509", "BC").generateCertificate(AutoridadeCertificadoraFinaldoSERPROSoftware));
-		} catch (Throwable error) {
-			logger.error(error.getMessage());
-			return null;
-		} finally {
-			return result;
-		}
-	}
+        private void loadCert(List<X509Certificate> result, CertificateFactory factory, String path) {
+                try {
+                        InputStream is = SerproNeoSignerProviderCA.class.getClassLoader().getResourceAsStream(path);
+                        if (is != null) {
+                                result.add((X509Certificate) factory.generateCertificate(is));
+                        }
+                } catch (Exception e) {
+                        logger.error("Erro ao carregar certificado " + path + ": " + e.getMessage());
+                }
+        }
 
-	public String getName() {
-		return chainMessagesBundle.getString("info.provider.name.serpro.neosigner");
-	}
+        public String getName() {
+                return chainMessagesBundle.getString("info.provider.name.serpro.neosigner");
+        }
 }

@@ -1,0 +1,545 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1. Configurar o módulo Maven `automacao-importador` no reactor": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608241
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358620731
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358828954
+      }
+    ],
+    "2.1 Definir os records e enums de domínio": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608391
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358833868
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359124654
+      }
+    ],
+    "2.2 Implementar `ParserCertificado` (parsing puro)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608471
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359132014
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359239350
+      }
+    ],
+    "3.1 Implementar detecção de duplicatas exatas e conflitos de case": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608558
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359251623
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359631139
+      }
+    ],
+    "3.2 Implementar cálculo de cadeias HOM faltantes": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608607
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359253116
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359632508
+      }
+    ],
+    "4.1 Implementar o método conservador": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608669
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359641083
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359875371
+      }
+    ],
+    "4.2 Implementar o método agressivo": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608712
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359642393
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359875687
+      }
+    ],
+    "5.1 Implementar `GeradorAlias`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608759
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359254009
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359634964
+      }
+    ],
+    "6.1 Implementar `CalculadoraDiff`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608846
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359643421
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359877133
+      }
+    ],
+    "6.2 Implementar `DecisorGravacao`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608934
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359479874
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359635540
+      }
+    ],
+    "6.3 Implementar `DecisorExitCode`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358608985
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359479789
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359630093
+      }
+    ],
+    "7.1 Implementar `RelatorioInconsistenciasBuilder`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609038
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359886589
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360075173
+      }
+    ],
+    "7.2 Implementar `RelatorioPersistenciaBuilder`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609078
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359887520
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360076162
+      }
+    ],
+    "8. Checkpoint — núcleo puro validado": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609121
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360672291
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360726396
+      }
+    ],
+    "9.1 Implementar `ClienteHttp` sobre um `Transporte` injetável": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609167
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358837054
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359125604
+      }
+    ],
+    "10.1 Implementar `ExpansorCertificados`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609218
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358837819
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359126542
+      }
+    ],
+    "11.1 Implementar `StagingWriter`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609262
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359644737
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359878140
+      }
+    ],
+    "11.2 Implementar `StagingReader`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609308
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359888921
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360077482
+      }
+    ],
+    "12.1 Implementar `snapshot`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609349
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359645469
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359879132
+      }
+    ],
+    "12.2 Implementar `gravarAtomico` com backup e rollback": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609391
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359889832
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360078318
+      }
+    ],
+    "13.1 Implementar `ServicoDownload`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609434
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360086281
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360288050
+      }
+    ],
+    "14.1 Implementar `ComandoBaixar`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609477
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360293881
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360500813
+      }
+    ],
+    "15.1 Implementar flag `--remover-duplicadas` e ajuda dos métodos": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609518
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360087360
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360289067
+      }
+    ],
+    "15.2 Implementar o fluxo principal de `persistir`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609558
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360294993
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360501711
+      }
+    ],
+    "16.1 Implementar `ImportadorCli` e o `Main`": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609609
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360506520
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360666764
+      }
+    ],
+    "17. Checkpoint final — ensure all tests pass": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788358609654
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360673200
+      },
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360727273
+      }
+    ],
+    "9. Cliente HTTP com timeout e retry (`io.ClienteHttp`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359125646
+      }
+    ],
+    "10. Expansão de certificados sem subprocessos (`io.ExpansorCertificados`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359126578
+      }
+    ],
+    "2. Modelos de domínio e parsing X.509 puro (`dominio`, `nucleo.ParserCertificado`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359239437
+      }
+    ],
+    "3. Detecção de inconsistências e faltantes (`nucleo.DetectorInconsistencias`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359632571
+      }
+    ],
+    "5. Geração de aliases únicos (`nucleo.GeradorAlias`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359635037
+      }
+    ],
+    "4. Deduplicação conservadora e agressiva (`nucleo.Deduplicador`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359875726
+      }
+    ],
+    "6. Diff, decisão de gravação e exit code puros (`nucleo`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788359877215
+      }
+    ],
+    "7. Montagem pura dos relatórios (`relatorio`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360076202
+      }
+    ],
+    "11. Staging: escrita e leitura (`io.StagingWriter`, `io.StagingReader`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360077527
+      }
+    ],
+    "12. Keystore BKS: snapshot, escrita atômica e rollback (`io.KeystoreBks`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360078421
+      }
+    ],
+    "13. Serviço de download / orquestração de fontes (`io.ServicoDownload`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360288165
+      }
+    ],
+    "14. Subcomando `baixar` (`cli.ComandoBaixar`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360500864
+      }
+    ],
+    "15. Subcomando `persistir` (`cli.ComandoPersistir`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360501758
+      }
+    ],
+    "16. Wiring da CLI raiz e Main (`cli.ImportadorCli`)": [
+      {
+        "executionId": "3f82b5bf-bcc5-4a87-825c-068280676fdd",
+        "chatSessionId": "sess_1d066724-b0e3-4825-9c86-b2ddc3c74c7e",
+        "timestamp": 1788360666811
+      }
+    ]
+  }
+}

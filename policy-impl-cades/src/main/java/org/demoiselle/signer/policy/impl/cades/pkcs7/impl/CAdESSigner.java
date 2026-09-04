@@ -1022,6 +1022,10 @@ public class CAdESSigner implements PKCS7Signer {
 			oid.setValue(algorithmOID);
 			fallback.setAlgID(oid);
 			fallback.setMinKeyLength(0);
+			SignerAlgorithmEnum fallbackEnum = SignerAlgorithmEnum.getSignerAlgorithmEnum(algorithmName);
+			if (fallbackEnum != null) {
+				signaturePolicy.setSignatureAlgorithmHashOID(fallbackEnum.getOIDAlgorithmHash());
+			}
 			return fallback;
 		}
 
@@ -1038,12 +1042,7 @@ public class CAdESSigner implements PKCS7Signer {
 					if (varSignerAlgorithmEnum == null) {
 						throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
 					}
-					String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
-					ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
-					varObjectIdentifier.setValue(varOIDAlgorithmHash);
-					AlgorithmIdentifier varAlgorithmIdentifier = signaturePolicy.getSignPolicyHashAlg();
-					varAlgorithmIdentifier.setAlgorithm(varObjectIdentifier);
-					signaturePolicy.setSignPolicyHashAlg(varAlgorithmIdentifier);
+					signaturePolicy.setSignatureAlgorithmHashOID(varSignerAlgorithmEnum.getOIDAlgorithmHash());
 				}
 			}
 		} else {
@@ -1053,13 +1052,7 @@ public class CAdESSigner implements PKCS7Signer {
 			if (varSignerAlgorithmEnum == null) {
 				throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));
 			}
-			String varOIDAlgorithmHash = varSignerAlgorithmEnum.getOIDAlgorithmHash();
-			ObjectIdentifier varObjectIdentifier = signaturePolicy.getSignPolicyHashAlg().getAlgorithm();
-			varObjectIdentifier.setValue(varOIDAlgorithmHash);
-			AlgorithmIdentifier varAlgorithmIdentifier = signaturePolicy.getSignPolicyHashAlg();
-			varAlgorithmIdentifier.setAlgorithm(varObjectIdentifier);
-			signaturePolicy.setSignPolicyHashAlg(varAlgorithmIdentifier);
-
+			signaturePolicy.setSignatureAlgorithmHashOID(varSignerAlgorithmEnum.getOIDAlgorithmHash());
 		}
 		if (algAndLength == null) {
 			throw new SignerException(cadesMessagesBundle.getString("error.no.algorithm.policy"));

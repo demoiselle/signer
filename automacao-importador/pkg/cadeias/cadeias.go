@@ -24,6 +24,7 @@ type Config struct {
 	TargetKeystore   string
 	KeystorePass     string
 	BouncyCastlePath string
+	TsaP7bURL        string
 }
 
 func AtualizarCadeias(cfg Config) error {
@@ -36,6 +37,11 @@ func AtualizarCadeias(cfg Config) error {
 	if cfg.Env == "pro" {
 		if err := baixarEExtrairZip(cfg.ZipURL, workDir); err != nil {
 			return fmt.Errorf("erro ao baixar/extrair zip de produção: %v", err)
+		}
+		if cfg.TsaP7bURL != "" {
+			if err := baixarEExtrairP7b(cfg.TsaP7bURL, workDir); err != nil {
+				log.Printf("[CADEIAS] Aviso: falha ao baixar cadeia TSA p7b: %v", err)
+			}
 		}
 	} else if cfg.Env == "hom" {
 		if err := baixarEExtrairHomolog(cfg.HomologURL, workDir); err != nil {
@@ -81,6 +87,37 @@ func baixarEExtrairZip(url, dest string) error {
 			return err
 		}
 	}
+	return nil
+}
+
+func baixarEExtrairP7b(url, dest string) error {
+	p7bPath := filepath.Join(dest, "tsa_chain.p7b")
+	log.Printf("[CADEIAS] Baixando cadeia TSA: %s", url)
+	if err := utils.DownloadFile(url, p7bPath); err != nil {
+		return fmt.Errorf("erro ao baixar p7b TSA: %v", err)
+	}
+
+	cmd := exec.Command("openssl", "pkcs7", "-inform", "DER", "-in", p7bPath, "-print_certs")
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		os.Remove(p7bPath)
+		return fmt.Errorf("erro ao extrair certificados do p7b TSA: %v", err)
+	}
+
+	certBlocks := strings.Split(string(output), "-----END CERTIFICATE-----")
+	added := 0
+	for i, block := range certBlocks {
+		if idx := strings.Index(block, "-----BEGIN CERTIFICATE-----"); idx != -1 {
+			cert := block[idx:] + "-----END CERTIFICATE-----\n"
+			crtPath := filepath.Join(dest, fmt.Sprintf("tsa_chain_%d.crt", i))
+			if err := os.WriteFile(crtPath, []byte(cert), 0644); err == nil {
+				added++
+			}
+		}
+	}
+
+	os.Remove(p7bPath)
+	log.Printf("[CADEIAS] Extraídos %d certificados da cadeia TSA", added)
 	return nil
 }
 

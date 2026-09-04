@@ -1,1 +1,8 @@
+# Artefatos de build Maven
+target/
+
+# Area de staging gerada em runtime pelo subcomando 'baixar' (nao versionar)
+staging/
+
+# Binario da implementacao Go legada
 automacao-importador

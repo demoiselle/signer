@@ -14,6 +14,12 @@ chain-icp-brasil-homolog/log_importacao.txt
 chain-icp-brasil/src/scripts_keytool/novascadeias/
 
 chain-icp-brasil/src/scripts_keytool/import.log
+
+# Go binaries
+automacao-importador/*/__debug_bin
+automacao-importador/atualizar-bks-pfx
+automacao-importador/diagnostico-cadeia
+automacao-importador/verificar-cadeias-v12
 chain-icp-brasil-homolog/import.log
 policy-engine/automacao-atualizacao/validacao-hash/*
 policy-engine/automacao-atualizacao/politicas-baixadas/*
@@ -26,3 +32,4 @@ build_full.log
 build_result.log
 output.log
 tests/results/authority_key_id_token_test.txt
+validation.log

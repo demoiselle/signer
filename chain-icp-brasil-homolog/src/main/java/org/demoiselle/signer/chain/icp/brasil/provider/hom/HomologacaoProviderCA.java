@@ -45,14 +45,19 @@ import java.util.Collection;
 import java.util.List;
 
 import org.demoiselle.signer.core.ca.provider.ProviderCA;
+import org.demoiselle.signer.core.util.DisablingUtil;
 import org.demoiselle.signer.core.util.MessagesBundle;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * WARNING: USE ONLY ON HOMOLOGATION ENVIROMENT
+ * Provides homologation Certificate Authority chain of the ICP-BRAZIL.
  * <p>
- * Provides homologation (with purpose of tests) FAKE Certificate Authority chain of the ICP-BRAZIL's
+ * By default, this chain is loaded when the dependency is present.
+ * To disable it, set the environment variable: {@code SIGNER_DISABLE_CHAIN_ICP_BRASIL_HOMOLOG=true}
+ * <p>
+ * The global environment variable {@code SIGNER_ENV} is also respected when
+ * the disable variable is not explicitly set.
  */
 public class HomologacaoProviderCA implements ProviderCA {
 
@@ -61,6 +66,10 @@ public class HomologacaoProviderCA implements ProviderCA {
 
 	@Override
 	public Collection<X509Certificate> getCAs() {
+		if (DisablingUtil.isChainDisabled("icp-brasil-homolog")) {
+			logger.info("Homologation chain 'icp-brasil-homolog' is disabled. Skipping CA loading.");
+			return new ArrayList<>();
+		}
 		List<X509Certificate> result = new ArrayList<>();
 		try {
 			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
